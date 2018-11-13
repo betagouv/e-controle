@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  django:
+    build:
+        context: .
+        dockerfile: docker/django/Dockerfile
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - ./ecc:/code
+      - ./database:/database
+    ports:
+      - "80:80"
+    image: lazybird/ecc-django

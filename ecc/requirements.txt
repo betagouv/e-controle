@@ -1,0 +1,5 @@
+Django
+ipdb
+pytest-django
+pytest-cov
+django-debug-toolbar
