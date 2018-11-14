@@ -1,14 +1,21 @@
 version: '3'
-
 services:
+  postgres:
+    image: postgres
+    env_file:
+      - docker/env/postgres.env
   django:
     build:
-        context: .
-        dockerfile: docker/django/Dockerfile
-    command: python manage.py runserver 0.0.0.0:80
+      context: .
+      dockerfile: docker/django/Dockerfile
+    command: uwsgi # Possible values : dev, uwsgi
+                   # Or in this format: python manage.py runserver 0:8000
     volumes:
       - ./ecc:/code
-      - ./database:/database
     ports:
-      - "80:80"
-    image: lazybird/ecc-django
+      - "8000:8000"
+    links:
+      - postgres
+    env_file:
+      - docker/env/django.env
+    image: ecc-django

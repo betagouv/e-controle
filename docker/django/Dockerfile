@@ -2,18 +2,28 @@ FROM python:3.6
 
 ENV PYTHONUNBUFFERED 1
 
-COPY ./ecc /code
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    postgresql-client
 
-COPY ./database/ /database/
+COPY ./ecc /code
 
 WORKDIR /code
 
 RUN pip install -r requirements.txt
 
 COPY ./docker/django/docker-entrypoint.sh /
+COPY ./docker/django/uwsgi.ini /
 
 RUN chmod +x /docker-entrypoint.sh
 
+EXPOSE 8000
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["python", "manage.py", "runserver", "0:80"]
+CMD ["uwsgi"]
+
+# Other options
+CMD ["uwsgi"]
+# CMD ["python", "manage.py", "runserver", "0:8000"]
+# CMD ["uwsgi", "--ini", "/uwsgi.ini"]
