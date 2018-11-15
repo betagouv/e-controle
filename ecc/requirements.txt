@@ -6,3 +6,4 @@ django-debug-toolbar
 psycopg2-binary
 Jinja2
 uwsgi
+dj-database-url
