@@ -2,20 +2,24 @@ version: '3'
 services:
   postgres:
     image: postgres
-    env_file:
-      - docker/env/postgres.env
+    environment:
+     - POSTGRES_USER=ecc
+     - POSTGRES_PASSWORD=ecc
+     - POSTGRES_DB=ecc
   django:
     build:
       context: .
       dockerfile: docker/django/Dockerfile
-    command: uwsgi # Possible values : dev, uwsgi
-                   # Or in this format: python manage.py runserver 0:8000
+    command: uwsgi --ini /uwsgi.ini
     volumes:
       - ./ecc:/code
     ports:
       - "8000:8000"
     links:
       - postgres
-    env_file:
-      - docker/env/django.env
+    environment:
+      - DEBUG=True
+      - PORT=8002
+      - SECRET_KEY="85r+)p4uxjlhhnsv+o(xb6#0s5=j=k20=p=iqm#9@tw=@21c3!"
+      - DATABASE_URL=postgres://ecc:ecc@postgres:5432/ecc
     image: ecc-django

@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    postgresql-client
+    postgresql-client gettext
 
 COPY ./ecc /code
 
@@ -13,17 +13,11 @@ WORKDIR /code
 RUN pip install -r requirements.txt
 
 COPY ./docker/django/docker-entrypoint.sh /
-COPY ./docker/django/uwsgi.ini /
-
+COPY ./docker/django/uwsgi.ini /uwsgi.ini.template
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 8000
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["uwsgi"]
-
-# Other options
-CMD ["uwsgi"]
-# CMD ["python", "manage.py", "runserver", "0:8000"]
-# CMD ["uwsgi", "--ini", "/uwsgi.ini"]
+CMD ["uwsgi --ini /uwsgi.ini"]
