@@ -20,4 +20,4 @@ EXPOSE 8000
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-CMD ["uwsgi --ini /uwsgi.ini"]
+CMD ["uwsgi", "--ini", "/uwsgi.ini"]

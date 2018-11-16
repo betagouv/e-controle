@@ -9,8 +9,7 @@ services:
   django:
     build:
       context: .
-      dockerfile: docker/django/Dockerfile
-    command: uwsgi --ini /uwsgi.ini
+      dockerfile: Dockerfile
     volumes:
       - ./ecc:/code
     ports:
