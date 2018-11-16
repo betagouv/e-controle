@@ -11,5 +11,5 @@ Outil permettant de simplifier la relation entre un organisme de contrôle et de
   - PORT : par défaut 8000
 
 # Lancement en dev avec docker-compose
-Le docker-compose.yml est fournit pour le développement uniquement.
-Usage : `docker-compose up`
+- Le docker-compose.yml est fournit pour le développement uniquement.
+- Usage : `docker-compose up`
