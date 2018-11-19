@@ -24,8 +24,8 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(Theme)
 class ThemeAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions', 'indented_title', 'title')
-    list_editable = ('title',)
+    list_display = ('tree_actions', 'indented_title', 'title', 'questionnaire')
+    list_editable = ('title', 'questionnaire')
     search_fields = ('title',)
 
 
@@ -38,8 +38,8 @@ class QuestionFileInline(OrderedTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('id', 'description', 'move_up_down_links')
-    list_editable = ('description',)
+    list_display = ('id', 'description', 'theme', 'move_up_down_links')
+    list_editable = ('description', 'theme')
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
