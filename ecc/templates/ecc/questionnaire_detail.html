@@ -112,40 +112,128 @@
                 <!--</div>-->
               </div>
               <div class="table-responsive">
-                <table class="table card-table table-striped table-vcenter">
-                  <thead>
-                  <tr>
-                    <th class="text-blue" colspan="2">Question</th>
-                    <th class="text-blue">Etat</th>
-                    <th></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td class="w-1"><span class="stamp stamp-md bg-blue mr-3">1-1</span></td>
-                    <td>Transmettre l’arrêté de création du syndicat, les statuts à jour et les principales modifications qui y ont été apportées depuis sa création.</td>
-                    <td>A remplir</td>
-                    <td class="w-1">
-                      <a href="{% url 'question-detail' %}"><button type="submit" class="btn btn-primary">Répondre</button>
-                        </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="w-1"><span class="stamp stamp-md bg-blue mr-3">1-2</span></td>
-                    <td>Transmettre, le cas échéant, les documents d’orientations stratégiques de votre syndicat. </td>
-                    <td>A remplir</td>
-                    <td class="w-1"><a href="{% url 'question-detail' %}"><button type="submit" class="btn btn-primary">Répondre</button></a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="w-1"><span class="stamp stamp-md bg-blue mr-3">1-3</span></td>
-                    <td>Décrire l’organisation et la composition actuelle du conseil d’administration et de son bureau ; indiquer les changements intervenus ces dernières années. Transmettre toutes les délibérations des organes de votre SIVU et leurs annexes sous format dématérialisé. Transmettre notamment les règlements intérieurs du conseil d’administration et du bureau, et les modifications intervenues depuis 2013. </td>
-                    <td>A remplir</td>
-                    <td class="w-1"><a href="{% url 'question-detail' %}"><button type="submit" class="btn btn-primary">Répondre</button></a>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                  <table class="table card-table table-striped table-vcenter">
+                      <thead>
+                      <tr>
+                        <th class="text-blue">Question</th>
+                        <th class="text-blue" style="text-align:right">Répondu</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                        <td class="rows p-0" colspan="2">
+                          <div class="card no-glitter border-0 col-12 m-0 p-0">
+                            <div class="card-header border-0">
+                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">1-1</span>
+                              <h3 class="card-title" data-toggle="card-collapse" style="cursor: pointer">Transmettre l’arrêté de création du syndicat, les statuts à jour et les principales modifications qui y ont été apportées depuis sa création.</h3>
+                              <div class="card-options">
+                                <label class="custom-switch m-0">
+                                    <input type="checkbox" value="1" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                  </label>
+                                <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                              </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                  <label class="form-label">Réponse</label>
+                                  <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Votre réponse..."></textarea>
+                                </div>
+                                   
+                                <div class="form-group">
+                                <div class="form-label">Fichiers</div>
+                                <ul>
+                                  <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-trash"></i></a></li>
+                                </ul>
+                              </div>
+                                <div class="form-group">
+                                <div class="form-label">Ajouter un fichier</div>
+                                <div class="row">
+                                <div class="col-10">
+                                  <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="example-file-input-custom">
+                                    <label class="custom-file-label">Choisir un fichier</label>
+                                  </div>
+                                </div>
+                                  <button type="submit" class="btn">Ajouter</button>
+                                  </div>
+                              </div>
+         
+                              <div class="form-group">
+                                <label class="custom-switch">
+                                  <input type="radio" name="option" value="true" class="custom-switch-input">
+                                  <span class="custom-switch-indicator"></span>
+                                  <span class="custom-switch-description">Réponse complète</span>
+                                </label>
+                              </div>
+                              
+                                <div class="form-group">
+                                 <div class="d-flex">
+                                  <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
+                                  <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse">Sauvegarder</button>
+                                </div>
+                            </div>
+                            
+                          </div>
+                                
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="rows p-0"  colspan="2">
+                            <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0">
+                              <div class="card-header border-0">
+                                <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">1-2</span>
+                                <h3 class="card-title" data-toggle="card-collapse"  style="cursor: pointer">Transmettre, le cas échéant, les documents d’orientations stratégiques de votre syndicat.</h3>
+                                <div class="card-options">
+                                  <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                </div>
+                              </div>
+                              <div class="card-body">
+                                  <div class="form-group">
+                                    <label class="form-label">Réponse</label>
+                                    <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Votre réponse..."></textarea>
+                                  </div>
+                                     
+                                  <div class="form-group">
+                                  <div class="form-label">Fichiers</div>
+                                  <ul>
+                                    <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-trash"></i></a></li>
+                                  </ul>
+                                </div>
+                                  <div class="form-group">
+                                  <div class="form-label">Ajouter un fichier</div>
+                                  <div class="row">
+                                  <div class="col-10">
+                                    <div class="custom-file">
+                                      <input type="file" class="custom-file-input" name="example-file-input-custom">
+                                      <label class="custom-file-label">Choisir un fichier</label>
+                                    </div>
+                                  </div>
+                                    <button type="submit" class="btn">Ajouter</button>
+                                    </div>
+                                </div>
+           
+                                <div class="form-group">
+                                  <label class="custom-switch">
+                                    <input type="radio" name="option" value="true" class="custom-switch-input">
+                                    <span class="custom-switch-indicator"></span>
+                                    <span class="custom-switch-description">Réponse complète</span>
+                                  </label>
+                                </div>
+                                
+                                  <div class="form-group">
+                                   <div class="d-flex">
+                                    <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
+                                    <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse">Sauvegarder</button>
+                                  </div>
+                              </div>
+                              
+                            </div>
+                                  
+                          </td>
+                      </tr>
+                      </tbody>
+                    </table>
               </div>
             </div>
             <div class="card"  id="theme2">
