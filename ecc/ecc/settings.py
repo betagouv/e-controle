@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'mptt',
     'ordered_model',
 
-    'questions',
     'control',
 ]
 
