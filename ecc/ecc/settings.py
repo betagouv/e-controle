@@ -120,6 +120,5 @@ STATIC_URL = '/static/'
 #  the STATIC_ROOT setting to a filesystem path.
 STATIC_ROOT = '/static/'
 
-if DEBUG:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
