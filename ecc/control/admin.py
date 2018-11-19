@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 
 from mptt.admin import DraggableMPTTAdmin
 from ordered_model.admin import OrderedModelAdmin
@@ -10,7 +9,7 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile
 
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
-    fields = ('title', 'end_date', 'move_up_down_links')
+    fields = ('title', 'description', 'end_date', 'move_up_down_links')
     readonly_fields = ('order', 'move_up_down_links')
     extra = 1
 
