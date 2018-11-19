@@ -1,0 +1,21 @@
+{
+  "name": "e-controle",
+  "scripts": {
+  },
+  "env": {
+    "SECRET_KEY": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "heroku-postgresql"
+  ],
+  "buildpacks": [
+
+  ]
+}
