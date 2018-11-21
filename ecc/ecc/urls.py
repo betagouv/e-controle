@@ -9,6 +9,7 @@ from control import views as control_views
 urlpatterns = [
     path('', ecc_views.login, name='login'),
     path('controle/<int:control_id>/', control_views.questionnaire_list),
+    path('questionnaire/<int:pk>/', control_views.questionnaire_detail),
     path('accueil/', ecc_views.questionnaire_list, name='questionnaire-list'),
     path('questionnaire/', ecc_views.questionnaire_detail, name='questionnaire-detail'),
     path('question/', ecc_views.question_detail, name='question-detail'),
