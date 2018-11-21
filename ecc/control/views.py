@@ -1,7 +1,7 @@
 from django.views.generic import ListView, DetailView
 
 
-from .models import Questionnaire, Theme
+from .models import Control, Questionnaire, Theme
 
 
 class QuestionnaireList(ListView):
@@ -9,7 +9,8 @@ class QuestionnaireList(ListView):
     context_object_name = 'questionnaires'
 
     def get_queryset(self):
-        return Questionnaire.objects.filter(control=self.kwargs.get('control_id'))
+        control_id = Control.objects.first().id
+        return Questionnaire.objects.filter(control=control_id)
 
 
 class QuestionnaireDetail(DetailView):

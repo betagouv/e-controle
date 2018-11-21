@@ -39,7 +39,7 @@
                 <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-home"></i> Accueil</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="{% url 'questionnaire-detail' %}" class="nav-link active"><i class="fe fe-check-square"></i> Questionnaire 1</a>
+                <a href="{% url 'questionnaire-detail' 1 %}" class="nav-link active"><i class="fe fe-check-square"></i> Questionnaire 1</a>
               </li>
               <li class="nav-item dropdown">
                 <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-check-square"></i> Mes Questionnaires</a>
@@ -74,7 +74,7 @@
                   <tbody>
                     <tr>
                       <td>{{ questionnaire.description }}</td>
-                      <td class="w-1"><a href="{% url 'questionnaire-detail' %}"><button type="submit" class="btn btn-primary">Accéder</button><a/></td>
+                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary">Accéder</button><a/></td>
                     </tr>
                   </tbody>
                 </table>
