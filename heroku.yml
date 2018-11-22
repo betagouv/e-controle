@@ -4,4 +4,4 @@ build:
 release:
   image: web
   command:
-    - heroku/init_database.sh
+    - ./heroku/init_database.sh
