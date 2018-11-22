@@ -5,7 +5,7 @@ ENV PORT 8000
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    postgresql-client gettext
+    postgresql-client gettext curl
 
 COPY ./ecc /code
 COPY ./heroku /code/heroku
