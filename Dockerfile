@@ -8,6 +8,7 @@ RUN apt-get update && \
     postgresql-client gettext
 
 COPY ./ecc /code
+COPY ./heroku /code/heroku
 
 WORKDIR /code
 
