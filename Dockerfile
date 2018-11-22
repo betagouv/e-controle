@@ -9,6 +9,7 @@ RUN apt-get update && \
 
 COPY ./ecc /code
 COPY ./heroku /code/heroku
+RUN mkdir -p /app/.profile.d
 RUN echo '[ -z "$SSH_CLIENT" ] && source <(curl --fail --retry 3 -sSL "$HEROKU_EXEC_URL")' > /app/.profile.d/heroku-exec.sh
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
