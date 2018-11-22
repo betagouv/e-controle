@@ -1,9 +1,13 @@
 {
   "name": "e-controle",
   "scripts": {
+     "postdeploy": "heroku/init_database.sh"
   },
   "env": {
     "SECRET_KEY": {
+      "required": true
+    },
+    "STAGING_DATABASE_URL": {
       "required": true
     }
   },
