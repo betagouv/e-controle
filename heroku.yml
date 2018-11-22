@@ -3,5 +3,3 @@ build:
     web: Dockerfile
 release:
   image: web
-  command:
-    - ./heroku/init_database.sh
