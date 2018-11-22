@@ -5,10 +5,12 @@ ENV PORT 8000
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    postgresql-client gettext curl
+    postgresql-client gettext curl openssh
 
 COPY ./ecc /code
 COPY ./heroku /code/heroku
+RUN echo '[ -z "$SSH_CLIENT" ] && source <(curl --fail --retry 3 -sSL "$HEROKU_EXEC_URL")' > /app/.profile.d/heroku-exec.sh
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 WORKDIR /code
 
