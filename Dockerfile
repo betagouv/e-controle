@@ -5,7 +5,7 @@ ENV PORT 8000
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    postgresql-client gettext curl openssh
+    postgresql-client gettext curl openssh-server
 
 COPY ./ecc /code
 COPY ./heroku /code/heroku
