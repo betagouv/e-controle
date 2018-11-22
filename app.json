@@ -4,10 +4,19 @@
      "postdeploy": "heroku/init_database.sh"
   },
   "env": {
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+    "HEROKU_PARENT_APP_NAME": {
+      "required": true
+    },
     "SECRET_KEY": {
       "required": true
     },
     "STAGING_DATABASE_URL": {
+      "required": true
+    },
+    "DEBUG": {
       "required": true
     }
   },
