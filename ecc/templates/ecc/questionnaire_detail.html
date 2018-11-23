@@ -42,7 +42,7 @@
                 <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-home"></i> Accueil</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link active"><i class="fe fe-check-square"></i> Questionnaires</a>
+                <a href="#" class="nav-link"><i class="fe fe-check-square"></i> Questionnaires</a>
               </li>
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link"><i class="fe fe-tag"></i> Historiques</a>
@@ -51,7 +51,7 @@
                 <a href="#" class="nav-link"><i class="fe fe-at-sign"></i> Coordonnées</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link"><i class="fe fe-file-text"></i> FAQ</a>
+                <a href="#" class="nav-link"><i class="fe fe-file-text"></i> Documentation</a>
               </li>
             </ul>
           </div>
@@ -77,7 +77,7 @@
                   <table class="table card-table">
                     <tbody>
                     <tr data-id="{{ forloop.counter }}" class="theme-row">
-                      <td><a href="#">{{ forloop.counter }}. {{ theme.title }}</a></td>
+                      <td><a href="#theme{{ forloop.counter }}">{{ forloop.counter }}. {{ theme.title }}</a></td>
                       <td class="text-right"><span class="text-muted">43%</span></td>
                     </tr>
                    {% endfor %}
