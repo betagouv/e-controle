@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <div class="page">
   <div class="page-single">
     <div class="container">
@@ -10,6 +11,11 @@
           </div>
           <form class="card" action="{% url 'questionnaire-list' %}" method="get">
             <div class="card-body p-6">
+              <div class="text-center text-muted">
+                    <div class="font-weight-bold mb-4">
+                        <img src="{% static "img/logo.svg" %}" class="header-brand-img" alt="logo">e-contrôle
+                    </div>
+              </div>
               <div class="card-title">Accéder à mon espace de contrôle</div>
               <div class="form-group">
                 <label class="form-label">Se connecter</label>
@@ -33,9 +39,6 @@
           </form>
           <div class="text-center text-muted">
             Vous rencontrez des difficultés pour vous connecter? <a href="mailto:econtrole@bate.ccomptes.fr">Demandez de l'aide</a>
-          </div>
-          <div class="text-center text-muted">
-          LOGO COUR DES COMPTES
           </div>
         </div>
       </div>

@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
   <div class="page">
   <div class="page-main">
     <div class="header py-4">
       <div class="container">
         <div class="d-flex">
-          <a class="header-brand" href="./index.html">
-            <img src="https://tabler.io/tabler/demo/brand/tabler.svg" class="header-brand-img" alt="tabler logo">
+          <a class="header-brand" href="{% url 'login' %}">
+            <div class="font-weight-bold mb-4">
+                <img src="{% static "img/logo.svg" %}" class="header-brand-img" alt="logo">e-contrôle
+            </div>
           </a>
           <div class="d-flex order-lg-2 ml-auto">
             <div class="dropdown">
