@@ -125,7 +125,15 @@
                             <div class="card-body">
                                 <div class="form-group">
                                   <label class="form-label">Réponse</label>
+                                  {% if user_profile == "edit" %}
                                   <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Votre réponse..."></textarea>
+                                  {% else %}
+                                  <p>
+                                      Un text de réponse ici. Un text de réponse ici. Un text de réponse ici.
+                                      Un text de réponse ici. Un text de réponse ici. Un text de réponse ici.
+                                  </p>
+                                  {% endif %}
+
                                 </div>
 
                                 <div class="form-group">
