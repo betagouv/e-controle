@@ -13,8 +13,8 @@
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                 <span class="avatar"></span>
                 <span class="ml-2 d-none d-lg-block">
-                  <span class="text-default">Jane Pearson</span>
-                  <small class="text-muted d-block mt-1">Administrator</small>
+                  <span class="text-default">Frédéric MARTIN</span>
+                  <small class="text-muted d-block mt-1">Ville de Chassieu</small>
                 </span>
               </a>
             </div>
@@ -42,10 +42,10 @@
                 <a href="#" class="nav-link active"><i class="fe fe-check-square"></i> Questionnaire 1</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-check-square"></i> Mes Questionnaires</a>
+                <a href="#" class="nav-link"><i class="fe fe-check-square"></i> Mes questionnaires</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-check-square"></i> Ancien questionnaires</a>
+                <a href="#" class="nav-link"><i class="fe fe-check-square"></i> Anciens questionnaires</a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link"><i class="fe fe-file-text"></i> FAQ</a>
@@ -68,7 +68,7 @@
               <div class="col-md-6 col-lg-12">
                 <div class="card">
                   <div class="card-header bg-blue text-white">
-                    <h4 class="card-title">Thémes</h4>
+                    <h4 class="card-title">Thèmes</h4>
                   </div>
                   {% for theme in themes %}
                   <table class="table card-table">
@@ -93,25 +93,32 @@
               </div>
               <div class="table-responsive">
                   <table class="table card-table table-striped table-vcenter">
-                      <thead>
-                      <tr>
-                        <th class="text-blue">Question</th>
-                        <th class="text-blue" style="text-align:right">Répondu</th>
-                      </tr>
-                      </thead>
                       <tbody>
+                        <!-- TODO : Section -->
+                      <tr>
+                        <td>
+                          <h4 class="card-title">Sous-section 1</h4>
+                        </td>
+                      </tr>
                       {% for question in theme.questions.all %}
                       <tr>
-                        <td class="rows p-0" colspan="2">
-                          <div class="card no-glitter border-0 col-12 m-0 p-0">
+                        <td class="rows p-0">
+                          <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
                               <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">{{ forloop.counter }}</span>
-                              <h3 class="card-title" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}</h3>
+                              <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
+                                <!-- TODO : Tags dynamique -->
+                                <div class="tags">
+                                  <span class="tag tag-azure">2 Fichiers réponses
+                                    <span class="tag-addon"><i class="fe fe-file"></i></span>
+                                  </span>
+                                  <span class="tag tag-indigo">Répondu par texte</span>
+                                  <span class="tag tag-green"> Réponse compléte
+                                      <span class="tag-addon"><i class="fe fe-check"></i></span>
+                                  </span>
+                                </div>
+                              </div>
                               <div class="card-options">
-                                <label class="custom-switch m-0">
-                                    <input type="checkbox" value="1" class="custom-switch-input">
-                                    <span class="custom-switch-indicator"></span>
-                                  </label>
                                 <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                               </div>
                             </div>
@@ -176,14 +183,13 @@
             <div class="row align-items-center">
               <div class="col-auto">
                 <ul class="list-inline list-inline-dots mb-0">
-                  <li class="list-inline-item"><a href="./docs/index.html">Documentation</a></li>
                   <li class="list-inline-item"><a href="./faq.html">FAQ</a></li>
                 </ul>
               </div>
             </div>
           </div>
           <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-center">
-            Copyright © 2018 <a href=".">Company Name</a>. All rights reserved.
+              <a href="https://www.ccomptes.fr/fr">Cour des comptes</a>. Tous droits réservés
           </div>
         </div>
       </div>
