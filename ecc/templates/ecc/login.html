@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load static %}
 <div class="page">
   <div class="page-single">
     <div class="container">
@@ -10,22 +11,27 @@
           </div>
           <form class="card" action="{% url 'questionnaire-list' %}" method="get">
             <div class="card-body p-6">
+              <div class="text-center text-muted">
+                    <div class="font-weight-bold mb-4">
+                        <img src="{% static "img/logo.svg" %}" class="header-brand-img" alt="logo">e-contrôle
+                    </div>
+              </div>
               <div class="card-title">Accéder à mon espace de contrôle</div>
               <div class="form-group">
                 <label class="form-label">Se connecter</label>
                 <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Votre email professionnel">
-                                <div class="form-group">
+                  <div class="form-group">
                      <div class="custom-controls-stacked">
                           <label class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" name="example-inline-radios" value="Equipe de contrôle" checked>
+                            <input type="radio" class="custom-control-input" name="profile" value="inspect" checked>
                             <span class="custom-control-label">Equipe de contrôle</span>
                           </label>
                           <label class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" name="example-inline-radios" value="Organisme contrôlé">
+                            <input type="radio" class="custom-control-input" name="profile" value="edit">
                             <span class="custom-control-label">Organisme contrôlé</span>
                           </label>
+                     </div>
                   </div>
-              </div>
               <div class="form-footer">
                 <button type="submit" class="btn btn-primary btn-block">Valider</button>
               </div>
@@ -33,9 +39,6 @@
           </form>
           <div class="text-center text-muted">
             Vous rencontrez des difficultés pour vous connecter? <a href="mailto:econtrole@bate.ccomptes.fr">Demandez de l'aide</a>
-          </div>
-          <div class="text-center text-muted">
-          LOGO COUR DES COMPTES
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ Outil permettant de simplifier la relation entre un organisme de contrôle et de
   - DATABASE_URL : URL de connection à la base de donnée. Format : postgres://user:password@ip:5432/db_name
 - Variable optionnel :
   - PORT : par défaut 8000
+  - DEBUG : pour mettre django en mode débug (par défaut False) 
 
 # Lancement en dev avec docker-compose
 - Le docker-compose.yml est fournit pour le développement uniquement.
