@@ -74,7 +74,7 @@
                   <table class="table card-table">
                     <tbody>
                     <tr data-id="{{ forloop.counter }}" class="theme-row">
-                      <td><a href="#">{{ theme.title }}</a></td>
+                      <td><a href="#">{{ forloop.counter }}. {{ theme.title }}</a></td>
                       <td class="text-right"><span class="text-muted">43%</span></td>
                     </tr>
                    {% endfor %}
