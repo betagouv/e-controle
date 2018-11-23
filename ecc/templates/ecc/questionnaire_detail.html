@@ -89,7 +89,7 @@
             <div class="card" id="theme{{ forloop.counter }}">
               <div class="card-status card-status-top bg-blue"></div>
               <div class="card-header">
-                <h3 class="card-title">{{ theme.title }}</h3>
+                <h3 class="card-title">{{ forloop.counter }}. {{ theme.title }}</h3>
               </div>
               <div class="table-responsive">
                   <table class="table card-table table-striped table-vcenter">
@@ -105,7 +105,7 @@
                         <td class="rows p-0">
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
-                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">{{ forloop.counter }}</span>
+                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
                                 <!-- TODO : Tags dynamique -->
                                 <div class="tags">
