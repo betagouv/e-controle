@@ -5,7 +5,7 @@ ENV PORT 8000
 
 # Python
 RUN yum -y update; yum clean all
-RUN yum -y install epel-release centos-release-scl; yum clean all
+RUN yum -y install epel-release; yum clean all
 RUN yum -y install python36 python36-devel python36-setuptools; yum clean all
 RUN yum -y groupinstall "Development Tools"; yum clean all
 RUN easy_install-3.6 pip
