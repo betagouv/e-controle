@@ -19,6 +19,6 @@ services:
     environment:
       - DEBUG=True
       - PORT=8000
-      - SECRET_KEY="85r+)p4uxjlhhnsv+o(xb6#0s5=j=k20=p=iqm#9@tw=@21c3!"
+      - SECRET_KEY=85r+)p4uxjlhhnsv+o(xb6#0s5=j=k20=p=iqm#9@tw=@21c3!
       - DATABASE_URL=postgres://ecc:ecc@postgres:5432/ecc
     image: ecc-django

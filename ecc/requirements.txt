@@ -6,8 +6,8 @@ django-debug-toolbar
 psycopg2-binary
 Jinja2
 uwsgi
-dj-database-url
 django-model-utils
 django-filer
 django-ordered-model
 django-mptt
+django-environ

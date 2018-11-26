@@ -1,6 +1,9 @@
 import os
+import environ
 
-import dj_database_url
+env = environ.Env(
+    DEBUG=(bool, False),
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DEBUG', False))
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -29,7 +32,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'debug_toolbar',
-    'dj_database_url',
     'model_utils',
     'easy_thumbnails',
     'filer',
@@ -74,7 +76,7 @@ WSGI_APPLICATION = 'ecc.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {'default': dj_database_url.config()}
+DATABASES = {'default': env.db()}
 
 
 # Password validation
