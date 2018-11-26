@@ -112,7 +112,7 @@
                                     <span class="tag-addon"><i class="fe fe-file"></i></span>
                                   </span>
                                   {% endif %}
-                                  {% if  forloop.parentloop.counter|divisibleby:'2' or forloop.parentloop.counter|divisibleby:'5' %}
+                                  {% if forloop.parentloop.counter|divisibleby:'5' %}
                                   <span class="tag tag-green"> Réponse complète
                                       <span class="tag-addon"><i class="fe fe-check"></i></span>
                                   </span>
@@ -159,14 +159,17 @@
                                     </div>
                                 </div>
                                 {% endif %}
-
+                              {% if user_profile == "edit" %}
                               <div class="form-group">
-                                <label class="custom-switch">
-                                  <input type="radio" name="option" value="true" class="custom-switch-input">
-                                  <span class="custom-switch-indicator"></span>
-                                  <span class="custom-switch-description">Réponse complète</span>
-                                </label>
+                                <div class="custom-switches-stacked">
+                                    <label class="custom-switch">
+                                      <input type="radio" name="option" value="1" class="custom-switch-input">
+                                      <span class="custom-switch-indicator"></span>
+                                      <span class="custom-switch-description">Réponse complète</span>
+                                    </label>
+                                </div>
                               </div>
+                              {% endif %}
 
                                 {% if user_profile == "edit" %}
                                 <div class="form-group">
