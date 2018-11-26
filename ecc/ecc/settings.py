@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'filer',
     'mptt',
     'ordered_model',
+    'django_tabler',
 
     'control',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

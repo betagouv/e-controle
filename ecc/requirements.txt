@@ -11,3 +11,4 @@ django-filer
 django-ordered-model
 django-mptt
 django-environ
+django-tabler
