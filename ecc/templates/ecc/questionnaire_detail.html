@@ -104,15 +104,19 @@
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
                                 <!-- TODO : Tags dynamique -->
                                 <div class="tags">
+                                  <span class="tag tag-indigo">Réponse par texte
+                                    <span class="tag-addon"><i class="fe fe-align-left"></i></span>
+                                  </span>
+                                  {% if forloop.parentloop.counter|divisibleby:'3' %}
                                   <span class="tag tag-azure">2 fichiers déposés
                                     <span class="tag-addon"><i class="fe fe-file"></i></span>
                                   </span>
-                                  <span class="tag tag-indigo">Réponse par texte
-                                     <span class="tag-addon"><i class="fe fe-align-left"></i></span>
-                                  </span>
+                                  {% endif %}
+                                  {% if  forloop.parentloop.counter|divisibleby:'2' or forloop.parentloop.counter|divisibleby:'5' %}
                                   <span class="tag tag-green"> Réponse complète
                                       <span class="tag-addon"><i class="fe fe-check"></i></span>
                                   </span>
+                                  {% endif %}
                                 </div>
                               </div>
                               <div class="card-options">
@@ -132,24 +136,29 @@
 
                                 </div>
 
+                                {% if forloop.parentloop.counter|divisibleby:'3' %}
                                 <div class="form-group">
-                                <div class="form-label">Fichiers</div>
-                                <ul>
-                                  <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-trash"></i></a></li>
-                                </ul>
-                              </div>
-                                <div class="form-group">
-                                <div class="form-label">Ajouter un fichier</div>
-                                <div class="row">
-                                <div class="col-10">
-                                  <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="example-file-input-custom">
-                                    <label class="custom-file-label">Choisir un fichier</label>
-                                  </div>
+                                    <div class="form-label">Fichiers</div>
+                                    <ul>
+                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon">{% if user_profile == "edit" %}<i class="fe fe-trash">{% endif %}</i></a></li>
+                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon">{% if user_profile == "edit" %}<i class="fe fe-trash">{% endif %}</i></a></li>
+                                    </ul>
                                 </div>
-                                  <button type="submit" class="btn">Ajouter</button>
-                                  </div>
-                              </div>
+                                {% endif %}
+                                {% if user_profile == "edit" %}
+                                <div class="form-group">
+                                    <div class="form-label">Ajouter un fichier</div>
+                                    <div class="row">
+                                    <div class="col-10">
+                                      <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="example-file-input-custom">
+                                        <label class="custom-file-label">Choisir un fichier</label>
+                                      </div>
+                                    </div>
+                                      <button type="submit" class="btn">Ajouter</button>
+                                    </div>
+                                </div>
+                                {% endif %}
 
                               <div class="form-group">
                                 <label class="custom-switch">
@@ -159,12 +168,14 @@
                                 </label>
                               </div>
 
+                                {% if user_profile == "edit" %}
                                 <div class="form-group">
                                  <div class="d-flex">
-                                  <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
-                                  <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse">Sauvegarder</button>
+                                      <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
+                                      <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse">Sauvegarder</button>
+                                  </div>
                                 </div>
-                            </div>
+                                {% endif %}
 
                           </div>
 
