@@ -16,6 +16,11 @@ class QuestionnaireList(ListView):
         control_id = Control.objects.first().id
         return Questionnaire.objects.filter(control=control_id)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_profile'] = self.request.session.get('user_profile')
+        return context
+
 
 class QuestionnaireDetail(DetailView):
     template_name = "ecc/questionnaire_detail.html"
