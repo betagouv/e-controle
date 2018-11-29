@@ -30,6 +30,13 @@ INSTALLED_APPS = [
 
     'debug_toolbar',
     'dj_database_url',
+    'model_utils',
+    'easy_thumbnails',
+    'filer',
+    'mptt',
+    'ordered_model',
+
+    'control',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-fr'
 
 TIME_ZONE = 'UTC'
 
@@ -111,8 +118,11 @@ STATIC_URL = '/static/'
 # Collect static won't work if you haven't configured this
 # django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set
 #  the STATIC_ROOT setting to a filesystem path.
-STATIC_ROOT = '/static/'
+STATIC_ROOT = '/var/ecc/static/'
 
-if DEBUG:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
