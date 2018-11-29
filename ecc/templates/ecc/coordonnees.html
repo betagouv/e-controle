@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<div class="page">
+  <div class="page-main">
+    <div class="header py-4">
+      <div class="container">
+        <div class="d-flex">
+          <a class="header-brand" href="{% url 'login' %}">
+            <img src="{% static "img/logo.png" %}" class="header-brand-img" alt="logo">
+          </a>
+          <div class="d-flex order-lg-2 ml-auto">
+            <div class="dropdown">
+              <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                <span class="ml-2 d-none d-lg-block">
+                  <span class="text-default">Frédéric MARTIN</span>
+                  {% if user_profile == "edit" %}
+                  <small class="text-muted d-block mt-1">Ville de Chassieu</small>
+                  {% endif %}
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-3 ml-auto">
+            <form class="input-icon my-3 my-lg-0">
+              <input type="Search" class="form-control header-search" placeholder="Rechercher&hellip;" tabindex="1">
+              <div class="input-icon-addon">
+                <i class="fe fe-search"></i>
+              </div>
+            </form>
+          </div>
+          <div class="col-lg order-lg-first">
+            <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+              <li class="nav-item">
+                <a href="{% url 'questionnaire-list' %}" class="nav-link active"><i class="fe fe-home"></i> Accueil</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-check-square"></i> Questionnaires</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link"><i class="fe fe-tag"></i> Historiques</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link"><i class="fe fe-at-sign"></i> Coordonnées</a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="my-3 my-md-5">
+      <div class="container">
+        <div class="page-header">
+          <h1 class="page-title">
+            Accéder aux questionnaires et aux documents déposés
+          </h1>
+        </div>
+        <div class="row row-cards">
+          <div class="col-lg-12">
+            {% for questionnaire in questionnaires %}
+            <div class="card">
+              <div class="card-header">
+                 <h3 class="card-title">{{ questionnaire.title }}</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table card-table table-striped table-vcenter">
+                  <tbody>
+                    <tr>
+                      <td>{{ questionnaire.description }}</td>
+                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary">Accéder</button><a/></td>
+                      <td class="w-1"><a /"><button type="submit" class="btn">Télécharger le questionnaire</button><a/></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+<footer class="footer">
+  <div class="container">
+    <div class="row align-items-center flex-row-reverse">
+      <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
+        <img src="{% static "img/logo-cc.jpg" %}" class="img col-3" alt="logo-cc">
+        E-contrôle. Version Bêta.  <a href="#">Cour des comptes / Chambres régionale et territoriale des comptes.</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+{% endblock content %}
