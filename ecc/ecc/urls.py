@@ -10,6 +10,8 @@ urlpatterns = [
     path('', ecc_views.login, name='login'),
     path('accueil/', control_views.questionnaire_list, name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
+    path('contacts/', ecc_views.contacts, name='contacts'),
+    path('suivi/', ecc_views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
 ]
 
