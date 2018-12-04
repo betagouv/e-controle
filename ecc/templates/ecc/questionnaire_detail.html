@@ -102,8 +102,8 @@
                         <td class="rows p-0">
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
-                              <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
-                              <div class="card-text" style="cursor: pointer">{{ question.description }}<br>
+                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
+                              <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
                                 <!-- TODO : Tags dynamique -->
                                 <div class="tags">
                                   {% if forloop.parentloop.counter|divisibleby:'3' %}
@@ -181,8 +181,8 @@
                                 {% if user_profile == "edit" %}
                                 <div class="form-group">
                                  <div class="d-flex">
-                                      <a href="javascript:void(0)" class="btn btn-link">Annuler</a>
-                                      <button type="submit" class="btn btn-primary ml-auto">Sauvegarder</button>
+                                      <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
+                                      <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse">Sauvegarder</button>
                                   </div>
                                 </div>
                                 {% endif %}
