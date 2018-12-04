@@ -81,8 +81,9 @@
                       <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-green">Déposer vos réponses</button><a/></td>
                       {% elif user_profile == "inspect" %}
                       <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-green">Consulter les réponses</button><a/></td>
+                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="fe fe-inbox btn-teal" data-toggle="tooltip" title="Voir les réponses dans mon navigateur windows" ></button><a/></td>
                       {% endif %}
-                      <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="btn btn-primary btn-yellow">Version word</button><a/></td>
+                      <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="btn btn-primary btn-yellow" data-toggle="tooltip" title="Récupérer le questionnaire au format word" >Version word</button><a/></td>
                     </tr>
                   </tbody>
                 </table>
