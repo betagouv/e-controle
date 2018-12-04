@@ -80,8 +80,8 @@
                       {% if user_profile == "edit" %}
                       <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-blue">Déposer et consulter vos réponses</button><a/></td>
                       {% elif user_profile == "inspect" %}
-                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="fe fe-eye btn btn-primary btn-blue" data-toggle="tooltip" title="Consulter les réponses sur E-contrôle"></button></button><a/></td>
-                      <td class="w-1"><a href="https://github.com/betagouv/e-controle/blob/feature/update-texts/ecc/static/img/tableau%20de%20suivi%20Q1.xlsx"><button type="submit" class="fe fe-folder btn btn-primary btn-yellow" data-toggle="tooltip" title="Explorer les réponses dans mon navigateur windows"></button></button><a/></td
+                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="fe fe-eye btn btn-primary btn-blue" data-toggle="tooltip" title="Consulter les réponses sur E-contrôle"></button><a/></td>
+                      <td class="w-1"><a href="https://github.com/betagouv/e-controle/blob/feature/update-texts/ecc/static/img/tableau%20de%20suivi%20Q1.xlsx"><button type="submit" class="fe fe-folder btn btn-primary btn-yellow" data-toggle="tooltip" title="Explorer les réponses dans mon navigateur windows"></button><a/></td
                       {% endif %}
                       <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button><a/></td>
                     </tr>
