@@ -45,10 +45,10 @@
                 <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-check-square"></i> Questionnaires</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="{% url 'tableau_suvi' %}" class="nav-link"><i class="fe-bar-chart"></i> Tableau de suivi</a>
+                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe-bar-chart"></i>Tableau de suivi</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="{% url 'coordonnees' %}" class="nav-link"><i class="fe fe-at-sign"></i> Coordonnées</a>
+                <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
               <li class="nav-item">
                 <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
@@ -79,7 +79,7 @@
                       <td>{{ questionnaire.description }}</td>
                       {% if user_profile == "edit" %}
                       <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-green">Déposer vos réponses</button><a/></td>
-                      {% if user_profile == "inspect" %}
+                      {% elif user_profile == "inspect" %}
                       <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-green">Consulter les réponses</button><a/></td>
                       {% endif %}
                       <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="btn btn-primary btn-yellow">Version word</button><a/></td>
