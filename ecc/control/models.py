@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from filer.fields.file import FilerFileField
 from mptt.models import MPTTModel, TreeForeignKey
@@ -29,6 +30,10 @@ class Questionnaire(OrderedModel):
         ordering = ('order',)
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
+
+    @property
+    def url(self):
+        return reverse('questionnaire-detail', args=[self.id])
 
     def __str__(self):
         return self.title
