@@ -83,28 +83,28 @@
                       {% if user_profile == "edit" %}
                       <td class="w-1">
                         <a href="{{ questionnaire.url }}">
-                          <button type="submit" class="btn btn-primary btn-blue">Déposer et consulter vos réponses</button>
+                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
                         <a/>
                       </td>
                       <td class="w-1">
                         <a href="#">
-                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button>
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer</button>
                         <a/>
                       </td>
                       {% elif user_profile == "inspect" %}
                       <td class="w-1">
-                        <a href="{{ questionnaire.get_absolute_url }}">
-                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" data-toggle="tooltip" title="Consulter les réponses sur E-contrôle"></button>
+                        <a href="{{ questionnaire.url }}">
+                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>
                         <a/>
                       </td>
                       <td class="w-1">
-                        <a href="https://github.com/betagouv/e-controle/blob/feature/update-texts/ecc/static/img/tableau%20de%20suivi%20Q1.xlsx">
-                          <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" data-toggle="tooltip" title="Explorer les réponses dans mon navigateur windows" ></button>
+                        <a href="#">
+                          <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
                         </a>
                       </td>
                       <td class="w-1">
-                        <a href="questionnaire1.doc">
-                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button>
+                        <a href="#">
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer</button>
                         <a/>
                       </td>
                       {% endif %}
