@@ -39,12 +39,13 @@
           <div class="col-lg order-lg-first">
             <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
               <li class="nav-item">
-                <a href="{% url 'accueil' %}" class="nav-link active" data-toggle="dropdown"><i class="fe fe-check-square"></i> Questionnaires</a>
+                <a href="#" class="nav-link active" data-toggle="dropdown"><i class="fe fe-check-square"></i>Questionnaires</a>
                 <div class="dropdown-menu dropdown-menu-arrow">
-                      <a href="{% url 'accueil' %}" class="dropdown-item ">Liste des questionnaires</a>
-                      <a href="{% url 'questionnaire/4' %}" class="dropdown-item ">Questionnaire 1</a>
-                      <a href="{% url 'questionnaire/7' %}" class="dropdown-item ">Questionnaire 2</a>
-                    </div>
+                  <a href="{% url 'questionnaire-list' %}" class="dropdown-item ">Liste des questionnaires</a>
+                  {% for questionnaire in questionnaires %}
+                  <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title }}</a>
+                  {% endfor %}
+                </div>
               </li>
               <li class="nav-item dropdown">
                 <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
@@ -80,9 +81,32 @@
                     <tr>
                       <td>{{ questionnaire.description }}</td>
                       {% if user_profile == "edit" %}
-                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary btn-blue">Déposer et consulter vos réponses</button><a/></td> <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button><a/></td>
+                      <td class="w-1">
+                        <a href="{{ questionnaire.url }}">
+                          <button type="submit" class="btn btn-primary btn-blue">Déposer et consulter vos réponses</button>
+                        <a/>
+                      </td>
+                      <td class="w-1">
+                        <a href="#">
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button>
+                        <a/>
+                      </td>
                       {% elif user_profile == "inspect" %}
-                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="fe fe-eye btn btn-primary btn-blue" data-toggle="tooltip" title="Consulter les réponses sur E-contrôle"></button><a/></td> <td class="w-1"><a href="https://github.com/betagouv/e-controle/blob/feature/update-texts/ecc/static/img/tableau%20de%20suivi%20Q1.xlsx"><button type="submit" class="fe fe-folder btn btn-primary btn-yellow" data-toggle="tooltip" title="Explorer les réponses dans mon navigateur windows" ></button><a/></a> <td class="w-1"><a href="questionnaire1.doc"><button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button><a/></
+                      <td class="w-1">
+                        <a href="{{ questionnaire.get_absolute_url }}">
+                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" data-toggle="tooltip" title="Consulter les réponses sur E-contrôle"></button>
+                        <a/>
+                      </td>
+                      <td class="w-1">
+                        <a href="https://github.com/betagouv/e-controle/blob/feature/update-texts/ecc/static/img/tableau%20de%20suivi%20Q1.xlsx">
+                          <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" data-toggle="tooltip" title="Explorer les réponses dans mon navigateur windows" ></button>
+                        </a>
+                      </td>
+                      <td class="w-1">
+                        <a href="questionnaire1.doc">
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" data-toggle="tooltip" title="Récupérer le questionnaire au format word" ></button>
+                        <a/>
+                      </td>
                       {% endif %}
                     </tr>
                   </tbody>
