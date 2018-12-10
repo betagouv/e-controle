@@ -5,6 +5,8 @@ from django.urls import path, include
 
 from . import views as ecc_views
 from control import views as control_views
+from magicauth import views as magicauth_views
+
 
 urlpatterns = [
     path('', ecc_views.login, name='login'),
@@ -12,6 +14,8 @@ urlpatterns = [
     path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
     path('contacts/', ecc_views.contacts, name='contacts'),
     path('suivi/', ecc_views.dashboard, name='dashboard'),
+    path('login/', magicauth_views.magic_link, name='magicauth-login'),
+    path('email-ok/', magicauth_views.email_sent, name='magicauth-email-sent'),
     path('admin/', admin.site.urls),
 ]
 
