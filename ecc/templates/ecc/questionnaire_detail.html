@@ -7,7 +7,7 @@
       <div class="container">
         <div class="d-flex">
           <a class="header-brand" href="{% url 'login' %}">
-            <img src="{% static "img/logo.png" %}" class="header-brand-img" alt="logo">
+            <img src="{% static "img/logo.jpg" %}" class="header-brand-img" alt="logo">
           </a>
           <div class="d-flex order-lg-2 ml-auto">
             <div class="dropdown">
@@ -39,19 +39,22 @@
           <div class="col-lg order-lg-first">
             <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
               <li class="nav-item">
-                <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-home"></i> Accueil</a>
+                <a href="#" class="nav-link active" data-toggle="dropdown"><i class="fe fe-check-square"></i>Questionnaires</a>
+                <div class="dropdown-menu dropdown-menu-arrow">
+                  <a href="{% url 'questionnaire-list' %}" class="dropdown-item ">Liste des questionnaires</a>
+                  {% for questionnaire in questionnaires %}
+                  <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title }}</a>
+                  {% endfor %}
+                </div>
               </li>
               <li class="nav-item dropdown">
-                <a href="{% url 'questionnaire-list' %}" class="nav-link active"><i class="fe fe-check-square"></i> Questionnaires</a>
+                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-tag"></i> Historiques</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-at-sign"></i> Coordonnées</a>
+                <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
+                <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
               </li>
             </ul>
           </div>
@@ -102,7 +105,7 @@
                         <td class="rows p-0">
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
-                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse"  style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
+                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
                                 <!-- TODO : Tags dynamique -->
                                 <div class="tags">
@@ -127,19 +130,20 @@
                                 <div class="form-group">
                                     <div class="form-label">Fichiers</div>
                                     <ul>
-                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon">{% if user_profile == "edit" %}<i class="fe fe-trash">{% endif %}</i></a></li>
-                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon">{% if user_profile == "edit" %}<i class="fe fe-trash">{% endif %}</i></a></li>
+                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></li></a></li
+                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></li></a></li
+                                      </div>
                                     </ul>
                                 </div>
                                 {% endif %}
                                 {% if user_profile == "edit" %}
                                 <div class="form-group">
-                                    <div class="form-label">Ajouter un fichier</div>
+                                    <div class="form-label">Déposer vos réponses</div>
                                     <div class="row">
                                     <div class="col-10">
                                       <div class="custom-file">
                                         <input type="file" class="custom-file-input" name="example-file-input-custom">
-                                        <label class="custom-file-label">Choisir un fichier</label>
+                                        <label class="custom-file-label">Choisir un ou plusieurs fichiers</label>
                                       </div>
                                     </div>
                                       <button type="submit" class="btn">Ajouter</button>
@@ -150,9 +154,9 @@
                               <div class="form-group">
                                 <div class="custom-switches-stacked">
                                     <label class="custom-switch">
-                                      <input type="radio" name="option" value="1" class="custom-switch-input">
+                                      <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
                                       <span class="custom-switch-indicator"></span>
-                                      <span class="custom-switch-description">Dépôt terminé</span>
+                                      <span class="custom-switch-description">Nous n'avons pas d'autres documents à déposer pour cette question.</span>
                                     </label>
                                 </div>
                               </div>
@@ -160,7 +164,15 @@
                                 <div class="form-group">
                                   <label class="form-label">Commentaire</label>
                                   {% if user_profile == "edit" %}
-                                  <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Votre réponse..."></textarea>
+                                  <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
+                                  {% else %}
+                                  <p>
+                                    La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.
+                                  </p>
+                                  {% endif %}
+
+                                  {% if user_profile == "edit" %}
+                                  <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
                                   {% else %}
                                   <p>
                                     La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.

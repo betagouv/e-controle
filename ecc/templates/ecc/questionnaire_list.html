@@ -7,7 +7,7 @@
       <div class="container">
         <div class="d-flex">
           <a class="header-brand" href="{% url 'login' %}">
-            <img src="{% static "img/logo.png" %}" class="header-brand-img" alt="logo">
+            <img src="{% static "img/logo.jpg" %}" class="header-brand-img" alt="logo">
           </a>
           <div class="d-flex order-lg-2 ml-auto">
             <div class="dropdown">
@@ -39,19 +39,22 @@
           <div class="col-lg order-lg-first">
             <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
               <li class="nav-item">
-                <a href="{% url 'questionnaire-list' %}" class="nav-link active"><i class="fe fe-home"></i> Accueil</a>
+                <a href="#" class="nav-link active" data-toggle="dropdown"><i class="fe fe-check-square"></i>Questionnaires</a>
+                <div class="dropdown-menu dropdown-menu-arrow">
+                  <a href="{% url 'questionnaire-list' %}" class="dropdown-item ">Liste des questionnaires</a>
+                  {% for questionnaire in questionnaires %}
+                  <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title }}</a>
+                  {% endfor %}
+                </div>
               </li>
               <li class="nav-item dropdown">
-                <a href="{% url 'questionnaire-list' %}" class="nav-link"><i class="fe fe-check-square"></i> Questionnaires</a>
+                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-tag"></i> Historiques</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a href="#" class="nav-link"><i class="fe fe-at-sign"></i> Coordonnées</a>
+                <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
+                <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
               </li>
             </ul>
           </div>
@@ -77,8 +80,34 @@
                   <tbody>
                     <tr>
                       <td>{{ questionnaire.description }}</td>
-                      <td class="w-1"><a href="{% url 'questionnaire-detail' questionnaire.id %}"><button type="submit" class="btn btn-primary">Accéder</button><a/></td>
-                      <td class="w-1"><a /"><button type="submit" class="btn">Télécharger le questionnaire</button><a/></td>
+                      {% if user_profile == "edit" %}
+                      <td class="w-1">
+                        <a href="{{ questionnaire.url }}">
+                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
+                        <a/>
+                      </td>
+                      <td class="w-1">
+                        <a href="#">
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer</button>
+                        <a/>
+                      </td>
+                      {% elif user_profile == "inspect" %}
+                      <td class="w-1">
+                        <a href="{{ questionnaire.url }}">
+                          <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>
+                        <a/>
+                      </td>
+                      <td class="w-1">
+                        <a href="#">
+                          <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
+                        </a>
+                      </td>
+                      <td class="w-1">
+                        <a href="#">
+                          <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer le questionnaire</button>
+                        <a/>
+                      </td>
+                      {% endif %}
                     </tr>
                   </tbody>
                 </table>
@@ -95,7 +124,7 @@
     <div class="row align-items-center flex-row-reverse">
       <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
         <img src="{% static "img/logo-cc.jpg" %}" class="img col-3" alt="logo-cc">
-        E-contrôle. Version Bêta. <a href="#">Cour des comptes / Chambres régionale et territoriale des comptes.</a>
+        E-contrôle. Version Bêta.  <a href="#">Cour des comptes / Chambres régionale et territoriale des comptes.</a>
       </div>
     </div>
   </div>
