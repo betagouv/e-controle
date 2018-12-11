@@ -15,7 +15,7 @@ urlpatterns = [
     path('contacts/', ecc_views.contacts, name='contacts'),
     path('suivi/', ecc_views.dashboard, name='dashboard'),
     path('login/', magicauth_views.magic_link, name='magicauth-login'),
-    path('email-ok/', magicauth_views.email_sent, name='magicauth-email-sent'),
+    path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
     path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
     path('admin/', admin.site.urls),
 ]
