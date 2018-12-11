@@ -18,7 +18,7 @@ class MagicLinkView(generic.FormView):
     template_name = "ecc/login.html"
 
     def form_valid(self, form):
-        form.send_email()
+        form.send_email(self.request)
         return super().form_valid(form)
 
 

@@ -23,7 +23,7 @@ class EmailForm(forms.Form):
         token = MagicToken.objects.create(user=user)
         return token
 
-    def send_email(self):
+    def send_email(self, request):
         user_email = self.cleaned_data['email']
         user = User.objects.get(email=user_email)
         token = self.create_token(user)
@@ -34,6 +34,7 @@ class EmailForm(forms.Form):
         context = {
             'token': token,
             'user': user,
+            'site': request.site,
         }
         text_message = loader.render_to_string(text_template, context)
         html_message = loader.render_to_string(html_template, context)

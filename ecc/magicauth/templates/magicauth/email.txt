@@ -1,3 +1,1 @@
-Envoie ok
-{{ user }}
-{{ token }}
+Votre lien de connection:  http//{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
