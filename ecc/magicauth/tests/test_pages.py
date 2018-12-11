@@ -1,7 +1,9 @@
+from datetime import timedelta
 from pytest import mark
 
 from django.core import mail
 from django.shortcuts import reverse
+from django.utils import timezone
 
 from magicauth.models import MagicToken
 
@@ -50,3 +52,58 @@ def test_posting_email_for_valid_existing_user_created_token(client):
     client.post(url, data=data)
     count_after = MagicToken.objects.count()
     assert count_after == count_before + 1
+
+
+def test_opening_magic_link_with_valid_token_redirects(client):
+    token = factories.MagicTokenFactory()
+    url = reverse('magicauth-validate-token', args=[token.key])
+    response = client.get(url)
+    assert response.status_code == 302
+
+
+def test_token_is_removed_after_visiting_magic_link(client):
+    token = factories.MagicTokenFactory()
+    url = reverse('magicauth-validate-token', args=[token.key])
+    count_before = MagicToken.objects.count()
+    client.get(url)
+    count_after = MagicToken.objects.count()
+    assert count_after == count_before - 1
+
+
+def test_duplicate_token_for_same_user_is_removed_after_visiting_magic_link(client):
+    token = factories.MagicTokenFactory()
+    duplicate = factories.MagicTokenFactory(user=token.user)
+    url = reverse('magicauth-validate-token', args=[token.key])
+    client.get(url)
+    assert duplicate not in MagicToken.objects.all()
+
+
+def test_visiting_magic_link_triggers_login(client):
+    token = factories.MagicTokenFactory()
+    url = reverse('magicauth-validate-token', args=[token.key])
+    client.get(url)
+    assert '_auth_user_id' in client.session
+
+
+def test_unknown_token_raise_404(client):
+    url = reverse('magicauth-validate-token', args=['unknown-token'])
+    response = client.get(url)
+    assert response.status_code == 404
+
+
+def test_expired_token_raise_404(client):
+    token = factories.MagicTokenFactory()
+    token.created = timezone.now() - timedelta(days=1)
+    token.save()
+    url = reverse('magicauth-validate-token', args=[token.key])
+    response = client.get(url)
+    assert response.status_code == 404
+
+
+def test_expired_token_is_deleted(client):
+    token = factories.MagicTokenFactory()
+    token.created = timezone.now() - timedelta(days=1)
+    token.save()
+    url = reverse('magicauth-validate-token', args=[token.key])
+    client.get(url)
+    assert token not in MagicToken.objects.all()

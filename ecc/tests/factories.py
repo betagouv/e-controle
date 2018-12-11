@@ -20,3 +20,11 @@ class UserFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = get_user_model()
+
+
+@register
+class MagicTokenFactory(factory.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'magicauth.MagicToken'
