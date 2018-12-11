@@ -27,3 +27,9 @@ On peut utiliser le fichier d'example comme ceci:
     cp .env.sample .env
 
 Les variables d'environnement sont automatiquement intégrées au process uWSGI via le fichier `ecc/wsgi.py`.
+
+## Virtialenv
+
+Pour intégrer ces variable dans le virtalenv, on peu itiliser le script `postactivate` qui est lancé après l'activation du virtualenv.
+
+    echo 'set -a; source /project/folder/.env; set +a' >> /path/to/virtualenv/bin/postactivate
