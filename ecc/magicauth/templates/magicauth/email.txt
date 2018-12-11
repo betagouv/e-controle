@@ -1,1 +1,13 @@
-Votre lien de connection:  http//{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
+Bonjour {{ user.first_name }} {{ user.last_name }},
+
+Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion". Ce lien sera actif 5 minutes.
+
+Votre lien de connection:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
+
+Ce lien est unique, temporaire et réservé à votre compte personnel. Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email.
+
+Pour demander l'accès à une autre personne, veuillez motiver votre demande directement en répondant à cet email.
+
+Merci beaucoup,
+
+L'équipe d'E-Contrôle
