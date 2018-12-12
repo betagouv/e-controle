@@ -48,3 +48,4 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 @admin.register(ResponseFile)
 class ResponseFileAdmin(admin.ModelAdmin):
     list_display = ('id', '__str__')
+    readonly_fields = ('question', 'file')
