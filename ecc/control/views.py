@@ -1,7 +1,7 @@
-from django.views.generic import ListView, DetailView
+from django.http import JsonResponse
+from django.views.generic import ListView, DetailView, CreateView
 
-
-from .models import Control, Questionnaire, Theme
+from .models import Control, Questionnaire, Theme, ResponseFile, Question
 
 
 class QuestionnaireList(ListView):
@@ -36,5 +36,19 @@ class QuestionnaireDetail(DetailView):
         return context
 
 
+class UploadResponseFileView(CreateView):
+    model = ResponseFile
+    fields = ('file',)
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.question = Question.objects.first()
+        self.object.save()
+        data = {'status': 'success'}
+        response = JsonResponse(data)
+        return response
+
+
+upload_response_file = UploadResponseFileView.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()

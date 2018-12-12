@@ -39,6 +39,7 @@ class Questionnaire(OrderedModel):
         return self.title
 
 
+
 class Theme(MPTTModel):
     title = models.CharField("titre", max_length=255)
     parent = TreeForeignKey(
@@ -79,3 +80,14 @@ class QuestionFile(OrderedModel):
     class Meta:
         verbose_name = 'Fichier Attaché'
         verbose_name_plural = 'Fichiers Attachés'
+
+
+class ResponseFile(models.Model):
+    question = models.ForeignKey(
+        to='Question', verbose_name='question', related_name='response_files',
+        on_delete=models.CASCADE)
+    file = models.FileField(verbose_name="fichier", upload_to="reponses")
+
+    class Meta:
+        verbose_name = 'Fichier Réponse Attaché'
+        verbose_name_plural = 'Fichiers Réponse Attachés'

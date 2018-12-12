@@ -4,7 +4,7 @@ from mptt.admin import DraggableMPTTAdmin
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
-from .models import Control, Questionnaire, Theme, Question, QuestionFile
+from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 
 
 class QuestionnaireInline(OrderedTabularInline):
@@ -42,3 +42,8 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
+
+
+@admin.register(ResponseFile)
+class ResponseFileAdmin(admin.ModelAdmin):
+    list_display = ('id', '__str__')
