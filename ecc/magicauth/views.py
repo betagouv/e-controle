@@ -1,12 +1,13 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.auth import login
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
-from django.conf import settings
 
 from .forms import EmailForm
 from .models import MagicToken
@@ -34,6 +35,8 @@ class ValidateTokenView(generic.RedirectView):
         return token
 
     def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect(settings.LOGIN_REDIRECT_URL)
         token_key = kwargs.get('key')
         token = self.get_valid_token(token_key)
         login(self.request, token.user)
