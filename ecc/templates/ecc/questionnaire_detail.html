@@ -139,15 +139,14 @@
                                 {% if user_profile == "edit" %}
                                 <div class="form-group">
                                     <div class="form-label">Déposer vos réponses</div>
-                                    <div class="row">
-                                    <div class="col-10">
-                                      <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="example-file-input-custom">
-                                        <label class="custom-file-label">Choisir un ou plusieurs fichiers</label>
+                                    <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
+                                      {% csrf_token %}
+                                      <div class="dz-message" data-dz-message><span>Déposer vos fichiers</span></div>
+                                      <input type="hidden" id="idQuestionBulletNumber" name="question_bullet_number" value="{{ forloop.parentloop.counter }}.{{ forloop.counter }}">
+                                      <div class="fallback">
+                                        <input name="file" type="file" multiple />
                                       </div>
-                                    </div>
-                                      <button type="submit" class="btn">Ajouter</button>
-                                    </div>
+                                    </form>
                                 </div>
                                 {% endif %}
                               {% if user_profile == "edit" %}
