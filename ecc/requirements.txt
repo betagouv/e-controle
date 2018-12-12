@@ -12,4 +12,8 @@ django-ordered-model
 django-mptt
 django-environ
 django-tabler
+pytest
+pytest-cov
+pytest-django
+pytest-factoryboy
 python-dotenv
