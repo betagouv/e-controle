@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'control',
     'magicauth',
+    'dropfiles',
 ]
 
 
@@ -107,6 +108,16 @@ EMAIL_HOST = os.environ.get('MAILGUN_SMTP_SERVER', '')
 EMAIL_PORT = os.environ.get('MAILGUN_SMTP_PORT', '')
 EMAIL_HOST_USER = os.environ.get('MAILGUN_SMTP_LOGIN', '')
 EMAIL_HOST_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD', '')
+
+
+FILER_STORAGES = {
+    'public': {
+        'main': {
+            'UPLOAD_TO': 'control.file_path.get_file_path',
+        },
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
