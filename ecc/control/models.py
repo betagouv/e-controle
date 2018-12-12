@@ -5,6 +5,8 @@ from filer.fields.file import FilerFileField
 from mptt.models import MPTTModel, TreeForeignKey
 from ordered_model.models import OrderedModel
 
+from .upload_path import response_file_path
+
 
 class Control(models.Model):
     title = models.CharField("title", max_length=255)
@@ -84,9 +86,9 @@ class QuestionFile(OrderedModel):
 
 class ResponseFile(models.Model):
     question = models.ForeignKey(
-        to='Question', verbose_name='question', related_name='response_files',
+        to='Question', verbose_name='question', related_name='question',
         on_delete=models.CASCADE)
-    file = models.FileField(verbose_name="fichier", upload_to="reponses")
+    file = models.FileField(verbose_name="fichier", upload_to=response_file_path)
 
     class Meta:
         verbose_name = 'Fichier Réponse Attaché'
