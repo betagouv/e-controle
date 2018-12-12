@@ -83,21 +83,22 @@ class Question(OrderedModel):
 
 class QuestionFile(OrderedModel):
     question = models.ForeignKey(
-        to='Question', verbose_name='question', related_name='files', on_delete=models.CASCADE)
+        to='Question', verbose_name='question', related_name='question_files',
+        on_delete=models.CASCADE)
     file = FilerFileField(verbose_name="fichier", on_delete=models.CASCADE)
     order_with_respect_to = 'question'
 
     class Meta:
-        verbose_name = 'Fichier Attaché'
-        verbose_name_plural = 'Fichiers Attachés'
+        verbose_name = 'Question: Fichier Attaché'
+        verbose_name_plural = 'Question: Fichiers Attachés'
 
 
 class ResponseFile(models.Model):
     question = models.ForeignKey(
-        to='Question', verbose_name='question', related_name='question',
+        to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)
     file = models.FileField(verbose_name="fichier", upload_to=response_file_path)
 
     class Meta:
-        verbose_name = 'Fichier Réponse Attaché'
-        verbose_name_plural = 'Fichiers Réponse Attachés'
+        verbose_name = 'Réponse: Fichier Attaché'
+        verbose_name_plural = 'Réponse: Fichiers Attachés'
