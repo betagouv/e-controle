@@ -1,3 +1,4 @@
+from django import forms
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, CreateView
 
@@ -41,8 +42,13 @@ class UploadResponseFileView(CreateView):
     fields = ('file',)
 
     def form_valid(self, form):
+        try:
+            numbering = form.data['question_bullet_number']
+        except KeyError:
+            raise forms.ValidationError("Question bullet number was missing on file upload")
         self.object = form.save(commit=False)
         self.object.question = Question.objects.first()
+        self.object.question_numbering = numbering
         self.object.save()
         data = {'status': 'success'}
         response = JsonResponse(data)

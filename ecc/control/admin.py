@@ -9,22 +9,23 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile, Respo
 
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
-    fields = ('title', 'description', 'end_date', 'move_up_down_links')
+    fields = ('title', 'reference_code', 'description', 'end_date', 'move_up_down_links')
     readonly_fields = ('order', 'move_up_down_links')
     extra = 1
 
 
 @admin.register(Control)
 class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('title',)
-    search_fields = ('title', 'questionnaires__title', 'questionnaires__description')
+    list_display = ('title', 'reference_code')
+    search_fields = (
+        'title', 'reference_code,' 'questionnaires__title', 'questionnaires__description')
     inlines = (QuestionnaireInline, )
 
 
 @admin.register(Theme)
 class ThemeAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions', 'indented_title', 'title', 'questionnaire')
-    list_editable = ('title', 'questionnaire')
+    list_display = ('tree_actions', 'indented_title', 'title', 'reference_code', 'questionnaire')
+    list_editable = ('title', 'questionnaire', 'reference_code')
     search_fields = ('title',)
 
 

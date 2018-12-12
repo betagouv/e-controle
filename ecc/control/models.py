@@ -10,6 +10,9 @@ from .upload_path import response_file_path
 
 class Control(models.Model):
     title = models.CharField("title", max_length=255)
+    reference_code = models.CharField(
+        verbose_name="code de référence", max_length=255, blank=True,
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
 
     class Meta:
         verbose_name = "Controle"
@@ -21,6 +24,9 @@ class Control(models.Model):
 
 class Questionnaire(OrderedModel):
     title = models.CharField("titre", max_length=255)
+    reference_code = models.CharField(
+        verbose_name="code de référence", max_length=255, blank=True,
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
     control = models.ForeignKey(
@@ -41,9 +47,11 @@ class Questionnaire(OrderedModel):
         return self.title
 
 
-
 class Theme(MPTTModel):
     title = models.CharField("titre", max_length=255)
+    reference_code = models.CharField(
+        verbose_name="code de référence", max_length=255, blank=True,
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
     parent = TreeForeignKey(
         to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     questionnaire = models.ForeignKey(

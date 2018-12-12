@@ -142,6 +142,7 @@
                                     <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <div class="dz-message" data-dz-message><span>Déposer vos fichiers</span></div>
+                                      <input type="hidden" id="idQuestionBulletNumber" name="question_bullet_number" value="{{ forloop.parentloop.counter }}.{{ forloop.counter }}">
                                       <div class="fallback">
                                         <input name="file" type="file" multiple />
                                       </div>
