@@ -6,7 +6,6 @@ from django.urls import path, include
 from . import views as ecc_views
 from control import views as control_views
 from magicauth import views as magicauth_views
-from dropfiles import views as dropfiles_views
 
 
 urlpatterns = [
@@ -18,7 +17,6 @@ urlpatterns = [
     path('login/', magicauth_views.magic_link, name='magicauth-login'),
     path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
     path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
-    path('fileupload/', dropfiles_views.upload_files),
     path('upload/', control_views.upload_response_file, name='response-upload'),
     path('admin/', admin.site.urls),
 ]
