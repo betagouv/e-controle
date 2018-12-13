@@ -79,7 +79,6 @@
                     <tbody>
                     <tr data-id="{{ forloop.counter }}" class="theme-row">
                       <td><a href="#theme{{ forloop.counter }}">{{ forloop.counter }}. {{ theme.title }}</a></td>
-                      <td class="text-right"><span class="text-muted">43%</span></td>
                     </tr>
                    {% endfor %}
                     </tbody>
@@ -148,17 +147,6 @@
                                     </form>
                                 </div>
                                 {% endif %}
-                              {% if user.profile.is_audited %}
-                              <div class="form-group">
-                                <div class="custom-switches-stacked">
-                                    <label class="custom-switch">
-                                      <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input">
-                                      <span class="custom-switch-indicator"></span>
-                                      <span class="custom-switch-description">Nous n'avons pas d'autres documents à déposer pour cette question.</span>
-                                    </label>
-                                </div>
-                              </div>
-                              {% endif %}
                                 <div class="form-group">
                                   <label class="form-label">Commentaire</label>
                                   {% if user.profile.is_audited %}
