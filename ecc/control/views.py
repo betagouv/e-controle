@@ -2,7 +2,7 @@ from django import forms
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, CreateView
 
-from .models import Control, Questionnaire, Theme, ResponseFile, Question
+from .models import Questionnaire, Theme, ResponseFile, Question
 
 
 class QuestionnaireList(ListView):
@@ -10,8 +10,7 @@ class QuestionnaireList(ListView):
     context_object_name = 'questionnaires'
 
     def get_queryset(self):
-        control_id = Control.objects.first().id
-        return Questionnaire.objects.filter(control=control_id)
+        return Questionnaire.objects.filter(control=self.request.user.profile.control)
 
 
 class QuestionnaireDetail(DetailView):
@@ -23,7 +22,9 @@ class QuestionnaireDetail(DetailView):
         context = super().get_context_data(**kwargs)
         theme_list = Theme.objects.root_nodes().filter(
             questionnaire=self.object)
+        questionnaire_list = Questionnaire.objects.filter(control=self.request.user.profile.control)
         context['themes'] = theme_list
+        context['questionnaires'] = questionnaire_list
         return context
 
 
