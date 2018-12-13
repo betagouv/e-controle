@@ -33,3 +33,9 @@ Les variables d'environnement sont automatiquement intégrées au process uWSGI 
 Pour intégrer ces variable dans le virtalenv, on peu itiliser le script `postactivate` qui est lancé après l'activation du virtualenv.
 
     echo 'set -a; source /project/folder/.env; set +a' >> /path/to/virtualenv/bin/postactivate
+
+
+# Restaurer le dump de la base de données en dev
+
+    cd $CODE_DIR/deploy/
+    pg_restore --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc latest.dump
