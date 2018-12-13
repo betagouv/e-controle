@@ -37,8 +37,12 @@ class UploadResponseFileView(CreateView):
             numbering = form.data['question_bullet_number']
         except KeyError:
             raise forms.ValidationError("Question bullet number was missing on file upload")
+        try:
+            question_id = form.data['question_id']
+        except KeyError:
+            raise forms.ValidationError("Question ID was missing on file upload")
         self.object = form.save(commit=False)
-        self.object.question = Question.objects.first()
+        self.object.question_id = question_id
         self.object.question_numbering = numbering
         self.object.save()
         data = {'status': 'success'}

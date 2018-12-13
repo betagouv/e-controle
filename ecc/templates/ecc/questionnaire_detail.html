@@ -141,6 +141,7 @@
                                       {% csrf_token %}
                                       <div class="dz-message" data-dz-message><span>Déposer vos fichiers</span></div>
                                       <input type="hidden" id="idQuestionBulletNumber" name="question_bullet_number" value="{{ forloop.parentloop.counter }}.{{ forloop.counter }}">
+                                      <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}">
                                       <div class="fallback">
                                         <input name="file" type="file" multiple />
                                       </div>
