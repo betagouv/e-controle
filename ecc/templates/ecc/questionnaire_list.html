@@ -14,10 +14,8 @@
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                 <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
                 <span class="ml-2 d-none d-lg-block">
-                  <span class="text-default">Frédéric MARTIN</span>
-                  {% if user_profile == "edit" %}
-                  <small class="text-muted d-block mt-1">Ville de Chassieu</small>
-                  {% endif %}
+                  <span class="text-default">{{ user.first_name }} {{ user.last_name }}</span>
+                  <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
                 </span>
               </a>
             </div>
@@ -80,7 +78,7 @@
                   <tbody>
                     <tr>
                       <td>{{ questionnaire.description }}</td>
-                      {% if user_profile == "edit" %}
+                      {% if user.profile.is_audited %}
                       <td class="w-1">
                         <a href="{{ questionnaire.url }}">
                           <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
@@ -91,7 +89,7 @@
                           <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer</button>
                         <a/>
                       </td>
-                      {% elif user_profile == "inspect" %}
+                      {% elif user.profile.is_inspector %}
                       <td class="w-1">
                         <a href="{{ questionnaire.url }}">
                           <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>

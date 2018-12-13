@@ -12,12 +12,10 @@
           <div class="d-flex order-lg-2 ml-auto">
             <div class="dropdown">
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span class="avatar"></span>
+                <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
                 <span class="ml-2 d-none d-lg-block">
-                  <span class="text-default">Frédéric MARTIN</span>
-                  {% if user_profile == "edit" %}
-                  <small class="text-muted d-block mt-1">Ville de Chassieu</small>
-                  {% endif %}
+                  <span class="text-default">{{ user.first_name }} {{ user.last_name }}</span>
+                  <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
                 </span>
               </a>
             </div>
@@ -136,7 +134,7 @@
                                     </ul>
                                 </div>
                                 {% endif %}
-                                {% if user_profile == "edit" %}
+                                {% if user.profile.is_audited %}
                                 <div class="form-group">
                                     <div class="form-label">Déposer vos réponses</div>
                                     <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
@@ -149,7 +147,7 @@
                                     </form>
                                 </div>
                                 {% endif %}
-                              {% if user_profile == "edit" %}
+                              {% if user.profile.is_audited %}
                               <div class="form-group">
                                 <div class="custom-switches-stacked">
                                     <label class="custom-switch">
@@ -162,7 +160,7 @@
                               {% endif %}
                                 <div class="form-group">
                                   <label class="form-label">Commentaire</label>
-                                  {% if user_profile == "edit" %}
+                                  {% if user.profile.is_audited %}
                                   <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
                                   {% else %}
                                   <p>
@@ -170,7 +168,7 @@
                                   </p>
                                   {% endif %}
 
-                                  {% if user_profile == "edit" %}
+                                  {% if user.profile.is_audited %}
                                   <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
                                   {% else %}
                                   <p>
@@ -180,7 +178,7 @@
 
                                 </div>
 
-                                {% if user_profile == "edit" %}
+                                {% if user.profile.is_audited %}
                                 <div class="form-group">
                                  <div class="d-flex">
                                       <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
