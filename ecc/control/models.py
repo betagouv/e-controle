@@ -40,6 +40,10 @@ class Questionnaire(OrderedModel):
         verbose_name_plural = "Questionnaires"
 
     @property
+    def numbering(self):
+        return self.order + 1
+
+    @property
     def url(self):
         return reverse('questionnaire-detail', args=[self.id])
 
@@ -62,6 +66,10 @@ class Theme(MPTTModel):
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
 
+    @property
+    def numbering(self):
+        return self.tree_id
+
     def __str__(self):
         return self.title
 
@@ -76,6 +84,10 @@ class Question(OrderedModel):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+
+    @property
+    def numbering(self):
+        return self.order + 1
 
     def __str__(self):
         return self.description
