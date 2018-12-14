@@ -22,6 +22,12 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     inlines = (QuestionnaireInline, )
 
 
+@admin.register(Questionnaire)
+class QuestionnaireAdmin(OrderedModelAdmin):
+    list_display = ('title', 'end_date')
+    search_fields = ('title', 'description')
+
+
 @admin.register(Theme)
 class ThemeAdmin(DraggableMPTTAdmin):
     list_display = ('tree_actions', 'indented_title', 'title', 'reference_code', 'questionnaire')
