@@ -1,5 +1,8 @@
 {
   "name": "e-controle",
+  "scripts": {
+    "postdeploy": "heroku/init_database.sh"
+  },
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
