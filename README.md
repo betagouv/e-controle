@@ -7,7 +7,13 @@ Outil permettant de simplifier la relation entre un organisme de contrôle et de
 - Variables d'environnement dans le contexte docker necessaires :
   - SECRET_KEY : chaîne aléatoire de 50 caractères libres
   - DATABASE_URL : URL de connexion à la base de données. Format : postgres://user:password@ip:5432/db_name
+  - EMAIL_HOST
+  - EMAIL_PORT
+  - EMAIL_HOST_USER
+  - EMAIL_HOST_PASSWORD
 - Variable optionnel :
+  - EMAIL_USE_TLS 
+  - EMAIL_USE_SSL
   - PORT : par défaut 8000
   - DEBUG : pour mettre django en mode débug (par défaut False)
 
