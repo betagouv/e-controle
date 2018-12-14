@@ -47,12 +47,16 @@
                   {% endfor %}
                 </div>
               </li>
+              <!-- TODO: Tableau de suivi
               <li class="nav-item dropdown">
                 <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
               </li>
+--> 
+               <!-- TODO: Contacts
               <li class="nav-item dropdown">
                 <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
+-->
               <li class="nav-item">
                 <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
               </li>
@@ -118,9 +122,20 @@
                               <div class="card-options">
                                 <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                               </div>
-                            </div>
+                              </div>
                             <div class="card-body">
                                 {% if forloop.parentloop.counter|divisibleby:'3' %}
+                            <div class="card">
+                                <div class="card-status card-status-left bg-blue"></div>
+                                <div class="card-header">
+                                  <h3 class="card-title">Annexe(s) à la question</h3>
+                                </div>
+                                <div class="card-body">
+                                    <ul>
+                                      <li><a href="#">Annexe1.xls</a> <a href="#"></i></li></a></li
+                                      </div>
+                                    </ul> 
+                              </div>
                                 <div class="form-group">
                                     <div class="form-label">Fichiers</div>
                                     <ul>
@@ -151,7 +166,7 @@
                                 </div>
                                 {% endif %}
                                 <div class="form-group">
-                                  <label class="form-label">Commentaire</label>
+                                  <label class="form-label">Commentaire facultatif</label>
                                   {% if user.profile.is_audited %}
                                   <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
                                   {% else %}
