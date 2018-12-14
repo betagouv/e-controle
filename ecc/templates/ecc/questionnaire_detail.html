@@ -102,7 +102,7 @@
                       {% for question in theme.questions.all %}
                       <tr>
                         <td class="rows p-0">
-                          <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
+                          <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
                               <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
@@ -124,9 +124,8 @@
                                 <div class="form-group">
                                     <div class="form-label">Fichiers</div>
                                     <ul>
-                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></li></a></li
-                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></li></a></li
-                                      </div>
+                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></li></a></li>
+                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></li></a></li>
                                     </ul>
                                 </div>
                                 {% endif %}
