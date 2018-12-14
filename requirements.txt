@@ -5,7 +5,7 @@ pytest-cov
 django-debug-toolbar
 psycopg2-binary
 Jinja2
-uwsgi
+uwsgi==2.0.15
 django-model-utils
 django-filer
 django-ordered-model
