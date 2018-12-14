@@ -1,5 +1,6 @@
-from random import randint
+import binascii
+import os
 
 
-def generate_numeric_token():
-    return str("%06d" % randint(0, 999999))
+def generate_token():
+    return binascii.hexlify(os.urandom(20)).decode()

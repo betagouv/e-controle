@@ -115,6 +115,7 @@ EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 
 LOGIN_REDIRECT_URL = 'questionnaire-list'
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
