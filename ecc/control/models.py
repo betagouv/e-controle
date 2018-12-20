@@ -69,7 +69,7 @@ class Theme(MPTTModel):
 
 
 class Question(OrderedModel):
-    description = models.TextField("description", max_length=255)
+    description = models.TextField("description")
     theme = models.ForeignKey(
         'theme', verbose_name='thème', related_name='questions', on_delete=models.CASCADE)
     order_with_respect_to = 'theme'
