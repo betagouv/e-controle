@@ -33,7 +33,7 @@
               <div class="input-icon-addon">
                 <i class="fe fe-search"></i>
               </div>
---> 
+-->
             </form>
           </div>
           <div class="col-lg order-lg-first">
@@ -80,7 +80,7 @@
                   <table class="table card-table">
                     <tbody>
                     <tr data-id="{{ forloop.counter }}" class="theme-row">
-                      <td><a href="#theme{{ forloop.counter }}">{{ forloop.counter }}. {{ theme.title }}</a></td>
+                      <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
                     </tr>
                    {% endfor %}
                     </tbody>
@@ -91,10 +91,10 @@
           </div>
           <div class="col-lg-8">
             {% for theme in themes %}
-            <div class="card" id="theme{{ forloop.counter }}">
+            <div class="card" id="theme{{ theme.numbering }}">
               <div class="card-status card-status-top bg-blue"></div>
               <div class="card-header">
-                <h3 class="card-title">{{ forloop.counter }}. {{ theme.title }}</h3>
+                <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
               </div>
               <div class="table-responsive">
                   <table class="table card-table table-striped table-vcenter">
@@ -104,11 +104,11 @@
                         <td class="rows p-0">
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
-                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ forloop.parentloop.counter }}.{{ forloop.counter }}</span>
+                              <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
                                 <!-- TODO : Tags dynamique -->
                                 <div class="tags">
-                                  {% if forloop.parentloop.counter|divisibleby:'3' %}
+                                  {% if theme.numbering|divisibleby:'3' %}
                                   <span class="tag tag-azure">2 fichiers déposés
                                     <span class="tag-addon"><i class="fe fe-file"></i></span>
                                   </span>
@@ -120,13 +120,12 @@
                               </div>
                             </div>
                             <div class="card-body">
-                                {% if forloop.parentloop.counter|divisibleby:'3' %}
+                                {% if theme.numbering|divisibleby:'3' %}
                                 <div class="form-group">
                                     <div class="form-label">Fichiers</div>
                                     <ul>
                                       <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></li></a></li
                                       <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></li></a></li
-                                      </div>
                                     </ul>
                                 </div>
                                 {% endif %}
@@ -136,7 +135,6 @@
                                     <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
                                       {% csrf_token %}
                                       <div class="dz-message" data-dz-message><span>Déposer vos fichiers</span></div>
-                                      <input type="hidden" id="idQuestionBulletNumber" name="question_bullet_number" value="{{ forloop.parentloop.counter }}.{{ forloop.counter }}">
                                       <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}">
                                       <div class="fallback">
                                         <input name="file" type="file" multiple />
