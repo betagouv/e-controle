@@ -26,16 +26,16 @@
     <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
       <div class="container">
         <div class="row align-items-center">
+          <!-- TODO: Faire la recherche
           <div class="col-lg-3 ml-auto">
-            <!-- TODO: Faire la recherche
             <form class="input-icon my-3 my-lg-0">
               <input type="Search" class="form-control header-search" placeholder="Rechercher&hellip;" tabindex="1">
               <div class="input-icon-addon">
                 <i class="fe fe-search"></i>
               </div>
---> 
             </form>
           </div>
+          -->
           <div class="col-lg order-lg-first">
             <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
               <li class="nav-item">
@@ -47,16 +47,16 @@
                   {% endfor %}
                 </div>
               </li>
-                          <!-- TODO: Tableau de suivi
+              <!-- TODO: Tableau de suivi
               <li class="nav-item dropdown">
                 <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
               </li>
--->
-            <!-- TODO: Contact
+              -->
+              <!-- TODO: Contact
               <li class="nav-item dropdown">
                 <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
--->
+              -->
               <li class="nav-item">
                 <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
               </li>
@@ -83,7 +83,7 @@
                 <table class="table card-table table-striped table-vcenter">
                   <tbody>
                     <tr>
-                      <td>{{ questionnaire.description }}</td>
+                      <td>{{ questionnaire.description|linebreaks }}</td>
                       {% if user.profile.is_audited %}
                       <td class="w-1">
                         <a href="{{ questionnaire.url }}">

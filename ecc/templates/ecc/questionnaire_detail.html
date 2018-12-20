@@ -26,15 +26,15 @@
     <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
       <div class="container">
         <div class="row align-items-center">
+          <!-- TODO: Faire la recherche
           <div class="col-lg-3 ml-auto">
-            <!-- TODO: Faire la recherche
             <form class="input-icon my-3 my-lg-0">
               <input type="Search" class="form-control header-search" placeholder="Rechercher&hellip;" tabindex="1">
               <div class="input-icon-addon">
                 <i class="fe fe-search"></i>
               </div>
---> 
             </form>
+          -->
           </div>
           <div class="col-lg order-lg-first">
             <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
@@ -51,12 +51,12 @@
               <li class="nav-item dropdown">
                 <a href="{% url 'dashboard' %}" class="nav-link"><i class="fe fe-bar-chart"></i>Tableau de suivi</a>
               </li>
---> 
+              -->
                <!-- TODO: Contacts
               <li class="nav-item dropdown">
                 <a href="{% url 'contacts' %}" class="nav-link"><i class="fe fe-at-sign"></i>Coordonnées</a>
               </li>
--->
+              -->
               <li class="nav-item">
                 <a href="mailto:assistance@e-controle.beta.fr" class="nav-link"><i class="fe fe-help-circle"></i> Aide</a>
               </li>
@@ -109,54 +109,47 @@
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
                             <div class="card-header border-0">
                               <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
-                              <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">{{ question.description }}<br>
+                              <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
+                                  {{ question.description|linebreaks }}
                                 <!-- TODO : Tags dynamique -->
+                                {% if theme.numbering|divisibleby:'3' %}
                                 <div class="tags">
-                                  {% if forloop.parentloop.counter|divisibleby:'3' %}
-                                  <span class="tag tag-azure">2 fichiers déposés
+                                  <span class="tag tag-azure pull-left">2 fichiers déposés
                                     <span class="tag-addon"><i class="fe fe-file"></i></span>
                                   </span>
-                                  {% endif %}
                                 </div>
+                                {% endif %}
                               </div>
-                              <div class="card-options">
-                                <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                              </div>
+                            </div>
+                            <div class="card-options">
+                              <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                            </div>
                             <div class="card-body">
-                            {% if theme.numbering|divisibleby:'3' %}
                             <div class="card">
-                                <div class="card-status card-status-left bg-blue"></div>
-                                <div class="card-header">
-                                  <h3 class="card-title">Annexe(s) à la question</h3>
-                                </div>
-                                <div class="card-body">
-                                    <ul>
-                                      <li><a href="#">Annexe1.xls</a> <a href="#"></i></li></a></li
-                                      </div>
-                                    </ul> 
-                              </div>
+                                {% if theme.numbering|divisibleby:'3' %}
                                 <div class="form-group">
-                                    <div class="form-label">Fichiers</div>
+                                    <div class="form-label">Fichiers déjà déposés:</div>
                                     <ul>
-                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></li></a></li
-                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></li></a></li
-                                      </div>
+                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></a></li>
+                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></a></li>
                                     </ul>
                                 </div>
                                 {% endif %}
+                                {% if question.numbering|divisibleby:'2' %}
+                                <div class="form-group">
+                                    <div class="form-label">Fichier annexe à la question:</div>
+                                    <ul>
+                                      <li><a href="#">Annexe1.xls</a></li
+                                    </ul>
+                                </div>
+                                {% endif %}
+
                                 {% if user.profile.is_audited %}
                                 <div class="form-group">
                                     <div class="form-label">Déposer vos réponses</div>
                                     <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
                                       {% csrf_token %}
-                                      <div class="dz-message" data-dz-message class="alert alert-icon alert-danger" role="alert"><span> Quelques recommandations :
-                                        </span></div>
-                        <ol>
-                             <li>Glisser-déposer un ou plusieurs fichiers en même temps;</li>
-                             <!--    <li>Le titre de chaque document doit être court et inférieur à 10 caractères;</li>
-                             <li>La taille du fichier doit être inférieure à 50 mégaoctets;</li>
--->                                   
-</ol>
+                                      <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
                                       <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}">
                                       <div class="fallback">
                                         <input name="file" type="file" multiple />
@@ -183,7 +176,6 @@
                                   </div>
                                 </div>
                                 {% endif %}
-
                           </div>
 
                         </td>
