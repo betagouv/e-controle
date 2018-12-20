@@ -24,9 +24,6 @@ class Control(models.Model):
 
 class Questionnaire(OrderedModel):
     title = models.CharField("titre", max_length=255)
-    reference_code = models.CharField(
-        verbose_name="code de référence", max_length=255, blank=True,
-        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
     control = models.ForeignKey(
@@ -40,6 +37,10 @@ class Questionnaire(OrderedModel):
         verbose_name_plural = "Questionnaires"
 
     @property
+    def numbering(self):
+        return self.order + 1
+
+    @property
     def url(self):
         return reverse('questionnaire-detail', args=[self.id])
 
@@ -49,9 +50,6 @@ class Questionnaire(OrderedModel):
 
 class Theme(MPTTModel):
     title = models.CharField("titre", max_length=255)
-    reference_code = models.CharField(
-        verbose_name="code de référence", max_length=255, blank=True,
-        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
     parent = TreeForeignKey(
         to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     questionnaire = models.ForeignKey(
@@ -62,12 +60,16 @@ class Theme(MPTTModel):
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
 
+    @property
+    def numbering(self):
+        return self.tree_id
+
     def __str__(self):
         return self.title
 
 
 class Question(OrderedModel):
-    description = models.TextField("description", max_length=255)
+    description = models.TextField("description")
     theme = models.ForeignKey(
         'theme', verbose_name='thème', related_name='questions', on_delete=models.CASCADE)
     order_with_respect_to = 'theme'
@@ -76,6 +78,10 @@ class Question(OrderedModel):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+
+    @property
+    def numbering(self):
+        return self.order + 1
 
     def __str__(self):
         return self.description
