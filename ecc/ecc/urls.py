@@ -20,6 +20,7 @@ urlpatterns = [
     path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
     path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
     path('upload/', control_views.upload_response_file, name='response-upload'),
+    path('sendfile/', control_views.send_file, name='send-file'),
     path('admin/', admin.site.urls),
 ]
 

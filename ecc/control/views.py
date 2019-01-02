@@ -1,6 +1,9 @@
 from django import forms
 from django.http import JsonResponse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
+
+from sendfile import sendfile
 
 from .models import Questionnaire, Theme, ResponseFile, Question
 
@@ -28,7 +31,7 @@ class QuestionnaireDetail(DetailView):
         return context
 
 
-class UploadResponseFileView(CreateView):
+class UploadResponseFile(CreateView):
     model = ResponseFile
     fields = ('file',)
 
@@ -45,6 +48,13 @@ class UploadResponseFileView(CreateView):
         return response
 
 
-upload_response_file = UploadResponseFileView.as_view()
+class SendFile(View):
+    def get(self, request):
+        Question.objects.first()
+        return sendfile(request, '/TODO.pdf')
+
+
+upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+send_file = SendFile.as_view()

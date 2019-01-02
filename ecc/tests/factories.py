@@ -28,3 +28,38 @@ class MagicTokenFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = 'magicauth.MagicToken'
+
+
+@register
+class ControlFactory(factory.DjangoModelFactory):
+    title = factory.LazyFunction(faker.name)
+
+    class Meta:
+        model = 'control.Control'
+
+
+@register
+class QuestionnaireFactory(factory.DjangoModelFactory):
+    title = factory.LazyFunction(faker.name)
+    control = factory.SubFactory(ControlFactory)
+
+    class Meta:
+        model = 'control.Questionnaire'
+
+
+@register
+class ThemeFactory(factory.DjangoModelFactory):
+    title = factory.LazyFunction(faker.name)
+    questionnaire = factory.SubFactory(QuestionnaireFactory)
+
+    class Meta:
+        model = 'control.Theme'
+
+
+@register
+class QuestionFactory(factory.DjangoModelFactory):
+    description = factory.LazyFunction(faker.name)
+    theme = factory.SubFactory(ThemeFactory)
+
+    class Meta:
+        model = 'control.Question'
