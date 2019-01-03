@@ -104,6 +104,7 @@
                   <table class="table card-table table-striped table-vcenter">
                       <tbody>
                       {% for question in theme.questions.all %}
+                      {% with response_files=question.response_files.all %}
                       <tr>
                         <td class="rows p-0">
                           <div class="card card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
@@ -111,10 +112,9 @@
                               <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
                               <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
                                   {{ question.description|linebreaks }}
-                                <!-- TODO : Tags dynamique -->
-                                {% if theme.numbering|divisibleby:'3' %}
+                                {% if response_files %}
                                 <div class="tags">
-                                  <span class="tag tag-azure pull-left">2 fichiers déposés
+                                  <span class="tag tag-azure pull-left">{{ response_files.count }} fichier{{ response_files.count|pluralize }} déposé{{ response_files.count|pluralize }}
                                     <span class="tag-addon"><i class="fe fe-file"></i></span>
                                   </span>
                                 </div>
@@ -126,12 +126,13 @@
                             </div>
                             <div class="card-body">
                             <div class="card">
-                                {% if theme.numbering|divisibleby:'3' %}
+                                {% if response_files %}
                                 <div class="form-group">
-                                    <div class="form-label">Fichiers déjà déposés:</div>
+                                    <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
                                     <ul>
-                                      <li><a href="#">Graphique.xls</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></a></li>
-                                      <li><a href="#">Contrats.doc</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:57"></i></a></li>
+                                      {% for file in response_files %}
+                                      <li><a href="#">{{ file.file }}</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></a></li>
+                                      {% endfor %}
                                     </ul>
                                 </div>
                                 {% endif %}
@@ -180,6 +181,7 @@
 
                         </td>
                       </tr>
+                      {% endwith %}
                       {% endfor %}
                       </tbody>
                     </table>
