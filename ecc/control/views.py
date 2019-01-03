@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView
 
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, ResponseFile, ResponseFile
+from .models import Questionnaire, Theme, ResponseFile
 
 
 class QuestionnaireList(ListView):
