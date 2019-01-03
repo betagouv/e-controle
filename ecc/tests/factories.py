@@ -1,6 +1,7 @@
 import factory
 
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from pytest_factoryboy import register
 from faker import Factory as FakerFactory
@@ -63,3 +64,15 @@ class QuestionFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = 'control.Question'
+
+
+@register
+class ResponseFileFactory(factory.DjangoModelFactory):
+    question = factory.SubFactory(QuestionFactory)
+    file = SimpleUploadedFile(
+            name='test.pdf',
+            content=open('./tests/data/test.pdf', 'rb').read(),
+            content_type='application/pdf')
+
+    class Meta:
+        model = 'control.ResponseFile'

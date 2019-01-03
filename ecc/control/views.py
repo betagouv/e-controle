@@ -5,7 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView
 
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, ResponseFile, Question
+from .models import Questionnaire, Theme, ResponseFile, ResponseFile
 
 
 class QuestionnaireList(ListView):
@@ -49,9 +49,10 @@ class UploadResponseFile(CreateView):
 
 
 class SendFile(View):
+
     def get(self, request):
-        Question.objects.first()
-        return sendfile(request, '/TODO.pdf')
+        q2 = ResponseFile.objects.first()
+        return sendfile(request, q2.file.path)
 
 
 upload_response_file = UploadResponseFile.as_view()
