@@ -143,7 +143,8 @@ STATIC_URL = '/static/'
 # Collect static won't work if you haven't configured this
 # django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set
 #  the STATIC_ROOT setting to a filesystem path.
-STATIC_ROOT = '/var/ecc/static/'
+DEFAULT_STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

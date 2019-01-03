@@ -31,6 +31,9 @@
     "EMAIL_HOST_PASSWORD": {
       "required": true
     },
+    "DEFAULT_FROM_EMAIL": {
+      "required": true
+    },
   },
   "formation": {
     "web": {
