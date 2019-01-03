@@ -131,7 +131,7 @@
                                     <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
                                     <ul>
                                       {% for file in response_files %}
-                                      <li><a href="#">{{ file.file }}</a> <a href="#" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></a></li>
+                                      <li><a href="{{ file.url }}">{{ file.file }}</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="Julie Faro, 29/11/2018, 12:55"></i></a></li>
                                       {% endfor %}
                                     </ul>
                                 </div>

@@ -108,3 +108,7 @@ class ResponseFile(models.Model):
     class Meta:
         verbose_name = 'Réponse: Fichier Attaché'
         verbose_name_plural = 'Réponse: Fichiers Attachés'
+
+    @property
+    def url(self):
+        return reverse('send-response-file', args=[self.id])

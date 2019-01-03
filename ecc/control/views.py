@@ -2,6 +2,7 @@ from django import forms
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic.detail import SingleObjectMixin
 
 from sendfile import sendfile
 
@@ -48,14 +49,19 @@ class UploadResponseFile(CreateView):
         return response
 
 
-class SendFile(View):
+class SendFileMixin(SingleObjectMixin):
+    model = None
 
-    def get(self, request):
-        q2 = ResponseFile.objects.first()
-        return sendfile(request, q2.file.path)
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+        return sendfile(request, obj.file.path)
+
+
+class SendResponseFile(SendFileMixin, View):
+    model = ResponseFile
 
 
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
-send_file = SendFile.as_view()
+send_response_file = SendResponseFile.as_view()
