@@ -1,6 +1,5 @@
 import os
 import environ
-from pathlib import Path
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -8,7 +7,7 @@ env = environ.Env(
     EMAIL_USE_SSL=(bool, False),
 )
 
-BASE_DIR = Path('.').absolute()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -30,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -143,11 +144,15 @@ STATIC_URL = '/static/'
 # Collect static won't work if you haven't configured this
 # django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set
 #  the STATIC_ROOT setting to a filesystem path.
-STATIC_ROOT = '/var/ecc/static/'
+DEFAULT_STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# Want forever-cacheable files and compression support?
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 DEFAULT_MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

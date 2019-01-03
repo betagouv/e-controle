@@ -11,9 +11,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./ecc:/code
+      - .:/app
     ports:
-      - "8000:8000"
+      - "8080:8080"
     links:
       - postgres
     environment:

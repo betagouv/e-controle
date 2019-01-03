@@ -19,3 +19,4 @@ pytest-factoryboy
 python-dotenv
 django-annoying
 django-sendfile
+whitenoise
