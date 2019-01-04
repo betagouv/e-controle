@@ -21,12 +21,10 @@ WORKDIR /app
 
 RUN pip3 install -r requirements.txt
 
-COPY /docker-entrypoint.sh /
-COPY ./uwsgi.ini /
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x docker-entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["/docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
-CMD ["uwsgi", "--ini", "/uwsgi.ini"]
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
