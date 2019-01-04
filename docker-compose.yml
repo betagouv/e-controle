@@ -1,0 +1,21 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+     - POSTGRES_USER=ecc
+     - POSTGRES_PASSWORD=ecc
+     - POSTGRES_DB=ecc
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    links:
+      - postgres
+    environment:
+      - PORT=8080
+    image: ecc-django
