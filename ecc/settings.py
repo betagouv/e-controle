@@ -1,6 +1,5 @@
 import os
 import environ
-from pathlib import Path
 
 env = environ.Env(
     DEBUG=(bool, False),
@@ -8,7 +7,7 @@ env = environ.Env(
     EMAIL_USE_SSL=(bool, False),
 )
 
-BASE_DIR = Path('.').absolute()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
