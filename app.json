@@ -1,16 +1,10 @@
 {
 	"name": "e-controle",
 	"env": {
-		"HEROKU_APP_NAME": {
-			"required": true
-		},
-		"HEROKU_PARENT_APP_NAME": {
-			"required": true
-		},
-		"SECRET_KEY": {
-			"required": true
-		},
 		"STAGING_DATABASE_URL": {
+	      "required": true
+	    },
+		"SECRET_KEY": {
 			"required": true
 		},
 		"DEBUG": {
@@ -37,10 +31,10 @@
 			"quantity": 1
 		}
 	},
+	"scripts": {
+    	"postdeploy": "pg_dump $STAGING_DATABASE_URL | psql $DATABASE_URL && python manage.py migrate"
+  	},
 	"addons": [
 		"heroku-postgresql"
-	],
-	"buildpacks": [
-
 	]
 }
