@@ -290,13 +290,13 @@
                   <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td align="right">
-                        <img src="https://demo-e-controle.herokuapp.com/static/img/logo.jpg" width="140" class="img" alt="logo">
+                        <img src="https://demo-e-controle.herokuapp.com/static/img/e-controle.svg" width="140" class="img" alt="logo">
                       </td>
                     </tr>
                     <tr>
                       <td>
                         <p>Bonjour {{ user.first_name }} {{ user.last_name }},</p>
-                        <p>Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion". Ce lien sera actif 5 minutes.</p>
+                        <p>Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion" ou copier/coller le lien dans votre navigateur. Ce lien sera actif 15 minutes.</p>
                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
@@ -312,7 +312,13 @@
                             </tr>
                           </tbody>
                         </table>
-                        <p>Ce lien est unique, temporaire et réservé à votre compte personnel. Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email. </p>
+                         <label class="form-label">
+                         <strong>URL</strong> <span class="form-required">*</span>
+                      </label>
+                      <input name="url" type="text" class="form-control" value="https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}">
+                    </div>
+                    <p> </p>
+                        <p>Ce lien est <strong>unique, temporaire et réservé à votre compte personnel</strong>. Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email. </p>
                         <p>Pour demander l'accès à une autre personne, veuillez motiver votre demande directement en répondant à cet email.</p>
                         <p>Merci beaucoup,</p>
                         <p>L'équipe d'E-Contrôle</p>
