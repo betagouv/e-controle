@@ -24,13 +24,13 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(OrderedModelAdmin):
-    list_display = ('title', 'end_date')
+    list_display = ('numbering', 'title', 'end_date')
     search_fields = ('title', 'description')
 
 
 @admin.register(Theme)
 class ThemeAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions', 'indented_title', 'title', 'questionnaire')
+    list_display = ('tree_actions', 'indented_title', 'numbering', 'title', 'questionnaire')
     list_editable = ('title', 'questionnaire')
     search_fields = ('title',)
 
@@ -44,11 +44,15 @@ class QuestionFileInline(OrderedTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('id', 'description', 'theme', 'move_up_down_links')
+    list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
     list_editable = ('description', 'theme')
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
+
+    def more_details(self, instance):
+        return 'détails...'
+    more_details.short_description = 'détails'
 
 
 @admin.register(ResponseFile)

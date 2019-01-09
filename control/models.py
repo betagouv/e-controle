@@ -39,6 +39,7 @@ class Questionnaire(OrderedModel):
     @property
     def numbering(self):
         return self.order + 1
+    numbering.fget.short_description = 'Numérotation'
 
     @property
     def url(self):
@@ -63,6 +64,7 @@ class Theme(MPTTModel):
     @property
     def numbering(self):
         return self.tree_id
+    numbering.fget.short_description = 'Numérotation'
 
     def __str__(self):
         return self.title
@@ -82,6 +84,7 @@ class Question(OrderedModel):
     @property
     def numbering(self):
         return self.order + 1
+    numbering.fget.short_description = 'Numérotation'
 
     def __str__(self):
         return self.description
