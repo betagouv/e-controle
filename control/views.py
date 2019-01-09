@@ -24,8 +24,7 @@ class QuestionnaireDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        theme_list = Theme.objects.root_nodes().filter(
-            questionnaire=self.object)
+        theme_list = Theme.objects.filter(questionnaire=self.object)
         questionnaire_list = Questionnaire.objects.filter(control=self.request.user.profile.control)
         context['themes'] = theme_list
         context['questionnaires'] = questionnaire_list

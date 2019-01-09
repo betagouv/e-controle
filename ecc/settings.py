@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'model_utils',
     'easy_thumbnails',
     'filer',
-    'mptt',
     'ordered_model',
     'django_tabler',
     'django_extensions',

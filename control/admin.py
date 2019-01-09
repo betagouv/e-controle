@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from mptt.admin import DraggableMPTTAdmin
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
@@ -24,15 +23,17 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(OrderedModelAdmin):
-    list_display = ('numbering', 'title', 'end_date')
+    list_display = ('numbering', 'title', 'end_date', 'control')
     search_fields = ('title', 'description')
+    list_filter = ('control',)
 
 
 @admin.register(Theme)
-class ThemeAdmin(DraggableMPTTAdmin):
-    list_display = ('tree_actions', 'indented_title', 'numbering', 'title', 'questionnaire')
+class ThemeAdmin(OrderedModelAdmin):
+    list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
     list_editable = ('title', 'questionnaire')
     search_fields = ('title',)
+    list_filter = ('questionnaire',)
 
 
 class QuestionFileInline(OrderedTabularInline):

@@ -9,7 +9,6 @@ uwsgi
 django-model-utils
 django-filer
 django-ordered-model
-django-mptt
 django-environ
 django-tabler
 pytest

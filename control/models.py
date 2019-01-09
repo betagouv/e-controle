@@ -2,10 +2,20 @@ from django.db import models
 from django.urls import reverse
 
 from filer.fields.file import FilerFileField
-from mptt.models import MPTTModel, TreeForeignKey
 from ordered_model.models import OrderedModel
 
 from .upload_path import response_file_path
+
+
+class WithNumberingMixin(object):
+    """
+    Add an helper method for getting the numbering base on the order field.
+    """
+
+    @property
+    def numbering(self):
+        return self.order + 1
+    numbering.fget.short_description = 'Numérotation'
 
 
 class Control(models.Model):
@@ -22,7 +32,7 @@ class Control(models.Model):
         return self.title
 
 
-class Questionnaire(OrderedModel):
+class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
@@ -32,14 +42,9 @@ class Questionnaire(OrderedModel):
     order_with_respect_to = 'control'
 
     class Meta:
-        ordering = ('order',)
+        ordering = ('control', 'order')
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
-
-    @property
-    def numbering(self):
-        return self.order + 1
-    numbering.fget.short_description = 'Numérotation'
 
     @property
     def url(self):
@@ -49,28 +54,23 @@ class Questionnaire(OrderedModel):
         return self.title
 
 
-class Theme(MPTTModel):
+class Theme(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
-    parent = TreeForeignKey(
-        to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     questionnaire = models.ForeignKey(
         to='Questionnaire', verbose_name='questionnaire', related_name='themes',
         null=True, blank=True, on_delete=models.CASCADE)
+    order_with_respect_to = 'questionnaire'
 
     class Meta:
+        ordering = ('questionnaire', 'order')
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
-
-    @property
-    def numbering(self):
-        return self.tree_id
-    numbering.fget.short_description = 'Numérotation'
 
     def __str__(self):
         return self.title
 
 
-class Question(OrderedModel):
+class Question(OrderedModel, WithNumberingMixin):
     description = models.TextField("description")
     theme = models.ForeignKey(
         'theme', verbose_name='thème', related_name='questions', on_delete=models.CASCADE)
@@ -80,11 +80,6 @@ class Question(OrderedModel):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
-
-    @property
-    def numbering(self):
-        return self.order + 1
-    numbering.fget.short_description = 'Numérotation'
 
     def __str__(self):
         return self.description
