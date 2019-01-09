@@ -1,6 +1,6 @@
 Bonjour {{ user.first_name }} {{ user.last_name }},
 
-Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion". Ce lien sera actif 5 minutes.
+Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion". Ce lien sera actif 15 minutes.
 
 Votre lien de connection:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
 
