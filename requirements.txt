@@ -20,3 +20,4 @@ python-dotenv
 django-annoying
 django-sendfile
 whitenoise
+django-extensions

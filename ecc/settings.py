@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'mptt',
     'ordered_model',
     'django_tabler',
+    'django_extensions',
 
     'control',
     'magicauth',
