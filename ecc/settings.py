@@ -122,6 +122,7 @@ MAGICAUTH_FROM_EMAIL = DEFAULT_FROM_EMAIL
 MAGICAUTH_TOKEN_DURATION = 15 * 60
 
 LOGIN_REDIRECT_URL = 'questionnaire-list'
+LOGIN_URL = 'login'
 
 
 # Internationalization
