@@ -2,12 +2,11 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-from filer.fields.file import FilerFileField
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
 
-from .upload_path import response_file_path
+from .upload_path import question_file_path, response_file_path
 
 
 class WithNumberingMixin(object):
@@ -92,12 +91,16 @@ class QuestionFile(OrderedModel):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
-    file = FilerFileField(verbose_name="fichier", on_delete=models.CASCADE)
+    file = models.FileField(verbose_name="fichier", upload_to=question_file_path)
     order_with_respect_to = 'question'
 
     class Meta:
+        ordering = ('question', 'order')
         verbose_name = 'Question: Fichier Attaché'
         verbose_name_plural = 'Question: Fichiers Attachés'
+
+    def __str__(self):
+        return self.file.name
 
 
 class ResponseFile(TimeStampedModel):

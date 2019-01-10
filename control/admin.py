@@ -39,8 +39,8 @@ class ThemeAdmin(OrderedModelAdmin):
 class QuestionFileInline(OrderedTabularInline):
     model = QuestionFile
     max_num = 4
-    fields = ('file', 'order', 'move_up_down_links',)
-    readonly_fields = ('order', 'move_up_down_links',)
+    fields = ('file', 'order', 'move_up_down_links')
+    readonly_fields = ('order', 'move_up_down_links')
 
 
 @admin.register(Question)

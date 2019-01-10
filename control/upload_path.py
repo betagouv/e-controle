@@ -1,11 +1,35 @@
 
+class PathBuilder(object):
+
+    def __init__(self, file_object, filename):
+        self.file_object = file_object
+        self.filename = filename
+        self.control_folder = file_object.question.theme.questionnaire.control.reference_code or \
+            f'CONTROLE-{file_object.question.theme.questionnaire.control.id}'
+        self.theme_num = file_object.question.theme.numbering
+        self.theme_folder = f'THEME_{self.theme_num:02}'
+        self.questionaire_num = file_object.question.theme.questionnaire.numbering
+        self.questionnaire_folder = f'Q{self.questionaire_num:02}'
+        self.question_num = file_object.question.numbering
+        self.theme_path = f'{self.control_folder}/{self.questionnaire_folder}/{self.theme_folder}'
+
+    def get_response_file_path(self):
+        prefix = f'Q{self.questionaire_num:02}-{self.theme_num:02}-{self.question_num:02}'
+        response_filename = f'{prefix}-{self.filename}'
+        path = f'{self.theme_path}/{response_filename}'
+        return path
+
+    def get_question_file_path(self):
+        question_path = f'{self.theme_path}/ANNEXES-QUESTION-{self.question_num:02}'
+        path = f'{question_path}/{self.filename}'
+        return path
+
+
+def question_file_path(instance, filename):
+    path = PathBuilder(file_object=instance, filename=filename)
+    return path.get_question_file_path()
+
+
 def response_file_path(instance, filename):
-    control_folder = instance.question.theme.questionnaire.control.reference_code or \
-        f'CONTROLE-{instance.question.theme.questionnaire.control.id}'
-    theme_num = instance.question.theme.numbering
-    theme_folder = f'THEME-{theme_num}'
-    questionaire_num = instance.question.theme.questionnaire.numbering
-    questionnaire_folder = f'Q-{questionaire_num:02}'
-    question_num = instance.question.numbering
-    prefixed_filename = f'Q{questionaire_num:02}-{theme_num:02}-{question_num:02}-{filename}'
-    return f'{control_folder}/{questionnaire_folder}/{theme_folder}/{prefixed_filename}'
+    path = PathBuilder(file_object=instance, filename=filename)
+    return path.get_response_file_path()
