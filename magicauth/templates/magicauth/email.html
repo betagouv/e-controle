@@ -312,12 +312,10 @@
                             </tr>
                           </tbody>
                         </table>
-                         <label class="form-label">
-                         <strong>URL</strong> <span class="form-required">*</span>
-                      </label>
-                      <input name="url" type="text" class="form-control" value="https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}">
-                    </div>
+                        </div>
                     <p> </p>
+                        <p> <strong>URL à copier/coller dans votre navigateur : </p>
+                        <p> https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}</strong> </p>
                         <p>Ce lien est <strong>unique, temporaire et réservé à votre compte personnel</strong>. Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email. </p>
                         <p>Pour demander l'accès à une autre personne, veuillez motiver votre demande directement en répondant à cet email.</p>
                         <p>Merci beaucoup,</p>
