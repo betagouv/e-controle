@@ -58,5 +58,10 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(ResponseFile)
 class ResponseFileAdmin(admin.ModelAdmin):
-    list_display = ('id', '__str__')
-    readonly_fields = ('question', 'file')
+    list_display = ('id', 'file', 'created', 'author')
+    readonly_fields = ('question', 'file', 'author')
+    date_hierarchy = 'created'
+    list_filter = (
+        'question__theme__questionnaire__control', 'question__theme__questionnaire',
+        'author', 'question__theme')
+    search_fields = ('author', 'file')

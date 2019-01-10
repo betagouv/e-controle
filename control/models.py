@@ -1,8 +1,11 @@
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
 from filer.fields.file import FilerFileField
+from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+
 
 from .upload_path import response_file_path
 
@@ -97,11 +100,13 @@ class QuestionFile(OrderedModel):
         verbose_name_plural = 'Question: Fichiers Attachés'
 
 
-class ResponseFile(models.Model):
+class ResponseFile(TimeStampedModel):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)
     file = models.FileField(verbose_name="fichier", upload_to=response_file_path)
+    author = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, related_name='response_files', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = 'Réponse: Fichier Attaché'
