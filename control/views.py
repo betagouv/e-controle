@@ -42,6 +42,7 @@ class UploadResponseFile(CreateView):
             raise forms.ValidationError("Question ID was missing on file upload")
         self.object = form.save(commit=False)
         self.object.question_id = question_id
+        self.object.author = self.request.user
         self.object.save()
         data = {'status': 'success'}
         response = JsonResponse(data)
