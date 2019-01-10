@@ -10,7 +10,7 @@ from sendfile import sendfile
 from .models import Questionnaire, Theme, ResponseFile
 
 
-class QuestionnaireList(ListView, LoginRequiredMixin):
+class QuestionnaireList(LoginRequiredMixin, ListView):
     template_name = "ecc/questionnaire_list.html"
     context_object_name = 'questionnaires'
 
@@ -18,7 +18,7 @@ class QuestionnaireList(ListView, LoginRequiredMixin):
         return Questionnaire.objects.filter(control=self.request.user.profile.control)
 
 
-class QuestionnaireDetail(DetailView, LoginRequiredMixin):
+class QuestionnaireDetail(LoginRequiredMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
     model = Questionnaire
@@ -32,7 +32,7 @@ class QuestionnaireDetail(DetailView, LoginRequiredMixin):
         return context
 
 
-class UploadResponseFile(CreateView, LoginRequiredMixin):
+class UploadResponseFile(LoginRequiredMixin, CreateView):
     model = ResponseFile
     fields = ('file',)
 
