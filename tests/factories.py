@@ -15,6 +15,7 @@ class UserFactory(factory.DjangoModelFactory):
     first_name = factory.LazyFunction(faker.first_name)
     last_name = factory.LazyFunction(faker.last_name)
     email = factory.LazyFunction(faker.email)
+    username = factory.LazyAttribute(lambda a: a.email)
     password = factory.PostGenerationMethodCall('set_password', '123')
     is_active = True
     is_staff = True
@@ -69,6 +70,7 @@ class QuestionFactory(factory.DjangoModelFactory):
 @register
 class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
+    author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
             content=open('./tests/data/test.pdf', 'rb').read(),

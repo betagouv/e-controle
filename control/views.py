@@ -58,8 +58,12 @@ class SendFileMixin(SingleObjectMixin):
         return sendfile(request, obj.file.path)
 
 
-class SendResponseFile(SendFileMixin, View):
+class SendResponseFile(SendFileMixin, LoginRequiredMixin, View):
     model = ResponseFile
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            question__theme__questionnaire__control=self.request.user.profile.control)
 
 
 upload_response_file = UploadResponseFile.as_view()
