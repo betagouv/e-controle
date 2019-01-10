@@ -24,15 +24,25 @@
             <img src="{% static "img/e-controle.svg" %}" class="header-brand-img" alt="logo" style="height: 4;">
           </a>
           <div class="d-flex order-lg-2 ml-auto">
+
             <div class="dropdown">
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span class="avatar" style="background-image: url(./demo/faces/female/25.jpg)"></span>
+                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+
                 <span class="ml-2 d-none d-lg-block">
-                  <span class="text-default">{{ user.first_name }} {{ user.last_name }}</span>
+                  <span class="text-default">{{ user.get_full_name }}</span>
                   <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
                 </span>
               </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                <small>
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+                </a>
+                </small>
+              </div>
             </div>
+
           </div>
         </div>
       </div>

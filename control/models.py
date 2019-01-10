@@ -115,3 +115,6 @@ class ResponseFile(TimeStampedModel):
     @property
     def url(self):
         return reverse('send-response-file', args=[self.id])
+
+    def __str__(self):
+        return self.file.name

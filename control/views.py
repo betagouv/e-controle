@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
@@ -9,7 +10,7 @@ from sendfile import sendfile
 from .models import Questionnaire, Theme, ResponseFile
 
 
-class QuestionnaireList(ListView):
+class QuestionnaireList(LoginRequiredMixin, ListView):
     template_name = "ecc/questionnaire_list.html"
     context_object_name = 'questionnaires'
 
@@ -17,7 +18,7 @@ class QuestionnaireList(ListView):
         return Questionnaire.objects.filter(control=self.request.user.profile.control)
 
 
-class QuestionnaireDetail(DetailView):
+class QuestionnaireDetail(LoginRequiredMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
     model = Questionnaire
@@ -31,7 +32,7 @@ class QuestionnaireDetail(DetailView):
         return context
 
 
-class UploadResponseFile(CreateView):
+class UploadResponseFile(LoginRequiredMixin, CreateView):
     model = ResponseFile
     fields = ('file',)
 
@@ -57,8 +58,12 @@ class SendFileMixin(SingleObjectMixin):
         return sendfile(request, obj.file.path)
 
 
-class SendResponseFile(SendFileMixin, View):
+class SendResponseFile(SendFileMixin, LoginRequiredMixin, View):
     model = ResponseFile
+
+    def get_queryset(self):
+        return self.model.objects.filter(
+            question__theme__questionnaire__control=self.request.user.profile.control)
 
 
 upload_response_file = UploadResponseFile.as_view()
