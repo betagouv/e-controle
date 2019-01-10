@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+Accéder aux questionnaires et aux documents déposés
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="row row-cards">
+  <div class="col-lg-12">
+    {% for questionnaire in questionnaires %}
+    <div class="card">
+      <div class="card-header">
+         <h3 class="card-title">{{ questionnaire.title }}</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table card-table table-striped table-vcenter">
+          <tbody>
+            <tr>
+              <td>{{ questionnaire.description|linebreaks }}</td>
+              {% if user.profile.is_audited %}
+              <td class="w-1">
+                <a href="{{ questionnaire.url }}">
+                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
+                <a/>
+              </td>
+              <td class="w-1">
+                <a href="#">
+                  <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer</button>
+                <a/>
+              </td>
+              {% elif user.profile.is_inspector %}
+              <td class="w-1">
+                <a href="{{ questionnaire.url }}">
+                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>
+                <a/>
+              </td>
+              <td class="w-1">
+                <a href="#">
+                  <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
+                </a>
+              </td>
+              <td class="w-1">
+                <a href="#">
+                  <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire au format word"> Récupérer le questionnaire</button>
+                <a/>
+              </td>
+              {% endif %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock page_content %}

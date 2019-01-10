@@ -1,0 +1,12 @@
+.stamp-xl {
+  min-width: 3rem;
+  height: 3rem;
+  line-height: 3rem;
+}
+
+/* IE specific fix */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .card--ie-773px {
+     width: 773px; 
+  }
+}

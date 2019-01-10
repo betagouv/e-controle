@@ -1,31 +1,40 @@
 {
-  "name": "e-controle",
-  "env": {
-    "HEROKU_APP_NAME": {
-      "required": true
-    },
-    "HEROKU_PARENT_APP_NAME": {
-      "required": true
-    },
-    "SECRET_KEY": {
-      "required": true
-    },
-    "STAGING_DATABASE_URL": {
-      "required": true
-    },
-    "DEBUG": {
-      "required": true
-    }
-  },
-  "formation": {
-    "web": {
-      "quantity": 1
-    }
-  },
-  "addons": [
-    "heroku-postgresql"
-  ],
-  "buildpacks": [
-
-  ]
+	"name": "e-controle",
+	"env": {
+		"STAGING_DATABASE_URL": {
+	      "required": true
+	    },
+		"SECRET_KEY": {
+			"required": true
+		},
+		"DEBUG": {
+			"required": true
+		},
+		"EMAIL_HOST": {
+			"required": true
+		},
+		"EMAIL_HOST_USER": {
+			"required": true
+		},
+		"EMAIL_HOST_PASSWORD": {
+			"required": true
+		},
+		"EMAIL_PORT": {
+			"required": true
+		},
+		"DEFAULT_FROM_EMAIL": {
+			"required": true
+		}
+	},
+	"formation": {
+		"web": {
+			"quantity": 1
+		}
+	},
+	"scripts": {
+    	"postdeploy": "pg_dump $STAGING_DATABASE_URL | psql $DATABASE_URL && python manage.py migrate"
+  	},
+	"addons": [
+		"heroku-postgresql"
+	]
 }

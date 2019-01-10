@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+{{ questionnaire.title }}
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="row row-cards">
+  <div class="col-lg-4">
+    <div class="row sticky">
+      <div class="col-md-6 col-lg-12">
+        <div class="card">
+          <div class="card-header bg-blue text-white">
+            <h4 class="card-title">Thèmes</h4>
+          </div>
+          {% for theme in themes %}
+          <table class="table card-table">
+            <tbody>
+            <tr data-id="{{ forloop.counter }}" class="theme-row">
+              <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
+            </tr>
+           {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    {% for theme in themes %}
+    <div class="card" id="theme{{ theme.numbering }}">
+      <div class="card-status card-status-top bg-blue"></div>
+      <div class="card-header">
+        <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
+      </div>
+      <div class="table-responsive">
+          <table class="table card-table table-striped table-vcenter">
+              <tbody>
+              {% for question in theme.questions.all %}
+              {% with response_files=question.response_files.all %}
+              <tr>
+                <td class="rows p-0">
+                  <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
+                    <div class="card-header border-0">
+                      <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
+                      <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
+                          {{ question.description|linebreaks }}
+                        {% if response_files %}
+                        <div class="tags">
+                          <span class="tag tag-azure pull-left">{{ response_files.count }} fichier{{ response_files.count|pluralize }} déposé{{ response_files.count|pluralize }}
+                            <span class="tag-addon"><i class="fe fe-file"></i></span>
+                          </span>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="card-options">
+                      <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                    </div>
+                    <div class="card-body">
+                    <div class="card">
+                        {% if response_files %}
+                        <div class="form-group">
+                            <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
+                            <ul>
+                              {% for file in response_files %}
+                              <li><a href="{{ file.url }}">{{ file.file }}</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
+                              {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        {% if question.numbering|divisibleby:'2' %}
+                        <div class="form-group">
+                            <div class="form-label">Fichier annexe à la question:</div>
+                            <ul>
+                              <li><a href="#">Annexe1.xls</a></li
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        {% if user.profile.is_audited %}
+                        <div class="form-group">
+                            <div class="form-label">Déposer vos réponses</div>
+                            <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                              <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
+                              <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}">
+                              <div class="fallback">
+                                <input name="file" type="file" multiple />
+                              </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                          <label class="form-label">Commentaire facultatif</label>
+                          {% if user.profile.is_audited %}
+                          <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
+                          {% else %}
+                          <p>
+                            La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.
+                          </p>
+                          {% endif %}
+                        </div>
+
+                        {% if user.profile.is_audited %}
+                        <div class="form-group">
+                         <div class="d-flex">
+                              <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
+                              <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse" onClick="document.location.reload(true)">Mettre à jour</button>
+                          </div>
+                        </div>
+                        {% endif %}
+                  </div>
+
+                </td>
+              </tr>
+              {% endwith %}
+              {% endfor %}
+              </tbody>
+            </table>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock page_content %}
