@@ -99,6 +99,10 @@ class QuestionFile(OrderedModel):
         verbose_name = 'Question: Fichier Attaché'
         verbose_name_plural = 'Question: Fichiers Attachés'
 
+    @property
+    def url(self):
+        return reverse('send-question-file', args=[self.id])
+
     def __str__(self):
         return self.file.name
 
