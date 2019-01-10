@@ -78,3 +78,15 @@ class ResponseFileFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = 'control.ResponseFile'
+
+
+@register
+class QuestionFileFactory(factory.DjangoModelFactory):
+    question = factory.SubFactory(QuestionFactory)
+    file = SimpleUploadedFile(
+            name='test.pdf',
+            content=open('./tests/data/test.pdf', 'rb').read(),
+            content_type='application/pdf')
+
+    class Meta:
+        model = 'control.QuestionFile'

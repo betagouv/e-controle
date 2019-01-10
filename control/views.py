@@ -7,7 +7,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, ResponseFile
+from .models import Questionnaire, Theme, QuestionFile, ResponseFile
 
 
 class QuestionnaireList(LoginRequiredMixin, ListView):
@@ -57,16 +57,24 @@ class SendFileMixin(SingleObjectMixin):
         obj = self.get_object()
         return sendfile(request, obj.file.path)
 
+    def get_queryset(self):
+        # The user should only have access to files that belong to the control
+        # he was associated with. That's why we filter-out based on the user's
+        # control.
+        return self.model.objects.filter(
+            question__theme__questionnaire__control=self.request.user.profile.control)
+
+
+class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
+    model = QuestionFile
+
 
 class SendResponseFile(SendFileMixin, LoginRequiredMixin, View):
     model = ResponseFile
-
-    def get_queryset(self):
-        return self.model.objects.filter(
-            question__theme__questionnaire__control=self.request.user.profile.control)
 
 
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+send_question_file = SendQuestionFile.as_view()
 send_response_file = SendResponseFile.as_view()
