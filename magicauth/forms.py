@@ -27,10 +27,10 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user = User.objects.get(email=user_email)
         token = self.create_token(user)
-        email_subject = getattr(settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Connection e-controle')
+        email_subject = getattr(settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Connexion e-controle')
         html_template = getattr(settings, 'MAGICAUTH_EMAIL_HTML_TEMPLATE', 'magicauth/email.html')
         text_template = getattr(settings, 'MAGICAUTH_EMAIL_TEXT_TEMPLATE', 'magicauth/email.txt')
-        from_email = getattr(settings, 'MAGICAUTH_FROM_EMAIL', 'econtrole@bate.ccomptes.fr')
+        from_email = getattr(settings, 'MAGICAUTH_FROM_EMAIL')
         context = {
             'token': token,
             'user': user,
