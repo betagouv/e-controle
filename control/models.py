@@ -38,7 +38,8 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
-    file = models.FileField(verbose_name="fichier", upload_to=questionnaire_file_path)
+    file = models.FileField(
+        verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True)
     control = models.ForeignKey(
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
