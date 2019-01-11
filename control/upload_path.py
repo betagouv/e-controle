@@ -1,7 +1,9 @@
 def questionnaire_file_path(instance, filename):
     questionnaire = instance
     control_folder = questionnaire.control.reference_code
-    path = f'{control_folder}/ANNEXES/{filename}'
+    questionaire_num = questionnaire.numbering
+    questionnaire_folder = f'Q{questionaire_num:02}'
+    path = f'{control_folder}/{questionnaire_folder}/{filename}'
     return path
 
 
@@ -12,10 +14,10 @@ class PathBuilder(object):
         self.filename = filename
         self.control_folder = file_object.question.theme.questionnaire.control.reference_code or \
             f'CONTROLE-{file_object.question.theme.questionnaire.control.id}'
-        self.theme_num = file_object.question.theme.numbering
-        self.theme_folder = f'THEME_{self.theme_num:02}'
         self.questionaire_num = file_object.question.theme.questionnaire.numbering
         self.questionnaire_folder = f'Q{self.questionaire_num:02}'
+        self.theme_num = file_object.question.theme.numbering
+        self.theme_folder = f'T{self.theme_num:02}'
         self.question_num = file_object.question.numbering
         self.questionnaire_path = f'{self.control_folder}/{self.questionnaire_folder}'
         self.theme_path = f'{self.questionnaire_path}/{self.theme_folder}'
@@ -26,7 +28,7 @@ class PathBuilder(object):
         return path
 
     def get_response_file_path(self):
-        prefix = f'Q{self.questionaire_num:02}-{self.theme_num:02}-{self.question_num:02}'
+        prefix = f'Q{self.questionaire_num:02}-T{self.theme_num:02}-{self.question_num:02}'
         response_filename = f'{prefix}-{self.filename}'
         path = f'{self.theme_path}/{response_filename}'
         return path
