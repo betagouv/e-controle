@@ -8,6 +8,30 @@ from tests import factories, utils
 pytestmark = mark.django_db
 
 
+def test_can_access_questionnaire_page_if_control_is_associated_with_the_user(client):
+    questionnaire = factories.QuestionnaireFactory()
+    user = factories.UserFactory()
+    user.profile.control = questionnaire.control
+    user.profile.save()
+    utils.login(client, user=user)
+    url = reverse('questionnaire-detail', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+def test_no_access_to_questionnaire_page_if_control_is_not_associated_with_the_user(client):
+    questionnaire = factories.QuestionnaireFactory()
+    user = factories.UserFactory()
+    unautorized_control = factories.ControlFactory()
+    assert unautorized_control != questionnaire.control
+    user.profile.control = unautorized_control
+    user.profile.save()
+    utils.login(client, user=user)
+    url = reverse('questionnaire-detail', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code != 200
+
+
 def test_download_questionnaire_file_works_if_the_control_is_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory()
     user = factories.UserFactory()
@@ -19,7 +43,7 @@ def test_download_questionnaire_file_works_if_the_control_is_associated_with_the
     assert response.status_code == 200
 
 
-def test_download_questionnaire_file_fails_if_the_control_is__not_associated_with_the_user(client):
+def test_download_questionnaire_file_fails_if_the_control_is_not_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory()
     user = factories.UserFactory()
     unautorized_control = factories.ControlFactory()

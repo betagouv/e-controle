@@ -23,6 +23,9 @@ class QuestionnaireDetail(LoginRequiredMixin, DetailView):
     context_object_name = 'questionnaire'
     model = Questionnaire
 
+    def get_queryset(self):
+        return self.model.objects.filter(control=self.request.user.profile.control)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         theme_list = Theme.objects.filter(questionnaire=self.object)
