@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'control',
     'magicauth',
     'user_profiles',
+    'utils',
 ]
 
 

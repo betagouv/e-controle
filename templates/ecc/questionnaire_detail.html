@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load basename %}
 
 {% block page_title %}
 {{ questionnaire.title }}
@@ -65,7 +66,7 @@
                             <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
                             <ul>
                               {% for file in response_files %}
-                              <li><a href="{{ file.url }}">{{ file.file }}</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
+                              <li><a href="{{ file.url }}">{{ file.file|basename }}</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
                               {% endfor %}
                             </ul>
                         </div>
@@ -75,7 +76,7 @@
                             <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
                             <ul>
                               {% for file in question_files %}
-                              <li><a href="{{ file.url }}">{{ file.file }}</a></li>
+                              <li><a href="{{ file.url }}">{{ file.file|basename }}</a></li>
                               {% endfor %}
                             </ul>
                         </div>
