@@ -38,7 +38,7 @@
           <table class="table card-table table-striped table-vcenter">
               <tbody>
               {% for question in theme.questions.all %}
-              {% with response_files=question.response_files.all %}
+              {% with response_files=question.response_files.all question_files=question.question_files.all %}
               <tr>
                 <td class="rows p-0">
                   <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
@@ -70,11 +70,13 @@
                             </ul>
                         </div>
                         {% endif %}
-                        {% if question.numbering|divisibleby:'2' %}
+                        {% if question_files %}
                         <div class="form-group">
-                            <div class="form-label">Fichier annexe à la question:</div>
+                            <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
                             <ul>
-                              <li><a href="#">Annexe1.xls</a></li
+                              {% for file in question_files %}
+                              <li><a href="{{ file.url }}">{{ file.file }}</a></li>
+                              {% endfor %}
                             </ul>
                         </div>
                         {% endif %}
@@ -92,7 +94,8 @@
                             </form>
                         </div>
                         {% endif %}
-                        <div class="form-group">
+
+                        <!-- <div class="form-group">
                           <label class="form-label">Commentaire facultatif</label>
                           {% if user.profile.is_audited %}
                           <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
@@ -101,16 +104,16 @@
                             La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.
                           </p>
                           {% endif %}
-                        </div>
+                        </div> -->
 
                         {% if user.profile.is_audited %}
                         <div class="form-group">
                          <div class="d-flex">
-                              <a href="javascript:void(0)" class="btn btn-link" data-toggle="card-collapse">Annuler</a>
                               <button type="submit" class="btn btn-primary ml-auto" data-toggle="card-collapse" onClick="document.location.reload(true)">Mettre à jour</button>
                           </div>
                         </div>
                         {% endif %}
+
                   </div>
 
                 </td>

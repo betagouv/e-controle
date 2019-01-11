@@ -7,7 +7,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, ResponseFile
+from .models import Questionnaire, Theme, QuestionFile, ResponseFile
 
 
 class QuestionnaireList(LoginRequiredMixin, ListView):
@@ -22,6 +22,9 @@ class QuestionnaireDetail(LoginRequiredMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
     model = Questionnaire
+
+    def get_queryset(self):
+        return self.model.objects.filter(control=self.request.user.profile.control)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,15 +61,31 @@ class SendFileMixin(SingleObjectMixin):
         return sendfile(request, obj.file.path)
 
 
-class SendResponseFile(SendFileMixin, LoginRequiredMixin, View):
-    model = ResponseFile
+class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
+    model = Questionnaire
 
     def get_queryset(self):
+        return self.model.objects.filter(control=self.request.user.profile.control)
+
+
+class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
+    model = QuestionFile
+
+    def get_queryset(self):
+        # The user should only have access to files that belong to the control
+        # he was associated with. That's why we filter-out based on the user's
+        # control.
         return self.model.objects.filter(
             question__theme__questionnaire__control=self.request.user.profile.control)
+
+
+class SendResponseFile(SendQuestionFile):
+    model = ResponseFile
 
 
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+send_questionnaire_file = SendQuestionnaireFile.as_view()
+send_question_file = SendQuestionFile.as_view()
 send_response_file = SendResponseFile.as_view()

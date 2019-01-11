@@ -2,12 +2,11 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-from filer.fields.file import FilerFileField
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
 
-from .upload_path import response_file_path
+from .upload_path import questionnaire_file_path, question_file_path, response_file_path
 
 
 class WithNumberingMixin(object):
@@ -39,6 +38,8 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
+    file = models.FileField(
+        verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True)
     control = models.ForeignKey(
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
@@ -52,6 +53,10 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     @property
     def url(self):
         return reverse('questionnaire-detail', args=[self.id])
+
+    @property
+    def file_url(self):
+        return reverse('send-questionnaire-file', args=[self.id])
 
     def __str__(self):
         return self.title
@@ -92,12 +97,20 @@ class QuestionFile(OrderedModel):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
-    file = FilerFileField(verbose_name="fichier", on_delete=models.CASCADE)
+    file = models.FileField(verbose_name="fichier", upload_to=question_file_path)
     order_with_respect_to = 'question'
 
     class Meta:
+        ordering = ('question', 'order')
         verbose_name = 'Question: Fichier Attaché'
         verbose_name_plural = 'Question: Fichiers Attachés'
+
+    @property
+    def url(self):
+        return reverse('send-question-file', args=[self.id])
+
+    def __str__(self):
+        return self.file.name
 
 
 class ResponseFile(TimeStampedModel):
