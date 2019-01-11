@@ -57,6 +57,17 @@ class SendFileMixin(SingleObjectMixin):
         obj = self.get_object()
         return sendfile(request, obj.file.path)
 
+
+class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
+    model = Questionnaire
+
+    def get_queryset(self):
+        return self.model.objects.filter(control=self.request.user.profile.control)
+
+
+class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
+    model = QuestionFile
+
     def get_queryset(self):
         # The user should only have access to files that belong to the control
         # he was associated with. That's why we filter-out based on the user's
@@ -65,16 +76,13 @@ class SendFileMixin(SingleObjectMixin):
             question__theme__questionnaire__control=self.request.user.profile.control)
 
 
-class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
-    model = QuestionFile
-
-
-class SendResponseFile(SendFileMixin, LoginRequiredMixin, View):
+class SendResponseFile(SendQuestionFile):
     model = ResponseFile
 
 
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+send_questionnaire_file = SendQuestionnaireFile.as_view()
 send_question_file = SendQuestionFile.as_view()
 send_response_file = SendResponseFile.as_view()

@@ -35,6 +35,7 @@ class MagicTokenFactory(factory.DjangoModelFactory):
 @register
 class ControlFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
+    reference_code = 'CONTROL'
 
     class Meta:
         model = 'control.Control'
@@ -44,6 +45,10 @@ class ControlFactory(factory.DjangoModelFactory):
 class QuestionnaireFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
     control = factory.SubFactory(ControlFactory)
+    file = SimpleUploadedFile(
+            name='test.pdf',
+            content=open('./tests/data/test.pdf', 'rb').read(),
+            content_type='application/pdf')
 
     class Meta:
         model = 'control.Questionnaire'

@@ -1,3 +1,9 @@
+def questionnaire_file_path(instance, filename):
+    questionnaire = instance
+    control_folder = questionnaire.control.reference_code
+    path = f'{control_folder}/ANNEXES/{filename}'
+    return path
+
 
 class PathBuilder(object):
 
@@ -34,10 +40,3 @@ def question_file_path(instance, filename):
 def response_file_path(instance, filename):
     path = PathBuilder(file_object=instance, filename=filename)
     return path.get_response_file_path()
-
-
-def questionnaire_file_path(instance, filename):
-    questionnaire = instance
-    control_folder = questionnaire.control.reference_code
-    path = f'{control_folder}/ANNEXES/{filename}'
-    return path
