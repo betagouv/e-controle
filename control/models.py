@@ -6,7 +6,7 @@ from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
 
-from .upload_path import question_file_path, response_file_path
+from .upload_path import questionnaire_file_path, question_file_path, response_file_path
 
 
 class WithNumberingMixin(object):
@@ -38,6 +38,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
+    file = models.FileField(verbose_name="fichier", upload_to=questionnaire_file_path)
     control = models.ForeignKey(
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)

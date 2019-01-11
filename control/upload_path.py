@@ -11,17 +11,18 @@ class PathBuilder(object):
         self.questionaire_num = file_object.question.theme.questionnaire.numbering
         self.questionnaire_folder = f'Q{self.questionaire_num:02}'
         self.question_num = file_object.question.numbering
-        self.theme_path = f'{self.control_folder}/{self.questionnaire_folder}/{self.theme_folder}'
+        self.questionnaire_path = f'{self.control_folder}/{self.questionnaire_folder}'
+        self.theme_path = f'{self.questionnaire_path}/{self.theme_folder}'
+
+    def get_question_file_path(self):
+        question_path = f'{self.theme_path}/ANNEXES-QUESTION-{self.question_num:02}'
+        path = f'{question_path}/{self.filename}'
+        return path
 
     def get_response_file_path(self):
         prefix = f'Q{self.questionaire_num:02}-{self.theme_num:02}-{self.question_num:02}'
         response_filename = f'{prefix}-{self.filename}'
         path = f'{self.theme_path}/{response_filename}'
-        return path
-
-    def get_question_file_path(self):
-        question_path = f'{self.theme_path}/ANNEXES-QUESTION-{self.question_num:02}'
-        path = f'{question_path}/{self.filename}'
         return path
 
 
@@ -33,3 +34,10 @@ def question_file_path(instance, filename):
 def response_file_path(instance, filename):
     path = PathBuilder(file_object=instance, filename=filename)
     return path.get_response_file_path()
+
+
+def questionnaire_file_path(instance, filename):
+    questionnaire = instance
+    control_folder = questionnaire.control.reference_code
+    path = f'{control_folder}/ANNEXES/{filename}'
+    return path
