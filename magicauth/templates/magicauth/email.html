@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html>
   <head>
@@ -290,7 +291,7 @@
                   <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                       <td align="right">
-                        <img src="https://demo-e-controle.herokuapp.com/static/img/e-controle.svg" width="140" class="img" alt="logo">
+                        <img src="https://{{ site.domain }}{% static "img/e-controle.png" %}" width="140" class="img" alt="logo">
                       </td>
                     </tr>
                     <tr>
