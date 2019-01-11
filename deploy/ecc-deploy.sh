@@ -17,6 +17,6 @@ source $VENV_DIR/bin/activate
 cd $PROJECT_DIR
 git pull
 pip install -r requirements.txt
-./manage.py migrate
-./manage.py collectstatic --noinput
+python3.6 ./manage.py migrate
+python3.6 ./manage.py collectstatic --noinput
 systemctl restart httpd
