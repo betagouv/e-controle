@@ -20,3 +20,4 @@ django-annoying
 django-sendfile
 whitenoise
 django-extensions
+git+https://github.com/justquick/django-activity-stream.git

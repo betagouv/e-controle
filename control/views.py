@@ -5,6 +5,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.detail import SingleObjectMixin
 
+from actstream import action
 from sendfile import sendfile
 
 from .models import Questionnaire, Theme, QuestionFile, ResponseFile
@@ -48,6 +49,13 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object.question_id = question_id
         self.object.author = self.request.user
         self.object.save()
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded',
+            'action_object': self.object,
+            'target': self.object.question,
+        }
+        action.send(**action_details)
         data = {'status': 'success'}
         response = JsonResponse(data)
         return response

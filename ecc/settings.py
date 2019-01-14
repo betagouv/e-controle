@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'ordered_model',
     'django_tabler',
     'django_extensions',
+    'actstream',
 
     'control',
     'magicauth',
