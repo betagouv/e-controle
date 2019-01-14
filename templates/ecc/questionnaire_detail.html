@@ -6,6 +6,20 @@
 {{ questionnaire.title }}
 {% endblock page_title %}
 
+{% block extra_static_header %}
+    {{ block.super }}
+
+    {% if debug %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
+    <script src="{% static 'dropzone/5.5.1/dropzone.js' %}"></script>
+    {% else %}
+    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.min.css' %}">
+    <script src="{% static 'dropzone/5.5.1/dropzone.min.js' %}"></script>
+    {% endif %}
+{% endblock extra_static_header %}
+
 {% block page_content %}
 <div class="row row-cards">
   <div class="col-lg-4">
