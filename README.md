@@ -1,15 +1,26 @@
 # e-controle
 Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés
 
-# Lancement en prod
+## Lancement en prod
 - Une base PostgreSQL 10 doit être fournie.
 
-# Lancement en dev avec docker-compose
+## Lancement en dev avec docker-compose
 - Le docker-compose.yml est fourni pour le développement uniquement.
 - Usage : `docker-compose up`
 
+## Définition des locales
 
-# Variables d'environnement
+Cette plateforme utilise l'encodage UTF-8 à plusieurs endroit, notament pour les nom de
+fichiers uploadés.
+
+Pour que cela fonctionne, il faut rendre configurer correctement les 'locales',
+par example comme ceci:
+
+    localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
+    export LANG=fr_FR.UTF-8
+    export LC_ALL=fr_FR.UTF-8
+
+## Variables d'environnement
 
 Certaines variables d'environnement doivent être positionnées pour que l'application fonctionne.
 
@@ -21,7 +32,7 @@ On peut utiliser le fichier d'example comme ceci:
 
 Les variables d'environnement sont automatiquement intégrées au process uWSGI via le fichier `ecc/wsgi.py`.
 
-# Restaurer le dump de la base de données en dev
+## Restaurer le dump de la base de données en dev
 
     cd $CODE_DIR/deploy/
     gpg latest.dump.gpg
