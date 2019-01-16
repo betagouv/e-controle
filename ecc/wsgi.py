@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 
 from dotenv import load_dotenv
 import os
+from libpath import Path
 
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-env_path = os.path.join(BASE_DIR, '.env')
+BASE_DIR = Path('.').parent.absolute()
+env_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path=env_path, override=True)
 
 application = get_wsgi_application()
