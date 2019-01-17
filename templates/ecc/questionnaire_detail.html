@@ -61,13 +61,20 @@
                       <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
                       <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
                           {{ question.description|linebreaks }}
-                        {% if response_files %}
+                      {% if response_files or question_files %}
                         <div class="tags">
+                          {% if response_files %}
                           <span class="tag tag-azure pull-left">{{ response_files.count }} fichier{{ response_files.count|pluralize }} déposé{{ response_files.count|pluralize }}
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
                           </span>
+                          {% endif %}
+                          {% if question_files %}
+                          <span class="tag tag-orange pull-left">{{ question_files.count }} fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }}
+                            <span class="tag-addon"><i class="fe fe-file"></i></span>
+                          </span>
+                          {% endif %}
                         </div>
-                        {% endif %}
+                      {% endif %}
                       </div>
                     </div>
                     <div class="card-options">
