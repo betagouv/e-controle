@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
         },
     },
@@ -162,6 +163,5 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 DEFAULT_MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = env('MEDIA_ROOT', default=DEFAULT_MEDIA_ROOT)
-
 
 SENDFILE_BACKEND = env('SENDFILE_BACKEND', default='sendfile.backends.development')
