@@ -44,7 +44,7 @@
         <script src="{% static "plugins/charts-c3/plugin.js" %}"></script>
         <script src="{% static "plugins/maps-google/plugin.js" %}"></script>
         <script src="{% static "plugins/input-mask/plugin.js" %}"></script>
-
+        {% block analytics %}{% endblock analytics %}
         {% block extra_js %}{% endblock extra_js %}
     </body>
 </html>
