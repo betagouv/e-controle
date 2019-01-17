@@ -26,3 +26,8 @@ Date: 17 janvier 2019
 Il faut inclure ceci Dans `WSGIDaemonProcess`:
 
     lang='fr_FR.UTF-8' locale='fr_FR.UTF-8'
+
+1. Matomo: il faut rajouter des variables d'environnement:
+
+    export PIWIK_TRACKER_BASE_URL=//webanalytics-TODO.fr/
+    export PIWIK_SITE_ID=23
