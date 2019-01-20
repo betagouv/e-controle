@@ -82,16 +82,12 @@
                     </div>
                     <div class="card-body">
                     <div class="card">
-                        {% if response_files %}
                         <div class="form-group">
                             <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
-                            <ul>
-                              {% for file in response_files %}
-                              <li><a href="{{ file.url }}">{{ file.file|basename }}</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
-                              {% endfor %}
+                            <ul id='app'>
+                              <li v-for="file in results"><a href="TODO">[[ file.basename ]]</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
                             </ul>
                         </div>
-                        {% endif %}
                         {% if question_files %}
                         <div class="form-group">
                             <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
@@ -150,3 +146,8 @@
   </div>
 </div>
 {% endblock page_content %}
+
+
+{% block extra_js %}
+<script src="{% static 'vue/reload-files.js' %}"></script>
+{% endblock extra_js %}

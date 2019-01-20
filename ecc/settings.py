@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_tabler',
     'django_extensions',
     'actstream',
+    'rest_framework',
 
     'control',
     'magicauth',
@@ -173,3 +174,9 @@ SETTINGS_EXPORT = [
     'PIWIK_TRACKER_BASE_URL',
     'PIWIK_SITE_ID',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}

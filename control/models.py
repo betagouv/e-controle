@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
@@ -128,6 +130,14 @@ class ResponseFile(TimeStampedModel):
     @property
     def url(self):
         return reverse('send-response-file', args=[self.id])
+
+    @property
+    def basename(self):
+        return os.path.basename(self.file.name)
+
+    @property
+    def creation_date(self):
+        return self.created.strftime("%d %b %Y %X")
 
     def __str__(self):
         return self.file.name

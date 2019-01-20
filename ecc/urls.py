@@ -4,9 +4,18 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
+from rest_framework import routers
+
 from . import views as ecc_views
 from control import views as control_views
+from control import api_views as control_api_views
 from magicauth import views as magicauth_views
+
+
+admin.site.site_header = 'E-Contrôle Administration'
+
+router = routers.DefaultRouter()
+router.register(r'question', control_api_views.QuestionViewSet, basename='question')
 
 
 urlpatterns = [
@@ -26,8 +35,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+urlpatterns += [
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')),
+]
+
 if settings.DEBUG:
+    import debug_toolbar
+    from rest_framework.documentation import include_docs_urls
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('admin/docs/', include('django.contrib.admindocs.urls'))]
-    import debug_toolbar
+    urlpatterns += [path('api/docs/', include_docs_urls(title='E-Contrôle API'))]
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
