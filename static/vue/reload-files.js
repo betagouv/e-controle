@@ -1,5 +1,3 @@
-const url = "/api/question/22/";
-
 new Vue({
   delimiters: ['[[', ']]'],
   el: '#app',
@@ -8,6 +6,7 @@ new Vue({
     results: []
   },
   mounted() {
+		const url = this.$refs.app.dataset.url;
     axios.get(url).then(response => {
       this.results = response.data
     })
