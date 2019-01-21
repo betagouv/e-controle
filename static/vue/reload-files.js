@@ -1,4 +1,4 @@
-const url = "/api/response-file/";
+const url = "/api/question/22/";
 
 new Vue({
   delimiters: ['[[', ']]'],

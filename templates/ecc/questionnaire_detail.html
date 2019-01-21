@@ -85,7 +85,7 @@
                         <div class="form-group">
                             <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
                             <ul id='app'>
-                              <li v-for="file in results"><a href="TODO">[[ file.basename ]]</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" title="{{ file.author.first_name }} {{ file.author.last_name }}, {{ file.created }}"></i></a></li>
+                              <li v-for="file in results.response_files" :key="file.basename"><a :href="file.url">[[ file.basename ]]</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i></a></li>
                             </ul>
                         </div>
                         {% if question_files %}
