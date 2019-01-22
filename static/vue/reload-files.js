@@ -1,8 +1,8 @@
 const url = "/api/question/"
 
-var app = new Vue({
+var question_app = new Vue({
   delimiters: ['[[', ']]'],
-  el: '#app',
+  el: '#question-detail-app',
   data: {
     title: 'Welcome to My Journal',
     results: {}
@@ -21,6 +21,6 @@ var app = new Vue({
 
 Dropzone.options.dropzoneArea = {
   success: function(file, done) {
-    app.fetchQuestionData()
+    question_app.fetchQuestionData()
   }
 };
