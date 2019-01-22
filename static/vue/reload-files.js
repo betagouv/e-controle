@@ -7,9 +7,20 @@ var app = new Vue({
     title: 'Welcome to My Journal',
     results: {}
   },
-  mounted() {
-    axios.get(url).then(response => {
-      this.results = response.data
-    })
-  }
+  methods: {
+		fetchQuestionData() {
+      axios.get(url).then(response => {
+        this.results = response.data
+      })
+    }
+  },
+  mounted: function () {
+  		this.fetchQuestionData();
+  	}
 });
+
+Dropzone.options.dropzoneArea = {
+  success: function(file, done) {
+    app.fetchQuestionData()
+  }
+};
