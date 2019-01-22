@@ -63,11 +63,11 @@
                           {{ question.description|linebreaks }}
                       {% if response_files or question_files %}
                         <div class="tags">
-                          {% if response_files %}
-                          <span class="tag tag-azure pull-left">{{ response_files.count }} fichier{{ response_files.count|pluralize }} déposé{{ response_files.count|pluralize }}
+                          <span v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files" class="tag tag-azure pull-left">
+                            <template v-if="results[{{ question.id }}].response_files.length > 1">[[ results[{{ question.id }}].response_files.length ]] fichiers déposés</template>
+                            <template v-else>[[ results[{{ question.id }}].response_files.length ]] fichier déposé</template>
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
                           </span>
-                          {% endif %}
                           {% if question_files %}
                           <span class="tag tag-orange pull-left">{{ question_files.count }} fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }}
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
@@ -82,8 +82,8 @@
                     </div>
                     <div class="card-body">
                     <div class="card">
-                        <div class="form-group" v-if="results[{{ question.id }}]">
-                            <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
+                        <div class="form-group" v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files">
+                            <div  v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files" class="form-label">Fichier(s) déposé(s):</div>
                             <ul>
                               <li v-for="file in results[{{ question.id }}].response_files" :key="file.id">
                                 <a :href="file.url">[[ file.basename ]]</a>
