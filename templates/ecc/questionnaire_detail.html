@@ -42,7 +42,7 @@
       </div>
     </div>
   </div>
-  <div class="col-lg-8">
+  <div class="col-lg-8" id="app">
     {% for theme in themes %}
     <div class="card" id="theme{{ theme.numbering }}">
       <div class="card-status card-status-top bg-blue"></div>
@@ -82,10 +82,15 @@
                     </div>
                     <div class="card-body">
                     <div class="card">
-                        <div class="form-group">
+                        <div class="form-group" v-if="results[{{ question.id }}]">
                             <div class="form-label">Fichier{{ response_files.count|pluralize }} déjà déposé{{ response_files.count|pluralize }}:</div>
-                            <ul ref="app" id='app' data-url="{% url 'api:question-detail' question.id %}">
-                              <li v-for="file in results.response_files"><a :href="file.url">[[ file.basename ]]</a> <a href="javascript:void(0)" class="icon"><i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i></a></li>
+                            <ul>
+                              <li v-for="file in results[{{ question.id }}].response_files" :key="file.id">
+                                <a :href="file.url">[[ file.basename ]]</a>
+                                <a href="javascript:void(0)" class="icon">
+                                  <i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i>
+                                </a>
+                              </li>
                             </ul>
                         </div>
                         {% if question_files %}
@@ -142,6 +147,7 @@
             </table>
       </div>
     </div>
+
     {% endfor %}
   </div>
 </div>

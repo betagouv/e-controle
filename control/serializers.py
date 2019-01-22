@@ -22,7 +22,6 @@ class ResponseFileSerializer(serializers.ModelSerializer):
         model = ResponseFile
         fields = ('id', 'url', 'basename', 'creation_date', 'author')
 
-
 class QuestionSerializer(serializers.ModelSerializer):
     response_files = ResponseFileSerializer(many=True, read_only=True)
 

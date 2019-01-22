@@ -1,12 +1,13 @@
-new Vue({
+const url = "/api/question/"
+
+var app = new Vue({
   delimiters: ['[[', ']]'],
   el: '#app',
   data: {
     title: 'Welcome to My Journal',
-    results: []
+    results: {}
   },
   mounted() {
-		const url = this.$refs.app.dataset.url;
     axios.get(url).then(response => {
       this.results = response.data
     })
