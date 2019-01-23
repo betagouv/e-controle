@@ -4,7 +4,6 @@ var question_app = new Vue({
   delimiters: ['[[', ']]'],
   el: '#question-detail-app',
   data: {
-    title: 'Welcome to My Journal',
     results: {}
   },
   methods: {
