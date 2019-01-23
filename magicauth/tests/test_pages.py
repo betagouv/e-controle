@@ -85,19 +85,19 @@ def test_visiting_magic_link_triggers_login(client):
     assert '_auth_user_id' in client.session
 
 
-def test_unknown_token_raise_404(client):
+def test_unknown_token_redirects(client):
     url = reverse('magicauth-validate-token', args=['unknown-token'])
     response = client.get(url)
-    assert response.status_code == 404
+    assert response.status_code == 302
 
 
-def test_expired_token_raise_404(client):
+def test_expired_token_redirects(client):
     token = factories.MagicTokenFactory()
     token.created = timezone.now() - timedelta(days=1)
     token.save()
     url = reverse('magicauth-validate-token', args=[token.key])
     response = client.get(url)
-    assert response.status_code == 404
+    assert response.status_code == 302
 
 
 def test_expired_token_is_deleted(client):

@@ -2,8 +2,6 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth import login
-from django.http import Http404
-from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -27,11 +25,13 @@ class ValidateTokenView(generic.RedirectView):
     url = reverse_lazy('questionnaire-list')
 
     def get_valid_token(self, key):
-        token = get_object_or_404(MagicToken, key=key)
         duration = getattr(settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
+        token = MagicToken.objects.filter(key=key).first()
+        if not token:
+            return None
         if token.created < timezone.now() - timedelta(seconds=duration):
             token.delete()
-            raise Http404
+            return None
         return token
 
     def get(self, *args, **kwargs):
@@ -39,6 +39,8 @@ class ValidateTokenView(generic.RedirectView):
             return redirect(settings.LOGIN_REDIRECT_URL)
         token_key = kwargs.get('key')
         token = self.get_valid_token(token_key)
+        if not token:
+            return redirect(settings.LOGIN_REDIRECT_URL)
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
