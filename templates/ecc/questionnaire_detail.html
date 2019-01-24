@@ -62,7 +62,7 @@
                       <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
                           {{ question.description|linebreaks }}
                         <div class="tags">
-                          <span v-if="results && r_files[{{ question.id }}]" class="tag tag-azure pull-left">
+                          <span v-if="results && r_files && r_files[{{ question.id }}]" class="tag tag-azure pull-left">
                             <template v-if="r_files[{{ question.id }}].length == 1">[[ r_files[{{ question.id }}].length ]] fichier déposé</template>
                             <template v-if="r_files[{{ question.id }}].length > 1">[[ r_files[{{ question.id }}].length ]] fichiers déposés</template>
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
@@ -80,7 +80,7 @@
                     </div>
                     <div class="card-body">
                     <div class="card">
-                        <div class="form-group" v-if="results && r_files[{{ question.id }}]">
+                        <div class="form-group" v-if="results && r_files && r_files[{{ question.id }}]">
                             <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
                             <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
                             <ul>
