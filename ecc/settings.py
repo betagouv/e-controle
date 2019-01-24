@@ -20,6 +20,11 @@ DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+SHOW_DEBUG_TOOLBAR = env('SHOW_DEBUG_TOOLBAR', default=DEBUG)
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda r: SHOW_DEBUG_TOOLBAR,
+}
 
 # Application definition
 
