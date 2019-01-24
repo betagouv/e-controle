@@ -42,8 +42,9 @@ class ValidateTokenView(generic.RedirectView):
         token = self.get_valid_token(token_key)
         if not token:
             messages.warning(
-                self.request, "Le lien de connexion que vous utilisez n'est pas "
-                "valide. Vous pouvez réessayer de vous conneceter")
+                self.request,
+                "Le lien de connexion ne fonctionne pas. Nous vous invitons à vous reconnecter."
+            )
             return redirect('login')
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
