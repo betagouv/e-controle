@@ -7,8 +7,13 @@
 
 {% block extra_static_header %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    {% if debug %}
+    <script src="{% static 'vue/2.5.22/vue.js' %}"></script>
+    <script src="{% static 'axios/0.18.0/axios.js' %}"></script>
+    {% else %}
+    <script src="{% static 'vue/2.5.22/vue.min.js' %}"></script>
+    <script src="{% static 'axios/0.18.0/axios.min.js' %}"></script>
+    {% endif %}
 {% endblock extra_static_header %}
 
 {% block content %}
