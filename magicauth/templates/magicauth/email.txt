@@ -1,10 +1,8 @@
 Bonjour {{ user.first_name }} {{ user.last_name }},
 
-Pour accéder à votre espace E-Contrôle, veuillez cliquer le lien de connection:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
+Pour accéder à votre espace E-Contrôle, vous avez juste à cliquer sur ce lien de connexion:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
 
-Ce lien est unique et temporaire. Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email.
-
-Pour demander l'accès à une autre personne, veuillez motiver votre demande directement en répondant à cet email.
+Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email.
 
 Merci beaucoup,
 

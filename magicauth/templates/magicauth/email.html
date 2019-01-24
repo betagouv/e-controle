@@ -297,7 +297,7 @@
                     <tr>
                       <td>
                         <p>Bonjour {{ user.first_name }} {{ user.last_name }},</p>
-                        <p>Pour accéder à votre espace E-Contrôle, veuillez cliquer sur "Connexion" ou copier/coller le lien dans votre navigateur.</p>
+                        <p>Pour accéder à votre espace E-Contrôle, vous avez juste à cliquer sur ce bouton :</p>
                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                           <tbody>
                             <tr>
@@ -313,11 +313,7 @@
                             </tr>
                           </tbody>
                         </table>
-                        <p><strong>Lien à copier/coller dans votre navigateur : </strong></p>
-                        <p>https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}</p>
-                        <p>Ce lien est unique, temporaire.</p>
                         <p>Si vous rencontrez des difficultés pour vos connecter, répondez directement à cet email.</p>
-                        <p>Pour demander l'accès à une autre personne, veuillez motiver votre demande directement en répondant à cet email.</p>
                         <p>Merci beaucoup,</p>
                         <p>L'équipe d'E-Contrôle</p>
                       </td>
