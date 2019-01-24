@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -40,7 +41,10 @@ class ValidateTokenView(generic.RedirectView):
         token_key = kwargs.get('key')
         token = self.get_valid_token(token_key)
         if not token:
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            messages.warning(
+                self.request, "Le lien de connexion que vous utilisez n'est pas "
+                "valide. Vous pouvez réessayer de vous conneceter")
+            return redirect('login')
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
