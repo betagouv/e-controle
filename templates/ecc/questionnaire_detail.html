@@ -61,11 +61,10 @@
                       <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
                       <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
                           {{ question.description|linebreaks }}
-                      {% if response_files or question_files %}
                         <div class="tags">
-                          <span v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files" class="tag tag-azure pull-left">
-                            <template v-if="results[{{ question.id }}].response_files.length > 1">[[ results[{{ question.id }}].response_files.length ]] fichiers déposés</template>
-                            <template v-else>[[ results[{{ question.id }}].response_files.length ]] fichier déposé</template>
+                          <span v-if="results && r_files && r_files[{{ question.id }}]" class="tag tag-azure pull-left">
+                            <template v-if="r_files[{{ question.id }}].length == 1">[[ r_files[{{ question.id }}].length ]] fichier déposé</template>
+                            <template v-if="r_files[{{ question.id }}].length > 1">[[ r_files[{{ question.id }}].length ]] fichiers déposés</template>
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
                           </span>
                           {% if question_files %}
@@ -74,7 +73,6 @@
                           </span>
                           {% endif %}
                         </div>
-                      {% endif %}
                       </div>
                     </div>
                     <div class="card-options">
@@ -82,10 +80,11 @@
                     </div>
                     <div class="card-body">
                     <div class="card">
-                        <div class="form-group" v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files">
-                            <div  v-if="results[{{ question.id }}] && results[{{ question.id }}].response_files" class="form-label">Fichier(s) déposé(s):</div>
+                        <div class="form-group" v-if="results && r_files && r_files[{{ question.id }}]">
+                            <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
+                            <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
                             <ul>
-                              <li v-for="file in results[{{ question.id }}].response_files" :key="file.id">
+                              <li v-for="file in r_files[{{ question.id }}]" :key="file.id">
                                 <a :href="file.url">[[ file.basename ]]</a>
                                 <a href="javascript:void(0)" class="icon">
                                   <i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i>

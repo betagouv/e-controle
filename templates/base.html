@@ -2,13 +2,18 @@
 {% load static %}
 
 {% block site_title %}
-    <title>Cour Des Comptes - E-controle</title>
+    <title>Cour Des Comptes - e-controle</title>
 {% endblock site_title %}
 
 {% block extra_static_header %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/axios/dist/axios.js"></script>
+    {% if debug %}
+    <script src="{% static 'vue/2.5.22/vue.js' %}"></script>
+    <script src="{% static 'axios/0.18.0/axios.js' %}"></script>
+    {% else %}
+    <script src="{% static 'vue/2.5.22/vue.min.js' %}"></script>
+    <script src="{% static 'axios/0.18.0/axios.min.js' %}"></script>
+    {% endif %}
 {% endblock extra_static_header %}
 
 {% block content %}
@@ -114,7 +119,7 @@
       <div class="row align-items-center flex-row-reverse">
         <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
           <img src="{% static "img/logo-cc.jpg" %}" class="img col-3" alt="logo-cc">
-          E-contrôle <a href='https://github.com/betagouv/e-controle'>v0.3</a> Bêta. Cour des comptes.
+          e-contrôle <a href='https://github.com/betagouv/e-controle'>v0.3</a> Beta. Cour des comptes.
         </div>
       </div>
     </div>
