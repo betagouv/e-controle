@@ -122,14 +122,12 @@
                           {% if user.profile.is_audited %}
                           <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="">
                           </textarea>
-                          <ul>
-                            <li v-for="file in results[{{ question.id }}].response_files" :key="file.id">
+                            <div v-for="file in r_files[{{ question.id }}]" :key="file.id">
                               <a :href="file.url">[[ file.basename ]]</a>
                               <a href="javascript:void(0)" class="icon">
                                 <i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i>
                               </a>
-                            </li>
-                          </ul>
+                            </div>
                           {% else %}
                           <p>
                             La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.

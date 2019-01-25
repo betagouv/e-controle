@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
-from .models import ResponseFile, Question
+from .models import ResponseFile, Question, Comment
 
 
 User = get_user_model()
@@ -28,3 +28,11 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'response_files')
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+    question = QuestionSerializer()
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'author', 'text', 'creation_date', 'question')

@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from .models import Question
+from .models import Question, Comment
 
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, CommentSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -25,3 +25,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
             dict_data[question_id] = elem
         response.data = dict_data
         return response
+
+
+class CommentViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = CommentSerializer
