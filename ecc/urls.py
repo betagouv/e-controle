@@ -12,7 +12,7 @@ from control import api_views as control_api_views
 from magicauth import views as magicauth_views
 
 
-admin.site.site_header = 'E-Contrôle Administration'
+admin.site.site_header = 'e-contrôle Administration'
 
 router = routers.DefaultRouter()
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
@@ -45,5 +45,5 @@ if settings.DEBUG:
     from rest_framework.documentation import include_docs_urls
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('admin/docs/', include('django.contrib.admindocs.urls'))]
-    urlpatterns += [path('api/docs/', include_docs_urls(title='E-Contrôle API'))]
+    urlpatterns += [path('api/docs/', include_docs_urls(title='e-contrôle API'))]
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
