@@ -141,3 +141,16 @@ class ResponseFile(TimeStampedModel):
 
     def __str__(self):
         return self.file.name
+
+
+class Comment(TimeStampedModel):
+    author = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, related_name='comments', on_delete=models.PROTECT)
+    text = models.TextField('commentaire', blank=False)
+    question = models.ForeignKey(
+        to='Question', verbose_name='question', related_name='comments',
+        on_delete='models.CASCADE')
+
+    @property
+    def creation_date(self):
+        return self.created.strftime("%d %b %Y %X")
