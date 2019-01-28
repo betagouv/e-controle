@@ -4,6 +4,8 @@ from .models import Question, Comment
 
 from .serializers import QuestionSerializer, CommentSerializer
 
+from rest_framework.renderers import JSONRenderer
+
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = QuestionSerializer
@@ -26,6 +28,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
         response.data = dict_data
         return response
 
-
-class CommentViewSet(viewsets.ReadOnlyModelViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    renderer_classes = (JSONRenderer, )
+    queryset = Comment.objects.all()

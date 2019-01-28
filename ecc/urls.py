@@ -16,6 +16,7 @@ admin.site.site_header = 'e-contrôle Administration'
 
 router = routers.DefaultRouter()
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
+router.register(r'comment', control_api_views.CommentViewSet, basename='comment')
 
 
 urlpatterns = [
