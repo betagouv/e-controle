@@ -79,20 +79,7 @@
                       <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                     </div>
                     <div class="card-body">
-                    <div class="card">
-                        <div class="form-group" v-if="results && r_files && r_files[{{ question.id }}]">
-                            <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
-                            <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
-                            <ul>
-                              <li v-for="file in r_files[{{ question.id }}]" :key="file.id">
-                                <a :href="file.url">[[ file.basename ]]</a>
-                                <a href="javascript:void(0)" class="icon">
-                                  <i class="fe fe-info" data-toggle="tooltip" :title="file.author.first_name + ' ' + file.author.last_name + ' (' + file.creation_date +')'"></i>
-                                </a>
-                              </li>
-                            </ul>
-                        </div>
-                        {% if question_files %}
+                                                {% if question_files %}
                         <div class="form-group">
                             <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
                             <ul>
@@ -102,7 +89,52 @@
                             </ul>
                         </div>
                         {% endif %}
-
+                   <div class="col-12">
+                    <div class="card">
+                        <div class="form-group" v-if="results && r_files && r_files[{{ question.id }}]">
+                            <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
+                            <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
+                            
+                              <div class="table-responsive">
+                    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+                      <thead>
+                        <tr>
+                          <th class="text-center w-1"><i></th>
+                          <th>Date de dépôt</th>
+                          <th>Nom du document</th>
+                          <th>Déposant</th>
+                          <th class="text-center"><i class="icon-settings"></i></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="text-center">
+                            <div class="fe fe-file">
+                            </div>
+                          </td>
+                          <td>
+                              <div><a'file.creation_date'</a></div>
+                                                          </div>
+                              <div class="float-center">
+                                <small class="text-muted"><a 'file.creation_hour'</a></small>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="clearfix">
+                              <div class="float-left">
+                                <div> <a :href="file.url">[[ file.basename ]]</a></div> 
+                            </div>
+                          </td>
+                           <td>
+                            <div class="clearfix">
+                              <div class="float-left">
+                                <div> <a :title="file.author.first_name + ' ' + file.author.last_name" </a><div>
+                              </div>
+                            </div>
+                          </td>
+                         </tr>
+                      
                         {% if user.profile.is_audited %}
                         <div class="form-group">
                             <div class="form-label">Déposer vos réponses</div>
