@@ -25,4 +25,5 @@ djangorestframework==3.9.1
 markdown==3.0.1
 django-filter==2.0.0
 coreapi==2.3.3
+django-oidc-provider==0.7.0
 git+https://github.com/justquick/django-activity-stream.git

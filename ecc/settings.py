@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'actstream',
     'rest_framework',
+    'oidc_provider',
 
     'control',
     'magicauth',
@@ -132,7 +133,6 @@ MAGICAUTH_TOKEN_DURATION = 15 * 60
 
 LOGIN_REDIRECT_URL = 'questionnaire-list'
 LOGIN_URL = 'login'
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

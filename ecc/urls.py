@@ -40,6 +40,8 @@ urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
 ]
 
+urlpatterns += [path('openid/', include('oidc_provider.urls', namespace='oidc_provider'))]
+
 if settings.DEBUG:
     import debug_toolbar
     from rest_framework.documentation import include_docs_urls
