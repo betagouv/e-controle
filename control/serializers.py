@@ -30,9 +30,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ('id', 'response_files')
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-    question = QuestionSerializer()
+    author = UserSerializer(read_only=True) 
+
+    author_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), source='author', many = False, write_only = True) 
+    question = serializers.PrimaryKeyRelatedField(queryset = Question.objects.all(), allow_null = True, many = False, required = False)
 
     class Meta:
         model = Comment
-        fields = ('id', 'author', 'text', 'creation_date', 'question')
+        fields = ('id', 'author', 'author_id', 'text', 'creation_date', 'question')

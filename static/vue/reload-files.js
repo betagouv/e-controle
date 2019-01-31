@@ -1,10 +1,49 @@
 const url = "/api/question/"
 const url_comment = "/api/comment/"
 
+Vue.filter('first', function (value) {
+  return value.charAt(0)
+})
 
 Vue.component('text-comment', {
-  props: ['text', 'questionid'],
-  template: '<p>{{ text }} + {{ questionid }}</p>'
+  props: ['text', 'questionid', 'date', 'firstname', 'lastname'],
+  template: `<div class="media">
+                <div class="media-object avatar avatar-pink">{{ firstname | first }}{{ lastname | first }}</div>
+                <div class="media-body">
+                  <div class="media-heading">
+                  <small class="float-right text-muted">{{ date }}</small>
+                  <h5> {{ firstname }} {{ lastname }}</h5>
+                  </div>
+                  <div>
+                    {{ text }}
+                  </div>
+                </div>
+            </div>`,
+})
+
+Vue.component('button-comment', {
+  props: ['questionid', 'userid'],
+  data: function() {
+    return {text: ''}
+  },
+  template: `<div>
+              <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="" v-model="text"></textarea> 
+              <div class="text-right">
+                <button class="btn btn-primary center" v-on:click=addComment>
+                  Envoyer
+                </button>
+              </div>
+            </div>`,
+  methods: {
+    addComment() {
+      var vm = this
+      vm.$parent.postComment(vm._props.questionid, vm._props.userid, vm.text)
+    }
+  },
+  mounted: function() {
+    var vm = this
+    vm.$parent.getCommentByQuestionId(vm._props.questionid)
+  }
 })
 
 var question_app = new Vue({
@@ -13,9 +52,7 @@ var question_app = new Vue({
   data: {
     results: {response_files: {}},
     r_files: {},
-    comments: [
-      {text: 'test'}
-    ]
+    comments: {}
   },
   methods: {
 		fetchQuestionData() {
@@ -32,42 +69,44 @@ var question_app = new Vue({
         }
         this.r_files[question_id] = response_files
       }
-    }
-  },
-  mounted: function () {
-  		this.fetchQuestionData()
-  	}
-})
-
-
-/*var comment_app = new Vue({
-  delimiters: ['[[', ']]'],
-  el: '#comment-app',
-  data: {
-    comments: {}
-  },
-  methods: {
-    fetchCommentData() {
-      axios.get(url).then(response => {
-        this.results = response.data
-
+    },
+    getCommentByQuestionId(question_id) {
+      url_by_id = url_comment + "?questionid=" + question_id
+      axios.get(url_by_id).then(response => {
+        this.comments[question_id] = []
+        this.comments[question_id].push(response.data)
+      }).catch(error => {
+          console.log(error)
       })
     },
-    saveComment(comment_data) {
-      for (question_id in comment_data) {
-        comments = comment_data[question_id].comments
-        if (comments.length == 0) {
-          comments = null
+    postComment(questionid, author_id, text) {
+      // Code to get token from cookie
+      var cookiestring = RegExp(""+"csrftoken"+"[^;]+").exec(document.cookie);
+      csrftoken = decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
+      console.log(author_id)
+      axios.post(url_comment,
+        {
+          question: questionid,
+          author_id: author_id,
+          text: text,
+        },
+        {
+          headers : {
+            "X-CSRFToken": csrftoken 
+          }
         }
-        this.r_comments[question_id] = comments
-      }
+      ).then(response => {
+        console.log(response)
+        this.comments[questionid][0].push(response.data)
+        this.$forceUpdate();
+      })
     }
   },
   mounted: function () {
-    this.fetchCommentData()
+		this.fetchQuestionData()
   }
 })
-*/
+
 Dropzone.options.dropzoneArea = {
   success: function(file, done) {
     question_app.fetchQuestionData()

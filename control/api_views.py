@@ -32,3 +32,15 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     renderer_classes = (JSONRenderer, )
     queryset = Comment.objects.all()
+
+    def get_queryset(self):
+        """
+        If one of the query params is question_id we restrict queryset which belong to this id
+        """
+        queryset = Comment.objects.all()
+        question_id = self.request.query_params.get('questionid', None)
+        print(question_id)
+        if question_id is not None:
+            queryset = queryset.filter(question__id = question_id)
+
+        return queryset
