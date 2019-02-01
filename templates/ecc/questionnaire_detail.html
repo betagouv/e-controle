@@ -22,7 +22,7 @@
 
 {% block page_content %}
 <div class="row row-cards">
-  <div class="col-lg-4">
+  <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
     <div class="row sticky">
       <div class="col-md-6 col-lg-12">
         <div class="card">
@@ -41,22 +41,17 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="col-lg-8" id="question-detail-app">
+  </div> <!--// closing: side_theme_list  //-->
+  <div class="col-lg-8" id="question-detail-app"> <!--// opening: main_list_of_questions  //-->
     {% for theme in themes %}
-    <div class="card" id="theme{{ theme.numbering }}">
+    <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
       <div class="card-status card-status-top bg-blue"></div>
       <div class="card-header">
         <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
       </div>
-      <div class="table-responsive">
-          <table class="table card-table table-striped table-vcenter">
-              <tbody>
               {% for question in theme.questions.all %}
               {% with response_files=question.response_files.all question_files=question.question_files.all %}
-              <tr>
-                <td class="rows p-0">
-                  <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2">
+                  <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 bg-transparent pb-2 pt-2" id="question{{ theme.numbering }}.{{ question.numbering }}"> <!--// opening: main_question_area_inside_a_theme  //-->
                     <div class="card-header border-0">
                       <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
                       <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
@@ -78,8 +73,8 @@
                     <div class="card-options">
                       <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                     </div>
-                    <div class="card-body">
-                    <div class="card">
+
+                    <div class="card-body">  <!--// opening: question_detail_area  //-->
                         <div class="form-group" v-if="results && r_files && r_files[{{ question.id }}]">
                             <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
                             <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
@@ -109,7 +104,7 @@
                             <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data" id="dropzone-area">
                               {% csrf_token %}
                               <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
-                              <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}">
+                              <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}" />
                               <div class="fallback">
                                 <input name="file" type="file" multiple />
                               </div>
@@ -128,18 +123,14 @@
                           {% endif %}
                         </div> -->
 
-                  </div>
-                </td>
-              </tr>
+                    </div>  <!--// closing: question_detail_area  //-->
+
+                  </div> <!--// closing: main_question_area_inside_a_theme  //-->
               {% endwith %}
               {% endfor %}
-              </tbody>
-            </table>
-      </div>
-    </div>
-
+    </div> <!--// closing: theme_area_containing_questions  //-->
     {% endfor %}
-  </div>
+  </div> <!--// closing: main_list_of_questions  //-->
 </div>
 {% endblock page_content %}
 
