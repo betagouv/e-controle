@@ -138,15 +138,14 @@ LOGIN_URL = 'login'
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'fr-fr'
-
 TIME_ZONE = 'Europe/Paris'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+# A trick for DRF that does not seems to know about the locale
+import locale
+locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/

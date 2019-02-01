@@ -135,13 +135,5 @@ class ResponseFile(TimeStampedModel):
     def basename(self):
         return os.path.basename(self.file.name)
 
-    @property
-    def creation_time(self):
-        return self.created.strftime("%X")
-
-    @property
-    def creation_date(self):
-        return self.created.strftime("%A %d %B %Y")
-
     def __str__(self):
         return self.file.name
