@@ -83,7 +83,6 @@ var question_app = new Vue({
       // Code to get token from cookie
       var cookiestring = RegExp(""+"csrftoken"+"[^;]+").exec(document.cookie);
       csrftoken = decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./,"") : "");
-      console.log(author_id)
       axios.post(url_comment,
         {
           question: questionid,
@@ -96,7 +95,6 @@ var question_app = new Vue({
           }
         }
       ).then(response => {
-        console.log(response)
         this.comments[questionid][0].push(response.data)
         this.$forceUpdate();
       })

@@ -39,7 +39,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         """
         queryset = Comment.objects.all()
         question_id = self.request.query_params.get('questionid', None)
-        print(question_id)
+
+        queryset = queryset.filter(
+            question__theme__questionnaire__control=self.request.user.profile.control)
+
         if question_id is not None:
             queryset = queryset.filter(question__id = question_id)
 
