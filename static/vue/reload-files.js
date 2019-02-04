@@ -1,14 +1,13 @@
 const url = "/api/question/"
 const url_comment = "/api/comment/"
 
-Vue.filter('first', function (value) {
+/*Vue.filter('first', function (value) {
   return value.charAt(0)
-})
+})*/
 
 Vue.component('text-comment', {
   props: ['text', 'questionid', 'date', 'firstname', 'lastname'],
   template: `<div class="media">
-                <div class="media-object avatar avatar-pink">{{ firstname | first }}{{ lastname | first }}</div>
                 <div class="media-body">
                   <div class="media-heading">
                   <small class="float-right text-muted">{{ date }}</small>
@@ -38,6 +37,7 @@ Vue.component('button-comment', {
     addComment() {
       var vm = this
       vm.$parent.postComment(vm._props.questionid, vm._props.userid, vm.text)
+      vm.text = ''
     }
   },
   mounted: function() {

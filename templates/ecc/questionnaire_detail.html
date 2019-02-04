@@ -120,9 +120,11 @@
                         <div class="form-group">
                           <label class="form-label">Commentaire facultatif</label>
                             <div v-if="comments && comments[{{ question.id }}]">
-                              <div v-for="comment in comments[{{ question.id }}][0]">
-                                <text-comment :key="comment.id" v-bind:text="comment.text" v-bind:questionid="{{ question.id }}" v-bind:date=" comment.creation_date " v-bind:firstname=" comment.author.first_name " v-bind:lastname=" comment.author.last_name "> </text-comment>
-                              </div>
+                              <ul class="list-group card-list-group" >
+                                <li class='list-group-item'v-for="comment in comments[{{ question.id }}][0]">
+                                  <text-comment :key="comment.id" v-bind:text="comment.text" v-bind:questionid="{{ question.id }}" v-bind:date=" comment.creation_date " v-bind:firstname=" comment.author.first_name " v-bind:lastname=" comment.author.last_name "> </text-comment>
+                                </li>
+                              </ul>
                             </div>
                             <button-comment v-bind:questionid="{{ question.id }}" v-bind:userid="{{ user.id }}" />
                         </div>
