@@ -30,7 +30,6 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    renderer_classes = (JSONRenderer, )
     queryset = Comment.objects.all()
 
     def get_queryset(self):
