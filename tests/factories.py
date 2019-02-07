@@ -14,7 +14,7 @@ faker = FakerFactory.create('fr_FR')
 class UserFactory(factory.DjangoModelFactory):
     first_name = factory.LazyFunction(faker.first_name)
     last_name = factory.LazyFunction(faker.last_name)
-    email = factory.LazyFunction(faker.email)
+    email = factory.LazyAttribute(lambda a: f'{a.first_name}.{a.last_name}@{faker.word()}.com')
     username = factory.LazyAttribute(lambda a: a.email)
     password = factory.PostGenerationMethodCall('set_password', '123')
     is_active = True
@@ -34,8 +34,8 @@ class MagicTokenFactory(factory.DjangoModelFactory):
 
 @register
 class ControlFactory(factory.DjangoModelFactory):
-    title = factory.LazyFunction(faker.name)
-    reference_code = 'CONTROL'
+    title = factory.LazyFunction(lambda: f'Controle: {faker.sentence(nb_words=3)}')
+    reference_code = factory.Sequence(lambda n: f'CONTROLE-{n}')
 
     class Meta:
         model = 'control.Control'
@@ -43,7 +43,7 @@ class ControlFactory(factory.DjangoModelFactory):
 
 @register
 class QuestionnaireFactory(factory.DjangoModelFactory):
-    title = factory.LazyFunction(faker.name)
+    title = factory.LazyFunction(lambda: f'Questionnaire à propos de {faker.name()}')
     control = factory.SubFactory(ControlFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
@@ -56,7 +56,7 @@ class QuestionnaireFactory(factory.DjangoModelFactory):
 
 @register
 class ThemeFactory(factory.DjangoModelFactory):
-    title = factory.LazyFunction(faker.name)
+    title = factory.LazyFunction(lambda: f'Thème: {faker.name()}')
     questionnaire = factory.SubFactory(QuestionnaireFactory)
 
     class Meta:
@@ -65,7 +65,7 @@ class ThemeFactory(factory.DjangoModelFactory):
 
 @register
 class QuestionFactory(factory.DjangoModelFactory):
-    description = factory.LazyFunction(faker.name)
+    description = factory.LazyFunction(faker.text)
     theme = factory.SubFactory(ThemeFactory)
 
     class Meta:
@@ -77,8 +77,8 @@ class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            name='response-file.pdf',
+            content=open('./tests/data/response-file.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
@@ -89,9 +89,9 @@ class ResponseFileFactory(factory.DjangoModelFactory):
 class QuestionFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
-            content_type='application/pdf')
+            name='annexe.xlsx',
+            content=open('./tests/data/annexe.xlsx', 'rb').read(),
+            content_type='application/xls')
 
     class Meta:
         model = 'control.QuestionFile'
