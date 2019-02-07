@@ -8,13 +8,13 @@ var question_app = new Vue({
     r_files: {}
   },
   methods: {
-		fetchQuestionData() {
+	  fetchQuestionData: function() {
       axios.get(url).then(response => {
         this.results = response.data
         this.saveResponseFiles(response.data)
       })
     },
-    saveResponseFiles(question_data) {
+    saveResponseFiles: function(question_data) {
       for (question_id in question_data) {
         response_files = question_data[question_id].response_files
         if (response_files.length == 0) {
@@ -24,7 +24,7 @@ var question_app = new Vue({
       }
     }
   },
-  mounted: function () {
+  mounted: function() {
   		this.fetchQuestionData()
   	}
 })
