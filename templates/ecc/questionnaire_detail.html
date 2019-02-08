@@ -29,13 +29,13 @@
           <div class="card-header bg-blue text-white">
             <h4 class="card-title">Thèmes</h4>
           </div>
-          {% for theme in themes %}
           <table class="table card-table">
             <tbody>
+              {% for theme in themes %}
             <tr data-id="{{ forloop.counter }}" class="theme-row">
               <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
             </tr>
-           {% endfor %}
+            {% endfor %}
             </tbody>
           </table>
         </div>
@@ -51,13 +51,13 @@
       </div>
               {% for question in theme.questions.all %}
               {% with response_files=question.response_files.all question_files=question.question_files.all %}
-                  <div class="card card--ie-773px card-collapsed no-glitter border-0 col-12 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}" id="question{{ theme.numbering }}.{{ question.numbering }}"> <!--// opening: main_question_area_inside_a_theme  //-->
-                    <div class="card-header border-1">
-                      <span class="stamp stamp-md bg-blue mr-3" data-toggle="card-collapse" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
-                      <div class="card-text" data-toggle="card-collapse" style="cursor: pointer">
+                  <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}" id="question{{ theme.numbering }}.{{ question.numbering }}"> <!--// opening: main_question_area_inside_a_theme  //-->
+                    <div class="card-header border-1" data-toggle="card-collapse" >
+                      <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
+                      <div class="card-text"style="cursor: pointer">
                           {{ question.description|linebreaks }}
                         <div class="tags">
-                          <span v-if="results && r_files && r_files[{{ question.id }}]" class="tag tag-azure pull-left">
+                          <span v-if="results && r_files && r_files[{{ question.id }}]" class="tag tag-azure pull-left" style="cursor: pointer">
                             <template v-if="r_files[{{ question.id }}].length == 1">[[ r_files[{{ question.id }}].length ]] fichier déposé</template>
                             <template v-if="r_files[{{ question.id }}].length > 1">[[ r_files[{{ question.id }}].length ]] fichiers déposés</template>
                             <span class="tag-addon"><i class="fe fe-file"></i></span>
@@ -69,9 +69,6 @@
                           {% endif %}
                         </div>
                       </div>
-                    </div>
-                    <div class="card-options">
-                      <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                     </div>
 
                     <div class="card-body">  <!--// opening: question_detail_area  //-->
@@ -101,8 +98,9 @@
                                 <div><a target="_blank" :href="file.url">[[ file.basename ]]</a></div>
                               </td>
                               <td class="text-center">
-                                <div>[[ file.author.first_name ]] [[ file.author.last_name ]]<div>
+                                <div>[[ file.author.first_name ]] [[ file.author.last_name ]]</div>
                               </td>
+                            </tr>
                           </tbody>
                         </table>
                         </div>
@@ -144,6 +142,11 @@
                         </div> -->
 
                     </div>  <!--// closing: question_detail_area  //-->
+
+                    <div class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer" data-toggle="card-collapse">
+                    <i class="fe fe-chevron-up"></i>
+                    </div>
+
 
                   </div> <!--// closing: main_question_area_inside_a_theme  //-->
               {% endwith %}

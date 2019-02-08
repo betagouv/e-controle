@@ -7,28 +7,33 @@
 
 {% block extra_static_header %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
+
     {% if debug %}
+    <script src="{% static 'es6-promise/4.2.5/es6-promise.js' %}" %"></script>
     <script src="{% static 'vue/2.5.22/vue.js' %}"></script>
     <script src="{% static 'axios/0.18.0/axios.js' %}"></script>
     {% else %}
+    <script src="{% static 'es6-promise/4.2.5/es6-promise.min.js' %}"></script>
     <script src="{% static 'vue/2.5.22/vue.min.js' %}"></script>
     <script src="{% static 'axios/0.18.0/axios.min.js' %}"></script>
     {% endif %}
 {% endblock extra_static_header %}
 
 {% block content %}
-<div class="page">
-  <div class="page-main">
-    {% block page_top_row %}
-    <div class="header py-4">
-      <div class="container">
-        <div class="d-flex">
-          <a class="header-brand" href="{% url 'login' %}">
-            <img src="{% static "img/e-controle.png" %}" class="header-brand-img" alt="logo" style="height: 4;">
-          </a>
-          <div class="d-flex order-lg-2 ml-auto">
+<div class="page"> <!--// opening: page  //-->
 
-            <div class="dropdown">
+  <div class="page-main"> <!--// opening: main_page  //-->
+    {% block page_top_row %}
+    <div class="header py-4"> <!--// opening: top_header  //-->
+      <div class="container d-flex"> <!--// opening: top_header_container  //-->
+          <a class="header-brand" href="{% url 'login' %}">
+            <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
+          </a>
+
+          <div class="d-flex order-lg-2 ml-auto"> <!--// opening: header_items  //-->
+
+            <div class="dropdown"> <!--// opening: main_dropdown  //-->
+
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                 <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
 
@@ -44,16 +49,15 @@
                 </a>
                 </small>
               </div>
-            </div>
+            </div> <!--// closing: main_dropdown  //-->
 
-          </div>
-        </div>
-      </div>
-    </div>
+          </div>   <!--// closing: header_items  //-->
+      </div>   <!--// opening: top_header_container  //-->
+    </div>  <!--// closing: top_header  //-->
     {% endblock page_top_row %}
 
     {% block page_top_nav %}
-    <div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+    <div class="header d-lg-flex p-0" id="headerMenuCollapse">
       <div class="container">
         <div class="row align-items-center">
           <!-- TODO: Faire la recherche
@@ -109,24 +113,25 @@
 
         {% block page_content %}
         {% endblock page_content %}
+      </div>
     </div>
-  </div>
   {% endblock page_main_container %}
 
   {% block page_footer %}
-  <footer class="footer">
+  <div class="footer">
     <div class="container">
       <div class="row align-items-center flex-row-reverse">
         <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
-          <img src="{% static "img/logo-cc.jpg" %}" class="img col-3" alt="logo-cc">
+          <img src="{% static 'img/logo-cc.jpg' %}" class="img col-3" alt="logo-cc"/>
           e-contrôle <a href='https://github.com/betagouv/e-controle'>v0.3</a> Beta. Cour des comptes.
         </div>
       </div>
     </div>
-  </footer>
+  </div>
   {% endblock page_footer %}
 
-</div>
+</div> <!--// closing: main_page  //-->
+</div> <!--// closing: page  //-->
 
 {% endblock content %}
 
