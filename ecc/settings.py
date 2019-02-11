@@ -145,7 +145,10 @@ USE_TZ = True
 
 # A trick for DRF that does not seems to know about the locale
 import locale
-locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+try:
+    locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+except locale.Error as e:
+    pass  # setlocale can crash, for instance when running on Heroku.
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
