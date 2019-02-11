@@ -1,0 +1,11 @@
+# Version 0.4
+
+Description: Amélioration de l'expérience de connexion / Changement liste des fichiers uploadés
+Date: 11 février 2019
+
+## Changements
+- La liste de fichiers se recharge automatiquement après l'upload
+- La liste des fichiers uploadés est affichée dans une tableau avec l'auteur et la date
+- Amélioration de l'expérience de connexion:
+    - Le message de l'email a été changé
+    - Il n'y a plus de page d'erreur quand on re-clique sur le bouton de connexion
