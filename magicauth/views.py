@@ -43,7 +43,7 @@ class ValidateTokenView(generic.RedirectView):
         if not token:
             messages.warning(
                 self.request,
-                "Le lien de connexion ne fonctionne pas. Nous vous invitons à vous reconnecter."
+                "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
             return redirect('login')
         login(self.request, token.user)
