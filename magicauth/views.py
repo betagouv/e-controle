@@ -52,5 +52,5 @@ class ValidateTokenView(generic.RedirectView):
 
 
 magic_link = MagicLinkView.as_view()
-email_sent = generic.TemplateView.as_view(template_name='magicauth/email-sent.html')
+email_sent = generic.TemplateView.as_view(template_name='magicauth/email_sent.html')
 validate_token = ValidateTokenView.as_view()
