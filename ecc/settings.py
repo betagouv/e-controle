@@ -47,11 +47,15 @@ INSTALLED_APPS = [
     'django_extensions',
     'actstream',
     'rest_framework',
+    'celery',
+    'django_celery_beat',
 
+    'ecc',
     'control',
     'magicauth',
     'user_profiles',
     'utils',
+    'reporting',
 ]
 
 
@@ -187,3 +191,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')

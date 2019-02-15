@@ -37,3 +37,17 @@ Les variables d'environnement sont automatiquement intégrées au process uWSGI 
     cd $CODE_DIR/deploy/
     gpg latest.dump.gpg
     pg_restore --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc latest.dump
+
+
+## Envoie d'emails périodiques
+
+On utilise Celery Beat et Redis pour gérer l'envoie d'emails périodiques.
+
+La fréquence des envoies est configurée dans django admin, avec l'applicaiton 'django_celery_beat'.
+
+    yum -y install redis
+    systemctl start redis
+    systemctl enable redis
+    redis-cli ping
+
+    celery worker --beat -A ecc -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler &
