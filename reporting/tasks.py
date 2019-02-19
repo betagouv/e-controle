@@ -1,3 +1,5 @@
+import logging
+
 from datetime import timedelta
 
 from actstream import action
@@ -15,6 +17,13 @@ from control.models import Control, ResponseFile
 
 
 logger = get_task_logger(__name__)
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
 
 current_site = Site.objects.get_current()
 
@@ -42,6 +51,7 @@ def send_files_report():
     for control in Control.objects.all():
         logger.info(f'Processing control: {control}')
         subject = f'{control.reference_code} - de nouveaux documents déposés !'
+        logger.debug(f"Email subject: {subject}")
         latest_email_sent = control.actor_actions.filter(verb='sent-files-report').first()
         if latest_email_sent:
             date_cutoff = latest_email_sent.timestamp
@@ -54,13 +64,12 @@ def send_files_report():
         )
         logger.info(f'Number of files: {len(files)}')
         if not files:
-            return None
+            continue
         recipients = control.user_profiles.filter(send_files_report=True)
         recipient_list = recipients.values_list('user__email', flat=True)
         logger.info(f'Recipients: {recipient_list}')
-
         if not recipient_list:
-            return None
+            continue
         context = {'files': files}
         number_of_sent_email = send_ecc_email(
             subject=subject,
