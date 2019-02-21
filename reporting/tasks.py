@@ -1,19 +1,14 @@
 import logging
-
 from datetime import timedelta
 
-from actstream import action
-from django.conf import settings
-from django.contrib.sites.models import Site
-from django.core.mail import send_mail
-from django.template import loader
 from django.utils import timezone
 
-
+from actstream import action
 from celery import task
 from celery.utils.log import get_task_logger
 
 from control.models import Control, ResponseFile
+from utils.email import send_email
 
 
 logger = get_task_logger(__name__)
@@ -25,23 +20,19 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 
-current_site = Site.objects.get_current()
-
-
-def send_ecc_email(subject, text_template, html_template, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, extra_context=None):
-    context = {'site': current_site}
-    if extra_context:
-        context.update(extra_context)
-    text_message = loader.render_to_string(text_template, context)
-    html_message = loader.render_to_string(html_template, context)
-    return send_mail(
-        subject=subject,
-        message=text_message,
-        from_email=from_email,
-        html_message=html_message,
-        recipient_list=recipient_list,
-        fail_silently=False,
+def get_files(control):
+    latest_email_sent = control.actor_actions.filter(verb='sent-files-report').first()
+    if latest_email_sent:
+        date_cutoff = latest_email_sent.timestamp
+    else:
+        date_cutoff = timezone.now() - timedelta(hours=24)
+    logger.info(f"Looking for files uploaded after this timestamp: {date_cutoff}")
+    files = ResponseFile.objects.filter(
+        question__theme__questionnaire__control=control,
+        created__gt=date_cutoff,
     )
+    logger.info(f'Number of files: {len(files)}')
+    return files
 
 
 @task
@@ -52,17 +43,7 @@ def send_files_report():
         logger.info(f'Processing control: {control}')
         subject = f'{control.reference_code} - de nouveaux documents déposés !'
         logger.debug(f"Email subject: {subject}")
-        latest_email_sent = control.actor_actions.filter(verb='sent-files-report').first()
-        if latest_email_sent:
-            date_cutoff = latest_email_sent.timestamp
-        else:
-            date_cutoff = timezone.now() - timedelta(hours=24)
-        logger.info(f"Looking for files uploaded after this timestamp: {date_cutoff}")
-        files = ResponseFile.objects.filter(
-            question__theme__questionnaire__control=control,
-            created__gt=date_cutoff,
-        )
-        logger.info(f'Number of files: {len(files)}')
+        files = get_files(control)
         if not files:
             continue
         recipients = control.user_profiles.filter(send_files_report=True)
@@ -71,7 +52,7 @@ def send_files_report():
         if not recipient_list:
             continue
         context = {'files': files}
-        number_of_sent_email = send_ecc_email(
+        number_of_sent_email = send_email(
             subject=subject,
             text_template=text_template,
             html_template=html_template,
