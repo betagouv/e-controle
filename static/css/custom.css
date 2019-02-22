@@ -7,6 +7,10 @@
 /* IE specific fix */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .card--ie-773px {
-     width: 773px; 
+     width: 773px;
   }
+}
+
+.zebra  {
+    background: #f8f9fa;
 }

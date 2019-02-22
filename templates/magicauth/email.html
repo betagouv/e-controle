@@ -1,0 +1,23 @@
+{% extends "base_email.html" %}
+{% block email_content %}
+<p>Bonjour {{ user.first_name }} {{ user.last_name }},</p>
+<p>Pour accéder à votre espace e-contrôle, vous avez juste à cliquer sur ce bouton :</p>
+<table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+  <tbody>
+    <tr>
+      <td align="center">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tbody>
+            <tr>
+              <td align="center"> <a href="https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}">Connexion</a> </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Si vous rencontrez des difficultés pour vous connecter, répondez directement à cet email.</p>
+<p>Merci beaucoup,</p>
+<p>L'équipe d'e-contrôle</p>
+{% endblock email_content %}

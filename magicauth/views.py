@@ -43,7 +43,7 @@ class ValidateTokenView(generic.RedirectView):
         if not token:
             messages.warning(
                 self.request,
-                "Le lien de connexion ne fonctionne pas. Nous vous invitons à vous reconnecter."
+                "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
             return redirect('login')
         login(self.request, token.user)
@@ -52,5 +52,5 @@ class ValidateTokenView(generic.RedirectView):
 
 
 magic_link = MagicLinkView.as_view()
-email_sent = generic.TemplateView.as_view(template_name='magicauth/email-sent.html')
+email_sent = generic.TemplateView.as_view(template_name='magicauth/email_sent.html')
 validate_token = ValidateTokenView.as_view()

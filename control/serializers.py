@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
+from utils.serializers import DateTimeFieldWihTZ
+
 from .models import ResponseFile, Question
 
 
@@ -17,10 +19,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ResponseFileSerializer(serializers.ModelSerializer):
     author = UserSerializer()
+    creation_date = DateTimeFieldWihTZ(source='created', format='%A %d %B %Y')
+    creation_time = DateTimeFieldWihTZ(source='created', format='%X')
 
     class Meta:
         model = ResponseFile
-        fields = ('id', 'url', 'basename', 'creation_date', 'author')
+        fields = ('id', 'url', 'basename', 'creation_date', 'creation_time', 'author')
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     response_files = ResponseFileSerializer(many=True, read_only=True)

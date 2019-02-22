@@ -7,7 +7,7 @@ from .models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'profile_type', 'control')
+    list_display = ('user', 'profile_type', 'control', 'send_files_report')
     list_filter = ('profile_type', 'control')
     raw_id_fields = ('user',)
 

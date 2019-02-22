@@ -47,11 +47,16 @@ INSTALLED_APPS = [
     'django_extensions',
     'actstream',
     'rest_framework',
+    'celery',
+    'django_celery_beat',
+    'django_cleanup.apps.CleanupConfig',
 
+    'ecc',
     'control',
     'magicauth',
     'user_profiles',
     'utils',
+    'reporting',
 ]
 
 
@@ -138,15 +143,17 @@ LOGIN_URL = 'login'
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'fr-fr'
-
 TIME_ZONE = 'Europe/Paris'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
+# A trick for DRF that does not seems to know about the locale
+import locale
+try:
+    locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
+except locale.Error as e:
+    pass  # setlocale can crash, for instance when running on Heroku.
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -185,3 +192,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')

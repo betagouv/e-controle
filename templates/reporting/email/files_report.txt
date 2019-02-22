@@ -1,0 +1,7 @@
+De nouveaux documents ont été déposés.
+
+{% for file in files %}
+* {{ file.basename }}: {{ file.created|date:"l, j F Y H:i" }} par {{ file.author.first_name }} {{ file.author.last_name }}
+{% endfor %}
+
+Continuer sur e-contrôle: https://{{ site.domain }}/

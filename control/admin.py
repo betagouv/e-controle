@@ -28,12 +28,19 @@ class QuestionnaireAdmin(OrderedModelAdmin):
     list_filter = ('control',)
 
 
+class QuestionInline(OrderedTabularInline):
+    model = Question
+    fields = ('description', 'order', 'move_up_down_links')
+    readonly_fields = ('order', 'move_up_down_links')
+
+
 @admin.register(Theme)
-class ThemeAdmin(OrderedModelAdmin):
+class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
     list_editable = ('title', 'questionnaire')
     search_fields = ('title',)
-    list_filter = ('questionnaire',)
+    list_filter = ('questionnaire__control', 'questionnaire',)
+    inlines = (QuestionInline,)
 
 
 class QuestionFileInline(OrderedTabularInline):
@@ -47,6 +54,7 @@ class QuestionFileInline(OrderedTabularInline):
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
     list_editable = ('description', 'theme')
+    raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)

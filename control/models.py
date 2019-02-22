@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
+from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
@@ -115,6 +116,7 @@ class QuestionFile(OrderedModel):
         return self.file.name
 
 
+@cleanup.ignore
 class ResponseFile(TimeStampedModel):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
@@ -134,10 +136,6 @@ class ResponseFile(TimeStampedModel):
     @property
     def basename(self):
         return os.path.basename(self.file.name)
-
-    @property
-    def creation_date(self):
-        return self.created.strftime("%d %b %Y %X")
 
     def __str__(self):
         return self.file.name

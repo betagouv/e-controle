@@ -24,5 +24,8 @@ django-settings-export==1.2.1
 djangorestframework==3.9.1
 markdown==3.0.1
 django-filter==2.0.0
+django-celery-beat==1.4.0
+redis==3.1.0
 coreapi==2.3.3
+django-cleanup==3.2.0
 git+https://github.com/justquick/django-activity-stream.git

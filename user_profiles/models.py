@@ -17,6 +17,9 @@ class UserProfile(models.Model):
         to='control.Control', verbose_name='controle', related_name='user_profiles',
         null=True, blank=True, on_delete=models.SET_NULL)
     organization = models.CharField("Organisme", max_length=255, blank=True)
+    send_files_report = models.BooleanField(
+        verbose_name="Envoie Rapport de Fichiers", default=False,
+        help_text="Envoyer par email le rapport des fichiers uplodés ?")
 
     class Meta:
         verbose_name = "Profile Utilisateur"
