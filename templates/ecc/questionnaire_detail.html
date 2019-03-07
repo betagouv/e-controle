@@ -21,6 +21,20 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
+<div class="card">
+  <div class="card-body">
+    {{ questionnaire.description|linebreaks }}
+    {% if questionnaire.end_date %}Échéance: <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>{% endif %}
+    {% if questionnaire.file %}
+    <p class="text-right">
+      <a href="{{ questionnaire.file_url }}">
+        <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
+      </a>
+    </p>
+    {% endif %}
+  </div>
+</div>
+
 <div class="row row-cards">
   <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
     <div class="row sticky">

@@ -8,31 +8,39 @@ from django.views.generic.detail import SingleObjectMixin
 from actstream import action
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, QuestionFile, ResponseFile
+from .models import Questionnaire, Theme, QuestionFile, ResponseFile, Control
 
 
-class QuestionnaireList(LoginRequiredMixin, ListView):
+class WithListOfControlsMixin(object):
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Questionnaires are grouped by control:
+        # we get the list of questionnaire from the list of controls
+        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all())
+        context['controls'] = control_list
+        return context
+
+
+class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, ListView):
     template_name = "ecc/questionnaire_list.html"
     context_object_name = 'questionnaires'
 
     def get_queryset(self):
-        return Questionnaire.objects.filter(control=self.request.user.profile.control)
+        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
 
-class QuestionnaireDetail(LoginRequiredMixin, DetailView):
+class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
-    model = Questionnaire
 
     def get_queryset(self):
-        return self.model.objects.filter(control=self.request.user.profile.control)
+        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         theme_list = Theme.objects.filter(questionnaire=self.object)
-        questionnaire_list = Questionnaire.objects.filter(control=self.request.user.profile.control)
         context['themes'] = theme_list
-        context['questionnaires'] = questionnaire_list
         return context
 
 
@@ -73,7 +81,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
 
     def get_queryset(self):
-        return self.model.objects.filter(control=self.request.user.profile.control)
+        return self.model.objects.filter(control__in=self.request.user.profile.controls.all())
 
 
 class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
@@ -84,7 +92,7 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
         # he was associated with. That's why we filter-out based on the user's
         # control.
         return self.model.objects.filter(
-            question__theme__questionnaire__control=self.request.user.profile.control)
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
 
 
 class SendResponseFile(SendQuestionFile):

@@ -7,9 +7,10 @@ from .models import UserProfile
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'profile_type', 'control', 'send_files_report')
-    list_filter = ('profile_type', 'control')
+    list_display = ('user', 'profile_type', 'send_files_report')
+    list_filter = ('profile_type', 'controls')
     raw_id_fields = ('user',)
+    filter_horizontal = ('controls',)
 
 
 class UserProfileInline(admin.StackedInline):

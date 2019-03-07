@@ -14,8 +14,10 @@ class UserProfile(models.Model):
         related_name='profile')
     profile_type = models.CharField(max_length=255, choices=PROFILE_TYPE)
     control = models.ForeignKey(
-        to='control.Control', verbose_name='controle', related_name='user_profiles',
+        to='control.Control', verbose_name='controle',
         null=True, blank=True, on_delete=models.SET_NULL)
+    controls = models.ManyToManyField(
+        to='control.Control', verbose_name='controles', related_name='user_profiles', blank=True)
     organization = models.CharField("Organisme", max_length=255, blank=True)
     send_files_report = models.BooleanField(
         verbose_name="Envoie Rapport de Fichiers", default=False,

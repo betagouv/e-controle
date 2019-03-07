@@ -8,16 +8,23 @@ Accéder aux questionnaires et aux documents déposés
 {% block page_content %}
 <div class="row row-cards">
   <div class="col-lg-12">
-    {% for questionnaire in questionnaires %}
+    {% for control in controls %}
     <div class="card">
+      <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
       <div class="card-header">
-         <h3 class="card-title">{{ questionnaire.title }}</h3>
+        <h3 class="card-title">{{ control.title }}</h3>
       </div>
+      <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
       <div class="table-responsive">
-        <table class="table card-table table-striped table-vcenter">
+        <table class="table card-table table-vcenter">
           <tbody>
+            {% for questionnaire in control.questionnaires.all %}
             <tr>
-              <td>{{ questionnaire.description|linebreaks }}</td>
+              <td>
+                <h4>{{ questionnaire.title }}</h4>
+                {{ questionnaire.description|linebreaks }}
+                {% if questionnaire.end_date %}Échéance: <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>{% endif %}
+              </td>
               {% if user.profile.is_audited %}
               <td class="w-1">
                 <a href="{{ questionnaire.url }}">
@@ -49,9 +56,11 @@ Accéder aux questionnaires et aux documents déposés
               </td>
               {% endif %}
             </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
+      </div>  <!--// closing: questionnaire_description_card_body  //-->
     </div>
     {% endfor %}
 </div>

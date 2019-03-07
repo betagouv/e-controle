@@ -10,7 +10,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Question.objects.filter(
-            theme__questionnaire__control=self.request.user.profile.control)
+            theme__questionnaire__control__in=self.request.user.profile.controls.all())
         return queryset
 
     def list(self, request, *args, **kwargs):
