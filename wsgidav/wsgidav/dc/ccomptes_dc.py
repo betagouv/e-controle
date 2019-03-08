@@ -2,16 +2,23 @@ from __future__ import print_function
 
 import sys
 import os
+from ldap3 import Server, Connection, ALL, NTLM 
 from wsgidav import compat, util
 from wsgidav.dc.base_dc import BaseDomainController
+from dotenv import load_dotenv
+sys.path.insert(0, '/opt/e-controle/')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
+BASE_DIR = r'/opt/e-controle/'
+env_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=env_path, override=True)
 
-sys.path.insert(0, '/vagrant_data/')
 from ecc import settings
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
 import django
 
 django.setup()
 from control.models import Control
+from django.contrib.auth.models import User
 
 class CCDomainController(BaseDomainController):
 
@@ -37,15 +44,8 @@ class CCDomainController(BaseDomainController):
         Returns:
         str
         """
-        print(environ)
-
-        print('get domain realm test')
-        print("")
-        print(path_info)
-        realm = self._calc_realm_from_path_provider(path_info, environ)
-        print(realm)
-        return "Windows Domain Authentication"
-
+        # print(f'Realm {path_info}')
+        return list(filter(None, path_info.split('/')))
 
     def require_authentication(self, realm, environ):
         """Return False to disable authentication for this request.
@@ -69,7 +69,7 @@ class CCDomainController(BaseDomainController):
         False to allow anonymous access
         True to force subsequent digest or basic authentication
         """
-        print("require auth test")
+        #print("require auth test")
         return True
 
     def basic_auth_user(self, realm, user_name, password, environ):
@@ -93,18 +93,29 @@ class CCDomainController(BaseDomainController):
         """
 
         ##Todo add verification corresponding to the given user
-
-        # print(realm)
-        # print(user_name)
-        # print(password)
-        # print(environ)
-
-        print(Control.objects.all())
-        print(user_name)
-        print(password)
-        print(environ)
-        print("Basic auth test")
-        return True
+        try:
+            server = Server(settings.LDAP_SERVER, get_info=ALL)
+            conn = Connection(server, user = settings.LDAP_DOMAIN + "\\" + user_name, password = password, authentication = NTLM)
+        except Exception as e:
+            print(e)
+        if conn.bind():
+            # We know that the following user exists in the LDAP
+            # We now check the realm
+            try:
+                users = User.objects.all()
+                print(f'Realm {realm}')
+                print(f'User controle {users[6].profile.control.reference_code}') 
+                if users[6].profile.control.reference_code == realm[0]:
+                    return True
+                for user in users:
+                    if user.profile.control is not None:
+                    	print(user.profile.control.reference_code)
+                    
+            except Exception as e:
+                print(e)
+                return False 
+        
+        return False
 
 
     def supports_http_digest_auth(self):
@@ -117,7 +128,7 @@ class CCDomainController(BaseDomainController):
         bool
         """
         print("supports http test")
-        return True
+        return False 
 
     def digest_auth_user(self, realm, user_name, environ):
         """Check access permissions for realm/user_name.
@@ -155,10 +166,8 @@ class CCDomainController(BaseDomainController):
         """
         # user = self._get_realm_entry(realm, user_name)
         user = {'password': 'test', 'roles': ['editor']}
-        print('test 1')
         if user is None:
             return False
         password = user.get("password")
         environ["wsgidav.auth.roles"] = user.get("roles", [])
-        print('test 2')
         return self._compute_http_digest_a1(realm, user_name, password)
