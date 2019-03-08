@@ -1,0 +1,46 @@
+/* Sample WsgiDAV configuration file
+ *
+ * 1. Rename this file to `wsgidav.json`
+ * 2. Adjust settings as appropriate
+ * 3. Run `wsgidav` from the same directory or pass file name with `--config` option.
+ *
+ * JSON formatted (JavaScript-style comments are allowed).
+ *
+ * NOTE: the recommended configuration file format is YAML!
+ *
+ * See http://wsgidav.readthedocs.io/en/latest/user_guide_configure.html
+ */
+{
+    "host": "0.0.0.0",
+    "port": 8080,
+    // Verbosity 0..5
+    "verbose": 3,
+    "provider_mapping": {
+        "/share1": "/path/to/share1",
+        "/share2": "/path/to/share2"
+    },
+    "http_authenticator": {
+        "domain_controller": null,  // Use simple_dc
+        "accept_basic": false,  // Force digest authentication
+        "accept_digest": true,
+        "default_to_digest": true,
+        "trusted_auth_header": null
+    },
+    "simple_dc": {
+        "user_mapping": {
+            "*": {
+                "user1": {
+                    "password": "abc123",
+                }
+            },
+            "/share2": true  // Allow anonymous access
+        }
+    },
+    "dir_browser": {
+        "enable": true,
+        "response_trailer": "",
+        "davmount": false,
+        "ms_mount": false,
+        "ms_sharepoint_support": true
+    }
+}
