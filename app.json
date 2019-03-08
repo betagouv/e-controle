@@ -24,6 +24,9 @@
 		},
 		"DEFAULT_FROM_EMAIL": {
 			"required": true
+		},
+		"CELERY_BROKER_URL": {
+			"required": true
 		}
 	},
 	"formation": {
