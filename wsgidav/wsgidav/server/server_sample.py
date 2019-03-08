@@ -22,7 +22,10 @@ def main():
     config = {
         "provider_mapping": {"/": provider},
         "http_authenticator": {
-            "domain_controller": None  # None: dc.simple_dc.SimpleDomainController(user_mapping)
+            "domain_controller": dc.simple_dc.CCDomainController,
+            "accept_basic": True,
+            "accept_digest": False,
+            "default_to_digest": False,
         },
         "simple_dc": {"user_mapping": {"*": True}},  # anonymous access
         "verbose": 1,
