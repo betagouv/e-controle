@@ -32,13 +32,13 @@
 
           <div class="d-flex order-lg-2 ml-auto"> <!--// opening: header_items  //-->
 
-            <div class="nav-item d-none d-md-flex dropdown">
+            <div class="nav-item">
               <a href="#" class="nav-link" data-toggle="dropdown">
-                <span><i class="fe fe-check-square"></i> Mes questionnaires</span>
+                <i class="dropdown-icon fe fe-check-square"></i> Mes questionnaires
               </a>
               <div class="dropdown-menu dropdown-menu-arrow">
                 {% for control in controls %}
-                <span style="cursor: text">{{ control.title }}</span>
+                <span class='pl-2' style="cursor: text">{{ control.title }}</span>
                   {% for questionnaire in control.questionnaires.all %}
                   <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title }}</a>
                   {% endfor %}
@@ -47,26 +47,26 @@
               </div>
             </div>
 
-            <div class="dropdown"> <!--// opening: main_dropdown  //-->
+            <div class="nav-item">
+                <a class="nav-link" href="mailto:e-controle-beta@ccomptes.fr">
+                  <i class="dropdown-icon fe fe-help-circle"></i>Besion d'aide ?
+                </a>
+            </div>
 
+            <div class="dropdown"> <!--// opening: main_profile_dropdown  //-->
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                 <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-
                 <span class="ml-2 d-none d-lg-block">
                   <span class="text-default">{{ user.get_full_name }}</span>
                   <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
                 </span>
               </a>
               <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                <a class="dropdown-item" href="mailto:e-controle-beta@ccomptes.fr">
-                      <i class="dropdown-icon fe fe-help-circle"></i> Besion d'aide ?
-                </a>
                 <a class="dropdown-item" href="{% url 'logout' %}">
-                      <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
                 </a>
-
               </div>
-            </div> <!--// closing: main_dropdown  //-->
+            </div> <!--// closing: main_profile_dropdown  //-->
 
           </div>   <!--// closing: header_items  //-->
       </div>   <!--// opening: top_header_container  //-->
