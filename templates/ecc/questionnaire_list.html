@@ -22,7 +22,6 @@ Accéder aux questionnaires et aux documents déposés
             <tr>
               <td>
                 <h4>{{ questionnaire.title }}</h4>
-                {{ questionnaire.description|linebreaks }}
                 {% if questionnaire.end_date %}Échéance: <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>{% endif %}
               </td>
               {% if user.profile.is_audited %}
@@ -31,13 +30,7 @@ Accéder aux questionnaires et aux documents déposés
                   <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
                 </a>
               </td>
-              {% if questionnaire.file %}
-              <td class="w-1">
-                <a href="{{ questionnaire.file_url }}">
-                  <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
-                </a>
-              </td>
-              {% endif %}
+
               {% elif user.profile.is_inspector %}
               <td class="w-1">
                 <a href="{{ questionnaire.url }}">
@@ -49,11 +42,6 @@ Accéder aux questionnaires et aux documents déposés
                   <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
                 </a>
               </td> -->
-              <td class="w-1">
-                <a href="{{ questionnaire.file_url }}">
-                  <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
-                </a>
-              </td>
               {% endif %}
             </tr>
             {% endfor %}
