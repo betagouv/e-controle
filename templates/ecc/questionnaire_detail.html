@@ -24,9 +24,14 @@
 <div class="card">
   <div class="card-body">
     {{ questionnaire.description|linebreaks }}
+    {% if questionnaire.sent_date %}
+      <p><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+      <span class="text-muted">{{ questionnaire.sent_date|date:"l d F Y" }}</span>
+      </p>
+    {% endif %}
     {% if questionnaire.end_date %}
-      <p><u>Date de réponse souhaitée</u>:
-        <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>
+      <p><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+        <span class="text-muted">{{ questionnaire.end_date|date:"l d F Y" }}</span>
       </p>
     {% endif %}
     {% if questionnaire.file %}

@@ -23,7 +23,7 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(OrderedModelAdmin):
-    list_display = ('numbering', 'title', 'end_date', 'control')
+    list_display = ('numbering', 'title', 'sent_date', 'end_date', 'control')
     search_fields = ('title', 'description')
     list_filter = ('control',)
 

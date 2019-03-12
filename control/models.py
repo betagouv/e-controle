@@ -39,6 +39,9 @@ class Control(models.Model):
 
 class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
+    sent_date = models.DateField(
+        verbose_name="date d'envoie", blank=True, null=True,
+        help_text="Date de transmission du questionnaire")
     end_date = models.DateField("échéance", blank=True, null=True)
     description = models.TextField("description", blank=True)
     file = models.FileField(
