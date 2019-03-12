@@ -12,7 +12,7 @@ Accueil
     <div class="card">
       <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
       <div class="card-header">
-        <h3 class="card-title">{{ control.title }}</h3>
+        <div class="card-title text-uppercase"><h4>{{ control.title }}</h4></div>
       </div>
       <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
       <div class="table-responsive">
@@ -21,8 +21,12 @@ Accueil
             {% for questionnaire in control.questionnaires.all %}
             <tr>
               <td>
-                <h4>{{ questionnaire.title }}</h4>
-                {% if questionnaire.end_date %}Échéance: <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>{% endif %}
+                <h5>{{ questionnaire.title }}</h5>
+                {% if questionnaire.end_date %}
+                  <p><u>Date de réponse souhaitée</u>:
+                    <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>
+                  </p>
+                {% endif %}
               </td>
               {% if user.profile.is_audited %}
               <td class="w-1">

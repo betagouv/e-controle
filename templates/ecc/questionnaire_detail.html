@@ -24,7 +24,11 @@
 <div class="card">
   <div class="card-body">
     {{ questionnaire.description|linebreaks }}
-    {% if questionnaire.end_date %}Échéance: <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>{% endif %}
+    {% if questionnaire.end_date %}
+      <p><u>Date de réponse souhaitée</u>:
+        <span class="tag tag-rounded">{{ questionnaire.end_date|date:"l d F Y" }}</span>
+      </p>
+    {% endif %}
     {% if questionnaire.file %}
     <p class="text-right">
       <a href="{{ questionnaire.file_url }}">
