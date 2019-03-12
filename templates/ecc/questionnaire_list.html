@@ -23,13 +23,13 @@ Accueil
               <td>
                 <h5 class="pb-2">{{ questionnaire.title }}</h5>
                 {% if questionnaire.sent_date %}
-                  <p><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
-                  <span class="text-muted">{{ questionnaire.sent_date|date:"l d F Y" }}</span>
+                  <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+                  {{ questionnaire.sent_date|date:"l d F Y" }}
                   </p>
                 {% endif %}
                 {% if questionnaire.end_date %}
-                  <p><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
-                    <span class="text-muted">{{ questionnaire.end_date|date:"l d F Y" }}</span>
+                  <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+                    {{ questionnaire.end_date|date:"l d F Y" }}
                   </p>
                 {% endif %}
               </td>
