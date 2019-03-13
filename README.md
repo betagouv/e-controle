@@ -45,9 +45,26 @@ On utilise Celery Beat et Redis pour gérer l'envoie d'emails périodiques.
 
 La fréquence des envoies est configurée dans django admin, avec l'applicaiton 'django_celery_beat'.
 
+Pour démarrer celery beat, il y a la commande suivante:
+
+
+    celery worker --beat -A ecc -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler &
+
+
+Un autre façon de faire, est d'installer un service systemd:
+
+
+    ln -s /opt/e-controle/deploy/conf/celery.service /etc/systemd/system/celery.service
+    systemctl daemon-reload
+    systemctl start celery
+    systemctl restart status
+    tail /var/log/ecc-celery.log
+
+
+Si le serveur Redis n'est pas fournit, on peut l'installer:
+
+
     yum -y install redis
     systemctl start redis
     systemctl enable redis
     redis-cli ping
-
-    celery worker --beat -A ecc -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler &
