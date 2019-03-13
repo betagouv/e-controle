@@ -1,24 +1,59 @@
 # e-controle
-Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés
-
-## Lancement en prod
-- Une base PostgreSQL 10 doit être fournie.
+Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés.
 
 ## Lancement en dev avec docker-compose
-- Le docker-compose.yml est fourni pour le développement uniquement.
-- Usage : `docker-compose up`
 
-## Définition des locales
+    cd e-control
+    cp .env.sample .env
+    docker-compose build
+    docker-compose up -d
+    docker-compose run django dev
 
-Cette plateforme utilise l'encodage UTF-8 à plusieurs endroit, notament pour les nom de
-fichiers uploadés.
+L'addresse IP et le numéro de port du server devrait s'afficher sur le terminal et permet de
+se connecter à l'admin:
 
-Pour que cela fonctionne, il faut rendre configurer correctement les 'locales',
-par example comme ceci:
+Par example : http://172.18.0.3:8080/admin/
 
-    localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
-    export LANG=fr_FR.UTF-8
-    export LC_ALL=fr_FR.UTF-8
+
+## Restaurer/Sauvegarder la base de données en dev
+
+    psql -h postgres -U ecc -d ecc < db.dump
+
+Pour créer le dump:
+
+    pg_dump --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc > db.dump
+
+Le mot de passe par de demo est `ecc`.
+
+
+## Comment se connecter en tant que dev
+
+En tant que dev, dans l'environnement local, il n'est pas toujours possible de s'envoyer un email
+pour se conneter.
+
+Dans ce cas, avant d'aller à la racine du site "/", on peut d'abord passer par le login
+de l'interface d'admin "/admin/"
+
+
+Voilà des utilisateurs qui existent par défaut quand on utilise le dump de démo:
+
+- inspector@demo.com / demoe12345
+- audited@democom / demoe12345
+
+
+## Des comamndes utiles
+
+    docker-compose run django dev
+    docker-compose run django uwsgi
+    docker-compose run django bash
+    docker-compose run django python3.6 manage.py runserver 0:8080
+    docker-compose run django python3.6 manage.py shell_plus
+    docker-compose run django <any-command>
+
+
+## Lancement en prod
+
+- Une base PostgreSQL 10 doit être fournie.
 
 ## Variables d'environnement
 
@@ -32,12 +67,18 @@ On peut utiliser le fichier d'example comme ceci:
 
 Les variables d'environnement sont automatiquement intégrées au process uWSGI via le fichier `ecc/wsgi.py`.
 
-## Restaurer le dump de la base de données en dev
 
-    cd $CODE_DIR/deploy/
-    gpg latest.dump.gpg
-    pg_restore --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc latest.dump
+## Définition des locales
 
+Cette plateforme utilise l'encodage UTF-8 à plusieurs endroit, notament pour les nom de
+fichiers uploadés.
+
+Pour que cela fonctionne, il faut rendre configurer correctement les 'locales',
+par example comme ceci:
+
+    localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
+    export LANG=fr_FR.UTF-8
+    export LC_ALL=fr_FR.UTF-8
 
 ## Envoie d'emails périodiques
 

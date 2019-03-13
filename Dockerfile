@@ -29,5 +29,3 @@ RUN chmod +x docker-entrypoint.sh
 EXPOSE 8080
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
-
-CMD ["uwsgi", "--ini", "uwsgi.ini"]

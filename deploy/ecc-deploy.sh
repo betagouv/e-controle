@@ -20,3 +20,4 @@ pip install -r requirements.txt
 python3.6 ./manage.py migrate
 python3.6 ./manage.py collectstatic --noinput
 systemctl restart httpd
+systemctl restart celery
