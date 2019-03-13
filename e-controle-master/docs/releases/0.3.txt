@@ -1,0 +1,35 @@
+# Version 0.3
+
+Description: Correctifs "post-launch" pour démarrer les premiers contrôles.
+Date: 17 janvier 2019
+
+## Changements
+- Bug avec les accents dans les noms de fichiers uploadés
+- Activity Stream: Ajout d'une version béta du traçage des actions du type 'upload de fichiers'
+- On a rapatrié les 'static assets' dans le dépôt git
+- Bug sur la date d'upload
+- Petites modifications dans le footer
+- On a ajouté une pastille avec le nombre de fichiers annexes à un question
+
+## Instructions de mise à jour
+
+1. Configurer les "locales" comme ceci:
+
+    localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
+
+
+1. Changer les locales dans le fichier `.env`
+
+    export LANG=fr_FR.UTF-8
+    export LC_ALL=fr_FR.UTF-8
+
+1. Change le vhost apache
+
+Il faut inclure ceci Dans `WSGIDaemonProcess`:
+
+    lang='fr_FR.UTF-8' locale='fr_FR.UTF-8'
+
+1. Matomo: il faut rajouter des variables d'environnement:
+
+    export PIWIK_TRACKER_BASE_URL=//webanalytics-TODO.fr/
+    export PIWIK_SITE_ID=23

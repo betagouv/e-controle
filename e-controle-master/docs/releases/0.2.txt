@@ -1,0 +1,4 @@
+# Version 0.2
+
+Description: Version minimale pour démarrer les premiers contrôles.
+Date: 10 janvier 2019

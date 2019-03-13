@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="page">
+  <div class="main-page">
+    <div class="container">
+      <div class="my-3 my-md-5">
+      <div class="row row-cards">
+        <div class="col col-login col-6 mx-auto">
+          <form class="card" action="{% url 'magicauth-login' %}" method="post">
+            {% csrf_token %}
+
+            <div class="text-center mb-6">
+              <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" />
+            </div>
+            <div class="card-body p-4">
+              <div class="card-center text-center card-title">Consulter et déposer les réponses aux questionnaires</div>
+
+              {% if user.is_authenticated %}
+              <div class="alert alert-info text-center" role="alert">
+              Vous êtes déjà connecté
+              </div>
+              <div class="text-center">
+                <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
+                <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
+              </div>
+              {% else %}
+              {% if messages %}
+              <div class="text-center" role="alert">
+                {% for message in messages %}
+                <p {% if message.tags %}class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+              </div>
+               {% endif %}
+
+              <div class="form-group">
+                <label class="text-uppercase form-label">Se connecter</label>
+                <input type="email" name="email" class="form-control {% if form.errors %}state-invalid {% endif %}" id="id_email" aria-describedby="emailHelp" placeholder="Votre email professionnel" required />
+                {% for error in form.email.errors %}
+                <div class="alet alert-danger text-center">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="form-footer">
+                <button type="submit" class="btn btn-primary btn-block">Valider</button>
+              </div>
+              {% endif %}
+            </div>
+          </form>
+          <div class="text-center text-muted">
+            Vous rencontrez des difficultés pour vous connecter?
+            <a href="mailto:lery.jicquel@beta.gouv.fr">Demandez de l'aide</a>
+          </div>
+          <div class="text-center">
+            <img src="{% static 'img/logo-cc.jpg' %}" alt="logo-cc" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock content %}
