@@ -106,7 +106,7 @@ class CCDomainController(BaseDomainController):
                 print(f'Realm {realm}')
                 print(f'User controle {user.profile.controls}') 
                 if user.profile.controls.filter(reference_code=realm).exists():
-                    environ["wsgidav.auth.roles"] = user.get("roles", ["reader"])
+                    environ["wsgidav.auth.roles"] = ["reader"]
                     return True
             except Exception as e:
                 print(e)
@@ -128,6 +128,7 @@ class CCDomainController(BaseDomainController):
         return False 
 
     def digest_auth_user(self, realm, user_name, environ):
+        pass
         """Check access permissions for realm/user_name.
 
         Called by http_authenticator for basic authentication requests.
@@ -162,9 +163,9 @@ class CCDomainController(BaseDomainController):
             or false if user is unknown or rejected
         """
         # user = self._get_realm_entry(realm, user_name)
-        user = {'password': 'test', 'roles': ['editor']}
-        if user is None:
-            return False
-        password = user.get("password")
-        environ["wsgidav.auth.roles"] = user.get("roles", [])
-        return self._compute_http_digest_a1(realm, user_name, password)
+        # user = {'password': 'test', 'roles': ['editor']}
+        # if user is None:
+        #     return False
+        # password = user.get("password")
+        # environ["wsgidav.auth.roles"] = user.get("roles", [])
+        # return self._compute_http_digest_a1(realm, user_name, password)
