@@ -45,7 +45,12 @@ class CCDomainController(BaseDomainController):
         str
         """
         # we only send the control code
-        return list(filter(None, path_info.split('/')))
+        realms = list(filter(None, path_info.split('/')))
+        if len(realms) != 0:
+            return realms[0]
+        else:
+            return ""
+
 
     def require_authentication(self, realm, environ):
         """Return False to disable authentication for this request.
@@ -103,10 +108,8 @@ class CCDomainController(BaseDomainController):
             # We now check the realm
             try:
                 user = User.objects.get(profile__active_directory_name = user_name)
-                print(f'Realm {realm}')
-                print(f'User controle {user.profile.controls}') 
+                environ["wsgidav.auth.roles"] = ["reader"]
                 if user.profile.controls.filter(reference_code=realm).exists():
-                    environ["wsgidav.auth.roles"] = ["reader"]
                     return True
             except Exception as e:
                 print(e)

@@ -5,7 +5,7 @@ from ccomptes_dc import CCDomainController
 __docformat__ = "reStructuredText"
 
 #rootpath = gettempdir()
-rootpath = "/tmp"
+rootpath = "/opt/e-controle-media/"
 provider = FilesystemProvider(rootpath)
 
 
