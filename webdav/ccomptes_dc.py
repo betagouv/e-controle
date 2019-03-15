@@ -44,7 +44,8 @@ class CCDomainController(BaseDomainController):
         Returns:
         str
         """
-        return list(filter(None, path_info.split('/')))
+        # we only send the control code
+        return list(filter(None, path_info.split('/'))).get(0, "")
 
     def require_authentication(self, realm, environ):
         """Return False to disable authentication for this request.
@@ -100,20 +101,17 @@ class CCDomainController(BaseDomainController):
         if conn.bind():
             # We know that the following user exists in the LDAP
             # We now check the realm
-            # try:
-            #     user = User.objects.get(profile__active_directory_name = user_name)
-            #     print(f'Realm {realm}')
-            #     print(f'User controle {user.profile.controls}') 
-            #     if user.profile.controls.filter(reference_code=realm[0]).exists():
-            #         return True
-            #     for user in users:
-            #         if user.profile.control is not None:
-            #         	print(user.profile.control.reference_code)
-                    
-            # except Exception as e:
-            print(e)
-            return False
-        
+            try:
+                user = User.objects.get(profile__active_directory_name = user_name)
+                print(f'Realm {realm}')
+                print(f'User controle {user.profile.controls}') 
+                if user.profile.controls.filter(reference_code=realm).exists():
+                    environ["wsgidav.auth.roles"] = user.get("roles", ["reader"])
+                    return True
+            except Exception as e:
+                print(e)
+                return False
+
         return False
 
 
