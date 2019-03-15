@@ -6,7 +6,7 @@ from ldap3 import Server, Connection, ALL, NTLM
 from wsgidav import compat, util
 from wsgidav.dc.base_dc import BaseDomainController
 from dotenv import load_dotenv
-sys.path.insert(0, '/vagrant_data/')
+sys.path.insert(0, '/opt/e-controle/')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
 BASE_DIR = r'/opt/e-controle/'
 env_path = os.path.join(BASE_DIR, '.env')
@@ -45,7 +45,7 @@ class CCDomainController(BaseDomainController):
         str
         """
         # we only send the control code
-        return list(filter(None, path_info.split('/'))).get(0, "")
+        return list(filter(None, path_info.split('/')))
 
     def require_authentication(self, realm, environ):
         """Return False to disable authentication for this request.
