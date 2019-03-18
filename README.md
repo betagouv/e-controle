@@ -45,10 +45,15 @@ Voilà des utilisateurs qui existent par défaut quand on utilise le dump de dé
 
     docker-compose run django dev
     docker-compose run django uwsgi
-    docker-compose run django bash
     docker-compose run django python3.6 manage.py runserver 0:8080
     docker-compose run django python3.6 manage.py shell_plus
     docker-compose run django <any-command>
+
+
+    # Appliquer les variables d'environnement, par example pour lancer les tests unitaires:
+    docker-compose run django bash
+    source .env
+    pytest
 
 
 ## Lancement en prod
