@@ -1,21 +1,12 @@
 from __future__ import print_function
 
-import sys
-import os
-from ldap3 import Server, Connection, ALL, NTLM 
+from ldap3 import Server, Connection, ALL, NTLM
 from wsgidav import compat, util
 from wsgidav.dc.base_dc import BaseDomainController
-from dotenv import load_dotenv
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
-load_dotenv(dotenv_path='.env', override=True)
-
 from ecc import settings
-os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
-import django
-
-django.setup()
 from control.models import Control
 from django.contrib.auth.models import User
+
 
 class CCDomainController(BaseDomainController):
 
