@@ -17,7 +17,7 @@ django.setup()
 from webdav.ccomptes_dc import CCDomainController
 rootpath = settings.MEDIA_ROOT
 #rootpath = "/opt/e-controle-media/"
-provider = FilesystemProvider(rootpath)
+provider = FilesystemProvider(rootpath, readonly = True)
 
 
 config = DEFAULT_CONFIG.copy()
