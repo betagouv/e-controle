@@ -6,11 +6,8 @@ from ldap3 import Server, Connection, ALL, NTLM
 from wsgidav import compat, util
 from wsgidav.dc.base_dc import BaseDomainController
 from dotenv import load_dotenv
-sys.path.insert(0, '/opt/e-controle/')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
-BASE_DIR = r'/opt/e-controle/'
-env_path = os.path.join(BASE_DIR, '.env')
-load_dotenv(dotenv_path=env_path, override=True)
+load_dotenv(dotenv_path='.env', override=True)
 
 from ecc import settings
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
@@ -108,7 +105,7 @@ class CCDomainController(BaseDomainController):
             # We now check the realm
             try:
                 user = User.objects.get(profile__active_directory_name = user_name)
-                environ["wsgidav.auth.roles"] = ["reader"]
+                environ["wsgidav.auth.roles"] = ("reader")
                 if user.profile.controls.filter(reference_code=realm).exists():
                     return True
             except Exception as e:
