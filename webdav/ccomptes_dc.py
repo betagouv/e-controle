@@ -97,7 +97,7 @@ class CCDomainController(BaseDomainController):
             try:
                 user = User.objects.get(profile__active_directory_name = user_name)
                 environ["wsgidav.auth.roles"] = ("reader")
-                if user.profile.controls.filter(reference_code=realm).exists():
+                if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
                     return True
             except Exception as e:
                 print(e)
