@@ -14,10 +14,6 @@ RUN easy_install-3.6 pip
 # Locales
 RUN localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
 
-# PostgreSQL
-RUN rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
-RUN yum -y install postgresql10 gettext; yum clean all
-
 # App
 COPY . /app
 WORKDIR /app
