@@ -126,3 +126,6 @@ dmypy.json
 .pyre/
 
 # End of https://www.gitignore.io/api/djang
+
+# IntelliJ files
+.idea/
