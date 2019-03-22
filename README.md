@@ -2,17 +2,17 @@
 Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés.
 
 ## Prérequis
-Pour pouvoir déveloper avec nous, tu dois avoir ces outils installés sur ta machine de dev : 
- - Git
- - GitFlow : https://danielkummer.github.io/git-flow-cheatsheet/
- - Docker : https://www.docker.com/
+
+- Nous utilisons [Docker](https://www.docker.com/) pour installer l'environnement de dévelopement
+- Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Il existe
+  une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
 
 Autres technos utilisées (pas besoin de les installer localement, elles sont sur docker):
  - python
  - Django
 
 ## Présentation des services
-Nous utilisons deux containers Dockers : un pour postgres, un pour django (définis dans https://github.com/betagouv/e-controle/blob/develop/docker-compose.yml). 
+Nous utilisons deux containers Dockers : un pour postgres, un pour django (définis dans https://github.com/betagouv/e-controle/blob/develop/docker-compose.yml).
 
 Le container postgres a une image standard, le django une image faite maison (défini par la https://github.com/betagouv/e-controle/blob/develop/Dockerfile).
 
@@ -30,21 +30,21 @@ On peut utiliser le fichier d'example comme ceci:
     cd /project/folder/
     cp .env.sample .env
 
-Les variables d'environnement sont automatiquement intégrées au process uWSGI via le fichier `ecc/wsgi.py`.
+Les variables d'environnement sont automatiquement intégrées au process uWSGI via
+le fichier `ecc/wsgi.py` - de même pour le fichier `ecc/manage.py`.
 
 ## Lancement en dev avec docker-compose
 
-Créer le fichier avec les variables d'environnement : 
+Créer le fichier avec les variables d'environnement :
 
     cp .env.sample .env
 
-Optionnel, mais pratique : configurer l'envoi de mails. 
+Optionnel, mais pratique : configurer l'envoi de mails.
 Les users non-admin n'ont pas de mot de passe, ils recoivent un lien par mail pour se logger. Sans config mail, vous ne pourrez utiliser que des users admin (avec mot de passe, depuis l'interface admin : `<server url>/admin`).
  - Se créer un compte sur debug mail : https://debugmail.io
- - Se faire ajouter dans le projet e-controle par un des dev.
- - Modifier `.env` : 
-    ......
-    
+ - Les informations de connection SMTP se trouve dans les "settings" de debugmail
+ - Modifier `.env` avec les informations de connection SMTP
+
 Builder l'image Docker pour django (`build` utilise la `Dockerfile`):
 
      docker-compose build
@@ -140,6 +140,6 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
     systemctl start redis
     systemctl enable redis
     redis-cli ping
-    
+
 ## uWSGI
 Todo : c'est quoi, comment ca marche, ...
