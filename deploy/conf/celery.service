@@ -1,0 +1,22 @@
+[Unit]
+Description=Celery Service
+After=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/e-controle/
+ExecStart=/opt/venv/bin/celery multi start worker1\
+        --beat -A ecc -l info\
+        --scheduler=django_celery_beat.schedulers:DatabaseScheduler\
+        --pidfile=/var/run/celery.pid\
+        --logfile=/var/log/ecc-celery.log
+ExecStop=/opt/venv/bin/celery multi stopwait worker1 \
+        --pidfile=/var/run/celery.pid
+ExecReload=/opt/venv/bin/celery multi restart worker1\
+        --beat -A ecc -l info\
+        --scheduler=django_celery_beat.schedulers:DatabaseScheduler\
+        --pidfile=/var/run/celery.pid\
+        --logfile=/var/log/ecc-celery.log
+
+[Install]
+WantedBy=multi-user.target
