@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -99,9 +99,14 @@ class SendResponseFile(SendQuestionFile):
     model = ResponseFile
 
 
+class QuestionnaireEditor(LoginRequiredMixin, TemplateView):
+    template_name = "ecc/questionnaire_editor.html"
+
+
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+questionnaire_editor = QuestionnaireEditor.as_view()
 send_questionnaire_file = SendQuestionnaireFile.as_view()
 send_question_file = SendQuestionFile.as_view()
 send_response_file = SendResponseFile.as_view()

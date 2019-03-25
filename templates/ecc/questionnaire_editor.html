@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+Accueil
+{% endblock page_title %}
+
+{% block page_content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+<div class="row row-cards">
+  <div class="col-lg-12">
+    <textarea rows="4" cols="50">Test</textarea>
+
+    <script>
+    var simplemde = new SimpleMDE({
+    	showIcons: ["heading-2", "heading-3", "heading-3"],
+    });
+
+    simplemde.value();
+    </script>
+
+  </div>
+</div>
+{% endblock page_content %}

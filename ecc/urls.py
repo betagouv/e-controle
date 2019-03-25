@@ -33,6 +33,7 @@ urlpatterns = [
     path('fichier-questionnaire/<int:pk>/', control_views.send_questionnaire_file, name='send-questionnaire-file'),
     path('fichier-question/<int:pk>/', control_views.send_question_file, name='send-question-file'),
     path('fichier-reponse/<int:pk>/', control_views.send_response_file, name='send-response-file'),
+    path('editeur/', control_views.questionnaire_editor, name='questionnaire-editor'),
     path('admin/', admin.site.urls),
 ]
 
