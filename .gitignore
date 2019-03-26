@@ -129,3 +129,6 @@ dmypy.json
 
 # IntelliJ files
 .idea/
+
+# Javascript
+node_modules/

@@ -1,0 +1,26 @@
+{
+  "name": "e-controle",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "prosemirror-commands": "^1.0.7",
+    "prosemirror-example-setup": "^1.0.1",
+    "prosemirror-keymap": "^1.0.1",
+    "prosemirror-model": "^1.7.0",
+    "prosemirror-schema-basic": "^1.0.0",
+    "prosemirror-schema-list": "^1.0.2",
+    "prosemirror-state": "^1.2.2",
+    "prosemirror-view": "^1.8.4"
+  },
+  "devDependencies": {
+    "css-loader": "^2.1.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js ",
+    "watch": "webpack --watch --config webpack.config.js"
+  }
+}
+
