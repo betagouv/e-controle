@@ -10,6 +10,7 @@ RUN yum -y install epel-release; yum clean all
 RUN yum -y install python36u python36u-pip python36u-devel python36u-setuptools; yum clean all
 RUN yum -y groupinstall "Development Tools"; yum clean all
 RUN easy_install-3.6 pip
+RUN ln -fs /usr/bin/python3.6 /usr/bin/python
 
 # Locales
 RUN localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
