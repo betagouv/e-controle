@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -42,6 +42,10 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         theme_list = Theme.objects.filter(questionnaire=self.object)
         context['themes'] = theme_list
         return context
+
+
+class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
+    template_name = "ecc/faq.html"
 
 
 class UploadResponseFile(LoginRequiredMixin, CreateView):
@@ -102,6 +106,7 @@ class SendResponseFile(SendQuestionFile):
 upload_response_file = UploadResponseFile.as_view()
 questionnaire_list = QuestionnaireList.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
+faq = FAQ.as_view()
 send_questionnaire_file = SendQuestionnaireFile.as_view()
 send_question_file = SendQuestionFile.as_view()
 send_response_file = SendResponseFile.as_view()
