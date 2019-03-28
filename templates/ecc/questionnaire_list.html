@@ -58,13 +58,12 @@ Accueil
 
             <tr>
               <td>
-                <p class="font-weight-bold"><i class="dropdown-icon fe fe-users"></i> <u>Personnes ayant accès au contrôle</u> :
+                <p class="font-weight-bold"><i class="dropdown-icon fe fe-users"></i> <u>Personnes ayant accès au contrôle</u> :</p>
                 {% for person in control.user_profiles.all %}
                   <a  href="mailto:{{ person.user.email }}"><button type="button" class="btn bg-blue-lighter btn-sm">
                     {% if person.is_inspector %}<i class="fa fa-institution mr-2"></i>{% else %}<i class="fe fe-user mr-2"></i>{% endif %} {{ person.user.first_name }} {{ person.user.last_name }}
                   </button></a>
                 {% endfor %}
-                </p>
               </td>
             </tr>
 
