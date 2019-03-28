@@ -6,13 +6,13 @@
     <div class="container">
       <div class="row">
         <div class="col col-login mx-auto">
-
             <div class="card-body p-2">
-              <div class="alert alert-success text-center" role="alert">
-                    Un email vous a été envoyé pour vous connecter. Si vous ne le recevez pas, vous pouvez réessayer.
+              <div class="alert text-center btn-info">
+                <i class="fe fe-mail" ></i> <i class="fe fe-check" ></i>
+                    <h1>Un email vous a été envoyé pour vous connecter.</h1> Si vous ne le recevez pas, vous pouvez réessayer.
               </div>
               <div class="text-center">
-                <a href="{% url 'login' %}" class="btn btn-primary">Réessayer</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Réessayer</a>
               </div>
             </div>
         </div>
