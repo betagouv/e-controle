@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'user_profiles',
     'utils',
     'reporting',
+    'parsing',
 ]
 
 
