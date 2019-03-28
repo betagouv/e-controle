@@ -24,23 +24,19 @@
 <div class="card">
   <div class="card-body">
     {{ questionnaire.description|linebreaks }}
+
     {% if questionnaire.sent_date %}
       <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
       {{ questionnaire.sent_date|date:"l d F Y" }}
       </p>
     {% endif %}
+
     {% if questionnaire.end_date %}
       <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
         {{ questionnaire.end_date|date:"l d F Y" }}
       </p>
     {% endif %}
-    {% if questionnaire.file %}
-    <p class="text-right">
-      <a href="{{ questionnaire.file_url }}" target="_blank" >
-        <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
-      </a>
-    </p>
-    {% endif %}
+
     <p class="font-weight-bold"><i class="dropdown-icon fe fe-at-sign"></i> <u>Qui à accès à ce questionnaire</u> ?</p>
     <ul>
     {% for person in questionnaire.control.user_profiles.all %}
@@ -51,6 +47,15 @@
       </li>
     {% endfor %}
     </ul>
+
+    {% if questionnaire.file %}
+    <p class="text-right">
+      <a href="{{ questionnaire.file_url }}" target="_blank" >
+        <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
+      </a>
+    </p>
+    {% endif %}
+
   </div>
 </div>
 
