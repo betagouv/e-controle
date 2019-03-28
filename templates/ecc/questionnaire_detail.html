@@ -41,6 +41,16 @@
       </a>
     </p>
     {% endif %}
+    <p class="font-weight-bold"><i class="dropdown-icon fe fe-at-sign"></i> <u>Qui à accès à ce questionnaire</u> ?</p>
+    <ul>
+    {% for person in questionnaire.control.user_profiles.all %}
+      <li>
+      {{ person.user.first_name }} {{ person.user.last_name }}: <a href="mailto:{{ person.user.email }}">{{ person.user.email }}</a>
+      {% if person.is_audited %}<small class="text-muted"> - Organisme Controlé</small>{% endif %}
+      {% if person.is_inspector %}<small class="text-muted"> - Contrôleur</small>{% endif %}
+      </li>
+    {% endfor %}
+    </ul>
   </div>
 </div>
 
