@@ -7,7 +7,7 @@ from annoying.fields import AutoOneToOneField
 class UserProfile(models.Model):
     PROFILE_TYPE = (
         ('audited', 'Organisme Controlé'),
-        ('inspector', 'Controleur'),
+        ('inspector', 'Contrôleur'),
     )
     user = AutoOneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE,
