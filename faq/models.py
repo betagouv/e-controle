@@ -10,6 +10,7 @@ class FAQItem(OrderedModel):
     description = RichTextField("description", blank=True)
 
     class Meta:
+        ordering = ('order',)
         verbose_name = "Item de F.A.Q"
         verbose_name_plural = "Items de F.A.Q"
 
