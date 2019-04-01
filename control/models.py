@@ -1,4 +1,5 @@
 import os
+import re
 
 from django.conf import settings
 from django.db import models
@@ -138,9 +139,16 @@ class ResponseFile(TimeStampedModel):
     def url(self):
         return reverse('send-response-file', args=[self.id])
 
+    def strip_prefix(self, basename):
+        """
+        Remove the suffix found in filename 'Q01-T02-01-'.
+        """
+        return re.sub(r'Q\d+-T\d+-\d+-', '', basename)
+
     @property
     def basename(self):
-        return os.path.basename(self.file.name)
+        basename = os.path.basename(self.file.name)[11:]
+        return self.strip_prefix(basename)
 
     def __str__(self):
         return self.file.name

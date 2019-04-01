@@ -5,6 +5,7 @@
 Accueil
 {% endblock page_title %}
 
+
 {% block page_content %}
 <div class="row row-cards">
   <div class="col-lg-12">
@@ -14,7 +15,7 @@ Accueil
       <div class="card-header">
         <div class="card-title text-uppercase"><h4>{{ control.title }}</h4></div>
       </div>
-      <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
+      <div class="card-body pb-0"> <!--// opening: questionnaire_description_card_body  //-->
       <div class="table-responsive">
         <table class="table card-table table-vcenter">
           <tbody>
@@ -52,8 +53,80 @@ Accueil
                 </a>
               </td> -->
               {% endif %}
+
             </tr>
             {% endfor %}
+
+            <tr>
+              <td colspan="2">
+                <div class="card card-collapsed border-0 mb-0">
+                  <div class="card-header border-0 pl-0" data-toggle="card-collapse">
+                    <h5 class="card-title font-weight-bold""><a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a></h5>
+                  </div>
+                  <div class="card-body">
+                    {% with control.user_profiles.inspectors as inspectors %}
+                    {% if inspectors %}
+                    <div class="card">
+                      <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
+                      </div>
+                      <div class="card-body o-auto" style="height: o-auto">
+                        <ul class="list-unstyled list-separated">
+
+                          {% for profile in inspectors %}
+                          <li class="list-separated-item">
+                            <div class="row align-items-center">
+                              <div class="col-auto">
+                                <span class="avatar avatar-pink">{{ profile.user.first_name|first }}{{ profile.user.last_name|first }}</span>
+                              </div>
+                              <div class="col">
+                                <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
+                                <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
+                              </div>
+                            </div>
+                          </li>
+                          {% endfor %}
+
+                      </div>
+
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    {% with control.user_profiles.audited as audited %}
+                    {% if audited %}
+                    <div class="card">
+                      <div class="card-header">
+                        <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
+                      </div>
+                      <div class="card-body o-auto" style="height: o-auto">
+                        <ul class="list-unstyled list-separated">
+
+                          {% for profile in audited %}
+                          <li class="list-separated-item">
+                            <div class="row align-items-center">
+                              <div class="col-auto">
+                                <span class="avatar avatar-pink">{{ profile.user.first_name|first }}{{ profile.user.last_name|first }}</span>
+                              </div>
+                              <div class="col">
+                                <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
+                                <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
+                              </div>
+                            </div>
+                          </li>
+                          {% endfor %}
+
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+
           </tbody>
         </table>
       </div>

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load faq_tags %}
+
+{% block page_title %}
+Foire aux questions
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="card">
+  <div class="card-body">
+    Si vous ne trouvez pas de réponses à vos questions, <a href="mailto:e-controle@beta.gouv.fr">contactez-nous par email</a>.
+  </div>
+</div>
+
+<div class="row row-cards">
+  <div class="col-lg-12">
+    {% get_faq_items as faq_items %}
+    {% for faq_item in faq_items %}
+    <div class="card" id="{{ faq_item.slug }}">
+      <div class="card-status card-status-top bg-orange"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-orange mr-3">{{ forloop.counter }}</span>
+        <h3 class="card-title">{{ faq_item.title }}</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+            {{ faq_item.description|safe }}
+          </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock page_content %}

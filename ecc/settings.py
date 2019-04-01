@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'celery',
     'django_celery_beat',
     'django_cleanup.apps.CleanupConfig',
+    'ckeditor',
 
     'ecc',
     'control',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
     'user_profiles',
     'utils',
     'reporting',
+    'faq',
 ]
 
 
@@ -194,6 +196,3 @@ REST_FRAMEWORK = {
 }
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
-LDAP_SERVER = env('LDAP_SERVER')
-LDAP_DOMAIN = env('LDAP_DOMAIN')

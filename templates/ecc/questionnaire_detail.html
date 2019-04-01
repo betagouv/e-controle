@@ -24,16 +24,19 @@
 <div class="card">
   <div class="card-body">
     {{ questionnaire.description|linebreaks }}
+
     {% if questionnaire.sent_date %}
       <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
       {{ questionnaire.sent_date|date:"l d F Y" }}
       </p>
     {% endif %}
+
     {% if questionnaire.end_date %}
       <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
         {{ questionnaire.end_date|date:"l d F Y" }}
       </p>
     {% endif %}
+
     {% if questionnaire.file %}
     <p class="text-right">
       <a href="{{ questionnaire.file_url }}" target="_blank" >
@@ -41,6 +44,7 @@
       </a>
     </p>
     {% endif %}
+
   </div>
 </div>
 
@@ -150,6 +154,9 @@
                                 <input name="file" type="file" multiple />
                               </div>
                             </form>
+                            <div class="text-right">
+                              <i class="dropdown-icon fe fe-help-circle"></i><a href="{% url 'faq' %}">Des questions sur le dépôt de fichiers ?</a>
+                            </div>
                         </div>
                         {% endif %}
 
