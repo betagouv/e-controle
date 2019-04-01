@@ -122,9 +122,6 @@ Pour démarrer celery beat, il y a la commande suivante:
 
     celery worker --beat -A ecc -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler &
 
-    cd $CODE_DIR/deploy/
-    gpg latest.dump.gpg
-    pg_restore --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc latest.dump
 
 Un autre façon de faire, est d'installer un service systemd:
 
