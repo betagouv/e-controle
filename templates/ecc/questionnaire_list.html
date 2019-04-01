@@ -68,7 +68,7 @@ Accueil
                     {% if inspectors %}
                     <div class="card">
                       <div class="card-header">
-                        <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Cour des comptes</strong></h3>
+                        <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
                       </div>
                       <div class="card-body o-auto" style="height: o-auto">
                         <ul class="list-unstyled list-separated">
@@ -77,7 +77,7 @@ Accueil
                           <li class="list-separated-item">
                             <div class="row align-items-center">
                               <div class="col-auto">
-                                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                                <span class="avatar avatar-pink">{{ profile.user.first_name|first }}{{ profile.user.last_name|first }}</span>
                               </div>
                               <div class="col">
                                 <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
@@ -97,7 +97,7 @@ Accueil
                     {% if audited %}
                     <div class="card">
                       <div class="card-header">
-                        <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlés</strong></h3>
+                        <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
                       </div>
                       <div class="card-body o-auto" style="height: o-auto">
                         <ul class="list-unstyled list-separated">
@@ -106,7 +106,7 @@ Accueil
                           <li class="list-separated-item">
                             <div class="row align-items-center">
                               <div class="col-auto">
-                                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                                <span class="avatar avatar-pink">{{ profile.user.first_name|first }}{{ profile.user.last_name|first }}</span>
                               </div>
                               <div class="col">
                                 <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
