@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+Comment créer un questionnaire?
+{% endblock page_title %}
+
+{% block page_content %}
+
+<div class="card-title">
+    E-contrôle peut créer un questionnaire à partir d'un document Word (fichier ".docx"). Pour que le questionnaire soit lu correctement par e-contrôle, le document word doit suivre le même format que l'exemple ci-dessous :
+</div>
+
+<div class="row" style="justify-content: space-evenly;">
+    <img src="{% static 'img/parser_instructions.png' %}" alt="instructions" />
+    <div class="column" style="justify-content: space-evenly;margin: 30px;">
+        <div class="panel" style="margin: 30px;">
+            <a href="">
+                <button type="submit"
+                        class="fe fe-download btn btn-primary btn-blue"
+                        title="Télécharger l'exemple"
+                        style="font-size: large;"
+                >
+                    Télécharger l'example
+                </button>
+            </a>
+        </div>
+        <div class="panel" style="margin: 30px;">
+            <a href="">
+                <button type="submit"
+                        class="fe fe-upload btn btn-primary btn-blue"
+                        title="Envoyer mon questionnaire"
+                        style="font-size: large;"
+                >
+                    Envoyer mon questionnaire
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock page_content %}

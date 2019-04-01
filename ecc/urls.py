@@ -23,6 +23,7 @@ urlpatterns = [
     path('', ecc_views.login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('accueil/', control_views.questionnaire_list, name='questionnaire-list'),
+    path('parseur/', control_views.parser_instructions, name='parser-instructions'),
     path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
     path('contacts/', ecc_views.contacts, name='contacts'),
     path('suivi/', ecc_views.dashboard, name='dashboard'),
