@@ -59,11 +59,78 @@ Accueil
             <tr>
               <td colspan="2">
                 <p class="font-weight-bold"><i class="dropdown-icon fe fe-users"></i> <u>Personnes ayant accès au contrôle</u> :</p>
-                {% for person in control.user_profiles.all %}
-                  <a  href="mailto:{{ person.user.email }}"><button type="button" class="btn bg-blue-lighter btn-sm">
-                    {% if person.is_inspector %}<i class="fa fa-institution mr-2"></i>{% else %}<i class="fe fe-user mr-2"></i>{% endif %} {{ person.user.first_name }} {{ person.user.last_name }}
-                  </button></a>
-                {% endfor %}
+
+                {% with control.user_profiles.inspectors as inspectors %}
+                {% if inspectors %}
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fa fa-institution mr-2"></i><STRONG>Cour des comptes</STRONG></h3>
+                    <div class="card-options">
+                      <button type="button" class="btn btn-outline-primary"><i class="fe fe-plus mr-2"></i>Ajouter</button>
+                    </div>
+                  </div>
+                  <div class="card-body o-auto" style="height: o-auto">
+                    <ul class="list-unstyled list-separated">
+
+                      {% for profile in inspectors %}
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                          </div>
+                          <div class="col">
+                            <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
+                            <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
+                          </div>
+                          <div class="col-auto">
+                            <a class="icon" href="javascript:void(0)">
+                              <i class="fa fa-user-times" title="Désactiver"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </li>
+                      {% endfor %}
+
+                  </div>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                {% with control.user_profiles.audited as audited %}
+                {% if audited %}
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fe fe-user mr-2"></i><STRONG>Organisme controlés</STRONG></h3>
+                    <div class="card-options">
+                      <button type="button" class="btn btn-outline-primary"><i class="fe fe-plus mr-2"></i>Ajouter</button>
+                    </div>
+                  </div>
+                  <div class="card-body o-auto" style="height: o-auto">
+                    <ul class="list-unstyled list-separated">
+
+                      {% for profile in audited %}
+                      <li class="list-separated-item">
+                        <div class="row align-items-center">
+                          <div class="col-auto">
+                            <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                          </div>
+                          <div class="col">
+                            <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
+                            <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
+                          </div>
+                          <div class="col-auto">
+                            <a class="icon" href="javascript:void(0)">
+                              <i class="fa fa-user-times" title="Désactiver"></i>
+                            </a>
+                          </div>
+                        </div>
+                      </li>
+                      {% endfor %}
+
+                  </div>
+                </div>
+                {% endif %}
+                {% endwith %}
               </td>
             </tr>
 
