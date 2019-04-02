@@ -98,7 +98,7 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
 
-class ParserInstructions(LoginRequiredMixin, TemplateView):
+class ParserInstructions(TemplateView): # removed LoginRequiredMixin : no login, do not prod this!
     template_name = "ecc/parser_instructions.html"
 
 
