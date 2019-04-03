@@ -1,6 +1,10 @@
 "use strict";
 
-ES6Promise.polyfill()
+// ES6Promise.polyfill()
+
+import axios from "axios";
+import Vue from "vue";
+import Dropzone from "dropzone";
 
 var url = "/api/question/";
 

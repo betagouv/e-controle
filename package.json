@@ -1,0 +1,20 @@
+{
+  "name": "e-controle",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dropzone": "^5.5.1",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "css-loader": "^2.1.1",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js ",
+    "watch": "webpack --watch --config webpack.config.js"
+  }
+}
