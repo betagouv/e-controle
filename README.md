@@ -143,3 +143,10 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
 
 ## uWSGI
 Todo : c'est quoi, comment ca marche, ...
+
+
+## Travailler avec Parcel
+
+    npm install  # Pour installer les dépendences
+    npm run build  # Pour construire le fichier bundle
+    npm run watch  # Pour construire le fichier bundle en mode watch
