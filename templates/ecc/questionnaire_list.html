@@ -58,10 +58,12 @@ Accueil
             {% endfor %}
 
             <tr>
-              <td colspan="2">
+              <td>
                 <div class="card card-collapsed border-0 mb-0">
                   <div class="card-header border-0 pl-0" data-toggle="card-collapse">
-                    <h5 class="card-title font-weight-bold""><a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a></h5>
+                    <h5 class="card-title font-weight-bold"">
+                      <a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a>
+                    </h5>
                   </div>
                   <div class="card-body">
                     {% with control.user_profiles.inspectors as inspectors %}
@@ -82,6 +84,9 @@ Accueil
                               <div class="col">
                                 <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
                                 <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
+                              </div>
+                              <div class="col-auto">
+                                  <button type="button" class="btn btn-outline-secondary fa fa-user-times" data-toggle="modal" title="Désactiver" data-target="#modalDeleteUser"></button>
                               </div>
                             </div>
                           </li>
@@ -112,6 +117,9 @@ Accueil
                                 <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
                                 <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
                               </div>
+                              <div class="col-auto">
+                                  <button type="button" class="btn btn-outline-secondary fa fa-user-times" data-toggle="modal" title="Désactiver" data-target="#modalDeleteUser"></button>
+                              </div>
                             </div>
                           </li>
                           {% endfor %}
@@ -120,13 +128,17 @@ Accueil
                     </div>
                     {% endif %}
                     {% endwith %}
-                    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
+                    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;">
+                      <i class="fe fe-chevron-up"></i>
+                    </div>
                   </div>
                 </div>
 
               </td>
+              <td class="w-1">
+                  <button type="submit" class="fe fe-plus btn btn-primary" title="Ajouter et inviter un utilisateur" data-toggle="modal" data-target="#modalAddUser"> Ajouter</button>
+              </td>
             </tr>
-
           </tbody>
         </table>
       </div>
@@ -135,4 +147,8 @@ Accueil
     {% endfor %}
 </div>
 </div>
+
+{% include "ecc/includes/modal-add-user.html" %}
+{% include "ecc/includes/modal-delete-user.html" %}
+
 {% endblock page_content %}
