@@ -2,152 +2,111 @@
 {% load static %}
 
 {% block page_title %}
-Comment créer un questionnaire?
+Convertir votre questionnaire word en « e-contrôle »
 {% endblock page_title %}
 
 {% block page_content %}
 
-<div class="card-title">
-    E-contrôle peut créer un questionnaire pour votre contrôle à partir de quelques renseignements et d'un document Word (fichier ".docx").
-</div>
-
-<div class="card">
+<div class="card active">
     <div class="card-body">
         <div class="card-title">
-            Chapeau
+            Comment ca marche?
         </div>
-        <div>
-            Renseigner le chapeau (paragraphe introductif, période sous contrôle, coordonnées de l’équipe de contrôle, ...)
+
+        <div class="card-body" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
+            <div style="width:40%; display: flex; flex-direction: column; align-items: center">
+                <h4>Questionnaire Word</h4>
+                <img src="{% static 'img/questionnaire_word.png' %}" alt="instructions" />
+            </div>
+            <div style="width:10%">
+                <h4>Convertisseur</h4>
+                <img src="{% static 'img/arrow-128.png' %}" alt="instructions" />
+            </div>
+            <div style="width:48%; display: flex; flex-direction: column; align-items: center">
+                <h4>Questionnaire e-controle</h4>
+                <img src="{% static 'img/questionnaire_econtrole.png' %}" alt="instructions" />
+            </div>
         </div>
-        <div class="panel" style="margin: 30px;">
+
+
+        <div class="card-title">
+            Le Convertisseur d'e-contrôle est simple. Il ne connaît que deux types d'objets : les <b>thèmes</b> et les <b>questions</b>. Il les différencie selon la taille de leur texte.
+        </div>
+        <div class="card-title">
+            Il veut donc voir dans votre document Word :
+            <ul>
+                <li> des thèmes en <b>taille 14</b> </li>
+                <li> des questions en<b> taille 12</b></li>
+            </ul>
+        </div>
+
+        <div class="panel" style="margin: 30px; display:flex; flex-direction: row; justify-content: center">
                 <button type="submit"
-                        class="fe btn btn-primary btn-blue disabled"
-                        title="Renseigner"
+                        class="fe btn btn-primary btn-blue"
                         style="font-size: large;"
+                        onclick="showNext()"
                 >
-                    Chapeau
+                    J'ai compris
                 </button>
-            (fonctionnalité à venir)
         </div>
     </div>
 </div>
 
-<div class="card">
+<div class="card" style="display: none">
     <div class="card-body">
         <div class="card-title">
-            Formattage
+            Mettre en forme votre questionnaire Word
         </div>
         <div>
-            Formatter votre questionnaire word au format e-controle.
+            Adaptez votre document Word : vos themes doivent etre en taille 14 et vos questions en taille 12.
         </div>
         <div>
-            Ce format est défini dans
-            <a htarget="_blank" href="/static/img/modèle.docx">
-                le modèle word à télécharger
-            </a>
-            et également dans l'exemple au bas de cette page.
+            Inspirez-vous du <a htarget="_blank" href="/static/img/modèle.docx">modèle à télécharger</a>.
         </div>
-    </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            Import
-        </div>
-        <div>
-            Importer le questionnaire dans e-controle, sans annexes dans un premier temps.
-        </div>
-        <div>
-            Vous pourrez prévisualiser le résultat. Si le résultat n’est pas satisfaisant, corriger le questionnaire et l’importer à nouveau.
-        </div>
         <div class="panel" style="margin: 30px;">
             <a href="mailto:e-controle@beta.gouv.fr">
-                <button type="submit"
+                <button
+                        type="submit"
                         class="fe fe-upload btn btn-primary btn-blue"
                         title="Envoyer mon questionnaire"
                         style="font-size: large;"
                 >
-                    Importer mon questionnaire
+                    Mon questionnaire Word est prêt, je l’envoie
                 </button>
             </a>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            Annexes (fonctionnalité à venir)
-        </div>
-        <div>
-            Rajoutez les annexes si necessaire.
-        </div>
-        <div class="panel" style="margin: 30px;">
-                <button type="submit"
-                        class="fe btn btn-primary btn-blue disabled"
-                        title="Annexes"
-                        style="font-size: large;"
-                >
-                    Annexes
-                </button>
-            (fonctionnalité à venir)
-        </div>
-    </div>
-</div>
+<script>
+function showNext() {
+    function findActive() {
+        var actives = document.getElementsByClassName("active");
+        return actives[0]
+    }
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            Terminer
-        </div>
-        <div>
-            Lorsque vous êtes satisfait.e du questionnaire, confirmez sa création.
-        </div>
-        <div class="panel" style="margin: 30px;">
-                <button type="submit"
-                        class="fe btn btn-primary btn-blue"
-                        title="Confirmer"
-                        style="font-size: large;"
-                >
-                    Confirmer
-                </button>
-        </div>
-    </div>
-</div>
+    function hide(element) {
+        element.style.display = "none";
+        element.classList.remove("active");
+    }
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            Optionnel : Télécharger (fonctionnalité à venir)
-        </div>
-        <div>
-            Vous pouvez si vous le désirez récupérer une version word du questionnaire créé par e-controle.
-        </div>
-        <div class="panel" style="margin: 30px;">
-            <a htarget="_blank" href="/static/img/modèle.docx">
-                <button type="submit"
-                        class="fe fe-download btn btn-primary btn-blue"
-                        title="Télécharger l'exemple"
-                        style="font-size: large;"
-                >
-                    Télécharger
-                </button>
-            </a>
-        </div>
-    </div>
-</div>
+    function show(elemnt) {
+        nextSection.style.display = "flex";
+        nextSection.classList.add("active");
+    }
 
-<div class="card">
-    <div class="card-body">
-        <div class="card-title">
-            Annexe : Exemple de format pour le questionnaire
-        </div>
-        <div>
-            <img src="{% static 'img/parser_instructions.png' %}" alt="instructions" />
-        </div>
-    </div>
-</div>
+    function findNext(element) {
+        return element.nextElementSibling;
+    }
+
+    var active = findActive();
+    hide(active);
+    var nextSection = findNext(active);
+    show(nextSection);
+}
+</script>
+
 
 
 {% endblock page_content %}
