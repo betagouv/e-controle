@@ -1,7 +1,13 @@
-import Vue from 'vue';
-import App from './App';
+import Vue from 'vue/dist/vue.js'
+import UserList from './users/UserList.vue'
 
-new Vue({
-  el: '#app',
-  render: h => h(App),
+var control_app = new Vue({
+  delimiters: ['[[', ']]'],
+  el: '#control-section',
+  data: {
+    name: 'Hello World! Ce message vient de Vue.JS !!',
+  },
+  components: {
+    UserList
+  }
 });

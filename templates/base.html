@@ -9,14 +9,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 
     {% if debug %}
-    <script src="{% static 'es6-promise/4.2.5/es6-promise.js' %}" %"></script>
-    <script src="{% static 'vue/2.5.22/vue.js' %}"></script>
-    <script src="{% static 'axios/0.18.0/axios.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.css' %}">
     {% else %}
-    <script src="{% static 'es6-promise/4.2.5/es6-promise.min.js' %}"></script>
-    <script src="{% static 'vue/2.5.22/vue.min.js' %}"></script>
-    <script src="{% static 'axios/0.18.0/axios.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.min.css' %}">
     {% endif %}
 
@@ -24,7 +18,7 @@
 
 {% block content %}
 <div class="page"> <!--// opening: page  //-->
-  <div id="app"></div>
+
   <div class="page-main"> <!--// opening: main_page  //-->
     {% block page_top_row %}
     <div class="header py-4"> <!--// opening: top_header  //-->
