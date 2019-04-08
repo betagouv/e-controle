@@ -11,19 +11,55 @@ Comment créer un questionnaire?
     E-contrôle peut créer un questionnaire à partir d'un document Word (fichier ".docx"). Pour que le questionnaire soit lu correctement par e-contrôle, le document word doit suivre le même format que l'exemple ci-dessous :
 </div>
 
-<div class="row" style="justify-content: space-evenly;">
-    <img src="{% static 'img/parser_instructions.png' %}" alt="instructions" />
-    <div class="column" style="justify-content: space-evenly;margin: 30px;">
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Chapeau
+        </div>
+        <div>
+            Renseigner le chapeau (paragraphe introductif, période sous contrôle, coordonnées de l’équipe de contrôle, ...)
+        </div>
         <div class="panel" style="margin: 30px;">
-            <a htarget="_blank" href="/static/img/modèle.docx">
                 <button type="submit"
-                        class="fe fe-download btn btn-primary btn-blue"
-                        title="Télécharger l'exemple"
+                        class="fe btn btn-primary btn-blue disabled"
+                        title="Renseigner"
                         style="font-size: large;"
                 >
-                    Télécharger l'example
+                    Chapeau
                 </button>
+            (fonctionnalité à venir)
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Formattage
+        </div>
+        <div>
+            Formatter votre questionnaire word au format e-controle.
+        </div>
+        <div>
+            Ce format est défini dans
+            <a htarget="_blank" href="/static/img/modèle.docx">
+                le modèle word à télécharger
             </a>
+            et également dans l'exemple au bas de cette page.
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Import
+        </div>
+        <div>
+            Importer le questionnaire dans e-controle, sans annexes dans un premier temps.
+        </div>
+        <div>
+            Vous pourrez prévisualiser le résultat. Si le résultat n’est pas satisfaisant, corriger le questionnaire et l’importer à nouveau.
         </div>
         <div class="panel" style="margin: 30px;">
             <a href="mailto:e-controle@beta.gouv.fr">
@@ -32,9 +68,83 @@ Comment créer un questionnaire?
                         title="Envoyer mon questionnaire"
                         style="font-size: large;"
                 >
-                    Envoyer mon questionnaire
+                    Importer mon questionnaire
                 </button>
             </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Annexes (fonctionnalité à venir)
+        </div>
+        <div>
+            Rajoutez les annexes si necessaire.
+        </div>
+        <div class="panel" style="margin: 30px;">
+                <button type="submit"
+                        class="fe btn btn-primary btn-blue disabled"
+                        title="Annexes"
+                        style="font-size: large;"
+                >
+                    Annexes
+                </button>
+            (fonctionnalité à venir)
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Terminer
+        </div>
+        <div>
+            Lorsque vous êtes satisfait.e du questionnaire, confirmez sa création.
+        </div>
+        <div class="panel" style="margin: 30px;">
+                <button type="submit"
+                        class="fe btn btn-primary btn-blue"
+                        title="Confirmer"
+                        style="font-size: large;"
+                >
+                    Confirmer
+                </button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Optionnel : Télécharger (fonctionnalité à venir)
+        </div>
+        <div>
+            Vous pouvez si vous le désirez récupérer une version word du questionnaire créé par e-controle.
+        </div>
+        <div class="panel" style="margin: 30px;">
+            <a htarget="_blank" href="/static/img/modèle.docx">
+                <button type="submit"
+                        class="fe fe-download btn btn-primary btn-blue"
+                        title="Télécharger l'exemple"
+                        style="font-size: large;"
+                >
+                    Télécharger
+                </button>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="card-title">
+            Annexe : Exemple de format pour le questionnaire
+        </div>
+        <div>
+            <img src="{% static 'img/parser_instructions.png' %}" alt="instructions" />
         </div>
     </div>
 </div>
