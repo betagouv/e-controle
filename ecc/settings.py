@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'django_cleanup.apps.CleanupConfig',
     'ckeditor',
+    'django_filters',
 
     'ecc',
     'control',
@@ -192,6 +193,9 @@ SETTINGS_EXPORT = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     )
 }
 

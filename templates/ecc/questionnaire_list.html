@@ -58,50 +58,17 @@ Accueil
             {% endfor %}
 
             <tr>
-              <td>
+              <td colspan="2">
                 <div class="card card-collapsed border-0 mb-0">
                   <div class="card-header border-0 pl-0" data-toggle="card-collapse">
-                    <h5 class="card-title font-weight-bold">
-                      <a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a>
-                    </h5>
+                    <h5 class="card-title font-weight-bold"><a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a></h5>
                   </div>
                   <div class="card-body">
-                    <user-list></user-list>
+                    <user-list profile-type='audited' control-id='{{ control.id }}'></user-list>
 
+                    <user-list profile-type='inspector' control-id='{{ control.id }}'></user-list>
 
-                    {% with control.user_profiles.audited as audited %}
-                    {% if audited %}
-                    <div class="card">
-                      <div class="card-header">
-                        <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
-                      </div>
-                      <div class="card-body o-auto" style="height: o-auto">
-                        <ul class="list-unstyled list-separated">
-
-                          {% for profile in audited %}
-                          <li class="list-separated-item">
-                            <div class="row align-items-center">
-                              <div class="col-auto">
-                                <span class="avatar avatar-pink">{{ profile.user.first_name|first }}{{ profile.user.last_name|first }}</span>
-                              </div>
-                              <div class="col">
-                                <a href="javascript:void(0)" class="text-inherit" title="{{ profile.organization }}">{{ profile.user.first_name }} {{ profile.user.last_name }}</a>
-                                <small class="d-block item-except text-sm text-muted h-1x"><a href="mailto:{{ profile.user.email }}">{{ profile.user.email }}</a></small>
-                              </div>
-                              <div class="col-auto">
-                                  <button type="button" class="btn btn-outline-secondary fa fa-user-times" data-toggle="modal" title="Désactiver" data-target="#modalDeleteUser"></button>
-                              </div>
-                            </div>
-                          </li>
-                          {% endfor %}
-
-                      </div>
-                    </div>
-                    {% endif %}
-                    {% endwith %}
-                    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;">
-                      <i class="fe fe-chevron-up"></i>
-                    </div>
+                    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
                   </div>
                 </div>
 
@@ -110,6 +77,7 @@ Accueil
                   <button type="submit" class="fe fe-plus btn btn-primary" title="Ajouter et inviter un utilisateur" data-toggle="modal" data-target="#modalAddUser"> Ajouter</button>
               </td>
             </tr>
+
           </tbody>
         </table>
       </div>
