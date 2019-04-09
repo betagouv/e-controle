@@ -1,5 +1,6 @@
 import Vue from 'vue/dist/vue.js'
 import UserList from './users/UserList.vue'
+import UserCreate from './users/UserCreate.vue'
 
 var control_app = new Vue({
   delimiters: ['[[', ']]'],
@@ -7,6 +8,7 @@ var control_app = new Vue({
   data: {
   },
   components: {
-    UserList
+    UserList,
+    UserCreate
   }
 });
