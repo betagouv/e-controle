@@ -2,6 +2,7 @@
 
 <div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="modalAddUser" aria-hidden="true">
   <div class="modal-dialog" role="document">
+    <form @submit.prevent="addUser">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Ajouter et inviter</h5>
@@ -10,42 +11,42 @@
         </button>
       </div>
       <div class="modal-body">
-        <form v-on:submit="submitEntry" action="#" method="post">
         <fieldset class="form-fieldset">
           <div class="form-group">
             <div class="custom-controls-stacked">
               <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" class="custom-control-input" name="example-inline-radios" value="option1" checked="">
+                <input type="radio" v-model="formData.profile_type" value="audited" class="custom-control-input" name="example-inline-radios">
                 <span class="custom-control-label">Équipe de contrôle</span>
               </label>
               <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" class="custom-control-input" name="example-inline-radios" value="option2">
+                <input type="radio" v-model="formData.profile_type" value="inspector" class="custom-control-input" name="example-inline-radios">
                 <span class="custom-control-label">Organisme Controlé</span>
               </label>
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">Prénom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="first_name">
+            <input type="text" class="form-control" v-model="formData.user.first_name">
           </div>
           <div class="form-group">
             <label class="form-label">Nom<span class="form-required"></span></label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" v-model="formData.user.last_name">
           </div>
           <div class="form-group">
             <label class="form-label">Email<span class="form-required"></span></label>
-            <input type="email" class="form-control">
+            <input type="email" class="form-control" v-model="formData.user.email">
           </div>
           <div class="form-group">
             <label class="form-label">Organisme<span class="form-required"></span></label>
-            <input type="text" class="form-control">
+            <input type="text" class="form-control" v-model="formData.organization">
           </div>
         </fieldset>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuler</button>
-        <button type="submit" class="btn btn-primary" data-dismiss="modal">Ajouter</button>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
@@ -58,22 +59,30 @@
   import VueAxios from 'vue-axios'
 
   Vue.use(VueAxios, axios)
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
   export default Vue.extend({
     data: () {
       return {
-        first_name: '',
-        last_name: '',
-        email: '',
-        oragnization: '',
-        controls: [],
-        postResult: []
+        'formData': {
+          'user': {
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+          },
+          'organization': '',
+          'controls': [3, 4],
+          'profile_type': ''
+        }
+        'postResult': [],
       }
     },
     methods: {
-      submitEntry() {
-        this.axios.post('/api/user/', this.data)
+      addUser() {
+        this.axios.post('/api/user/', this.formData)
           .then(response => {
+            console.log(response.data)
             this.postResult = response.data
           })
       }
