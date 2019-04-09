@@ -1,12 +1,11 @@
 <template>
-  <div class="card">
+  <div class="card" v-if="user_profiles && user_profiles.length">
     <div class="card-header">
       <h3 v-if="profileType=='inspector'" class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
       <h3 v-if="profileType=='audited'" class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
-
     </div>
     <div class="card-body o-auto" style="height: o-auto">
-      <ul class="list-unstyled list-separated" v-if="user_profiles && user_profiles.length">
+      <ul class="list-unstyled list-separated">
         <li class="list-separated-item" v-for="profile of user_profiles">
           <div class="row align-items-center">
             <div class="col-auto">
@@ -26,7 +25,6 @@
 <script lang="ts">
   import Vue from "vue";
 
-  import UserList from './users/UserList.vue'
   import axios from 'axios'
   import VueAxios from 'vue-axios'
 
