@@ -9,9 +9,9 @@ Convertir votre questionnaire word en « e-contrôle »
 
 <div class="card active">
     <div class="card-body">
-        <div class="card-title">
-            Comment ca marche?
-        </div>
+        <h4>
+            Etape 1 : Comment ca marche?
+        </h4>
 
         <div class="card-body" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center">
             <div style="width:40%; display: flex; flex-direction: column; align-items: center">
@@ -41,26 +41,31 @@ Convertir votre questionnaire word en « e-contrôle »
         </div>
 
         <div class="panel" style="margin: 30px; display:flex; flex-direction: row; justify-content: center">
-                <button type="submit"
-                        class="fe btn btn-primary btn-blue"
-                        style="font-size: large;"
-                        onclick="showNext()"
-                >
-                    J'ai compris
-                </button>
+            <button type="submit"
+                    class="fe btn btn-primary btn-blue"
+                    style="font-size: large;"
+                    onclick="showNext()"
+            >
+                J'ai compris
+            </button>
         </div>
     </div>
 </div>
 
 <div class="card" style="display: none">
     <div class="card-body">
-        <div class="card-title">
-            Mettre en forme votre questionnaire Word
-        </div>
         <div>
+            <a href="" onclick="showPrevious(event)">
+                < Retour
+            </a>
+        </div>
+        <h4 style="margin-bottom: 24px;">
+            Etape 2 : Mettre en forme votre questionnaire Word
+        </h4>
+        <div class="card-title">
             Adaptez votre document Word : vos themes doivent etre en taille 14 et vos questions en taille 12.
         </div>
-        <div>
+        <div class="card-title">
             Inspirez-vous du <a htarget="_blank" href="/static/img/modèle.docx">modèle à télécharger</a>.
         </div>
 
@@ -80,7 +85,6 @@ Convertir votre questionnaire word en « e-contrôle »
 </div>
 
 <script>
-function showNext() {
     function findActive() {
         var actives = document.getElementsByClassName("active");
         return actives[0]
@@ -91,20 +95,33 @@ function showNext() {
         element.classList.remove("active");
     }
 
-    function show(elemnt) {
-        nextSection.style.display = "flex";
-        nextSection.classList.add("active");
+    function show(element) {
+        element.style.display = "flex";
+        element.classList.add("active");
     }
 
-    function findNext(element) {
-        return element.nextElementSibling;
+    function showNext() {
+        function findNext(element) {
+            return element.nextElementSibling;
+        }
+
+        var active = findActive();
+        hide(active);
+        var nextSection = findNext(active);
+        show(nextSection);
     }
 
-    var active = findActive();
-    hide(active);
-    var nextSection = findNext(active);
-    show(nextSection);
-}
+    function showPrevious(event) {
+        function findPrevious(element) {
+            return element.previousElementSibling;
+        }
+
+        event.preventDefault(); // don't jump around the page when <a> is clicked
+        var active = findActive();
+        hide(active);
+        var previousSection = findPrevious(active);
+        show(previousSection);
+    }
 </script>
 
 
