@@ -16,26 +16,22 @@ class ControlPKField(serializers.PrimaryKeyRelatedField):
         return queryset
 
 
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email')
-
-
 class UserProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
     controls = ControlPKField(many=True)
 
     class Meta:
         model = UserProfile
-        fields = ('user', 'profile_type', 'organization', 'controls')
+        fields = ('first_name', 'last_name', 'email', 'profile_type', 'organization', 'controls')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):
         profile_data = validated_data
         controls_data = profile_data.pop('controls')
-        user_data = profile_data.pop('user')
+        user_data = {
+            'first_name': profile_data.pop('first_name'),
+            'last_name': profile_data.pop('last_name'),
+            'email': profile_data.pop('email')
+        }
         user_data['username'] = user_data['email']
         user = User.objects.create(**user_data)
         profile_data['user'] = user
