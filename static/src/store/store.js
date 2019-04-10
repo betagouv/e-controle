@@ -9,23 +9,29 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
-      userProfiles: []
+      users: [],
+    },
+
+    mutations: {
+      updateUsers(state, users) {
+          state.users = users
+      }
     },
     actions: {
       loadData({commit}) {
         axios.get('/api/user/').then((response) => {
-          commit('updateUserProfiles', response.data)
+          commit('updateUsers', response.data)
         })
       }
     },
-    mutations: {
-      updateUserProfiles(state, userProfiles) {
-          state.userProfiles = userProfiles
-      }
-    },
     getters: {
-        getUserProfiles: state => {
-            return state.userProfiles
+        getAllUsers: state => {
+            return state.users
+        },
+        getUsers: (state) => (controlId, profileType) => {
+            return state.users.filter(u => {
+                return (u.profile_type == profileType) && (u.controls.includes(controlId))
+            })
         }
     }
 })
