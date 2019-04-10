@@ -1,12 +1,12 @@
 <template>
-  <div class="card" v-if="user_profiles && user_profiles.length">
+  <div class="card" v-if="getUserProfiles && getUserProfiles.length">
     <div class="card-header">
       <h3 v-if="profileType=='inspector'" class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
       <h3 v-if="profileType=='audited'" class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
     </div>
     <div class="card-body o-auto" style="height: o-auto">
       <ul class="list-unstyled list-separated">
-        <li class="list-separated-item" v-for="profile of user_profiles">
+        <li class="list-separated-item" v-for="profile of getUserProfiles">
           <div class="row align-items-center">
             <div class="col-auto">
               <span class="avatar avatar-pink">{{ profile.user.first_name.charAt(0) }}{{ profile.user.last_name.charAt(0) }}</span>
@@ -28,23 +28,28 @@
   import axios from 'axios'
   import VueAxios from 'vue-axios'
 
+  import { mapGetters } from 'vuex'
+  import { store } from '../store/store';
+
   Vue.use(VueAxios, axios)
+
+
 
   export default Vue.extend({
     data: () {
       return {
-        user_profiles: []
       }
     },
-    props: ['profileType', 'controlId'],
-    mounted() {
-      var urlParams = new URLSearchParams('')
-      urlParams.set("controls", this.controlId)
-      urlParams.set("profile_type", this.profileType)
-      this.axios.get('/api/user/?' + urlParams.toString())
-        .then(response => {
-          this.user_profiles = response.data
-        })
+    store,
+    props: {
+      profileType: String,
+      controlId: String
+    },
+    computed: mapGetters([
+      'getUserProfiles'
+    ]),
+    created() {
+      this.$store.dispatch('loadData')
     }
   });
 </script>
