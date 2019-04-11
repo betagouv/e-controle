@@ -10,6 +10,12 @@ RUN yum -y install epel-release; yum clean all
 RUN yum -y install python36u python36u-pip python36u-devel python36u-setuptools; yum clean all
 RUN yum -y groupinstall "Development Tools"; yum clean all
 RUN easy_install-3.6 pip
+
+# Node.js and NPM
+RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash -
+RUN yum -y install nodejs; yum clean all
+
+# Make python3 the default
 RUN ln -fs /usr/bin/python3.6 /usr/bin/python
 
 # Locales
@@ -19,7 +25,9 @@ RUN localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
 COPY . /app
 WORKDIR /app
 
+# Python and NPM Packaging
 RUN pip3 install -r requirements.txt
+RUN npm install
 
 RUN chmod +x docker-entrypoint.sh
 

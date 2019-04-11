@@ -143,3 +143,19 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
 
 ## uWSGI
 Todo : c'est quoi, comment ca marche, ...
+
+
+## Parcel : Bundler JS
+
+Nous avons fait le choix d'utiliser le bundler parcel qui est une alternative à Webpack.
+Voir le fichier ``package.json`` pour plus de détails.
+
+Pour lancer le build en mode wach:
+
+    docker-compose run django watch
+
+Quelques commandes bash utiles:
+
+    npm install  # Pour installer les dépendences
+    npm run build  # Pour construire le fichier bundle
+    npm run watch  # Pour construire le fichier bundle en mode watch

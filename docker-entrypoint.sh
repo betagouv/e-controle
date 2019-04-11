@@ -11,6 +11,10 @@ echo "############# Running Django collectstatic and migrate"""
 python3.6 manage.py collectstatic --noinput
 python3.6 manage.py migrate
 
+echo "############# Building bundle"""
+npm run build
+
+
 echo -n "############# Server IP: "
 hostname -I
 
@@ -20,6 +24,10 @@ case "$1" in
     dev)
         echo "############# Running Development Server on ${PORT}"
         python3.6 manage.py runserver 0:${PORT}
+    ;;
+    watch)
+        echo "############# Running Bundler on Watch Mode"
+        npm run watch
     ;;
     uwsgi)
         echo "############# Running uWSGI App"
