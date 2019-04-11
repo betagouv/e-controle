@@ -18,6 +18,9 @@ class ControlPKField(serializers.PrimaryKeyRelatedField):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     controls = ControlPKField(many=True)
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    email = serializers.EmailField(source='user.email')
 
     class Meta:
         model = UserProfile
@@ -27,11 +30,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         profile_data = validated_data
         controls_data = profile_data.pop('controls')
-        user_data = {
-            'first_name': profile_data.pop('first_name'),
-            'last_name': profile_data.pop('last_name'),
-            'email': profile_data.pop('email')
-        }
+        user_data = profile_data.pop('user')
         user_data['username'] = user_data['email']
         user = User.objects.create(**user_data)
         profile_data['user'] = user

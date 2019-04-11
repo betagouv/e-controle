@@ -6,7 +6,7 @@
     </div>
     <div class="card-body o-auto" style="height: o-auto">
       <ul class="list-unstyled list-separated">
-        <li class="list-separated-item" v-for="user of users">
+        <li class="list-separated-item" v-for="(user, index) in users" :key="index">
           <div class="row align-items-center">
             <div class="col-auto">
               <span class="avatar avatar-pink">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
@@ -49,7 +49,6 @@
     },
     methods: {
       ...mapActions(['loadData'])
-      }
     }
   });
 </script>

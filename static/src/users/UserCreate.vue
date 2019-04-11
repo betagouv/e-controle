@@ -5,7 +5,7 @@
     <form @submit.prevent="addUser">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Ajouter et inviter</h5>
+        <h5 class="modal-title" id="labelForModalAddUser">Ajouter</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true"></span>
         </button>
@@ -15,26 +15,26 @@
           <div class="form-group">
             <div class="custom-controls-stacked">
               <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" v-model="formData.profile_type" value="audited" class="custom-control-input" name="example-inline-radios">
+                <input type="radio" v-model="formData.profile_type" value="inspector" class="custom-control-input" name="control-inline-radios">
                 <span class="custom-control-label">Équipe de contrôle</span>
               </label>
               <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" v-model="formData.profile_type" value="inspector" class="custom-control-input" name="example-inline-radios">
+                <input type="radio" v-model="formData.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
                 <span class="custom-control-label">Organisme Controlé</span>
               </label>
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">Prénom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="formData.user.first_name">
+            <input type="text" class="form-control" v-model="formData.first_name">
           </div>
           <div class="form-group">
             <label class="form-label">Nom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="formData.user.last_name">
+            <input type="text" class="form-control" v-model="formData.last_name">
           </div>
           <div class="form-group">
             <label class="form-label">Email<span class="form-required"></span></label>
-            <input type="email" class="form-control" v-model="formData.user.email">
+            <input type="email" class="form-control" v-model="formData.email">
           </div>
           <div class="form-group">
             <label class="form-label">Organisme<span class="form-required"></span></label>
@@ -58,33 +58,45 @@
   import axios from 'axios'
   import VueAxios from 'vue-axios'
 
+  import { mapActions } from 'vuex'
+  import { store } from '../store/store';
+
   Vue.use(VueAxios, axios)
+
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
   export default Vue.extend({
+    store,
     data: () {
       return {
         'formData': {
-          'user': {
             'first_name': '',
             'last_name': '',
             'email': '',
-          },
-          'organization': '',
-          'controls': [3, 4],
-          'profile_type': ''
+            'organization': '',
+            'controls': [3, 4],
+            'profile_type': ''
         }
         'postResult': [],
       }
     },
     methods: {
-      addUser() {
+      ...mapActions(['loadData']),
+      hideModal() {
+        $('#modalAddUser').modal('hide');
+      },
+      postData() {
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             console.log(response.data)
             this.postResult = response.data
           })
+      },
+      addUser() {
+        this.postData()
+        this.loadData()
+        this.hideModal()
       }
     }
   });
