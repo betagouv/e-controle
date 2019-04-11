@@ -28,7 +28,6 @@ WORKDIR /app
 # Python and NPM Packaging
 RUN pip3 install -r requirements.txt
 RUN npm install
-RUN npm run build
 
 RUN chmod +x docker-entrypoint.sh
 

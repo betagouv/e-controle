@@ -11,8 +11,7 @@ echo "############# Running Django collectstatic and migrate"""
 python3.6 manage.py collectstatic --noinput
 python3.6 manage.py migrate
 
-echo "############# Running NPM install and bundler"""
-npm install
+echo "############# Building bundle"""
 npm run build
 
 
