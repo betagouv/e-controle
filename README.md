@@ -145,9 +145,10 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
 Todo : c'est quoi, comment ca marche, ...
 
 
-## Travailler avec Parcel
+## Parcel : Bundler JS
 
 Nous avons fait le choix d'utiliser le bundler parcel qui est une alternative à Webpack.
+Voir le fichier ``package.json`` pour plus de détails.
 
 Pour lancer le build en mode wach:
 
