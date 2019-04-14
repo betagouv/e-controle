@@ -5,11 +5,18 @@
   </div>
   <div class="card-body">
 
-    <user-list :users=inspectorUsers() profile-type="inspector"></user-list>
+    <div class="card">
+      <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + controlId"> Ajouter une personne</button>
+    </div>
 
-    <user-list :users=auditedUsers() profile-type="audited"></user-list>
+    <user-list :users="inspectorUsers()" profile-type="inspector"></user-list>
+
+    <user-list :users="auditedUsers()" profile-type="audited"></user-list>
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
+
+    <user-create :control-id="controlId"></user-create>
+
   </div>
 </div>
 </template>
@@ -20,6 +27,7 @@
   import VueAxios from "vue-axios"
 
   import UserList from "./UserList.vue"
+  import UserCreate from "./UserCreate.vue"
 
   Vue.use(VueAxios, axios)
 
@@ -56,6 +64,7 @@
     },
     components: {
       UserList,
+      UserCreate
     }
   });
 </script>
