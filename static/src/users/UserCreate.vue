@@ -1,6 +1,6 @@
 <template>
 
-<div class="modal fade" :id="'modalAddUser' + controlId" tabindex="-1" role="dialog" :aria-labelledby="'modalAddUser' + controlId" aria-hidden="true">
+<div class="modal fade modal-add-user" :id="'modalAddUser' + controlId" tabindex="-1" role="dialog" :aria-labelledby="'modalAddUser' + controlId" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form @submit.prevent="addUser">
     <div class="modal-content">
@@ -58,6 +58,8 @@
   import axios from 'axios'
   import VueAxios from 'vue-axios'
 
+  import EventBus from '../events.js';
+
   Vue.use(VueAxios, axios)
 
   axios.defaults.xsrfCookieName = 'csrftoken'
@@ -81,12 +83,16 @@
       }
     },
     methods: {
+      hideModal() {
+        $('.modal-add-user').modal('hide');
+      },
       addUser() {
         this.formData.controls.push(this.controlId)
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
-            window.location.reload()
+            EventBus.$emit('user-added', this.postResult);
+            this.hideModal()
           })
       }
     }

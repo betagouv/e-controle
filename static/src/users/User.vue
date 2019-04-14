@@ -29,6 +29,8 @@
   import UserList from "./UserList.vue"
   import UserCreate from "./UserCreate.vue"
 
+  import EventBus from '../events.js';
+
   Vue.use(VueAxios, axios)
 
   export default Vue.extend({
@@ -61,6 +63,9 @@
     },
     mounted() {
       this.getUsers()
+      EventBus.$on('user-added', data => {
+        this.getUsers()
+      })
     },
     components: {
       UserList,

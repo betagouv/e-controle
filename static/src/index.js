@@ -1,6 +1,8 @@
 import Vue from 'vue/dist/vue.js'
 import User from './users/User.vue'
 
+const EventBus = new Vue();
+export default EventBus;
 
 var vm1 = new Vue({
   el: '#vm-app-1',
