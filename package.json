@@ -6,7 +6,9 @@
     "build": "parcel build static/src/index.js --out-dir ./static/dist/ --out-file bundle.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "vue": "^2.6.10",
+    "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3"
   },
   "devDependencies": {
