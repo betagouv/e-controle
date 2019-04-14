@@ -25,6 +25,14 @@ class UserFactory(factory.DjangoModelFactory):
 
 
 @register
+class UserProfileFactory(factory.DjangoModelFactory):
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = 'user_profiles.UserProfile'
+
+
+@register
 class MagicTokenFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
 

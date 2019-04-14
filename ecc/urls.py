@@ -11,12 +11,14 @@ from . import views as ecc_views
 from control import views as control_views
 from control import api_views as control_api_views
 from magicauth import views as magicauth_views
+from user_profiles import api_views as user_profiles_api_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
 
 router = routers.DefaultRouter()
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
+router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
 
 
 urlpatterns = [
