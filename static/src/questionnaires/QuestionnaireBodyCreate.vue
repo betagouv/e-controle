@@ -1,20 +1,25 @@
 <template>
   <div>
 
-    SUIIIIIITTTE
     <form @submit.prevent="createBody">
-      <fieldset class="form-fieldset">
-        <div class="form-group">
-          <label class="form-label">Date de transmission du questionnaire<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.sent_date }" v-model="formData.sent_date">
-          <p class="text-muted pl-2" v-if="errors.sent_date"><i class="fa fa-warning"></i> {{ errors.sent_date.join(' / ')}}</p>
+      <fieldset v-for="(group, index) in body" class="form-fieldset" id="'group-' + index">
+        <div class="form-group theme">
+          <label class="form-label">Thème<span class="form-required"></span></label>
+          <input type="text" class="form-control" v-model="body[index].theme">
         </div>
-        <div class="form-group">
-          <label class="form-label">Date de réponse souhaitée<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.end_date }" v-model="formData.end_date">
-          <p class="text-muted pl-2" v-if="errors.end_date"><i class="fa fa-warning"></i> {{ errors.end_date.join(' / ')}}</p>
+        <div class="form-group questions">
+          <div v-for="(question, qIndex) in body[index].questions">
+            <label class="form-label">Question {{qIndex + 1}}<span class="form-required"></span></label>
+            <input type="text" class="form-control" v-model="body[index].questions[qIndex]">
+          </div>
+        </div>
+        <div @click="addQuestion(index)">
+          +
         </div>
       </fieldset>
+      <div @click="addGroup()">
+        +
+      </div>
       <div>
         <button type="submit" class="btn btn-primary">Suivant</button>
       </div>
@@ -29,19 +34,31 @@
   export default Vue.extend({
     data() {
       return {
-        formData: {
-            'sent_date': '',
-            'end_date': '',
-        },
+        body: [
+          {
+            theme: "",
+            questions: [
+                    "",
+            ]
+          }
+        ],
         'errors': [],
       }
     },
     methods: {
       createBody: function () {
         console.log('body created sortof')
-        console.log(this.formData)
-        this.$emit('body-created', this.formData)
-      }
+        console.log(this.body)
+        this.$emit('body-created', this.body)
+      },
+      addQuestion: function (groupIndex) {
+        console.log('addQuestion', groupIndex)
+        this.body[groupIndex].questions.push("");
+      },
+      addGroup: function (index) {
+        console.log('addGroup', index)
+        this.body.push({ theme: "", questions: [""]})
+      },
     }
   });
 </script>

@@ -36,7 +36,7 @@
       QuestionnaireMetadataCreate
     },
     mounted() {
-      this.$refs.createMetadataChild.$on('metadata-created', functiocon(data) {
+      this.$refs.createMetadataChild.$on('metadata-created', function(data) {
         console.log('got metadata', data);
         // "this" is the child component.
         this.$parent.questionnaire.metadata = data;
