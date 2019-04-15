@@ -61,12 +61,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
-
   import axios from 'axios'
+  import Vue from "vue";
   import VueAxios from 'vue-axios'
 
-  import EventBus from '../events.js';
+  import EventBus from '../events';
 
   Vue.use(VueAxios, axios)
 

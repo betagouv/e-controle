@@ -22,14 +22,13 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
   import axios from "axios"
+  import Vue from "vue";
   import VueAxios from "vue-axios"
 
-  import UserList from "./UserList.vue"
-  import UserCreate from "./UserCreate.vue"
-
-  import EventBus from '../events.js';
+  import EventBus from '../events';
+  import UserCreate from "./UserCreate"
+  import UserList from "./UserList"
 
   Vue.use(VueAxios, axios)
 
