@@ -25,7 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         source='user.email',
         validators=[UniqueValidator(
             queryset=User.objects.all(),
-            message="C'est email existe déjà")])
+            message="Cet email existe déjà")])
 
     class Meta:
         model = UserProfile

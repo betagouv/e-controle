@@ -12,7 +12,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'envoie de ce formulaire n'a pas fonctionné.
+          L'envoi de ce formulaire n'a pas fonctionné.
         </div>
         <fieldset class="form-fieldset">
           <div class="form-group">
@@ -51,7 +51,7 @@
         </fieldset>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuler</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
         <button type="submit" class="btn btn-primary">Ajouter</button>
       </div>
     </form>
