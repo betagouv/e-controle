@@ -1,4 +1,4 @@
-import User from './users/User.vue'
+import Users from './users/Users.vue'
 import Vue from 'vue/dist/vue.js'
 
 const EventBus = new Vue();
@@ -9,6 +9,6 @@ var vm1 = new Vue({
   data: {
   },
   components: {
-    User
+    'users-for-control': Users
   },
 });
