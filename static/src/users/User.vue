@@ -43,9 +43,11 @@
     },
     methods: {
       getUsers() {
-        var urlParams = new URLSearchParams()
-        urlParams.set("controls", this.controlId)
-        Vue.axios.get('/api/user/?' + urlParams.toString()).then((response) => {
+        Vue.axios.get('/api/user/', {
+          params: {
+            controls: this.controlId
+          }
+        }).then((response) => {
           this.users = response.data
         })
       },
