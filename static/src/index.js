@@ -5,7 +5,7 @@ const EventBus = new Vue();
 export default EventBus;
 
 var vm1 = new Vue({
-  el: '#vm-app-1',
+  el: '#questionnaire-list-vm',
   data: {
   },
   components: {
