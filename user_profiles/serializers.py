@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from .models import UserProfile
 
@@ -20,7 +21,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
     controls = ControlPKField(many=True)
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
-    email = serializers.EmailField(source='user.email')
+    email = serializers.EmailField(
+        source='user.email',
+        validators=[UniqueValidator(
+            queryset=User.objects.all(),
+            message="C'est email existe déjà")])
 
     class Meta:
         model = UserProfile
