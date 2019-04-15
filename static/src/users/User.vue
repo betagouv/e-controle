@@ -53,12 +53,12 @@
       },
       auditedUsers() {
         return this.users.filter(item => {
-           return item.profile_type == 'audited'
+           return item.profile_type === 'audited'
         })
       },
       inspectorUsers() {
         return this.users.filter(item => {
-           return item.profile_type == 'inspector'
+           return item.profile_type === 'inspector'
         })
       }
     },
