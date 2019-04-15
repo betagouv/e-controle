@@ -11,6 +11,9 @@
         </button>
       </div>
       <div class="modal-body">
+        <div v-if="hasErrors" class="alert alert-danger">
+          L'envoie de ce formulaire n'a pas fonctionné.
+        </div>
         <fieldset class="form-fieldset">
           <div class="form-group">
             <div class="custom-controls-stacked">
@@ -22,23 +25,28 @@
                 <input type="radio" v-model="formData.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
                 <span class="custom-control-label">Organisme Controlé</span>
               </label>
+              <p class="text-muted pl-2" v-if="errors.profile_type"><i class="fa fa-warning"></i> Choisissez l'une des options</p>
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">Prénom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="formData.first_name">
+            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name">
+            <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
           </div>
           <div class="form-group">
             <label class="form-label">Nom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="formData.last_name">
+            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name">
+            <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
           </div>
           <div class="form-group">
             <label class="form-label">Email<span class="form-required"></span></label>
-            <input type="email" class="form-control" v-model="formData.email">
+            <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="formData.email">
+            <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
           </div>
           <div class="form-group">
             <label class="form-label">Organisme<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="formData.organization">
+            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization">
+            <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
           </div>
         </fieldset>
       </div>
@@ -80,6 +88,8 @@
             'profile_type': ''
         }
         'postResult': [],
+        'errors': [],
+        'hasErrors': false
       }
     },
     methods: {
@@ -93,6 +103,10 @@
             this.postResult = response.data
             EventBus.$emit('user-added', this.postResult);
             this.hideModal()
+          })
+          .catch((error) => {
+            this.hasErrors = true
+            this.errors = error.response.data
           })
       }
     }
