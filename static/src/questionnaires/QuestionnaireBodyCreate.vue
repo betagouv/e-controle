@@ -2,18 +2,18 @@
   <div>
 
     <form @submit.prevent="createBody">
-      <fieldset v-for="(group, index) in body" class="form-fieldset" id="'group-' + index">
+      <fieldset v-for="(group, groupIndex) in body" class="form-fieldset" id="'group-' + groupIndex">
         <div class="form-group theme">
           <label class="form-label">Thème<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-model="body[index].theme">
+          <input type="text" class="form-control" v-model="body[groupIndex].theme">
         </div>
         <div class="form-group questions">
-          <div v-for="(question, qIndex) in body[index].questions">
+          <div v-for="(question, qIndex) in body[groupIndex].questions">
             <label class="form-label">Question {{qIndex + 1}}<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-model="body[index].questions[qIndex]">
+            <input type="text" class="form-control" v-model="body[groupIndex].questions[qIndex]">
           </div>
         </div>
-        <div @click="addQuestion(index)">
+        <div @click="addQuestion(groupIndex)">
           +
         </div>
       </fieldset>
@@ -63,4 +63,5 @@
   });
 </script>
 
-<style></style>
+<style>
+</style>
