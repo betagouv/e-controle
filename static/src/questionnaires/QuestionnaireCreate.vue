@@ -48,7 +48,12 @@
         // "this" is the child component.
         this.$parent.questionnaire.body = data;
         this.$parent.state = STATES.DONE;
-      })
+      });
+
+      this.$refs.createBodyChild.$on('back', function() {
+        console.log('back');
+        this.$parent.state = STATES.START;
+      });
 
     }
   });

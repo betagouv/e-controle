@@ -44,8 +44,13 @@
         +
       </div>
 
-      <div>
-        <button type="submit" class="btn btn-primary">Suivant</button>
+      <div class="d-flex">
+        <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
+          Précédent
+        </a>
+        <button type="submit" class="btn btn-primary ml-auto">
+          Suivant
+        </button>
       </div>
 
     </form>
@@ -71,6 +76,9 @@
       }
     },
     methods: {
+      back: function() {
+        this.$emit('back');
+      },
       createBody: function () {
         console.log('body created sortof')
         console.log(this.body)
