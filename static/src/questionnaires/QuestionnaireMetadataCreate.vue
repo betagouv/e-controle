@@ -17,13 +17,13 @@
         </div>
         <div class="form-group">
           <label class="form-label">Date de transmission du questionnaire<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.sent_date }" v-model="metadata.sent_date">
-          <p class="text-muted pl-2" v-if="errors.sent_date"><i class="fa fa-warning"></i> {{ errors.sent_date.join(' / ')}}</p>
+          <datepicker class="blue" v-model="metadata.sent_date" :language="fr" :monday-first="true">
+          </datepicker>
         </div>
         <div class="form-group">
           <label class="form-label">Date de réponse souhaitée<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.end_date }" v-model="metadata.end_date">
-          <p class="text-muted pl-2" v-if="errors.end_date"><i class="fa fa-warning"></i> {{ errors.end_date.join(' / ')}}</p>
+          <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
+          </datepicker>
         </div>
       </fieldset>
       <div class="text-right">
@@ -36,6 +36,8 @@
 
 <script>
   import Vue from "vue";
+  import Datepicker from 'vuejs-datepicker';
+  import {fr} from 'vuejs-datepicker/dist/locale';
 
   let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
@@ -53,6 +55,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
             'end_date': '',
         },
         'errors': [],
+        'fr': fr // locale for datepicker
       }
     },
     methods: {
@@ -61,6 +64,9 @@ services pour toute information complémentaire qu’appellerait ce questionnair
         console.log(this.metadata)
         this.$emit('metadata-created', this.metadata)
       }
+    },
+    components: {
+      Datepicker
     }
   });
 </script>
