@@ -9,9 +9,9 @@
       <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + controlId"> Ajouter une personne</button>
     </div>
 
-    <user-list :users="inspectorUsers()" profile-type="inspector"></user-list>
+    <user-list :users="inspectorUsers()" profile-type="inspector" :control-id="controlId"></user-list>
 
-    <user-list :users="auditedUsers()" profile-type="audited"></user-list>
+    <user-list :users="auditedUsers()" profile-type="audited" :control-id="controlId"></user-list>
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 

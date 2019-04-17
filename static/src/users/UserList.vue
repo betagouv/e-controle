@@ -16,9 +16,10 @@
               <small class="d-block item-except text-sm text-muted h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
             <div class="col-auto mr-4">
-              <button class="fe fe-user-x btn btn-outline-warning" data-toggle="modal" :data-target="modalDeactivateUser"> Désactiver</button>
+              <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + controlId + '-' + user.id"> Désactiver</button>
             </div>
           </div>
+          <user-deactivate :user="user" :controlId="controlId"></user-deactivate>
         </li>
       </ul>
     </div>
@@ -28,10 +29,16 @@
 <script lang="ts">
   import Vue from "vue";
 
+  import UserDeactivate from "./UserDeactivate"
+
   export default Vue.extend({
     props: {
       users: Array,
-      profileType: String
+      profileType: String,
+      controlId: Number,
+    },
+    components: {
+      UserDeactivate,
     }
   });
 </script>

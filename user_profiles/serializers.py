@@ -18,6 +18,7 @@ class ControlPKField(serializers.PrimaryKeyRelatedField):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source='user.pk')
     controls = ControlPKField(many=True)
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
@@ -29,7 +30,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'last_name', 'email', 'profile_type', 'organization', 'controls')
+        fields = (
+            'id', 'first_name', 'last_name', 'email', 'profile_type',
+            'organization', 'controls')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):
