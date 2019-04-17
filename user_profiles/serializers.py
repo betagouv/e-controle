@@ -18,7 +18,7 @@ class ControlPKField(serializers.PrimaryKeyRelatedField):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(source='user.pk')
+    id = serializers.IntegerField(source='user.pk', read_only=True)
     controls = ControlPKField(many=True)
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
@@ -27,12 +27,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(
             queryset=User.objects.all(),
             message="Cet email existe déjà")])
+    is_active = serializers.CharField(source='user.is_active', read_only=True)
 
     class Meta:
         model = UserProfile
         fields = (
             'id', 'first_name', 'last_name', 'email', 'profile_type',
-            'organization', 'controls')
+            'organization', 'controls', 'is_active')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):

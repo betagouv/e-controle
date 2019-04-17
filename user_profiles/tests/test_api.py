@@ -61,3 +61,33 @@ def test_audited_cannot_create_user():
     count_after = User.objects.count()
     assert count_after == count_before
     assert response.status_code != 201
+
+
+def test_inspector_can_deactivate_user():
+    someone = factories.UserProfileFactory(profile_type='audited')
+    inspector = factories.UserProfileFactory(profile_type='inspector')
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    someone.controls.add(control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-deactivate', args=[someone.pk])
+    count_before = User.objects.filter(is_active=True).count()
+    response = client.post(url)
+    count_after = User.objects.filter(is_active=True).count()
+    assert count_after == count_before - 1
+    assert response.status_code == 200
+
+
+def test_audited_cannot_deactivate_user():
+    someone = factories.UserProfileFactory(profile_type='inspector')
+    audited = factories.UserProfileFactory(profile_type='audited')
+    control = factories.ControlFactory()
+    audited.controls.add(control)
+    someone.controls.add(control)
+    utils.login(client, user=audited.user)
+    url = reverse('api:user-deactivate', args=[someone.pk])
+    count_before = User.objects.filter(is_active=True).count()
+    response = client.post(url)
+    count_after = User.objects.filter(is_active=True).count()
+    assert count_after == count_before
+    assert response.status_code != 200
