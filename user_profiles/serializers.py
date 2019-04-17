@@ -27,7 +27,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(
             queryset=User.objects.all(),
             message="Cet email existe déjà")])
-    is_active = serializers.CharField(source='user.is_active', read_only=True)
+    is_active = serializers.BooleanField(source='user.is_active', read_only=True)
 
     class Meta:
         model = UserProfile
