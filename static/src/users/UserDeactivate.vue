@@ -39,7 +39,8 @@
             return 'modalDeactivateUser' + this.control.id + '-' + this.user.id
         },
         deactivate() {
-          this.axios.post('/api/user/' + this.user.id + '/deactivate/')
+          var postData = { control: this.control.id }
+          this.axios.post('/api/user/' + this.user.id + '/remove-control/', postData)
             .then(response => {
               this.postResult = response.data
               EventBus.$emit('users-changed', this.postResult);
