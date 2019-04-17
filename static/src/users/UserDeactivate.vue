@@ -27,11 +27,11 @@
   export default Vue.extend({
     props: {
       user: Object,
-      controlId: Number
+      control: Object
     },
     methods: {
         modalId() {
-            return 'modalDeactivateUser' + this.controlId + '-' + this.user.id
+            return 'modalDeactivateUser' + this.control.id + '-' + this.user.id
         }
     }
   })

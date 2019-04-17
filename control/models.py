@@ -37,6 +37,12 @@ class Control(models.Model):
     def __str__(self):
         return self.title
 
+    def data(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+        }
+
 
 class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)

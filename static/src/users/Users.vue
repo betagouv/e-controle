@@ -6,16 +6,16 @@
   <div class="card-body">
 
     <div class="card" v-if="requestUserProfileType==='inspector'">
-      <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + controlId"> Ajouter une personne</button>
+      <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
     </div>
 
-    <user-list :users="inspectorUsers()" profile-type="inspector" :control-id="controlId"></user-list>
+    <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
 
-    <user-list :users="auditedUsers()" profile-type="audited" :control-id="controlId"></user-list>
+    <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
-    <user-create :control-id="controlId"></user-create>
+    <user-create :control="control"></user-create>
 
   </div>
 </div>
@@ -34,7 +34,7 @@
 
   export default Vue.extend({
     props: {
-      controlId: Number,
+      control: Object,
       requestUserProfileType: String
     },
     data() {
@@ -46,7 +46,7 @@
       getUsers() {
         Vue.axios.get('/api/user/', {
           params: {
-            controls: this.controlId
+            controls: this.control.id
           }
         }).then((response) => {
           this.users = response.data

@@ -1,6 +1,6 @@
 <template>
 
-<div class="modal fade modal-add-user" :id="'modalAddUser' + controlId" tabindex="-1" role="dialog" :aria-labelledby="'modalAddUser' + controlId" aria-hidden="true">
+<div class="modal fade modal-add-user" :id="'modalAddUser' + control.id" tabindex="-1" role="dialog" :aria-labelledby="'modalAddUser' + control.id" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form @submit.prevent="addUser">
     <div class="modal-content">
@@ -74,7 +74,7 @@
 
   export default Vue.extend({
     props: {
-      controlId: Number
+      control: Object
     },
     data: () {
       return {
@@ -96,7 +96,7 @@
         $('.modal-add-user').modal('hide');
       },
       addUser() {
-        this.formData.controls.push(this.controlId)
+        this.formData.controls.push(this.control.id)
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
