@@ -5,13 +5,13 @@ from rest_framework.response import Response
 from .models import UserProfile
 
 from .serializers import UserProfileSerializer
-from .permissions import CreateUserPermission
+from .permissions import ChangeUserPermission
 
 
 class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
     filterset_fields = ('controls', 'profile_type')
-    permission_classes = (CreateUserPermission,)
+    permission_classes = (ChangeUserPermission,)
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(
