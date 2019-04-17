@@ -29,7 +29,7 @@
       return {
         postResult: {}
       }
-    }
+    },
     props: {
       user: Object,
       control: Object
