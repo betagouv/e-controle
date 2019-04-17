@@ -14,7 +14,7 @@
           <p class="text-muted pl-2" v-if="errors.end_date"><i class="fa fa-warning"></i> {{ errors.end_date.join(' / ')}}</p>
         </div>
       </fieldset>
-      <div>
+      <div class="text-right">
         <button type="submit" class="btn btn-primary">Suivant</button>
       </div>
     </form>

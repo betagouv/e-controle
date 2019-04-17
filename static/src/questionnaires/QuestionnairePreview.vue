@@ -1,6 +1,16 @@
 <template>
     <div>
-        {{questionnaire}}
+        <div>
+            {{questionnaire}}
+        </div>
+        <div class="d-flex">
+            <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
+                Précédent
+            </a>
+            <button type="submit" class="btn btn-primary ml-auto">
+                Enregistrer
+            </button>
+        </div>
     </div>
 </template>
 
@@ -24,6 +34,11 @@
                 console.log('new questionnaire', data);
                 updateQuestionnaire(data);
             });
+        },
+        methods: {
+            back: function() {
+                this.$emit('back');
+            },
         }
     });
 </script>

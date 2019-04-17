@@ -61,10 +61,15 @@
         this.$parent.state = STATES.DONE;
       });
 
-      this.$refs.createBodyChild.$on('back', function() {
-        console.log('back');
-        this.$parent.state = STATES.START;
-      });
+      let setupBack = function(ref, newState) {
+        this.$refs[ref].$on('back', function() {
+          console.log('back');
+          this.$parent.state = newState;
+        });
+      }.bind(this);
+
+      setupBack('createBodyChild', STATES.START);
+      setupBack('previewChild', STATES.METADATA_CREATED);
 
     }
   });
