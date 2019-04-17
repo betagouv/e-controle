@@ -16,8 +16,7 @@
               <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
             <div class="col-auto mr-4">
-              <button v-if="user.is_active" class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
-              <button v-else @click="activate(user)" class="fe fe-user-check btn btn-outline-primary"> Activer</button>
+              <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
             </div>
           </div>
           <user-deactivate :user="user" :control="control"></user-deactivate>
@@ -46,15 +45,6 @@
     },
     components: {
       UserDeactivate,
-    },
-    methods: {
-      activate(user) {
-        this.axios.post('/api/user/' + user.id + '/activate/')
-          .then(response => {
-            this.postResult = response.data
-            EventBus.$emit('users-changed', this.postResult);
-          })
-      }
     }
   });
 </script>
