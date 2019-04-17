@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
+
+from control.models import Control
 
 from .models import UserProfile
 
@@ -15,6 +16,10 @@ class ControlPKField(serializers.PrimaryKeyRelatedField):
         user = self.context['request'].user
         queryset = user.profile.controls.all()
         return queryset
+
+
+class RemoveControlSerializer(serializers.Serializer):
+    control = serializers.PrimaryKeyRelatedField(queryset=Control.objects.all())
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

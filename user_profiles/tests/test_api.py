@@ -86,6 +86,21 @@ def test_audited_cannot_create_user():
     assert response.status_code != 201
 
 
+def test_inspector_can_remove_user_from_control():
+    someone = factories.UserProfileFactory(profile_type='audited')
+    inspector = factories.UserProfileFactory(profile_type='inspector')
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    someone.controls.add(control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-remove-control', args=[someone.pk])
+    count_before = User.objects.filter(profile__controls=control).count()
+    response = client.post(url, {'control': control.pk})
+    count_after = User.objects.filter(profile__controls=control).count()
+    assert count_after == count_before - 1
+    assert response.status_code == 200
+
+
 def test_inspector_can_deactivate_user():
     someone = factories.UserProfileFactory(profile_type='audited')
     inspector = factories.UserProfileFactory(profile_type='inspector')
