@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div>
-            {{questionnaire}}
-        </div>
+        <questionnaire-detail v-bind:questionnaire="questionnaire">
+        </questionnaire-detail>
         <div class="d-flex">
             <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
                 Précédent
@@ -16,6 +15,7 @@
 
 <script>
     import Vue from "vue"
+    import QuestionnaireDetail from "./QuestionnaireDetail"
 
     export default Vue.extend({
         data: function() {
@@ -39,6 +39,9 @@
             back: function() {
                 this.$emit('back');
             },
+        },
+        components: {
+            QuestionnaireDetail
         }
     });
 </script>
