@@ -24,3 +24,10 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
         profile.user.is_active = False
         profile.user.save()
         return Response({'is_active': profile.user.is_active})
+
+    @action(detail=True, methods=['post'])
+    def activate(self, request, pk):
+        profile = self.get_object()
+        profile.user.is_active = True
+        profile.user.save()
+        return Response({'is_active': profile.user.is_active})
