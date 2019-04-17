@@ -11,12 +11,13 @@
             <div class="col-auto">
               <span class="avatar avatar-pink">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
             </div>
-            <div class="col">
+            <div class="col" :class="{'bg-blue-lightest': !user.is_active}">
               <a href="javascript:void(0)" class="text-inherit" :title="user.organization">{{ user.first_name }} {{ user.last_name }}</a>
-              <small class="d-block item-except text-sm text-muted h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
+              <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
             <div class="col-auto mr-4">
-              <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
+              <button v-if="user.is_active" class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
+              <button v-else @click="activate(user)" class="fe fe-user-check btn btn-outline-primary"> Activer</button>
             </div>
           </div>
           <user-deactivate :user="user" :control="control"></user-deactivate>
@@ -32,6 +33,11 @@
   import UserDeactivate from "./UserDeactivate"
 
   export default Vue.extend({
+    data: () {
+      return {
+        postResult: {}
+      }
+    },
     props: {
       users: Array,
       profileType: String,
@@ -39,6 +45,14 @@
     },
     components: {
       UserDeactivate,
+    },
+    methods: {
+      activate(user) {
+        this.axios.post('/api/user/' + user.id + '/activate/')
+          .then(response => {
+            this.postResult = response.data
+          })
+      }
     }
   });
 </script>
