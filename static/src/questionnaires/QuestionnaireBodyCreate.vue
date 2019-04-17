@@ -34,14 +34,22 @@
           </div>
         </div>
 
-        <div @click="addQuestion(groupIndex)">
-          +
+        <div class="card-footer text-right">
+          <a href="javascript:void(0)" @click.prevent="addQuestion(groupIndex)" class="btn btn-primary">
+            <i class="fe fe-plus"></i>Ajouter une question
+          </a>
         </div>
 
       </div>
 
-      <div @click="addGroup()">
-        +
+      <div class="card">
+        <div class="card-footer text-right">
+          <div class="card-status card-status-top bg-blue">
+          </div>
+          <a href="javascript:void(0)" @click="addGroup()" class="btn btn-primary">
+            <i class="fe fe-plus"></i>Ajouter un thème
+          </a>
+        </div>
       </div>
 
       <div class="d-flex">
@@ -49,7 +57,7 @@
           Précédent
         </a>
         <button type="submit" class="btn btn-primary ml-auto">
-          Suivant
+          Prévisualiser
         </button>
       </div>
 
