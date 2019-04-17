@@ -15,7 +15,7 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(
-            controls__in=self.request.user.profile.controls.all())
+            controls__in=self.request.user.profile.controls.all()).distinct()
         return queryset
 
     @action(detail=True, methods=['post'], url_path='remove-control')
@@ -25,7 +25,6 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
         if serializer.is_valid():
             control = serializer.data['control']
             profile.controls.remove(control)
-            profile.save()
             return Response({'status': f"Removed control {control}"})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
