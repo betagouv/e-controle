@@ -6,7 +6,7 @@
         <div class="alert alert-warning">
           <h4>Confirmer la désactivation</h4>
           <p>
-            La personne ne pourra plus se connecter.
+            {{ user.first_name }} {{ user.last_name }} ne pourra plus se connecter.
           </p>
           <div class="btn-list">
             <button class="btn btn-danger" type="button" data-dismiss="modal">OK</button>
