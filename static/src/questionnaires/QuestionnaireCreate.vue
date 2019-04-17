@@ -2,15 +2,19 @@
   <div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
+            v-on:metadata-created="metadataCreated"
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
             ref="createBodyChild"
-            v-show="state === STATES.METADATA_CREATED">
+            v-on:body-created="bodyCreated"
+            v-on:back="back"
+            v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
     <questionnaire-preview
             ref="previewChild"
-            v-show="state === STATES.DONE">
+            v-on:back="back"
+            v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
   </div>
 </template>
@@ -25,9 +29,9 @@
   let STATES = {
     START : "start",
     // Transition : metadata-created / back
-    METADATA_CREATED : "metadata_created",
+    CREATING_BODY : "creating_body",
     // Transition : body-created / back
-    DONE: "done"
+    PREVIEW: "preview"
   };
 
   export default Vue.extend({
@@ -46,43 +50,41 @@
       QuestionnairePreview
     },
     mounted() {
-      let emitQuestionnaireUpdated = function() {
+      this.emitQuestionnaireUpdated();
+    },
+    methods: {
+      emitQuestionnaireUpdated: function() {
         this.$emit('questionnaire-updated', this.questionnaire);
-      }.bind(this);
-
-      let moveToState = function(newState) {
+      },
+      moveToState: function(newState) {
         this.state = newState;
-      }.bind(this);
-
-      emitQuestionnaireUpdated();
-
-      this.$refs.createMetadataChild.$on('metadata-created', function(data) {
-        console.log('got metadata', data);
-        // "this" is the child component.
-        this.$parent.questionnaire.metadata = data;
-        emitQuestionnaireUpdated();
-        moveToState(STATES.METADATA_CREATED);
-      });
-
-      this.$refs.createBodyChild.$on('body-created', function(data) {
+      },
+      bodyCreated: function(data) {
         console.log('got body', data);
         // "this" is the child component.
-        this.$parent.questionnaire.body = data;
-        emitQuestionnaireUpdated();
-        moveToState(STATES.DONE);
-      });
-
-
-      let setupBack = function(childRef, newState) {
-        this.$refs[childRef].$on('back', function() {
-          console.log('back');
-          moveToState(newState);
-        });
-      }.bind(this);
-
-      setupBack('createBodyChild', STATES.START);
-      setupBack('previewChild', STATES.METADATA_CREATED);
-
+        this.questionnaire.body = data;
+        this.emitQuestionnaireUpdated();
+        this.moveToState(STATES.PREVIEW);
+      },
+      metadataCreated: function(data) {
+        console.log('got metadata', data);
+        // "this" is the child component.
+        this.questionnaire.metadata = data;
+        this.emitQuestionnaireUpdated();
+        this.moveToState(STATES.CREATING_BODY);
+      },
+      back: function() {
+        console.log('back');
+        if (this.state === STATES.CREATING_BODY) {
+          this.moveToState(STATES.START);
+          return;
+        }
+        if (this.state === STATES.PREVIEW) {
+          this.moveToState(STATES.CREATING_BODY)
+          return;
+        }
+        console.error('Trying to go back from state', this.state);
+      }
     }
   });
 </script>
