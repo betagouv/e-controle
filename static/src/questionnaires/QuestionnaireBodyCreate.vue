@@ -7,10 +7,10 @@
         </div>
 
         <div class="card-header">
-          <label v-bind:for="'theme' + (groupIndex + 1)">
+          <label v-bind:for="'theme' + (groupIndex + 1)" class="form-label-h3">
             <h3 class="card-title">{{groupIndex + 1}}.</h3>
           </label>
-          <input class="form-control"
+          <input class="form-control form-control-h3"
                  placeholder="Ecrivez un thème ici"
                  type="text"
                  v-bind:id="'theme' + (groupIndex + 1)"
@@ -97,4 +97,12 @@
 </script>
 
 <style>
+  .form-control {
+    background-color: red;
+  }
+
+  .form-control-h3 {
+    font-size: 1.125rem;
+    font-weight: 400;
+  }
 </style>
