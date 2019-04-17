@@ -21,9 +21,12 @@
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview";
 
+  // State machine
   let STATES = {
     START : "start",
+    // Transition : metadata-created / back
     METADATA_CREATED : "metadata_created",
+    // Transition : body-created / back
     DONE: "done"
   };
 
@@ -43,28 +46,37 @@
       QuestionnairePreview
     },
     mounted() {
-      this.$emit('questionnaire-updated', this.questionnaire);
+      let emitQuestionnaireUpdated = function() {
+        this.$emit('questionnaire-updated', this.questionnaire);
+      }.bind(this);
+
+      let moveToState = function(newState) {
+        this.state = newState;
+      }.bind(this);
+
+      emitQuestionnaireUpdated();
 
       this.$refs.createMetadataChild.$on('metadata-created', function(data) {
         console.log('got metadata', data);
         // "this" is the child component.
         this.$parent.questionnaire.metadata = data;
-        this.$parent.$emit('questionnaire-updated', this.$parent.questionnaire)
-        this.$parent.state = STATES.METADATA_CREATED;
+        emitQuestionnaireUpdated();
+        moveToState(STATES.METADATA_CREATED);
       });
 
       this.$refs.createBodyChild.$on('body-created', function(data) {
         console.log('got body', data);
         // "this" is the child component.
         this.$parent.questionnaire.body = data;
-        this.$parent.$emit('questionnaire-updated', this.$parent.questionnaire)
-        this.$parent.state = STATES.DONE;
+        emitQuestionnaireUpdated();
+        moveToState(STATES.DONE);
       });
 
-      let setupBack = function(ref, newState) {
-        this.$refs[ref].$on('back', function() {
+
+      let setupBack = function(childRef, newState) {
+        this.$refs[childRef].$on('back', function() {
           console.log('back');
-          this.$parent.state = newState;
+          moveToState(newState);
         });
       }.bind(this);
 

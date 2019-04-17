@@ -97,12 +97,4 @@
 </script>
 
 <style>
-  .form-control {
-    background-color: red;
-  }
-
-  .form-control-h3 {
-    font-size: 1.125rem;
-    font-weight: 400;
-  }
 </style>
