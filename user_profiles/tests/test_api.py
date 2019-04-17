@@ -43,6 +43,29 @@ def test_inspector_can_create_user():
     assert response.status_code == 201
 
 
+def test_can_associate_a_control_to_anexisting_user():
+    inspector = factories.UserProfileFactory(profile_type='inspector')
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    existing_user = factories.UserFactory()
+    post_data = {
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'profile_type': 'audited',
+        'email': existing_user.email,
+        'controls': [control.id]
+    }
+    utils.login(client, user=inspector.user)
+    assert control not in existing_user.profile.controls.all()
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    response = client.post(url, post_data)
+    count_after = User.objects.count()
+    assert response.status_code == 201
+    assert count_after == count_before
+    assert control in existing_user.profile.controls.all()
+
+
 def test_audited_cannot_create_user():
     audited = factories.UserProfileFactory(profile_type='audited')
     control = factories.ControlFactory()
