@@ -11,7 +11,7 @@
             <div class="col-auto">
               <span class="avatar avatar-pink">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
             </div>
-            <div class="col" :class="{'bg-blue-lightest': !user.is_active}">
+            <div class="col">
               <a href="javascript:void(0)" class="text-inherit" :title="user.organization">{{ user.first_name }} {{ user.last_name }}</a>
               <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>

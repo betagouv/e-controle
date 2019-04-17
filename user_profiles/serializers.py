@@ -28,13 +28,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.EmailField(source='user.email')
-    is_active = serializers.BooleanField(source='user.is_active', read_only=True)
 
     class Meta:
         model = UserProfile
         fields = (
             'id', 'first_name', 'last_name', 'email', 'profile_type',
-            'organization', 'controls', 'is_active')
+            'organization', 'controls')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):
