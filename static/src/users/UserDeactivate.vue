@@ -9,7 +9,7 @@
             {{ user.first_name }} {{ user.last_name }} ne pourra plus se connecter.
           </p>
           <div class="btn-list">
-            <button class="btn btn-danger" type="button" data-dismiss="modal">OK</button>
+            <button @click="deactivate()" class="btn btn-danger" type="button" data-dismiss="modal">OK</button>
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Anuler</button>
           </div>
         </div>
@@ -22,9 +22,12 @@
 <script lang="ts">
   import Vue from "vue";
 
-  import UserDeactivate from "./UserDeactivate"
-
   export default Vue.extend({
+    data: () {
+      return {
+        postResult: {}
+      }
+    }
     props: {
       user: Object,
       control: Object
@@ -32,6 +35,12 @@
     methods: {
         modalId() {
             return 'modalDeactivateUser' + this.control.id + '-' + this.user.id
+        },
+        deactivate() {
+          this.axios.post('/api/user/' + this.user.id + '/deactivate/')
+            .then(response => {
+              this.postResult = response.data
+            })
         }
     }
   })
