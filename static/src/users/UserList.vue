@@ -30,6 +30,7 @@
 <script lang="ts">
   import Vue from "vue";
 
+  import EventBus from '../events';
   import UserDeactivate from "./UserDeactivate"
 
   export default Vue.extend({
@@ -51,6 +52,7 @@
         this.axios.post('/api/user/' + user.id + '/activate/')
           .then(response => {
             this.postResult = response.data
+            EventBus.$emit('users-changed', this.postResult);
           })
       }
     }

@@ -65,7 +65,7 @@
     },
     mounted() {
       this.getUsers()
-      EventBus.$on('user-added', data => {
+      EventBus.$on('users-changed', data => {
         this.getUsers()
       })
     },

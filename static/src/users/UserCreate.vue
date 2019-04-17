@@ -100,7 +100,7 @@
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
-            EventBus.$emit('user-added', this.postResult);
+            EventBus.$emit('users-changed', this.postResult);
             this.hideModal()
           })
           .catch((error) => {
