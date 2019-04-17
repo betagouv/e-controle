@@ -9,7 +9,8 @@
             v-show="state === STATES.METADATA_CREATED">
     </questionnaire-body-create>
     <questionnaire-preview
-            ref="previewChild">
+            ref="previewChild"
+            v-show="state === STATES.DONE">
     </questionnaire-preview>
   </div>
 </template>
