@@ -1,12 +1,16 @@
 <template>
   <div>
-    <questionnaire-metadata-create ref="createMetadataChild" v-show="state === STATES.START">
+    <questionnaire-metadata-create
+            ref="createMetadataChild"
+            v-show="state === STATES.START">
     </questionnaire-metadata-create>
-    <questionnaire-body-create ref="createBodyChild" v-show="state === STATES.METADATA_CREATED">
+    <questionnaire-body-create
+            ref="createBodyChild"
+            v-show="state === STATES.METADATA_CREATED">
     </questionnaire-body-create>
-    <div v-show="state === STATES.DONE">
-      All done! {{questionnaire}}
-    </div>
+    <questionnaire-preview
+            ref="previewChild">
+    </questionnaire-preview>
   </div>
 </template>
 
@@ -14,6 +18,7 @@
   import Vue from "vue";
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
+  import QuestionnairePreview from "./QuestionnairePreview";
 
   let STATES = {
     START : "start",
@@ -33,13 +38,17 @@
     },
     components: {
       QuestionnaireBodyCreate,
-      QuestionnaireMetadataCreate
+      QuestionnaireMetadataCreate,
+      QuestionnairePreview
     },
     mounted() {
+      this.$emit('questionnaire-updated', this.questionnaire);
+
       this.$refs.createMetadataChild.$on('metadata-created', function(data) {
         console.log('got metadata', data);
         // "this" is the child component.
         this.$parent.questionnaire.metadata = data;
+        this.$parent.$emit('questionnaire-updated', this.$parent.questionnaire)
         this.$parent.state = STATES.METADATA_CREATED;
       });
 
@@ -47,6 +56,7 @@
         console.log('got body', data);
         // "this" is the child component.
         this.$parent.questionnaire.body = data;
+        this.$parent.$emit('questionnaire-updated', this.$parent.questionnaire)
         this.$parent.state = STATES.DONE;
       });
 
