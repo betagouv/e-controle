@@ -15,6 +15,11 @@
                  type="text"
                  v-bind:id="'theme' + (groupIndex + 1)"
                  v-model="body[groupIndex].theme">
+          <span>
+            <a href="javascript:void(0)" @click.prevent="deleteTheme(groupIndex)" class="btn btn-link">
+              <i class="fe fe-trash-2"></i>Supprimer
+            </a>
+          </span>
         </div>
 
         <div v-for="(question, qIndex) in body[groupIndex].questions"
@@ -31,6 +36,11 @@
                       v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)"
                       v-model="body[groupIndex].questions[qIndex]">
             </textarea>
+            <span>
+              <a href="javascript:void(0)" @click.prevent="deleteQuestion(groupIndex, qIndex)" class="btn btn-link">
+                <i class="fe fe-trash-2"></i>Supprimer
+              </a>
+            </span>
           </div>
         </div>
 
@@ -100,6 +110,12 @@
         console.log('addGroup', index)
         this.body.push({ theme: "", questions: [""]})
       },
+      deleteQuestion: function(groupIndex, qIndex) {
+        this.body[groupIndex].questions.splice(qIndex, 1);
+      },
+      deleteTheme: function(groupIndex) {
+        this.body.splice(groupIndex, 1);
+      }
     }
   });
 </script>
