@@ -5,10 +5,6 @@
   </div>
   <div class="card-body">
 
-    <div class="card" v-if="requestUserProfileType==='inspector'">
-      <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
-    </div>
-
     <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
 
     <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>

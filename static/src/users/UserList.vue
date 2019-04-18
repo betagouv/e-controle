@@ -1,9 +1,22 @@
 <template>
   <div class="card" v-if="users && users.length">
-    <div class="card-header">
-      <h3 v-if="profileType=='inspector'" class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
-      <h3 v-if="profileType=='audited'" class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
+    <div v-if="profileType==='inspector'" class="card-header pr-0">
+      <div class="col">
+        <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
+      </div>
+      <div class="col-auto">
+        <button class="fe fe-plus btn btn-outline-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+      </div>
     </div>
+    <div v-if="profileType==='audited'" class="card-header pr-0">
+      <div class="col">
+        <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
+      </div>
+      <div class="col-auto">
+        <button class="fe fe-plus btn btn-outline-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+      </div>
+    </div>
+
     <div class="card-body pr-0">
       <ul class="list-unstyled list-separated">
         <li class="list-separated-item" v-for="(user, index) in users" :key="index">
@@ -18,7 +31,7 @@
             <div class="col-auto">
               <button class="fe fe-edit btn btn-outline-primary" data-toggle="modal" :data-target="'#modalUpdateUser' + control.id + '-' + user.id"> Modifier</button>
             </div>
-            <div class="col-auto mr-4">
+            <div class="col-auto mr-3">
               <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
             </div>
           </div>
