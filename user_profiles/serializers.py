@@ -42,7 +42,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user_data = profile_data.pop('user')
         user_data['username'] = user_data['email']
         profile = UserProfile.objects.filter(user__email=user_data.get('email')).first()
-        if not profile:
+        if profile:
+            profile.user.first_name = user_data.get('first_name')
+            profile.user.last_name = user_data.get('last_name')
+            profile.organization = profile_data.get('organization')
+            profile.profile_type = profile_data.get('profile_type')
+            profile.user.save()
+            profile.save()
+        else:
             user = User.objects.create(**user_data)
             profile_data['user'] = user
             profile_data['send_files_report'] = True

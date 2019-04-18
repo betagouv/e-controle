@@ -15,11 +15,15 @@
               <a href="javascript:void(0)" class="text-inherit" :title="user.organization">{{ user.first_name }} {{ user.last_name }}</a>
               <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
+            <div class="col-auto">
+              <button class="fe fe-edit btn btn-outline-primary" data-toggle="modal" :data-target="'#modalUpdateUser' + control.id + '-' + user.id"> Modifier</button>
+            </div>
             <div class="col-auto mr-4">
               <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
             </div>
           </div>
           <user-deactivate :user="user" :control="control"></user-deactivate>
+          <user-update :user="user" :control="control"></user-update>
         </li>
       </ul>
     </div>
@@ -31,6 +35,7 @@
 
   import EventBus from '../events';
   import UserDeactivate from "./UserDeactivate"
+  import UserUpdate from "./UserUpdate"
 
   export default Vue.extend({
     data: () {
@@ -45,6 +50,7 @@
     },
     components: {
       UserDeactivate,
+      UserUpdate,
     }
   });
 </script>
