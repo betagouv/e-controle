@@ -85,7 +85,7 @@
             'organization': '',
             'controls': [],
             'profile_type': ''
-        }
+        },
         'postResult': [],
         'errors': [],
         'hasErrors': false
@@ -95,12 +95,23 @@
       hideModal() {
         $('.modal-add-user').modal('hide');
       },
+      resetFormData() {
+        this.formData = {
+            'first_name': '',
+            'last_name': '',
+            'email': '',
+            'organization': '',
+            'controls': [],
+            'profile_type': ''
+        }
+      },
       addUser() {
         this.formData.controls.push(this.control.id)
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
-            EventBus.$emit('users-changed', this.postResult);
+            EventBus.$emit('users-changed', this.postResult)
+            this.resetFormData()
             this.hideModal()
           })
           .catch((error) => {
@@ -109,7 +120,7 @@
           })
       }
     }
-  });
+  })
 </script>
 
 <style></style>
