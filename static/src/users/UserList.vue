@@ -5,7 +5,7 @@
         <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
       </div>
       <div class="col-auto">
-        <button class="fe fe-plus btn btn-outline-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+        <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
       </div>
     </div>
     <div v-if="profileType==='audited'" class="card-header pr-0">
@@ -13,7 +13,7 @@
         <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
       </div>
       <div class="col-auto">
-        <button class="fe fe-plus btn btn-outline-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+        <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
       </div>
     </div>
 
@@ -29,10 +29,10 @@
               <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
             <div class="col-auto">
-              <button class="fe fe-edit btn btn-outline-primary" data-toggle="modal" :data-target="'#modalUpdateUser' + control.id + '-' + user.id"> Modifier</button>
+              <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" :data-target="'#modalUpdateUser' + control.id + '-' + user.id"></button>
             </div>
             <div class="col-auto mr-3">
-              <button class="fe fe-user-x btn btn-outline-primary" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"> Désactiver</button>
+              <button class="fe fe-user-x btn btn-outline-primary" title="Désactiver" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"></button>
             </div>
           </div>
           <user-deactivate :user="user" :control="control"></user-deactivate>
