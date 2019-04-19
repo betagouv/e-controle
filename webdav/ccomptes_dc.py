@@ -86,27 +86,19 @@ class CCDomainController(BaseDomainController):
         """
 
         ##Todo add verification corresponding to the given user
-        username_2 = environ['REMOTE_USER']
-        print(username_2)
+        username = environ['REMOTE_USER']
+        username = username.split('@', 1)[0]
+
+        # We know that the following user exists in the LDAP
+        # We now check the realm
         try:
-            server = Server(settings.LDAP_SERVER, get_info=ALL)
-            conn = Connection(server, user = settings.LDAP_DOMAIN + "\\" + user_name, password = password, authentication = NTLM)
+            user = User.objects.get(profile__active_directory_name=username)
+            environ["wsgidav.auth.roles"] = ("reader")
+            if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
+                return True
         except Exception as e:
             print(e)
-        if conn.bind():
-            # We know that the following user exists in the LDAP
-            # We now check the realm
-            try:
-                user = User.objects.get(profile__active_directory_name = user_name)
-                environ["wsgidav.auth.roles"] = ("reader")
-                if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
-                    return True
-            except Exception as e:
-                print(e)
-                return False
-
-        return False
-
+            return False
 
     def supports_http_digest_auth(self):
         """Signal if this DC instance supports the HTTP digest authentication theme.
