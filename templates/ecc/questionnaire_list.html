@@ -28,12 +28,12 @@ Accueil
               <td>
                 <h5>{{ questionnaire.title }}</h5>
                 {% if questionnaire.sent_date %}
-                  <div class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+                  <div><i class="dropdown-icon fe fe-send"></i> Date de transmission du questionnaire :
                   {{ questionnaire.sent_date|date:"l d F Y" }}
                   </div>
                 {% endif %}
                 {% if questionnaire.end_date %}
-                  <div class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+                  <div><i class="dropdown-icon fe fe-clock"></i> Date de réponse souhaitée :
                     {{ questionnaire.end_date|date:"l d F Y" }}
                   </div>
                 {% endif %}
