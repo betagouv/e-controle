@@ -86,6 +86,8 @@ class CCDomainController(BaseDomainController):
         """
 
         ##Todo add verification corresponding to the given user
+        username_2 = environ['REMOTE_USER']
+        print(username_2)
         try:
             server = Server(settings.LDAP_SERVER, get_info=ALL)
             conn = Connection(server, user = settings.LDAP_DOMAIN + "\\" + user_name, password = password, authentication = NTLM)
