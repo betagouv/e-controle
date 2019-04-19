@@ -62,12 +62,12 @@
         </div>
       </div>
 
-      <div class="d-flex">
+      <div class="text-right">
         <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
-          Précédent
+          < Retour
         </a>
         <button type="submit" class="btn btn-primary ml-auto">
-          Prévisualiser
+          Prévisualiser >
         </button>
       </div>
 

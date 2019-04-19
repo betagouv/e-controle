@@ -2,12 +2,12 @@
     <div>
         <questionnaire-detail v-bind:questionnaire="questionnaire">
         </questionnaire-detail>
-        <div class="d-flex">
+        <div class="text-right">
             <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
-                Précédent
+                < Retour
             </a>
             <button type="submit" class="btn btn-primary ml-auto">
-                Enregistrer
+                Confimer la création
             </button>
         </div>
     </div>
