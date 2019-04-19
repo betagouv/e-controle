@@ -32,9 +32,8 @@
     <body class="">
         {% block content %}
         {% endblock content %}
+        {% block js_bundle %}{% endblock js_bundle %}
         {% block js_last %}
-        <script src="{% static 'dist/bundle.js' %}"></script>
-
         <script src="{% static "js/require.min.js" %}"></script>
         <script>
             requirejs.config({

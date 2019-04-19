@@ -150,12 +150,11 @@ Todo : c'est quoi, comment ca marche, ...
 Nous avons fait le choix d'utiliser le bundler parcel qui est une alternative à Webpack.
 Voir le fichier ``package.json`` pour plus de détails.
 
-Pour lancer le build en mode wach:
-
-    docker-compose run django watch
-
 Quelques commandes bash utiles:
 
     npm install  # Pour installer les dépendences
-    npm run build  # Pour construire le fichier bundle
-    npm run watch  # Pour construire le fichier bundle en mode watch
+    npm run build-questionnaire-create  # Pour construire le fichier bundle
+    npm run watch-questionnaire-list  # Pour construire le fichier bundle en mode watch
+
+    npm run build-questionnaire-list  # Pour construire le fichier bundle
+    npm run watch-questionnaire-create  # Pour construire le fichier bundle en mode watch
