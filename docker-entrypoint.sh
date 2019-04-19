@@ -12,9 +12,7 @@ python3.6 manage.py collectstatic --noinput
 python3.6 manage.py migrate
 
 echo "############# Building bundle"""
-npm run build-questionnaire-list
-npm run build-questionnaire-create
-
+npm run build-all
 
 echo -n "############# Server IP: "
 hostname -I

@@ -153,8 +153,11 @@ Voir le fichier ``package.json`` pour plus de détails.
 Quelques commandes bash utiles:
 
     npm install  # Pour installer les dépendences
-    npm run build-questionnaire-create  # Pour construire le fichier bundle
-    npm run watch-questionnaire-list  # Pour construire le fichier bundle en mode watch
 
-    npm run build-questionnaire-list  # Pour construire le fichier bundle
+    npm run build-all
+
+    npm run watch-questionnaire-list  # Pour construire le fichier bundle en mode watch
+    npm run build-questionnaire-create  # Pour construire le fichier bundle
+
     npm run watch-questionnaire-create  # Pour construire le fichier bundle en mode watch
+    npm run build-questionnaire-list  # Pour construire le fichier bundle
