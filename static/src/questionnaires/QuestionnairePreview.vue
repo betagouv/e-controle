@@ -8,7 +8,7 @@
             <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
                 < Retour
             </a>
-            <button type="submit" class="btn btn-primary ml-auto">
+            <button type="submit" @click.prevent="done()" class="btn btn-primary ml-auto">
                 Confirmer la création
             </button>
         </div>
@@ -41,6 +41,9 @@
             back: function() {
                 this.$emit('back');
             },
+            done: function() {
+                alert("C'est fini pour cette activité! Merci!");
+            }
         },
         components: {
             QuestionnaireDetail
