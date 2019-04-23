@@ -1,13 +1,15 @@
 <template>
     <div>
-        <questionnaire-detail v-bind:questionnaire="questionnaire">
-        </questionnaire-detail>
+        <div class="preview">
+            <questionnaire-detail v-bind:questionnaire="questionnaire">
+            </questionnaire-detail>
+        </div>
         <div class="text-right">
             <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
                 < Retour
             </a>
             <button type="submit" class="btn btn-primary ml-auto">
-                Confimer la création
+                Confirmer la création
             </button>
         </div>
     </div>

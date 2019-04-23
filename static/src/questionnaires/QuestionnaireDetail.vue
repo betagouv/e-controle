@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="card-header">
+            <h3 class="card-title">{{questionnaire.metadata.title}}</h3>
+        </div>
         <div id="metadata" class="card">
             <div v-if="questionnaire.metadata" class="card-body">
                 {{ questionnaire.metadata.description }}

@@ -4,6 +4,10 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
+          <label class="form-label">Titre<span class="form-required"></span></label>
+          <input type="text" class="form-control" v-model="metadata.title" >
+        </div>
+        <div class="form-group">
           <label class="form-label">
             Description<span class="form-required"></span>
           </label>

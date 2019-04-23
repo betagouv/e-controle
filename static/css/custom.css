@@ -26,6 +26,11 @@
     margin-bottom: 0px;
 }
 
+.preview {
+    background: rgba(70, 127, 207, 0.04) url(../img/apercu.png);
+    padding: 1.5rem;
+}
+
 /* datepicker : make it blue */
 .blue .vdp-datepicker__calendar .cell.selected,
 .blue .vdp-datepicker__calendar .cell.selected.highlighted,
