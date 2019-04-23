@@ -12,7 +12,7 @@
                 </p>
 
                 <p v-if="questionnaire.metadata.end_date" class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
-                    {{ questionnaire.metadata.end_date }}
+                    {{ questionnaire.metadata.end_date | DateFormat}}
                 </p>
             </div>
         </div>
@@ -60,11 +60,15 @@
 
 <script>
     import Vue from "vue";
+    import DateFormat from '../utils/DateFormat.js';
 
     export default Vue.extend({
         props: [ 'questionnaire' ],
         data: function() {
             return {};
+        },
+        filters: {
+            DateFormat
         }
     });
 </script>
