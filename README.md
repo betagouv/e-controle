@@ -80,7 +80,7 @@ Note : Comment le dump a été créé :
 
 
 
-## Des comamndes utiles
+## Des commandes utiles
 
     docker-compose run django dev
     docker-compose run django uwsgi
