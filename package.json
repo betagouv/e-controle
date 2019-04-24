@@ -5,7 +5,7 @@
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
-    "build-all": "npm run build-questionnaire-list ; npm run build-questionnaire-create"
+    "build-all": "npm run build-questionnaire-list & npm run build-questionnaire-create"
   },
   "dependencies": {
     "axios": "^0.18.0",
