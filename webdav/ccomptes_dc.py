@@ -1,18 +1,15 @@
 from __future__ import print_function
 
-from ldap3 import Server, Connection, ALL, NTLM
-from wsgidav import compat, util
 from wsgidav.dc.base_dc import BaseDomainController
 from ecc import settings
-from control.models import Control
 from django.contrib.auth.models import User
+import logging
 
 
 class CCDomainController(BaseDomainController):
 
     def __init__(self, wsgidav_app, config):
         super(CCDomainController, self).__init__(wsgidav_app, config)
-        ## TODO: add configuration
 
     def get_domain_realm(self, path_info, environ):
         """Return the normalized realm name for a given URL.
@@ -64,7 +61,6 @@ class CCDomainController(BaseDomainController):
         False to allow anonymous access
         True to force subsequent digest or basic authentication
         """
-        #print("require auth test")
         return True
 
     def basic_auth_user(self, realm, user_name, password, environ):
@@ -78,7 +74,7 @@ class CCDomainController(BaseDomainController):
         environ["wsgidav.auth.permissions"] = (<perm>, ...)
 
         Args:
-        realm (str):
+        realm (str): In this case the realm is equal to the control code or ab empty string
         user_name (str):
         password (str):
         environ (dict):
@@ -97,7 +93,7 @@ class CCDomainController(BaseDomainController):
             if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
                 return True
         except Exception as e:
-            print(e)
+            logging.error(e)
             return False
 
     def supports_http_digest_auth(self):
@@ -109,8 +105,7 @@ class CCDomainController(BaseDomainController):
         Returns:
         bool
         """
-        print("supports http test")
-        return False 
+        return False
 
     def digest_auth_user(self, realm, user_name, environ):
         pass
@@ -147,10 +142,3 @@ class CCDomainController(BaseDomainController):
             str: MD5("{usern_name}:{realm}:{password}")
             or false if user is unknown or rejected
         """
-        # user = self._get_realm_entry(realm, user_name)
-        # user = {'password': 'test', 'roles': ['editor']}
-        # if user is None:
-        #     return False
-        # password = user.get("password")
-        # environ["wsgidav.auth.roles"] = user.get("roles", [])
-        # return self._compute_http_digest_a1(realm, user_name, password)
