@@ -52,6 +52,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
             'description': DESCRIPTION_DEFAULT,
             'sent_date': '',
             'end_date': '',
+            'title': ''
         },
         'errors': [],
         'fr': fr // locale for datepicker

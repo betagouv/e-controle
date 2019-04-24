@@ -1,19 +1,21 @@
 <template>
     <div>
-        <div class="card-header">
-            <h3 class="card-title">{{questionnaire.metadata.title}}</h3>
-        </div>
-        <div id="metadata" class="card">
-            <div v-if="questionnaire.metadata" class="card-body">
-                {{ questionnaire.metadata.description }}
+        <div v-if="questionnaire.metadata">
+            <div v-if="questionnaire.metadata.title" class="card-header">
+                <h3 class="card-title">{{questionnaire.metadata.title}}</h3>
+            </div>
+            <div id="metadata" class="card">
+                <div class="card-body">
+                    {{ questionnaire.metadata.description }}
 
-                <p v-if="questionnaire.metadata.sent_date" class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
-                    {{ questionnaire.metadata.sent_date}}
-                </p>
+                    <p v-if="questionnaire.metadata.sent_date" class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+                        {{ questionnaire.metadata.sent_date}}
+                    </p>
 
-                <p v-if="questionnaire.metadata.end_date" class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
-                    {{ questionnaire.metadata.end_date | DateFormat}}
-                </p>
+                    <p v-if="questionnaire.metadata.end_date" class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+                        {{ questionnaire.metadata.end_date | DateFormat}}
+                    </p>
+                </div>
             </div>
         </div>
 
