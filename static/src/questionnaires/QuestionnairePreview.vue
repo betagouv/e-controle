@@ -1,13 +1,15 @@
 <template>
     <div>
-        <questionnaire-detail v-bind:questionnaire="questionnaire">
-        </questionnaire-detail>
-        <div class="d-flex">
+        <div class="preview">
+            <questionnaire-detail v-bind:questionnaire="questionnaire">
+            </questionnaire-detail>
+        </div>
+        <div class="text-right">
             <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
-                Précédent
+                < Retour
             </a>
-            <button type="submit" class="btn btn-primary ml-auto">
-                Enregistrer
+            <button type="submit" @click.prevent="done()" class="btn btn-primary ml-auto">
+                Confirmer la création
             </button>
         </div>
     </div>
@@ -39,6 +41,9 @@
             back: function() {
                 this.$emit('back');
             },
+            done: function() {
+                alert("C'est fini pour cette activité! Merci!");
+            }
         },
         components: {
             QuestionnaireDetail

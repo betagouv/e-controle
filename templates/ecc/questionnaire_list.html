@@ -12,26 +12,30 @@ Accueil
     {% for control in controls %}
     <div class="card">
       <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
-      <div class="card-header">
-        <div class="card-title text-uppercase"><h4>{{ control.title }}</h4></div>
+      <div class="card-header d-flex align-content-between">
+        <h4 class="card-title text-uppercase">{{ control.title }}</h4>
+        <div class="card-options">
+            <a href="/questionnaire/controle-1234/creer" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un questionnaire</a>
+        </div>
       </div>
-      <div class="card-body pb-0"> <!--// opening: questionnaire_description_card_body  //-->
-      <div class="table-responsive">
+      <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
+        <div class="card-title">Questionnaires</div>
+      <div class="card">
         <table class="table card-table table-vcenter">
           <tbody>
             {% for questionnaire in control.questionnaires.all %}
             <tr>
               <td>
-                <h5 class="pb-2">{{ questionnaire.title }}</h5>
+                <h5>{{ questionnaire.title }}</h5>
                 {% if questionnaire.sent_date %}
-                  <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+                  <div><i class="dropdown-icon fe fe-send"></i> Date de transmission du questionnaire :
                   {{ questionnaire.sent_date|date:"l d F Y" }}
-                  </p>
+                  </div>
                 {% endif %}
                 {% if questionnaire.end_date %}
-                  <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+                  <div><i class="dropdown-icon fe fe-clock"></i> Date de réponse souhaitée :
                     {{ questionnaire.end_date|date:"l d F Y" }}
-                  </p>
+                  </div>
                 {% endif %}
               </td>
               {% if user.profile.is_audited %}
@@ -56,16 +60,15 @@ Accueil
 
             </tr>
             {% endfor %}
-
-            <tr>
-              <td colspan="2">
-                <users-for-control :control="{{ control.data }}" request-user-profile-type={{ user.profile.profile_type }} :key={{ control.id }}></users-for-control>
-              </td>
-            </tr>
-
           </tbody>
         </table>
       </div>
+      <div>
+        <div colspan="2">
+          <users-for-control :control="{{ control.data }}" request-user-profile-type={{ user.profile.profile_type }} :key={{ control.id }}></users-for-control>
+        </div>
+      </div>
+
       </div>  <!--// closing: questionnaire_description_card_body  //-->
     </div>
     {% endfor %}

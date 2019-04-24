@@ -4,6 +4,10 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
+          <label class="form-label">Titre<span class="form-required"></span></label>
+          <input type="text" class="form-control" v-model="metadata.title" >
+        </div>
+        <div class="form-group">
           <label class="form-label">
             Description<span class="form-required"></span>
           </label>
@@ -16,18 +20,13 @@
           <p class="text-muted pl-2" v-if="errors.description"><i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}</p>
         </div>
         <div class="form-group">
-          <label class="form-label">Date de transmission du questionnaire<span class="form-required"></span></label>
-          <datepicker class="blue" v-model="metadata.sent_date" :language="fr" :monday-first="true">
-          </datepicker>
-        </div>
-        <div class="form-group">
           <label class="form-label">Date de réponse souhaitée<span class="form-required"></span></label>
           <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
           </datepicker>
         </div>
       </fieldset>
       <div class="text-right">
-        <button type="submit" class="btn btn-primary">Suivant</button>
+        <button type="submit" class="btn btn-primary">Suivant ></button>
       </div>
     </form>
 
@@ -53,6 +52,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
             'description': DESCRIPTION_DEFAULT,
             'sent_date': '',
             'end_date': '',
+            'title': ''
         },
         'errors': [],
         'fr': fr // locale for datepicker
