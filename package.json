@@ -1,15 +1,18 @@
 {
   "name": "e-controle",
-  "main": "static/src/index.js",
   "scripts": {
-    "watch": "parcel watch static/src/index.js --out-dir ./static/dist/ --out-file bundle.js",
-    "build": "parcel build static/src/index.js --out-dir ./static/dist/ --out-file bundle.js"
+    "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
+    "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
+    "build-all": "npm run build-questionnaire-list & npm run build-questionnaire-create"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
-    "vue-hot-reload-api": "^2.3.3"
+    "vue-hot-reload-api": "^2.3.3",
+    "vuejs-datepicker": "^1.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

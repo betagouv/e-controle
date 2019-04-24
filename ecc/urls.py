@@ -26,6 +26,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('accueil/', control_views.questionnaire_list, name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
+    path('questionnaire/controle-<int:controlId>/create', control_views.questionnaire_create, name='questionnaire-create'),
     path('faq/', control_views.faq, name='faq'),
     path('login/', magicauth_views.magic_link, name='magicauth-login'),
     path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),

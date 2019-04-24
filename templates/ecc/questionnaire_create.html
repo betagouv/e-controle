@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% load basename %}
+
+{% block page_title %}
+Créer un questionnaire
+{% endblock page_title %}
+
+{% block extra_static_header %}
+{{ block.super }}
+{% endblock extra_static_header %}
+
+{% block page_content %}
+
+<div id="questionnaire-create-vm">
+    <questionnaire-create>
+
+    </questionnaire-create>
+</div>
+
+{% endblock page_content %}
+
+{% block js_bundle %}
+    <script src="{% static 'dist/questionnaire-create-bundle.js' %}"></script>
+{% endblock js_bundle %}

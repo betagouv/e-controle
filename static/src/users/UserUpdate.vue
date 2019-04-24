@@ -1,11 +1,11 @@
 <template>
 
-<div class="modal fade modal-add-user" :id="'modalAddUser' + control.id" tabindex="-1" role="dialog" :aria-labelledby="'modalAddUser' + control.id" aria-hidden="true">
+<div class="modal fade modal-update-user" :id="modalId()" tabindex="-1" role="dialog" :aria-labelledby="modalId()" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form @submit.prevent="addUser">
+    <form @submit.prevent="updateUser">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="labelForModalAddUser">Ajouter</h5>
+        <h5 class="modal-title" id="labelForModalAddUser">Modifier</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true"></span>
         </button>
@@ -52,7 +52,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
+        <button type="submit" class="btn btn-primary">Modifier</button>
       </div>
     </form>
     </div>
@@ -74,7 +74,8 @@
 
   export default Vue.extend({
     props: {
-      control: Object
+      control: Object,
+      user: Object
     },
     data: () {
       return {
@@ -92,34 +93,34 @@
       }
     },
     methods: {
+      modalId() {
+          return 'modalUpdateUser' + this.control.id + '-' + this.user.id
+      },
       hideModal() {
-        $('.modal-add-user').modal('hide');
+        $('.modal-update-user').modal('hide');
       },
-      resetFormData() {
-        this.formData = {
-            'first_name': '',
-            'last_name': '',
-            'email': '',
-            'organization': '',
-            'controls': [],
-            'profile_type': ''
-        }
-      },
-      addUser() {
+      updateUser() {
         this.formData.controls.push(this.control.id)
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
-            this.resetFormData()
             this.hideModal()
           })
           .catch((error) => {
             this.hasErrors = true
             this.errors = error.response.data
           })
-      }
+      },
     }
+    mounted () {
+        this.formData.first_name = this.user.first_name
+        this.formData.last_name = this.user.last_name
+        this.formData.email = this.user.email
+        this.formData.controls = this.user.controls
+        this.formData.profile_type = this.user.profile_type
+    }
+
   })
 </script>
 
