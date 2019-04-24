@@ -14,3 +14,28 @@
 .zebra  {
     background: #f8f9fa;
 }
+
+
+/* questionnaires Vue components */
+.form-control-h3 {
+    font-size: 1.125rem;
+    font-weight: 400;
+}
+
+.form-label-h3 {
+    margin-bottom: 0px;
+}
+
+/* datepicker : make it blue */
+.blue .vdp-datepicker__calendar .cell.selected,
+.blue .vdp-datepicker__calendar .cell.selected.highlighted,
+.blue .vdp-datepicker__calendar .cell.selected:hover {
+    background: #467fcf;
+    color: #fff;
+}
+
+.blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,
+.blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,
+.blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {
+    border: 1px solid #467fcf;
+}

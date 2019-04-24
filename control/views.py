@@ -44,6 +44,12 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return context
 
 
+class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
+    # todo : how to pass in the control's id from the url?
+
+    template_name = "ecc/questionnaire_create.html"
+
+
 class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
     template_name = "ecc/faq.html"
 
@@ -103,10 +109,11 @@ class SendResponseFile(SendQuestionFile):
     model = ResponseFile
 
 
-upload_response_file = UploadResponseFile.as_view()
-questionnaire_list = QuestionnaireList.as_view()
-questionnaire_detail = QuestionnaireDetail.as_view()
 faq = FAQ.as_view()
-send_questionnaire_file = SendQuestionnaireFile.as_view()
+questionnaire_create = QuestionnaireCreate.as_view()
+questionnaire_detail = QuestionnaireDetail.as_view()
+questionnaire_list = QuestionnaireList.as_view()
 send_question_file = SendQuestionFile.as_view()
+send_questionnaire_file = SendQuestionnaireFile.as_view()
 send_response_file = SendResponseFile.as_view()
+upload_response_file = UploadResponseFile.as_view()
