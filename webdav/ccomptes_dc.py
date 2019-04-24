@@ -34,8 +34,7 @@ class CCDomainController(BaseDomainController):
         """
         # we only send the control code
         if environ is not None:
-            # We have to fake an http autorization in order to use a "Basic authenication"
-            environ['HTTP_AUTHORIZATION'] = 'Basic dGVzdDp0ZXN0'
+            environ['HTTP_AUTHORIZATION'] = settings.HTTP_AUTHORIZATION
         realms = list(filter(None, path_info.split('/')))
         if len(realms) != 0:
             return realms[0]
@@ -87,7 +86,6 @@ class CCDomainController(BaseDomainController):
         False if user is not known or not authorized
         True if user is authorized
         """
-        print(environ)
         username = environ['REMOTE_USER']
         username = username.split('@', 1)[0]
 
