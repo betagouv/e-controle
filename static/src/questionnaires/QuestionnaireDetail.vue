@@ -8,11 +8,15 @@
                 <div class="card-body">
                     {{ questionnaire.metadata.description }}
 
-                    <p v-if="questionnaire.metadata.sent_date" class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
+                    <p v-if="questionnaire.metadata.sent_date" class="font-weight-bold">
+                        <i class="dropdown-icon fe fe-send"></i>
+                        <u>Date de transmission du questionnaire</u> :
                         {{ questionnaire.metadata.sent_date}}
                     </p>
 
-                    <p v-if="questionnaire.metadata.end_date" class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+                    <p v-if="questionnaire.metadata.end_date" class="font-weight-bold">
+                        <i class="dropdown-icon fe fe-clock"></i>
+                        <u>Date de réponse souhaitée</u> :
                         {{ questionnaire.metadata.end_date | DateFormat}}
                     </p>
                 </div>
@@ -30,7 +34,11 @@
                             <table class="table card-table">
                                 <tbody>
                                 <tr v-for="(group, groupIndex) in questionnaire.body" class="theme-row">
-                                    <td><a v-bind:href="'#theme' + (groupIndex + 1)">{{ groupIndex + 1 }}. {{ group.theme }}</a></td>
+                                    <td>
+                                        <a v-bind:href="'#theme' + (groupIndex + 1)">
+                                            {{ groupIndex + 1 }}. {{ group.theme }}
+                                        </a>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -40,14 +48,20 @@
             </div>
 
             <div class="col-lg-8" id="question-detail-app">
-                <div v-bind:id="'theme' + (groupIndex + 1)" v-for="(group, groupIndex) in questionnaire.body" class="card">
+                <div v-bind:id="'theme' + (groupIndex + 1)"
+                     v-for="(group, groupIndex) in questionnaire.body"
+                     class="card">
                     <div class="card-status card-status-top bg-blue"></div>
                     <div class="card-header">
                         <h3 class="card-title">{{ groupIndex + 1 }}. {{ group.theme }}</h3>
                     </div>
-                    <div v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)" v-for="(question, qIndex) in group.questions" class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
+                    <div v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)"
+                         v-for="(question, qIndex) in group.questions"
+                         class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
                         <div class="card-header border-1" data-toggle="card-collapse" >
-                            <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">{{ groupIndex + 1 }}.{{ qIndex + 1 }}</span>
+                            <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
+                                {{ groupIndex + 1 }}.{{ qIndex + 1 }}
+                            </span>
                             <div class="card-text"style="cursor: pointer">
                                 {{ question }}
                             </div>

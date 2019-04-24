@@ -17,7 +17,9 @@
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
-          <p class="text-muted pl-2" v-if="errors.description"><i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}</p>
+          <p class="text-muted pl-2" v-if="errors.description">
+            <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
+          </p>
         </div>
         <div class="form-group">
           <label class="form-label">Date de réponse souhaitée<span class="form-required"></span></label>
