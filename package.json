@@ -3,9 +3,11 @@
   "scripts": {
     "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
+    "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
     "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
-    "build-all": "npm run build-questionnaire-list & npm run build-questionnaire-create"
+    "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
+    "build-all": "npm run build-questionnaire-list & npm run build-questionnaire-create & npm run build-questionnaire-detail "
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -13,7 +15,8 @@
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3",
-    "vuejs-datepicker": "^1.5.4"
+    "vuejs-datepicker": "^1.5.4",
+    "dropzone": "^5.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
