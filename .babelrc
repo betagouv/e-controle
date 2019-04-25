@@ -6,9 +6,9 @@
         "targets": {
           "ie": "11"
         },
-        "modules": false,
         "debug": true
       }
     ]
-  ]
+  ],
+  "plugins": ["@babel/plugin-transform-object-assign"]
 }
