@@ -5,7 +5,7 @@
     <form @submit.prevent="updateUser">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="labelForModalAddUser">Modifier</h5>
+        <h4 class="modal-title" id="labelForModalAddUser">{{ control.title }}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true"></span>
         </button>
