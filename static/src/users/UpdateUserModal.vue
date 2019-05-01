@@ -1,6 +1,6 @@
 <template>
 
-<div class="modal fade modal-update-user" :id="modalId()" tabindex="-1" role="dialog" :aria-labelledby="modalId()" aria-hidden="true">
+<div class="modal fade update-user-modal" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form @submit.prevent="updateUser">
     <div class="modal-content">
@@ -73,12 +73,9 @@
   axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
   export default Vue.extend({
-    props: {
-      control: Object,
-      user: Object
-    },
     data: () {
       return {
+        'control': Object,
         'formData': {
             'first_name': '',
             'last_name': '',
@@ -93,11 +90,8 @@
       }
     },
     methods: {
-      modalId() {
-          return 'modalUpdateUser' + this.control.id + '-' + this.user.id
-      },
       hideModal() {
-        $('.modal-update-user').modal('hide');
+        $('.update-user-modal').modal('hide');
       },
       updateUser() {
         this.formData.controls.push(this.control.id)
@@ -114,13 +108,15 @@
       },
     }
     mounted () {
-        this.formData.first_name = this.user.first_name
-        this.formData.last_name = this.user.last_name
-        this.formData.email = this.user.email
-        this.formData.controls = this.user.controls
-        this.formData.profile_type = this.user.profile_type
+        EventBus.$on('click-update-user', data => {
+          this.control = data.control
+          this.formData.first_name = data.user.first_name
+          this.formData.last_name = data.user.last_name
+          this.formData.email = data.user.email
+          this.formData.controls = data.user.controls
+          this.formData.profile_type = data.user.profile_type
+        })
     }
-
   })
 </script>
 

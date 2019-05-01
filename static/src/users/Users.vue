@@ -13,6 +13,8 @@
 
     <add-user-modal></add-user-modal>
 
+    <update-user-modal></update-user-modal>
+
   </div>
 </div>
 </template>
@@ -22,8 +24,9 @@
   import Vue from "vue";
   import VueAxios from "vue-axios"
 
-  import EventBus from '../events';
   import AddUserModal from "./AddUserModal"
+  import EventBus from '../events'
+  import UpdateUserModal from "./UpdateUserModal"
   import UserList from "./UserList"
 
   Vue.use(VueAxios, axios)
@@ -67,7 +70,8 @@
     },
     components: {
       UserList,
-      AddUserModal
+      AddUserModal,
+      UpdateUserModal
     }
   });
 </script>

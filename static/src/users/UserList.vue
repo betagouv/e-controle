@@ -29,7 +29,7 @@
               <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
             </div>
             <div class="col-auto">
-              <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" :data-target="'#modalUpdateUser' + control.id + '-' + user.id"></button>
+              <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="clickUpdateUser(user)"></button>
             </div>
             <div class="col-auto mr-3">
               <button class="fe fe-user-x btn btn-outline-primary" title="Désactiver" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"></button>
@@ -48,7 +48,6 @@
 
   import EventBus from '../events';
   import UserDeactivate from "./UserDeactivate"
-  import UserUpdate from "./UserUpdate"
 
   export default Vue.extend({
     data: () {
@@ -62,8 +61,7 @@
       control: Object,
     },
     components: {
-      UserDeactivate,
-      UserUpdate,
+      UserDeactivate
     },
     methods: {
       clickAddUser() {
@@ -71,7 +69,13 @@
           'control': this.control,
           'profileType': this.profileType
         })
-      }
+      },
+      clickUpdateUser(user) {
+        EventBus.$emit('click-update-user', {
+          'control': this.control,
+          'user': user
+        })
+      },
     }
   });
 </script>
