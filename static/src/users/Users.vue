@@ -11,8 +11,6 @@
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
-    <remove-user-modal></remove-user-modal>
-
   </div>
 </div>
 </template>
@@ -23,7 +21,6 @@
   import VueAxios from "vue-axios"
 
   import EventBus from '../events'
-  import RemoveUserModal from "./RemoveUserModal"
   import UserList from "./UserList"
 
   Vue.use(VueAxios, axios)
@@ -66,8 +63,7 @@
       })
     },
     components: {
-      UserList,
-      RemoveUserModal
+      UserList
     }
   });
 </script>
