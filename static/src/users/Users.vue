@@ -4,10 +4,29 @@
     <h5 class="card-title font-weight-bold"><a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a></h5>
   </div>
   <div class="card-body">
+    <div class="card">
+      <div class="card-header pr-0">
+        <div class="col">
+          <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
+        </div>
+        <div class="col-auto">
+          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser('inspector')"> Ajouter une personne</button>
+        </div>
+      </div>
+      <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
+    </div>
 
-    <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
-
-    <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
+    <div class="card">
+      <div class="card-header pr-0">
+        <div class="col">
+          <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
+        </div>
+        <div class="col-auto">
+          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser('audited')"> Ajouter une personne</button>
+        </div>
+      </div>
+      <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
+    </div>
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
@@ -54,7 +73,13 @@
         return this.users.filter(item => {
            return item.profile_type === 'inspector'
         })
-      }
+      },
+      clickAddUser(profileType) {
+        EventBus.$emit('click-add-user', {
+          'control': this.control,
+          'profileType': profileType
+        })
+      },
     },
     mounted() {
       this.getUsers()
