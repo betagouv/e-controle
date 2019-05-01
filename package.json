@@ -13,7 +13,8 @@
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3",
-    "vuejs-datepicker": "^1.5.4"
+    "vuejs-datepicker": "^1.5.4",
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
