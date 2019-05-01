@@ -32,11 +32,9 @@
               <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="clickUpdateUser(user)"></button>
             </div>
             <div class="col-auto mr-3">
-              <button class="fe fe-user-x btn btn-outline-primary" title="Désactiver" data-toggle="modal" :data-target="'#modalDeactivateUser' + control.id + '-' + user.id"></button>
+              <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="clickRemoveUser(user)"></button>
             </div>
           </div>
-          <user-deactivate :user="user" :control="control"></user-deactivate>
-          <user-update :user="user" :control="control"></user-update>
         </li>
       </ul>
     </div>
@@ -47,7 +45,6 @@
   import Vue from "vue";
 
   import EventBus from '../events';
-  import UserDeactivate from "./UserDeactivate"
 
   export default Vue.extend({
     data: () {
@@ -59,9 +56,6 @@
       users: Array,
       profileType: String,
       control: Object,
-    },
-    components: {
-      UserDeactivate
     },
     methods: {
       clickAddUser() {
@@ -76,6 +70,12 @@
           'user': user
         })
       },
+      clickRemoveUser(user) {
+        EventBus.$emit('click-remove-user', {
+          'control': this.control,
+          'user': user
+        })
+      }
     }
   });
 </script>

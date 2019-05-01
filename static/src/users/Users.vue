@@ -15,6 +15,8 @@
 
     <update-user-modal></update-user-modal>
 
+    <remove-user-modal></remove-user-modal>
+
   </div>
 </div>
 </template>
@@ -26,6 +28,7 @@
 
   import AddUserModal from "./AddUserModal"
   import EventBus from '../events'
+  import RemoveUserModal from "./RemoveUserModal"
   import UpdateUserModal from "./UpdateUserModal"
   import UserList from "./UserList"
 
@@ -71,7 +74,8 @@
     components: {
       UserList,
       AddUserModal,
-      UpdateUserModal
+      UpdateUserModal,
+      RemoveUserModal
     }
   });
 </script>
