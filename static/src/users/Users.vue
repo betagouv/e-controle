@@ -11,7 +11,7 @@
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
-    <user-create :control="control"></user-create>
+    <add-user-modal></add-user-modal>
 
   </div>
 </div>
@@ -23,7 +23,7 @@
   import VueAxios from "vue-axios"
 
   import EventBus from '../events';
-  import UserCreate from "./UserCreate"
+  import AddUserModal from "./AddUserModal"
   import UserList from "./UserList"
 
   Vue.use(VueAxios, axios)
@@ -67,7 +67,7 @@
     },
     components: {
       UserList,
-      UserCreate
+      AddUserModal
     }
   });
 </script>

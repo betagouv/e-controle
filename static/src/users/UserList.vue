@@ -5,7 +5,7 @@
         <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
       </div>
       <div class="col-auto">
-        <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+        <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser()"> Ajouter une personne</button>
       </div>
     </div>
     <div v-if="profileType==='audited'" class="card-header pr-0">
@@ -13,7 +13,7 @@
         <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
       </div>
       <div class="col-auto">
-        <button class="fe fe-plus btn btn-primary" data-toggle="modal" :data-target="'#modalAddUser' + control.id"> Ajouter une personne</button>
+        <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser()"> Ajouter une personne</button>
       </div>
     </div>
 
@@ -64,6 +64,14 @@
     components: {
       UserDeactivate,
       UserUpdate,
+    },
+    methods: {
+      clickAddUser() {
+        EventBus.$emit('click-add-user', {
+          'control': this.control,
+          'profileType': this.profileType
+        })
+      }
     }
   });
 </script>
