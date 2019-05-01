@@ -11,8 +11,6 @@
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
-    <update-user-modal></update-user-modal>
-
     <remove-user-modal></remove-user-modal>
 
   </div>
@@ -26,7 +24,6 @@
 
   import EventBus from '../events'
   import RemoveUserModal from "./RemoveUserModal"
-  import UpdateUserModal from "./UpdateUserModal"
   import UserList from "./UserList"
 
   Vue.use(VueAxios, axios)
@@ -70,7 +67,6 @@
     },
     components: {
       UserList,
-      UpdateUserModal,
       RemoveUserModal
     }
   });
