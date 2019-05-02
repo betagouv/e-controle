@@ -10,7 +10,7 @@
           <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
         </div>
         <div class="col-auto">
-          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser('inspector')"> Ajouter une personne</button>
+          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('inspector')"> Ajouter une personne</button>
         </div>
       </div>
       <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
@@ -22,7 +22,7 @@
           <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
         </div>
         <div class="col-auto">
-          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="clickAddUser('audited')"> Ajouter une personne</button>
+          <button class="fe fe-plus btn btn-primary" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('audited')"> Ajouter une personne</button>
         </div>
       </div>
       <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
@@ -35,16 +35,21 @@
 </template>
 
 <script lang="ts">
+  import { mapFields } from 'vuex-map-fields'
   import axios from "axios"
   import Vue from "vue";
   import VueAxios from "vue-axios"
 
+  import { store } from '../store'
   import EventBus from '../events'
   import UserList from "./UserList"
 
+
   Vue.use(VueAxios, axios)
 
+
   export default Vue.extend({
+    store,
     props: {
       control: Object,
       requestUserProfileType: String
@@ -53,6 +58,12 @@
       return {
         users: []
       }
+    },
+    computed: {
+      ...mapFields([
+        'editingControl'
+        'editingProfileType',
+      ]),
     },
     methods: {
       getUsers() {
@@ -74,12 +85,10 @@
            return item.profile_type === 'inspector'
         })
       },
-      clickAddUser(profileType) {
-        EventBus.$emit('click-add-user', {
-          'control': this.control,
-          'profileType': profileType
-        })
-      },
+      updateEditingState(profileType) {
+        this.editingControl = this.control
+        this.editingProfileType = profileType
+      }
     },
     mounted() {
       this.getUsers()

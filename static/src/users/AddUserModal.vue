@@ -5,7 +5,7 @@
     <form @submit.prevent="addUser">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="labelForModalAddUser">{{ control.title }}</h4>
+        <h4 class="modal-title" id="labelForModalAddUser">{{ editingControl.title }}</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true"></span>
         </button>
@@ -14,10 +14,10 @@
         <div v-if="hasErrors" class="alert alert-danger">
           L'envoi de ce formulaire n'a pas fonctionné.
         </div>
-        <div v-if="profileType==='inspector'" class="text-center">
+        <div v-if="editingProfileType==='inspector'" class="text-center">
             <h4><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h4>
         </div>
-        <div v-if="profileType==='audited'" class="text-center">
+        <div v-if="editingProfileType==='audited'" class="text-center">
             <h4><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
         </div>
         <fieldset class="form-fieldset">
@@ -54,10 +54,12 @@
 </template>
 
 <script lang="ts">
+  import { mapFields } from 'vuex-map-fields'
   import axios from 'axios'
   import Vue from "vue";
   import VueAxios from 'vue-axios'
 
+  import { store } from '../store'
   import EventBus from '../events';
 
   Vue.use(VueAxios, axios)
@@ -66,13 +68,9 @@
   axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
 
   export default Vue.extend({
-    // props: {
-    //   control: Object
-    // },
+    store,
     data: () {
       return {
-        'control': {},
-        'profileType': '',
         'formData': {
             'first_name': '',
             'last_name': '',
@@ -85,6 +83,12 @@
         'errors': [],
         'hasErrors': false
       }
+    },
+    computed: {
+      ...mapFields([
+        'editingControl'
+        'editingProfileType',
+      ]),
     },
     methods: {
       hideModal() {
@@ -101,8 +105,8 @@
         }
       },
       addUser() {
-        this.formData.controls.push(this.control.id)
-        this.formData.profile_type = this.profileType
+        this.formData.controls.push(this.editingControl.id)
+        this.formData.profile_type = this.editingProfileType
         this.axios.post('/api/user/', this.formData)
           .then(response => {
             this.postResult = response.data
@@ -115,12 +119,6 @@
             this.errors = error.response.data
           })
       }
-    },
-    mounted() {
-      EventBus.$on('click-add-user', data => {
-        this.control = data.control
-        this.profileType = data.profileType
-      })
     }
   })
 </script>

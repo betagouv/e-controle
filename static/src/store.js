@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     state: {
       editingControl: {},
       editingUser: {},
+      editingProfileType: ''
     },
     getters: {
       getField,
