@@ -23,11 +23,17 @@
 </template>
 
 <script lang="ts">
-  import Vue from "vue";
+  import { mapFields } from 'vuex-map-fields';
+  import Vue from 'vue';
+  import Vuex from 'vuex'
 
-  import EventBus from '../events';
+  import EventBus from '../events'
+  import { store } from '../store'
+
+  Vue.use(Vuex);
 
   export default Vue.extend({
+    store,
     data: () {
       return {
         postResult: {}
@@ -38,12 +44,16 @@
       profileType: String,
       control: Object,
     },
+    computed: {
+      ...mapFields([
+        'editingUser',
+        'editingControl'
+      ]),
+    },
     methods: {
       clickUpdateUser(user) {
-        EventBus.$emit('click-update-user', {
-          'control': this.control,
-          'user': user
-        })
+        this.editingControl = this.control
+        this.editingUser = user
       },
       clickRemoveUser(user) {
         EventBus.$emit('click-remove-user', {
