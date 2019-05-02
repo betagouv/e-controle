@@ -41,7 +41,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         controls_data = profile_data.pop('controls')
         user_data = profile_data.pop('user')
         user_data['username'] = user_data['email']
-        profile = UserProfile.objects.filter(user__email=user_data.get('email')).first()
+        profile = UserProfile.objects.filter(user__username=user_data.get('email')).first()
         if profile:
             profile.user.first_name = user_data.get('first_name')
             profile.user.last_name = user_data.get('last_name')
