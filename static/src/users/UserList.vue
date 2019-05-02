@@ -11,10 +11,10 @@
           <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
         <div class="col-auto">
-          <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="clickUpdateUser(user)"></button>
+          <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
         </div>
         <div class="col-auto mr-3">
-          <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="clickRemoveUser(user)"></button>
+          <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
         </div>
       </div>
     </li>
@@ -27,7 +27,6 @@
   import Vue from 'vue';
   import Vuex from 'vuex'
 
-  import EventBus from '../events'
   import { store } from '../store'
 
   Vue.use(Vuex);
@@ -51,15 +50,9 @@
       ]),
     },
     methods: {
-      clickUpdateUser(user) {
+      updateEditingState(user) {
         this.editingControl = this.control
         this.editingUser = user
-      },
-      clickRemoveUser(user) {
-        EventBus.$emit('click-remove-user', {
-          'control': this.control,
-          'user': user
-        })
       }
     }
   });
