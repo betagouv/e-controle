@@ -2,7 +2,6 @@
 
 <div class="modal fade add-user-modal" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form @submit.prevent="addUser">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="labelForModalAddUser">{{ editingControl.title }}</h4>
@@ -20,34 +19,50 @@
         <div v-if="editingProfileType==='audited'" class="text-center">
             <h4><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
         </div>
-        <fieldset class="form-fieldset">
-          <div class="form-group">
-            <label class="form-label">Prénom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name">
-            <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
+
+        <form @submit.prevent="findUser" v-if="showStep1">
+          <fieldset class="form-fieldset">
+            <div class="form-group">
+              <label class="form-label">Email<span class="form-required"></span></label>
+              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="formData.email" required>
+              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
+            </div>
+          </fieldset>
+          <div class="text-right">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="submit" class="btn btn-primary">Suivant</button>
           </div>
-          <div class="form-group">
-            <label class="form-label">Nom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name">
-            <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
+        </form>
+
+        <form @submit.prevent="addUser" v-if="showStep2">
+          <fieldset class="form-fieldset">
+            <div class="form-group">
+              <label class="form-label">Email<span class="form-required"></span></label>
+              <input type="email" class="form-control" v-model="formData.email" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prénom<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name" :readonly="foundUser" required>
+              <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name" :readonly="foundUser" required>
+              <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Organisme<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization" :readonly="foundUser">
+              <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
+            </div>
+          </fieldset>
+          <div class="text-right">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
-          <div class="form-group">
-            <label class="form-label">Email<span class="form-required"></span></label>
-            <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="formData.email">
-            <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Organisme<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization">
-            <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
-          </div>
-        </fieldset>
+        </form>
+
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-      </div>
-    </form>
     </div>
   </div>
 </div>
@@ -81,7 +96,11 @@
         },
         'postResult': [],
         'errors': [],
-        'hasErrors': false
+        'hasErrors': false,
+        'searchResult': {},
+        'foundUser': false,
+        'showStep1': true,
+        'showStep2': false,
       }
     },
     computed: {
@@ -103,6 +122,10 @@
             'controls': [],
             'profile_type': ''
         }
+        this.showStep1 = true
+        this.showStep2 = false
+        this.foundUser = false
+        this.hasErrors = false
       },
       addUser() {
         this.formData.controls.push(this.editingControl.id)
@@ -117,6 +140,22 @@
           .catch((error) => {
             this.hasErrors = true
             this.errors = error.response.data
+          })
+      },
+      findUser() {
+        this.axios.get('/api/user/', {
+            params: {
+              search: this.formData.email
+            }
+          })
+          .then(response => {
+            this.searchResult = response.data
+            if(response.data.length) {
+              this.foundUser = true
+              Object.assign(this.formData, response.data[0])
+            }
+            this.showStep1 = false
+            this.showStep2 = true
           })
       }
     }
