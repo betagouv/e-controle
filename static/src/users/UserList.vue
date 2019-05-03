@@ -11,10 +11,10 @@
           <small class="d-block item-except h-1x"><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
         <div class="col-auto">
-          <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
+          <button v-if="sessionUser.is_inspector" class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
         </div>
         <div class="col-auto mr-3">
-          <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
+          <button v-if="sessionUser.is_inspector" class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
         </div>
       </div>
     </li>
@@ -47,6 +47,7 @@
       ...mapFields([
         'editingUser',
         'editingControl'
+        'sessionUser'
       ]),
     },
     methods: {

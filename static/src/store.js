@@ -9,12 +9,23 @@ export const store = new Vuex.Store({
     state: {
       editingControl: {},
       editingUser: {},
-      editingProfileType: ''
+      editingProfileType: '',
+      sessionUser: {}
     },
     getters: {
       getField,
     },
     mutations: {
       updateField,
+      setSessionUser(state, user) {
+          state.sessionUser = user
+      }
+    },
+    actions: {
+      setSessionUser({commit}) {
+        axios.get('/api/user/current/').then((response) => {
+          commit('setSessionUser', response.data)
+        })
+      }
     }
 })
