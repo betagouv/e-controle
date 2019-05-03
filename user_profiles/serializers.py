@@ -33,7 +33,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = (
             'id', 'first_name', 'last_name', 'email', 'profile_type',
-            'organization', 'controls')
+            'organization', 'controls', 'is_audited', 'is_inspector')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):
