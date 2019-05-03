@@ -53,6 +53,7 @@ def test_can_associate_a_control_to_anexisting_user():
         'last_name': existing_user.last_name,
         'profile_type': 'audited',
         'email': existing_user.email,
+        'organization': '',
         'controls': [control.id]
     }
     utils.login(client, user=inspector.user)
