@@ -26,6 +26,11 @@
               </div>
             </div>
             <div class="form-group">
+              <label class="form-label">Email<span class="form-required"></span></label>
+              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="editingUser.email" readonly>
+              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="$store.state.editingUser.first_name">
               <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
@@ -34,11 +39,6 @@
               <label class="form-label">Nom<span class="form-required"></span></label>
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name">
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email<span class="form-required"></span></label>
-              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="editingUser.email">
-              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
             </div>
             <div class="form-group">
               <label class="form-label">Organisme<span class="form-required"></span></label>
