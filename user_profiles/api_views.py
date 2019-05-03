@@ -29,3 +29,8 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
             return Response({'status': f"Removed control {control}"})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def current(self, request, pk=None):
+        serializer = UserProfileSerializer(request.user.profile)
+        return Response(serializer.data)
