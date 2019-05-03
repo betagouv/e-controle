@@ -17,7 +17,7 @@
             <h4><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h4>
         </div>
         <div v-if="editingProfileType==='audited'" class="text-center">
-            <h4><i class="fe fe-user mr-2"></i><strong>Organisme controlé</strong></h3>
+            <h4><i class="fe fe-user mr-2"></i><strong>Organisme contrôlé</strong></h3>
         </div>
 
         <form @submit.prevent="findUser" v-if="showStep1">
