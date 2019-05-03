@@ -2,59 +2,56 @@
 
 <div class="modal fade update-user-modal" id="updateUserModal" tabindex="-1" role="dialog" aria-labelledby="updateUserModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form @submit.prevent="updateUser">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="labelForModalAddUser">{{ editingControl.title }}</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true"></span>
-        </button>
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
           L'envoi de ce formulaire n'a pas fonctionné.
         </div>
-        <fieldset class="form-fieldset">
-          <div class="form-group">
-            <div class="custom-controls-stacked">
-              <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" v-model="editingUser.profile_type" value="inspector" class="custom-control-input" name="control-inline-radios">
-                <span class="custom-control-label">Équipe de contrôle</span>
-              </label>
-              <label class="custom-control custom-radio custom-control-inline">
-                <input type="radio" v-model="editingUser.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
-                <span class="custom-control-label">Organisme Contrôlé</span>
-              </label>
-              <p class="text-muted pl-2" v-if="errors.profile_type"><i class="fa fa-warning"></i> Choisissez l'une des options</p>
+        <form @submit.prevent="updateUser">
+          <fieldset class="form-fieldset">
+            <div class="form-group">
+              <div class="custom-controls-stacked">
+                <label class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" v-model="editingUser.profile_type" value="inspector" class="custom-control-input" name="control-inline-radios">
+                  <span class="custom-control-label">Équipe de contrôle</span>
+                </label>
+                <label class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" v-model="editingUser.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
+                  <span class="custom-control-label">Organisme Contrôlé</span>
+                </label>
+                <p class="text-muted pl-2" v-if="errors.profile_type"><i class="fa fa-warning"></i> Choisissez l'une des options</p>
+              </div>
             </div>
+            <div class="form-group">
+              <label class="form-label">Prénom<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="$store.state.editingUser.first_name">
+              <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nom<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name">
+              <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email<span class="form-required"></span></label>
+              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="editingUser.email">
+              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Organisme<span class="form-required"></span></label>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="editingUser.organization">
+              <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
+            </div>
+          </fieldset>
+          <div class="text-right">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
-          <div class="form-group">
-            <label class="form-label">Prénom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="$store.state.editingUser.first_name">
-            <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nom<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name">
-            <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email<span class="form-required"></span></label>
-            <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="editingUser.email">
-            <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Organisme<span class="form-required"></span></label>
-            <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="editingUser.organization">
-            <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
-          </div>
-        </fieldset>
+        </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary">Modifier</button>
-      </div>
-    </form>
     </div>
   </div>
 </div>
