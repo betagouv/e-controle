@@ -10,7 +10,7 @@
           </p>
           <div class="btn-list">
             <button @click="remove()" class="btn btn-danger" type="button" data-dismiss="modal">Supprimer</button>
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Anuler</button>
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
           </div>
         </div>
       </div>
