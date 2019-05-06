@@ -32,24 +32,29 @@
         </form>
 
         <form @submit.prevent="addUser" v-if="showStep2">
-          <fieldset class="form-fieldset">
-            <div class="form-group">
-              <p class="form-label">Email: {{ formData.email}}</p>
-              <p class="small text-muted">(Pour modifier cet email, vous pouvez supprimer l'utilisateur puis le créer un nouveau.)</p>
-            </div>
+          <div class="form-fieldset">
+            <p class="form-label">Email : {{ formData.email}}</p>
+          </div>
+          <div v-if="foundUser" class="form-fieldset">
+            <p class="form-label">Prénom : {{ formData.first_name}}</p>
+            <p class="form-label">Nom : {{ formData.last_name}}</p>
+            <p class="form-label">Organisme : {{ formData.organization}}</p>
+          </div>
+          <fieldset v-else class="form-fieldset">
             <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name" :readonly="foundUser" required>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name" required>
               <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
               <label class="form-label">Nom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name" :readonly="foundUser" required>
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name" required>
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
+
               <label class="form-label">Organisme<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization" :readonly="foundUser">
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization">
               <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
             </div>
           </fieldset>
