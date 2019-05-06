@@ -14,7 +14,7 @@
           <fieldset class="form-fieldset">
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
-              <p class="small text-muted">Si cet email erroné vous pouvez le <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer</button></p>
+              <p class="small text-muted">Si cet email est erroné, vous pouvez le <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer</button></p>
             </div>
             <hr/>
             <div class="form-group">
