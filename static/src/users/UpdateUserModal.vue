@@ -13,6 +13,11 @@
         <form @submit.prevent="updateUser">
           <fieldset class="form-fieldset">
             <div class="form-group">
+              <p class="form-label">Email : {{ editingUser.email}}</p>
+              <p class="small text-muted">Si cet email erroné vous pouvez le <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer</button></p>
+            </div>
+            <hr/>
+            <div class="form-group">
               <div class="custom-controls-stacked">
                 <label class="custom-control custom-radio custom-control-inline">
                   <input type="radio" v-model="editingUser.profile_type" value="inspector" class="custom-control-input" name="control-inline-radios">
@@ -26,13 +31,8 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Email<span class="form-required"></span></label>
-              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="editingUser.email" readonly>
-              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
-            </div>
-            <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="$store.state.editingUser.first_name">
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="editingUser.first_name">
               <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
@@ -104,6 +104,13 @@
             this.errors = error.response.data
           })
       },
+      remove(user) {
+        this.hideModal()
+        this.editingControl = this.control
+        this.editingUser = user
+        this.hasErrors = false
+        this.errors = {}
+      }
     }
   })
 </script>
