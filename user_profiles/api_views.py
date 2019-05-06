@@ -11,7 +11,7 @@ from .permissions import ChangeUserPermission
 class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
     filterset_fields = ('controls', 'profile_type')
-    search_fields = ('user__username',)
+    search_fields = ('=user__username',)
     permission_classes = (ChangeUserPermission,)
 
     def get_queryset(self):
