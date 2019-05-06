@@ -37,8 +37,8 @@
         <form @submit.prevent="addUser" v-if="showStep2">
           <fieldset class="form-fieldset">
             <div class="form-group">
-              <label class="form-label">Email<span class="form-required"></span></label>
-              <input type="email" class="form-control" v-model="formData.email" readonly>
+              <p class="form-label">Email: {{ formData.email}}</p>
+              <p class="small text-muted">(Pour modifier cet email, vous pouvez supprimer l'utilisateur puis le créer un nouveau.)</p>
             </div>
             <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
