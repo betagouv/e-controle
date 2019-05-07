@@ -80,11 +80,18 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 
 
 class SendFileMixin(SingleObjectMixin):
+    """
+    Inheriting classes should override :
+    - model to specify the data type of the file.
+    - (optional) get_query_set() to restrict the accessible files.
+    """
     model = None
 
+    # used in a View, this function overrides the View's GET request handler.
     def get(self, request, *args, **kwargs):
+        # get the object fetched by SingleObjectMixin
         obj = self.get_object()
-        return sendfile(request, obj.file.path)
+        return sendfile(request, obj.file.path, attachment=True, attachment_filename=obj.basename)
 
 
 class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
