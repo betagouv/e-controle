@@ -16,3 +16,4 @@ class EccConfig(AppConfig):
         registry.register(apps.get_model('control.Control'))
         registry.register(apps.get_model('control.Question'))
         registry.register(get_user_model())
+        registry.register(apps.get_model('user_profiles.UserProfile'))
