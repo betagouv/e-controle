@@ -82,7 +82,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 class SendFileMixin(SingleObjectMixin):
     """
     Inheriting classes should override :
-    - model to specify the data type of the file.
+    - model to specify the data type of the file. The model class should implement a basename property.
     - (optional) get_query_set() to restrict the accessible files.
     """
     model = None
