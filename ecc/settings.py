@@ -204,7 +204,6 @@ CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 
 LDAP_SERVER = env('LDAP_SERVER', default=None)
 LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
-HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
 
 CKEDITOR_CONFIGS = {
     'default': {
