@@ -78,8 +78,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         """
         Name of file, without path.
         """
-        basename = os.path.basename(self.file.name)
-        return basename
+        return os.path.basename(self.file.name)
 
     def __str__(self):
         return self.title
@@ -137,8 +136,7 @@ class QuestionFile(OrderedModel):
         """
         Name of file, without path.
         """
-        basename = os.path.basename(self.file.name)
-        return basename
+        return os.path.basename(self.file.name)
 
     def __str__(self):
         return self.file.name
