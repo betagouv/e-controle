@@ -15,7 +15,8 @@ class EmailForm(forms.Form):
 
     def clean_email(self):
         user_email = self.cleaned_data['email']
-        if not User.objects.filter(email=user_email).exists():
+        user_email = user_email.lower()
+        if not User.objects.filter(username__iexact=user_email).exists():
             raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
         return user_email
 
@@ -25,7 +26,7 @@ class EmailForm(forms.Form):
 
     def send_email(self, request):
         user_email = self.cleaned_data['email']
-        user = User.objects.get(email=user_email)
+        user = User.objects.get(username__iexact=user_email)
         token = self.create_token(user)
         email_subject = getattr(settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Connexion e-controle')
         html_template = getattr(settings, 'MAGICAUTH_EMAIL_HTML_TEMPLATE', 'magicauth/email.html')
