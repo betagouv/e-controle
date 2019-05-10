@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 
+from actstream import action
 from rest_framework import serializers
 
 from control.models import Control
@@ -33,7 +34,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = (
             'id', 'first_name', 'last_name', 'email', 'profile_type',
-            'organization', 'controls')
+            'organization', 'controls', 'is_audited', 'is_inspector')
         extra_kwargs = {'controls': {'write_only': True}}
 
     def create(self, validated_data):
@@ -41,7 +42,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         controls_data = profile_data.pop('controls')
         user_data = profile_data.pop('user')
         user_data['username'] = user_data['email']
-        profile = UserProfile.objects.filter(user__email=user_data.get('email')).first()
+        profile = UserProfile.objects.filter(user__username=user_data.get('email')).first()
+        action_details = {}
+        action_details['sender'] = self.context['request'].user
         if profile:
             profile.user.first_name = user_data.get('first_name')
             profile.user.last_name = user_data.get('last_name')
@@ -49,11 +52,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
             profile.profile_type = profile_data.get('profile_type')
             profile.user.save()
             profile.save()
+            action_details['verb'] = 'update user'
         else:
             user = User.objects.create(**user_data)
             profile_data['user'] = user
             profile_data['send_files_report'] = True
             profile = UserProfile.objects.create(**profile_data)
-        for control_data in controls_data:
-            profile.controls.add(control_data)
+            action_details['verb'] = 'add user'
+        action_details['action_object'] = profile
+        for control in controls_data:
+            if control not in profile.controls.all():
+                profile.controls.add(control)
+                action_details['verb'] = 'add user'
+                action_details['target'] = control
+        action.send(**action_details)
         return profile

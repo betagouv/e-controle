@@ -21,6 +21,15 @@ def test_posting_email_for_valid_existing_user_redirects(client):
     assert len(mail.outbox) == 1
 
 
+def test_loging_with_email_is_case_insensitive(client):
+    user = factories.UserFactory()
+    url = reverse('magicauth-login')
+    data = {'email': user.email.upper()}
+    response = client.post(url, data=data)
+    assert response.status_code == 302
+    assert len(mail.outbox) == 1
+
+
 def test_posting_unknown_email_raise_error(client):
     url = reverse('magicauth-login')
     data = {'email': 'unknown@email.com'}

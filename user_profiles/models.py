@@ -8,7 +8,7 @@ from .managers import UserProfileQuerySet
 
 class UserProfile(models.Model):
     PROFILE_TYPE = (
-        ('audited', 'Organisme Controlé'),
+        ('audited', 'Organisme Contrôlé'),
         ('inspector', 'Contrôleur'),
     )
     user = AutoOneToOneField(

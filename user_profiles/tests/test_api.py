@@ -53,6 +53,7 @@ def test_can_associate_a_control_to_anexisting_user():
         'last_name': existing_user.last_name,
         'profile_type': 'audited',
         'email': existing_user.email,
+        'organization': '',
         'controls': [control.id]
     }
     utils.login(client, user=inspector.user)
@@ -98,4 +99,13 @@ def test_inspector_can_remove_user_from_control():
     response = client.post(url, {'control': control.pk})
     count_after = User.objects.filter(profile__controls=control).count()
     assert count_after == count_before - 1
+    assert response.status_code == 200
+
+
+def test_logged_in_user_can_get_current_user():
+    factories.UserProfileFactory()
+    user = factories.UserFactory()
+    utils.login(client, user=user)
+    url = reverse('api:user-current')
+    response = client.get(url)
     assert response.status_code == 200

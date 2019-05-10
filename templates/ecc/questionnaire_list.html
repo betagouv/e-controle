@@ -65,7 +65,7 @@ Accueil
       </div>
       <div>
         <div colspan="2">
-          <users-for-control :control="{{ control.data }}" request-user-profile-type={{ user.profile.profile_type }} :key={{ control.id }}></users-for-control>
+          <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
         </div>
       </div>
 
@@ -73,6 +73,13 @@ Accueil
     </div>
     {% endfor %}
   </div>
+
+  <add-user-modal></add-user-modal>
+
+  <update-user-modal></update-user-modal>
+
+  <remove-user-modal></remove-user-modal>
+
 </div>
 {% endblock page_content %}
 
