@@ -1,6 +1,6 @@
 <template>
   <div class="table-responsive" v-if="files">
-    <div class="form-label">Fichier{{ answers_number===1 ? '': 's' }} déposé{{ answers_number===1 ? '': 's' }}:</div>
+    <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
@@ -37,14 +37,18 @@
 
   export default Vue.extend({
     data() {
-      return {answers_number: 0, files: {}};
+      return {answer_count: 0, files: {}};
     },
     mounted() {
       var _this = this
       this.$parent.$on('answer-updated-' + this.question_id, function (files) {
-        _this.answers_number = files ? files.length: 0;
         _this.files = files;
       })
+    },
+    computed: {
+      answer_count: function () {
+         return files ? this.files.length: 0;
+      }
     },
     props: {
       question_id: String,

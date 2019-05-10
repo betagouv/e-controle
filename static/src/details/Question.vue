@@ -6,17 +6,17 @@
     <div class="card-text" style="cursor: pointer">
       {{ question_description }}
       <div class="tags">
-        <template v-if="answers_number">
+        <template v-if="answer_count">
           <span class="tag tag-azure pull-left" style="cursor: pointer">
-            {{answers_number}} fichier{{ answers_number===1 ? '': 's' }} déposé{{ answers_number===1 ? '': 's' }}
+            {{answer_count}} fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}
             <span class="tag-addon">
               <i class="fe fe-file"></i>
             </span>
           </span>
         </template>
-        <template v-if="annexes_number">
+        <template v-if="annexe_count">
           <span class="tag tag-orange pull-left">
-            {{ annexes_number }} fichier{{ annexes_number===1 ? '': 's' }} annexe{{ annexes_number===1 ? '': 's' }}
+            {{ annexe_count }} fichier{{ annexe_count===1 ? '': 's' }} annexe{{ annexe_count===1 ? '': 's' }}
             <span class="tag-addon">
               <i class="fe fe-paperclip"></i>
             </span>
@@ -29,18 +29,16 @@
 
 <script lang="ts">
 
-  import axios from 'axios';
   import Vue from "vue";
-  import VueAxios from 'vue-axios';
 
   export default Vue.extend({
     data() {
-      return {answers_number: 0};
+      return {answer_count: 0};
     },
     mounted() {
       var _this = this
-      this.$parent.$on('question-updated-' + this.question_id, function (answer_number) {
-        _this.answers_number = answer_number;
+      this.$parent.$on('question-updated-' + this.question_id, function (answer_count) {
+        _this.answer_count = answer_count;
       })
     },
     props: {
@@ -48,7 +46,7 @@
       theme_numbering: String,
       question_numbering: String,
       question_id: String,
-      annexes_number: String,
+      annexe_count: String,
     },
     methods: {}
   });

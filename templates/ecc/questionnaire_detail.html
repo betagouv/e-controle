@@ -12,11 +12,9 @@
     {% if debug %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
-{#    <script src="{% static 'dropzone/5.5.1/dropzone.js' %}"></script>#}
     {% else %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.min.css' %}">
-{#    <script src="{% static 'dropzone/5.5.1/dropzone.min.js' %}"></script>#}
     {% endif %}
 {% endblock extra_static_header %}
 
@@ -26,14 +24,17 @@
       {{ questionnaire.description|linebreaks }}
 
       {% if questionnaire.sent_date %}
-        <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du
-          questionnaire</u> :
+        <p class="font-weight-bold">
+          <i class="dropdown-icon fe fe-send"></i>
+          <u>Date de transmission du questionnaire</u> :
           {{ questionnaire.sent_date|date:"l d F Y" }}
         </p>
       {% endif %}
 
       {% if questionnaire.end_date %}
-        <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
+        <p class="font-weight-bold">
+          <i class="dropdown-icon fe fe-clock"></i>
+          <u>Date de réponse souhaitée</u> :
           {{ questionnaire.end_date|date:"l d F Y" }}
         </p>
       {% endif %}
@@ -72,7 +73,7 @@
         </div>
       </div>
     </div> <!--// closing: side_theme_list  //-->
-    <div class="col-lg-8" id="question-detail-app"> <!--// opening: main_list_of_questions  //-->
+    <div class="col-lg-8" id="questionaire-detail-app"> <!--// opening: main_list_of_questions  //-->
       {% for theme in themes %}
         <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
           <div class="card-status card-status-top bg-blue"></div>
@@ -88,7 +89,7 @@
                              theme_numbering="{{ theme.numbering }}"
                              question_numbering="{{ question.numbering }}"
                              question_id="{{ question.id }}"
-                             anexes_count="{{ question_file.count }}"></question>
+                             annexe_count="{{ question_file.count }}"></question>
 
                  <div class="card-body">  <!--// opening: question_detail_area  //-->
                   <answer question_id="{{ question.id }}"></answer>
@@ -120,20 +121,10 @@
                             </div>
                         </div>
                         {% endif %}
-
-                        <!-- <div class="form-group">
-                          <label class="form-label">Commentaire facultatif</label>
-                          {% if user.profile.is_audited %}
-                          <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
-                          {% else %}
-                          <p>
-                            La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.
-                          </p>
-                          {% endif %}
-                        </div> -->
               </div>  <!--// closing: question_detail_area  //-->
 
-              <div class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer"
+              <div class="text-center bg-blue cursor-pointer text-white"
+                   style="cursor: pointer"
                    data-toggle="card-collapse">
                 <i class="fe fe-chevron-up"></i>
               </div>
@@ -148,10 +139,6 @@
   </div> <!--// closing: main_list_of_questions  //-->
 {% endblock page_content %}
 
-
-{#{% block extra_js %}#}
-{#<script src="{% static 'vue/reload-files.js' %}"></script>#}
-{#{% endblock extra_js %}#}
 {% block js_bundle %}
   <script src="{% static 'dist/questionnaire-detail-bundle.js' %}"></script>
 {% endblock js_bundle %}
