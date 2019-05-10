@@ -3,7 +3,7 @@
 {% load basename %}
 
 {% block page_title %}
-{{ questionnaire.title }}
+  {{ questionnaire.title }}
 {% endblock page_title %}
 
 {% block extra_static_header %}
@@ -12,127 +12,89 @@
     {% if debug %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
-    <script src="{% static 'dropzone/5.5.1/dropzone.js' %}"></script>
     {% else %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.min.css' %}">
-    <script src="{% static 'dropzone/5.5.1/dropzone.min.js' %}"></script>
     {% endif %}
 {% endblock extra_static_header %}
 
 {% block page_content %}
-<div class="card">
-  <div class="card-body">
-    {{ questionnaire.description|linebreaks }}
+  <div class="card">
+    <div class="card-body">
+      {{ questionnaire.description|linebreaks }}
 
-    {% if questionnaire.sent_date %}
-      <p class="font-weight-bold"><i class="dropdown-icon fe fe-send"></i> <u>Date de transmission du questionnaire</u> :
-      {{ questionnaire.sent_date|date:"l d F Y" }}
-      </p>
-    {% endif %}
+      {% if questionnaire.sent_date %}
+        <p class="font-weight-bold">
+          <i class="dropdown-icon fe fe-send"></i>
+          <u>Date de transmission du questionnaire</u> :
+          {{ questionnaire.sent_date|date:"l d F Y" }}
+        </p>
+      {% endif %}
 
-    {% if questionnaire.end_date %}
-      <p class="font-weight-bold"><i class="dropdown-icon fe fe-clock"></i> <u>Date de réponse souhaitée</u> :
-        {{ questionnaire.end_date|date:"l d F Y" }}
-      </p>
-    {% endif %}
+      {% if questionnaire.end_date %}
+        <p class="font-weight-bold">
+          <i class="dropdown-icon fe fe-clock"></i>
+          <u>Date de réponse souhaitée</u> :
+          {{ questionnaire.end_date|date:"l d F Y" }}
+        </p>
+      {% endif %}
 
-    {% if questionnaire.file %}
-    <p class="text-right">
-      <a href="{{ questionnaire.file_url }}" target="_blank" >
-        <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire"> Récupérer le questionnaire</button>
-      </a>
-    </p>
-    {% endif %}
+      {% if questionnaire.file %}
+        <p class="text-right">
+          <a href="{{ questionnaire.file_url }}" target="_blank">
+            <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
+              Récupérer le questionnaire
+            </button>
+          </a>
+        </p>
+      {% endif %}
 
+    </div>
   </div>
-</div>
 
-<div class="row row-cards">
-  <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
-    <div class="row sticky">
-      <div class="col-md-6 col-lg-12">
-        <div class="card">
-          <div class="card-header bg-blue text-white">
-            <h4 class="card-title">Thèmes</h4>
-          </div>
-          <table class="table card-table">
-            <tbody>
+  <div class="row row-cards">
+    <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
+      <div class="row sticky">
+        <div class="col-md-6 col-lg-12">
+          <div class="card">
+            <div class="card-header bg-blue text-white">
+              <h4 class="card-title">Thèmes</h4>
+            </div>
+            <table class="table card-table">
+              <tbody>
               {% for theme in themes %}
-            <tr data-id="{{ forloop.counter }}" class="theme-row">
-              <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+                <tr data-id="{{ forloop.counter }}" class="theme-row">
+                  <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  </div> <!--// closing: side_theme_list  //-->
-  <div class="col-lg-8" id="question-detail-app"> <!--// opening: main_list_of_questions  //-->
-    {% for theme in themes %}
-    <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
-      <div class="card-status card-status-top bg-blue"></div>
-      <div class="card-header">
-        <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
-      </div>
-              {% for question in theme.questions.all %}
-              {% with response_files=question.response_files.all question_files=question.question_files.all %}
-                  <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}" id="question{{ theme.numbering }}.{{ question.numbering }}"> <!--// opening: main_question_area_inside_a_theme  //-->
-                    <div class="card-header border-1" data-toggle="card-collapse" >
-                      <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">{{ theme.numbering }}.{{ question.numbering }}</span>
-                      <div class="card-text"style="cursor: pointer">
-                          {{ question.description|linebreaks }}
-                        <div class="tags">
-                          <span v-if="results && r_files && r_files[{{ question.id }}]" class="tag tag-azure pull-left" style="cursor: pointer">
-                            <template v-if="r_files[{{ question.id }}].length == 1">[[ r_files[{{ question.id }}].length ]] fichier déposé</template>
-                            <template v-if="r_files[{{ question.id }}].length > 1">[[ r_files[{{ question.id }}].length ]] fichiers déposés</template>
-                            <span class="tag-addon"><i class="fe fe-file"></i></span>
-                          </span>
-                          {% if question_files %}
-                          <span class="tag tag-orange pull-left">{{ question_files.count }} fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }}
-                            <span class="tag-addon"><i class="fe fe-paperclip"></i></span>
-                          </span>
-                          {% endif %}
-                        </div>
-                      </div>
-                    </div>
+    </div> <!--// closing: side_theme_list  //-->
+    <div class="col-lg-8" id="questionaire-detail-app"> <!--// opening: main_list_of_questions  //-->
+      {% for theme in themes %}
+        <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
+          <div class="card-status card-status-top bg-blue"></div>
+          <div class="card-header">
+            <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
+          </div>
+          {% for question in theme.questions.all %}
+            {% with response_files=question.response_files.all question_files=question.question_files.all %}
+              <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}"
+                   id="question{{ theme.numbering }}.{{ question.numbering }}">
 
-                    <div class="card-body">  <!--// opening: question_detail_area  //-->
+                <question question_description="{{ question.description }}"
+                             theme_numbering="{{ theme.numbering }}"
+                             question_numbering="{{ question.numbering }}"
+                             question_id="{{ question.id }}"
+                             annexe_count="{{ question_file.count }}"></question>
 
-                        <div class="table-responsive" v-if="results && r_files && r_files[{{ question.id }}]">
-                        <div v-if="r_files[{{ question.id }}].length == 1" class="form-label">Fichier déposé:</div>
-                        <div v-if="r_files[{{ question.id }}].length > 1" class="form-label">Fichiers déposés:</div>
-                        <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
-                          <thead>
-                            <tr>
-                              <th class="text-center w-1"></th>
-                              <th>Date de dépôt</th>
-                              <th>Nom du document</th>
-                              <th class="text-center">Déposant</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr v-for="file in r_files[{{ question.id }}]" :key="file.id">
-                              <td class="text-center">
-                                <div class="fe fe-file"></div>
-                              </td>
-                              <td>
-                                <div>[[  file.creation_date ]]</div>
-                                <div class="small text-muted">[[  file.creation_time ]]</div>
-                              </td>
-                              <td>
-                                <div><a target="_blank" :href="file.url">[[ file.basename ]]</a></div>
-                              </td>
-                              <td class="text-center">
-                                <div>[[ file.author.first_name ]] [[ file.author.last_name ]]</div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        </div>
+                 <div class="card-body">  <!--// opening: question_detail_area  //-->
+                  <answer question_id="{{ question.id }}"></answer>
 
-                        {% if question_files %}
+                                        {% if question_files %}
                         <div class="form-group">
                             <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
                             <ul>
@@ -159,36 +121,24 @@
                             </div>
                         </div>
                         {% endif %}
+              </div>  <!--// closing: question_detail_area  //-->
 
-                        <!-- <div class="form-group">
-                          <label class="form-label">Commentaire facultatif</label>
-                          {% if user.profile.is_audited %}
-                          <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="Texte..."></textarea>
-                          {% else %}
-                          <p>
-                            La convention de partenariat a été datée et signée le 12 mars 2010 (déposer ci-joint avec une note explicative). Depuis le 1er octobre 2017, nous avons initié un groupe de travail avec l'ordonnateur afin de réviser cette convention. Nous vous adressons également les comptes rendus de ces réunions.
-                          </p>
-                          {% endif %}
-                        </div> -->
-
-                    </div>  <!--// closing: question_detail_area  //-->
-
-                    <div class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer" data-toggle="card-collapse">
-                    <i class="fe fe-chevron-up"></i>
-                    </div>
+              <div class="text-center bg-blue cursor-pointer text-white"
+                   style="cursor: pointer"
+                   data-toggle="card-collapse">
+                <i class="fe fe-chevron-up"></i>
+              </div>
 
 
-                  </div> <!--// closing: main_question_area_inside_a_theme  //-->
-              {% endwith %}
-              {% endfor %}
-              {% resetcycle %}
-    </div> <!--// closing: theme_area_containing_questions  //-->
-    {% endfor %}
+              </div> <!--// closing: main_question_area_inside_a_theme  //-->
+            {% endwith %}
+          {% endfor %}
+        {% resetcycle %}
+        </div> <!--// closing: theme_area_containing_questions  //-->
+      {% endfor %}
   </div> <!--// closing: main_list_of_questions  //-->
-</div>
 {% endblock page_content %}
 
-
-{% block extra_js %}
-<script src="{% static 'vue/reload-files.js' %}"></script>
-{% endblock extra_js %}
+{% block js_bundle %}
+  <script src="{% static 'dist/questionnaire-detail-bundle.js' %}"></script>
+{% endblock js_bundle %}
