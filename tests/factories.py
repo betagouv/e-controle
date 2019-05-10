@@ -1,11 +1,11 @@
 import factory
+import time
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from pytest_factoryboy import register
 from faker import Factory as FakerFactory
-
 
 faker = FakerFactory.create('fr_FR')
 
@@ -85,9 +85,10 @@ class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
-            content_type='application/pdf')
+        # random name for file
+        name=str(time.time()),
+        content=open('./tests/data/test.pdf', 'rb').read(),
+        content_type='application/pdf')
 
     class Meta:
         model = 'control.ResponseFile'
