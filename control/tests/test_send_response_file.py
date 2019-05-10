@@ -21,6 +21,7 @@ def test_download_response_file_has_right_filename(client):
     url = reverse('send-response-file', args=[response_file.id])
     response = client.get(url)
 
+    assert response.has_header('Content-Disposition')
     assert response['Content-Disposition'].find(filename) > -1
 
 

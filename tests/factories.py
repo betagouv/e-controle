@@ -1,5 +1,4 @@
 import factory
-import time
 
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -85,8 +84,7 @@ class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
-        # random name for file
-        name=str(time.time()),
+        name='test.pdf',
         content=open('./tests/data/test.pdf', 'rb').read(),
         content_type='application/pdf')
 
