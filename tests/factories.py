@@ -1,5 +1,6 @@
 import factory
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -54,7 +55,7 @@ class QuestionnaireFactory(factory.DjangoModelFactory):
     control = factory.SubFactory(ControlFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
@@ -84,9 +85,9 @@ class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
-        name='test.pdf',
-        content=open('./tests/data/test.pdf', 'rb').read(),
-        content_type='application/pdf')
+            name='test.pdf',
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
+            content_type='application/pdf')
 
     class Meta:
         model = 'control.ResponseFile'
@@ -97,7 +98,7 @@ class QuestionFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
