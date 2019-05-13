@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load basename %}
 
 {% block page_title %}
   {{ questionnaire.title }}
@@ -98,7 +99,7 @@
                             <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
                             <ul>
                               {% for file in question_files %}
-                              <li><a href="{{ file.url }}">{{ file.basename }}</a></li>
+                              <li><a href="{{ file.url }}">{{ file.file|basename }}</a></li>
                               {% endfor %}
                             </ul>
                         </div>
