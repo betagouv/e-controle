@@ -216,3 +216,11 @@ CKEDITOR_CONFIGS = {
         ]
     }
 }
+
+# LDAP configuration for WEBDAV configuration
+
+LDAP_SERVER = env('LDAP_SERVER')
+LDAP_USER = env('LDAP_USER')
+LDAP_DOMAIN = env('LDAP_DOMAIN')
+LDAP_PASSWORD = env('LDAP_PASSWORD')
+LDAP_DC = env('LDAP_DC')
