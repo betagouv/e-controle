@@ -18,7 +18,9 @@ from webdav.ccomptes_dc import CCDomainController
 rootpath = settings.MEDIA_ROOT
 #rootpath = "/opt/e-controle-media/"
 provider = FilesystemProvider(rootpath, readonly=True)
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 config = DEFAULT_CONFIG.copy()
 config.update({

@@ -90,7 +90,7 @@ class CCDomainController(BaseDomainController):
     # We know that the following user exists in the LDAP
     # We now check the realm
     try:
-      logging.debug('Basic auth: LDAP Sever')
+      logging.info(f'Basic auth: LDAP Sever (username: {username})')
       server = Server(settings.LDAP_SERVER, get_info=ALL)
       conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
