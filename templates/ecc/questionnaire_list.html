@@ -21,8 +21,11 @@ Accueil
         {% endif %}
       </div>
       <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
-        <div class="card-title">Questionnaires</div>
-      <div class="card">
+        <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->
+          <div class="card-header border-0">
+              <div class="card-title"><i class="fa fa-question dropdown-icon"></i>Questionnaires</div>
+          </div>
+          <div class="card">
         <table class="table card-table table-vcenter">
           <tbody>
             {% for questionnaire in control.questionnaires.all %}
@@ -62,11 +65,8 @@ Accueil
           </tbody>
         </table>
       </div>
-      <div>
-        <div colspan="2">
-          <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
-        </div>
-      </div>
+        </div> <!--// closing: list of questionnaires for control  //-->
+        <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
 
       </div>  <!--// closing: questionnaire_description_card_body  //-->
     </div>

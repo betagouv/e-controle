@@ -1,9 +1,11 @@
 <template>
-<div class="card card-collapsed border-0 mb-0">
-  <div class="card-header border-0 pl-0" data-toggle="card-collapse">
-    <h5 class="card-title font-weight-bold"><a href="#"><i class="dropdown-icon fe fe-users"></i>Personnes ayant accès au contrôle</a></h5>
-  </div>
-  <div class="card-body">
+<div class="card border-0 card-collapsed">
+    <div class="card-header border-0" data-toggle="card-collapse">
+        <div class="card-title"><i class="fe fe-users dropdown-icon"></i>Personnes ayant accès au contrôle</div>
+        <div class="card-options">
+            <a href="#" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
+        </div>
+    </div>
     <div class="card">
       <div class="card-header pr-0">
         <div class="col">
@@ -30,7 +32,6 @@
 
     <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;"><i class="fe fe-chevron-up"></i></div>
 
-  </div>
 </div>
 </template>
 
