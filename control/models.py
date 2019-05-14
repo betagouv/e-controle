@@ -73,6 +73,13 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     def file_url(self):
         return reverse('send-questionnaire-file', args=[self.id])
 
+    @property
+    def basename(self):
+        """
+        Name of file, without path.
+        """
+        return os.path.basename(self.file.name)
+
     def __str__(self):
         return self.title
 
@@ -124,6 +131,13 @@ class QuestionFile(OrderedModel):
     def url(self):
         return reverse('send-question-file', args=[self.id])
 
+    @property
+    def basename(self):
+        """
+        Name of file, without path.
+        """
+        return os.path.basename(self.file.name)
+
     def __str__(self):
         return self.file.name
 
@@ -153,7 +167,10 @@ class ResponseFile(TimeStampedModel):
 
     @property
     def basename(self):
-        basename = os.path.basename(self.file.name)[11:]
+        """
+        Name of file, without path and without name prefix.
+        """
+        basename = os.path.basename(self.file.name)
         return self.strip_prefix(basename)
 
     def __str__(self):
