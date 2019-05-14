@@ -40,26 +40,23 @@ Accueil
                   </div>
                 {% endif %}
               </td>
-              {% if user.profile.is_audited %}
               <td class="w-1">
-                <a href="{{ questionnaire.url }}">
-                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
+                <a href="{{ questionnaire.url }}"
+                   class="btn btn-primary btn-sm"
+                   {% if user.profile.is_audited %}
+                      title="Déposer et consulter vos réponses"
+                   {% elif user.profile.is_inspector %}
+                       title="Consulter les réponses sur E-contrôle"
+                   {% endif %}
+                >
+                    <i class="fe fe-eye"></i>
+                    {% if user.profile.is_audited %}
+                        Répondre
+                    {% elif user.profile.is_inspector %}
+                        Consulter
+                    {% endif %}
                 </a>
               </td>
-
-              {% elif user.profile.is_inspector %}
-              <td class="w-1">
-                <a href="{{ questionnaire.url }}">
-                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>
-                </a>
-              </td>
-              <!-- <td class="w-1">
-                <a href="#">
-                  <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
-                </a>
-              </td> -->
-              {% endif %}
-
             </tr>
             {% endfor %}
           </tbody>
