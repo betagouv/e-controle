@@ -15,7 +15,7 @@
           <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
         </div>
         <div class="col-auto">
-          <a v-if="sessionUser.is_inspector" href="" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('inspector')" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un contrôleur</a>
+          <a v-if="sessionUser.is_inspector" href="" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('inspector')" class="btn btn-primary"><i class="fe fe-plus"></i>Ajouter un contrôleur</a>
         </div>
       </div>
       <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
@@ -27,7 +27,7 @@
           <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme contrôlé</strong></h3>
         </div>
         <div class="col-auto">
-          <a v-if="sessionUser.is_inspector" href="" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('audited')" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un contrôlé</a>
+          <a v-if="sessionUser.is_inspector" href="" data-toggle="modal" data-target="#addUserModal" @click="updateEditingState('audited')" class="btn btn-primary"><i class="fe fe-plus"></i>Ajouter un contrôlé</a>
         </div>
       </div>
       <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>

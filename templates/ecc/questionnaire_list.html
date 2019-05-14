@@ -16,7 +16,7 @@ Accueil
         <h4 class="page-title">{{ control.title }}</h4>
         {% if debug %}
         <div class="card-options">
-            <a href="/questionnaire/controle-1234/creer" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un questionnaire</a>
+            <a href="/questionnaire/controle-1234/creer" class="btn btn-primary"><i class="fe fe-plus"></i>Ajouter un questionnaire</a>
         </div>
         {% endif %}
       </div>
@@ -33,19 +33,19 @@ Accueil
               <td>
                 <h5>{{ questionnaire.title }}</h5>
                 {% if questionnaire.sent_date %}
-                  <div><i class="dropdown-icon fe fe-send"></i> Date de transmission du questionnaire :
+                  <div><i class="fe fe-send"></i> Date de transmission du questionnaire :
                   {{ questionnaire.sent_date|date:"l d F Y" }}
                   </div>
                 {% endif %}
                 {% if questionnaire.end_date %}
-                  <div><i class="dropdown-icon fe fe-clock"></i> Date de réponse souhaitée :
+                  <div><i class="fe fe-clock"></i> Date de réponse souhaitée :
                     {{ questionnaire.end_date|date:"l d F Y" }}
                   </div>
                 {% endif %}
               </td>
               <td class="w-1">
                 <a href="{{ questionnaire.url }}"
-                   class="btn btn-primary btn-sm"
+                   class="btn btn-primary"
                    {% if user.profile.is_audited %}
                       title="Déposer et consulter vos réponses"
                    {% elif user.profile.is_inspector %}

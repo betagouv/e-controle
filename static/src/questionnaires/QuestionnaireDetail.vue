@@ -6,17 +6,18 @@
             </div>
             <div id="metadata" class="card">
                 <div class="card-body">
+                    <p>
                     {{ questionnaire.metadata.description }}
-
-                    <p v-if="questionnaire.metadata.sent_date" class="font-weight-bold">
-                        <i class="dropdown-icon fe fe-send"></i>
-                        <u>Date de transmission du questionnaire</u> :
+                    </p>
+                    <p v-if="questionnaire.metadata.sent_date">
+                        <i class="fe fe-send"></i>
+                        Date de transmission du questionnaire :
                         {{ questionnaire.metadata.sent_date}}
                     </p>
 
-                    <p v-if="questionnaire.metadata.end_date" class="font-weight-bold">
-                        <i class="dropdown-icon fe fe-clock"></i>
-                        <u>Date de réponse souhaitée</u> :
+                    <p v-if="questionnaire.metadata.end_date">
+                        <i class="fe fe-clock"></i>
+                        Date de réponse souhaitée :
                         {{ questionnaire.metadata.end_date | DateFormat}}
                     </p>
                 </div>
