@@ -15,7 +15,8 @@
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
               <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
-              <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer l'utilisateur</button>            </div>
+              <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer l'utilisateur</button>
+            </div>
             <hr/>
             <div class="form-group">
               <div class="custom-controls-stacked">
