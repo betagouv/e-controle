@@ -20,6 +20,7 @@ from webdav.cc_domain_controller import CCDomainController
 rootpath = settings.MEDIA_ROOT
 
 provider = FilesystemProvider(rootpath, readonly=True)
+import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
