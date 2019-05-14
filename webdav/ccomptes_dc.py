@@ -30,6 +30,7 @@ class CCDomainController(BaseDomainController):
     str
     """
     # we only send the control code
+    logging.debug('Get domain realm: Start')
     if environ is not None:
       environ['HTTP_AUTHORIZATION'] = settings.HTTP_AUTHORIZATION
     realms = list(filter(None, path_info.split('/')))
@@ -82,19 +83,23 @@ class CCDomainController(BaseDomainController):
     False if user is not known or not authorized
     True if user is authorized
     """
+    logging.debug('Start basic auth user')
     username = environ['REMOTE_USER']
     username = username.split('@', 1)[0]
 
     # We know that the following user exists in the LDAP
     # We now check the realm
     try:
+      logging.debug('Basic auth: LDAP Sever')
       server = Server(settings.LDAP_SERVER, get_info=ALL)
       conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
+      logging.debug('Basic auth: LDAP Binding')
       if conn.bind():
         conn.search('DC=ccomptes,DC=re7',
                     f'(&(objectClass=user)(sAMAccountName={username}))',
                     attributes=['mail'])
+        logging.debug('Basic auth: LDAP search')
         if len(conn.entries) == 1:
           email = conn.entries[0].mail.value
           user = User.objects.get(email=email)

@@ -17,23 +17,23 @@ django.setup()
 from webdav.ccomptes_dc import CCDomainController
 rootpath = settings.MEDIA_ROOT
 #rootpath = "/opt/e-controle-media/"
-provider = FilesystemProvider(rootpath, readonly = True)
+provider = FilesystemProvider(rootpath, readonly=True)
 
 
 config = DEFAULT_CONFIG.copy()
 config.update({
-    "provider_mapping": {"/": provider},
-    "http_authenticator": {
-        "domain_controller": CCDomainController,
-        "accept_basic": True, "accept_digest": False,
-        "default_to_digest": False,
-    },
-    "verbose": 4,
-    "enable_loggers": [],
-    "property_manager": True,  # True: use property_manager.PropertyManager
-    "lock_manager": True,  # True: use lock_manager.LockManager
-    })
+  "provider_mapping": {"/": provider},
+  "http_authenticator": {
+    "domain_controller": CCDomainController,
+    "accept_basic": True, "accept_digest": False,
+    "default_to_digest": False,
+  },
+  "verbose": 4,
+  "enable_loggers": [],
+  "property_manager": True,  # True: use property_manager.PropertyManager
+  "lock_manager": True,  # True: use lock_manager.LockManager
+})
 app = WsgiDAVApp(config)
 
 def application(environ, start_response):
-    return app(environ, start_response)
+  return app(environ, start_response)
