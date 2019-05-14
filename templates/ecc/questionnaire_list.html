@@ -14,9 +14,11 @@ Accueil
       <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
       <div class="card-header d-flex align-content-between">
         <h4 class="card-title text-uppercase">{{ control.title }}</h4>
+        {% if debug %}
         <div class="card-options">
             <a href="/questionnaire/controle-1234/creer" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un questionnaire</a>
         </div>
+        {% endif %}
       </div>
       <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
         <div class="card-title">Questionnaires</div>
