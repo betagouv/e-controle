@@ -72,7 +72,7 @@
   Vue.use(VueAxios, axios)
 
   axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   export default Vue.extend({
     store,
