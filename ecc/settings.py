@@ -215,7 +215,6 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION')
 # LDAP configuration for WEBDAV configuration
 
 LDAP_SERVER = env('LDAP_SERVER', default=None)
