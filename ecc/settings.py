@@ -200,9 +200,6 @@ REST_FRAMEWORK = {
 }
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
-LDAP_SERVER = env('LDAP_SERVER', default=None)
-LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
 
 CKEDITOR_CONFIGS = {
@@ -219,8 +216,8 @@ CKEDITOR_CONFIGS = {
 
 # LDAP configuration for WEBDAV configuration
 
-LDAP_SERVER = env('LDAP_SERVER')
-LDAP_USER = env('LDAP_USER')
-LDAP_DOMAIN = env('LDAP_DOMAIN')
-LDAP_PASSWORD = env('LDAP_PASSWORD')
-LDAP_DC = env('LDAP_DC')
+LDAP_SERVER = env('LDAP_SERVER', default=None)
+LDAP_USER = env('LDAP_USER', default=None)
+LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
+LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
+LDAP_DC = env('LDAP_DC', default=None)
