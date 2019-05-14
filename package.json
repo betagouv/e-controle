@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "moment": "^2.24.0",
     "store": "^2.0.12",
     "vue": "^2.6.10",
