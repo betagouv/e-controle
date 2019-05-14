@@ -1,9 +1,9 @@
 from __future__ import print_function
-from ldap3 import Server, Connection, ALL, NTLM
-from wsgidav.dc.base_dc import BaseDomainController
 from ecc import settings
 from django.contrib.auth.models import User
+from ldap3 import Server, Connection, ALL, NTLM
 import logging
+from wsgidav.dc.base_dc import BaseDomainController
 
 
 class CCDomainController(BaseDomainController):
@@ -84,7 +84,7 @@ class CCDomainController(BaseDomainController):
     True if user is authorized
     """
     logging.debug('Start basic auth user')
-    username = environ['REMOTE_USER']
+    username = environ['REMOTE_USER'] # example avalingot@CCOMPTES.FR
     username = username.split('@', 1)[0]
 
     # We know that the following user exists in the LDAP
@@ -96,7 +96,7 @@ class CCDomainController(BaseDomainController):
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
       logging.debug('Basic auth: LDAP Binding')
       if conn.bind():
-        conn.search('DC=ccomptes,DC=re7',
+        conn.search(settings.LDAP_DC,
                     f'(&(objectClass=user)(sAMAccountName={username}))',
                     attributes=['mail'])
         logging.debug('Basic auth: LDAP search')
