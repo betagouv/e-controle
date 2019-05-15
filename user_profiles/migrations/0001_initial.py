@@ -12,7 +12,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('control', '0006_change_meta_options'),
-        ('auth', '0009_alter_user_last_name_max_length'),
     ]
 
     operations = [
