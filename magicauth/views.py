@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
-
+import logging
 from .forms import EmailForm
 from .models import MagicToken
 
@@ -50,7 +50,17 @@ class ValidateTokenView(generic.RedirectView):
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
 
+class ValidateAgentView(generic.RedirectView):
+    url = reverse_lazy('questionnaire-list')
+
+    def get(self, *args, **kwargs):
+        logging.debug(self.request.META['REMOTE_USER'])
+
+        return super().get(*args, **kwargs)
+
 
 magic_link = MagicLinkView.as_view()
 email_sent = generic.TemplateView.as_view(template_name='magicauth/email_sent.html')
 validate_token = ValidateTokenView.as_view()
+
+kerberos_validation = ValidateAgentView.as_view()
