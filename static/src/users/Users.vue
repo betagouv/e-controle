@@ -86,7 +86,7 @@
       ...mapFields([
         'editingControl',
         'editingProfileType',
-        'sessionUser'
+        'sessionUser',
       ]),
     },
     methods: {
