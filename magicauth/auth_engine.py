@@ -9,6 +9,7 @@ class TunedRemoteUserBackend(RemoteUserBackend):
   create_unknown_user=False
 
   def authenticate(self, request, remote_user):
+    logging.debug(remote_user)
     username = remote_user.split('@', 1)[0] # example avalingot@CCOMPTES.FR
 
     try:
@@ -35,4 +36,4 @@ class TunedRemoteUserBackend(RemoteUserBackend):
         raise Exception(f"Can't not access to Active directory server ({settings.LDAP_SERVER})")
     except Exception as e:
       logging.error(e)
-      return False
+      return None
