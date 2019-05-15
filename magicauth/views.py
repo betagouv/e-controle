@@ -54,7 +54,6 @@ class ValidateAgentView(generic.RedirectView):
     url = reverse_lazy('questionnaire-list')
 
     def get(self, *args, **kwargs):
-        logging.debug(self.request.META['REMOTE_USER'])
 
         return super().get(*args, **kwargs)
 
