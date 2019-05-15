@@ -2,89 +2,90 @@
 {% load static %}
 
 {% block page_title %}
-Accueil
+  Accueil
 {% endblock page_title %}
 
 
 {% block page_content %}
-<div class="row row-cards" id="questionnaire-list-vm">
-  <div class="col-lg-12">
-    {% for control in controls %}
-    <div class="card">
-      <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
-      <div class="card-header d-flex align-content-between">
-        <h4 class="card-title text-uppercase">{{ control.title }}</h4>
-        {% if debug %}
-        <div class="card-options">
-            <a href="/questionnaire/controle-1234/creer" class="btn btn-primary btn-sm"><i class="fe fe-plus"></i>Ajouter un questionnaire</a>
+  <div class="row row-cards" id="questionnaire-list-vm">
+    <div class="col-lg-12">
+      {% for control in controls %}
+        <div class="card">
+          <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
+          <div class="card-header">
+            <h4 class="page-title">{{ control.title }}</h4>
+            {% if debug %}
+              <div class="card-options">
+                <a href="/questionnaire/controle-1234/creer" class="btn btn-primary">
+                  <i class="fe fe-plus"></i>
+                  Ajouter un questionnaire
+                </a>
+              </div>
+            {% endif %}
+          </div>
+          <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
+            <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->
+              <div class="card-header border-0">
+                <div class="card-title"><i class="fa fa-question dropdown-icon"></i>Questionnaires</div>
+              </div>
+              <div class="card">
+                <table class="table card-table table-vcenter">
+                  <tbody>
+                  {% for questionnaire in control.questionnaires.all %}
+                    <tr>
+                      <td>
+                        <h5>{{ questionnaire.title }}</h5>
+                        {% if questionnaire.sent_date %}
+                          <div><i class="fe fe-send"></i> Date de transmission du questionnaire :
+                            {{ questionnaire.sent_date|date:"l d F Y" }}
+                          </div>
+                        {% endif %}
+                        {% if questionnaire.end_date %}
+                          <div><i class="fe fe-clock"></i> Date de réponse souhaitée :
+                            {{ questionnaire.end_date|date:"l d F Y" }}
+                          </div>
+                        {% endif %}
+                      </td>
+                      <td class="w-1">
+                        <a href="{{ questionnaire.url }}"
+                           class="btn btn-primary"
+                            {% if user.profile.is_audited %}
+                           title="Déposer et consulter vos réponses"
+                            {% elif user.profile.is_inspector %}
+                           title="Consulter les réponses sur E-contrôle"
+                            {% endif %}
+                        >
+                          <i class="fe fe-eye"></i>
+                          {% if user.profile.is_audited %}
+                            Répondre
+                          {% elif user.profile.is_inspector %}
+                            Consulter
+                          {% endif %}
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div> <!--// closing: list of questionnaires for control  //-->
+
+            <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
+
+          </div>  <!--// closing: questionnaire_description_card_body  //-->
         </div>
-        {% endif %}
-      </div>
-      <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
-        <div class="card-title">Questionnaires</div>
-      <div class="card">
-        <table class="table card-table table-vcenter">
-          <tbody>
-            {% for questionnaire in control.questionnaires.all %}
-            <tr>
-              <td>
-                <h5>{{ questionnaire.title }}</h5>
-                {% if questionnaire.sent_date %}
-                  <div><i class="dropdown-icon fe fe-send"></i> Date de transmission du questionnaire :
-                  {{ questionnaire.sent_date|date:"l d F Y" }}
-                  </div>
-                {% endif %}
-                {% if questionnaire.end_date %}
-                  <div><i class="dropdown-icon fe fe-clock"></i> Date de réponse souhaitée :
-                    {{ questionnaire.end_date|date:"l d F Y" }}
-                  </div>
-                {% endif %}
-              </td>
-              {% if user.profile.is_audited %}
-              <td class="w-1">
-                <a href="{{ questionnaire.url }}">
-                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Déposer et consulter vos réponses"> Répondre</button>
-                </a>
-              </td>
-
-              {% elif user.profile.is_inspector %}
-              <td class="w-1">
-                <a href="{{ questionnaire.url }}">
-                  <button type="submit" class="fe fe-eye btn btn-primary btn-blue" title="Consulter les réponses sur E-contrôle"> Consulter</button>
-                </a>
-              </td>
-              <!-- <td class="w-1">
-                <a href="#">
-                  <button type="submit" class="fe fe-folder btn btn-primary btn-yellow" title="Explorer les réponses dans mon navigateur windows"> Explorer</button>
-                </a>
-              </td> -->
-              {% endif %}
-
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <div colspan="2">
-          <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
-        </div>
-      </div>
-
-      </div>  <!--// closing: questionnaire_description_card_body  //-->
+      {% endfor %}
     </div>
-    {% endfor %}
+
+    <add-user-modal></add-user-modal>
+
+    <update-user-modal></update-user-modal>
+
+    <remove-user-modal></remove-user-modal>
+
   </div>
-
-  <add-user-modal></add-user-modal>
-
-  <update-user-modal></update-user-modal>
-
-  <remove-user-modal></remove-user-modal>
-
-</div>
 {% endblock page_content %}
 
 {% block js_bundle %}
-    <script src="{% static 'dist/questionnaire-list-bundle.js' %}"></script>
+  <script src="{% static 'dist/questionnaire-list-bundle.js' %}"></script>
 {% endblock js_bundle %}

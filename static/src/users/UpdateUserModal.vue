@@ -14,7 +14,13 @@
           <fieldset class="form-fieldset">
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
-              <p class="small text-muted">Si cet email est erroné, vous pouvez le <button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)">Supprimer</button></p>
+              <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
+              <button class="btn btn-secondary btn-sm"
+                      data-toggle="modal"
+                      data-target="#removeUserModal"
+                      @click="updateEditingState(user)">
+                Supprimer l'utilisateur
+              </button>
             </div>
             <hr/>
             <div class="form-group">
@@ -71,7 +77,7 @@
   Vue.use(VueAxios, axios)
 
   axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   export default Vue.extend({
     store,
