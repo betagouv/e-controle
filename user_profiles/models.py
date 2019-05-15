@@ -21,8 +21,6 @@ class UserProfile(models.Model):
     send_files_report = models.BooleanField(
         verbose_name="Envoie Rapport de Fichiers", default=False,
         help_text="Envoyer par email le rapport des fichiers uplodés ?")
-    active_directory_name = models.CharField(
-        max_length=255, blank=True, verbose_name="Login sur l'active directory de la cour")
 
     objects = UserProfileQuerySet.as_manager()
 
