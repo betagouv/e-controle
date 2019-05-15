@@ -36,6 +36,7 @@ urlpatterns = [
     path('fichier-question/<int:pk>/', control_views.send_question_file, name='send-question-file'),
     path('fichier-reponse/<int:pk>/', control_views.send_response_file, name='send-response-file'),
     path('admin/', admin.site.urls),
+    path('login-agent/', magicauth_views.kerberos_validation),
 ]
 
 urlpatterns += [
