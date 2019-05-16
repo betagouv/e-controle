@@ -56,6 +56,8 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('admin/docs/', include('django.contrib.admindocs.urls'))]
     urlpatterns += [path('api/docs/', include_docs_urls(title='e-contrôle API'))]
+    urlpatterns += path('demo1/', ecc_views.demo_inspector, name='demo-inspector'),
+    urlpatterns += path('demo2/', ecc_views.demo_audited, name='demo-audited'),
 
 
 TESTING_MODE = 'test' in sys.argv[0]  # We want to enable the toolbar when runing tests
