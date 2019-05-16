@@ -46,7 +46,7 @@ class ValidateTokenView(generic.RedirectView):
                 "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
             return redirect('login')
-        login(self.request, token.user)
+        login(self.request, token.user, backend='django.contrib.auth.backends.ModelBackend')
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
 
