@@ -1,66 +1,105 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<div class="page">
-  <div class="main-page">
-    <div class="container">
-      <div class="my-3 my-md-5">
-      <div class="row row-cards">
-        <div class="col col-login col-6 mx-auto">
-          <form class="card" action="{% url 'magicauth-login' %}" method="post">
-            {% csrf_token %}
-
-            <div class="text-center mb-6">
-              <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" />
-            </div>
-            <div class="card-body p-4">
+  <div class="page">
+    <div class="main-page">
+      <div class="container">
+        {#        <div class="my-5 my-md-8">#}
+        {##}
+        <div class="row row-cards">
+          <div class="col col-5 mx-auto card">
+            <div class="card-body">
+              <div class="text-center card-title  mb-6">
+                <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" />
+              </div>
               <div class="card-center text-center card-title">Consulter et déposer les réponses aux questionnaires</div>
 
               {% if user.is_authenticated %}
-              <div class="alert alert-info text-center" role="alert">
-              Vous êtes déjà connecté
-              </div>
-              <div class="text-center">
-                <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
-                <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
-              </div>
+                <div class="alert alert-info text-center" role="alert">
+                  Vous êtes déjà connecté
+                </div>
+                <div class="text-center">
+                  <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
+                  <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
+                </div>
               {% else %}
-              {% if messages %}
-              <div class="text-center" role="alert">
-                {% for message in messages %}
-                <p {% if message.tags %}class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
-                {% endfor %}
-              </div>
-               {% endif %}
 
-              <div class="form-group">
-                <label class="text-uppercase form-label">Se connecter</label>
-                <input type="email" name="email"
-                       class="form-control {% if form.errors %}state-invalid {% endif %}"
-                       id="id_email" aria-describedby="emailHelp"
-                       placeholder="Votre email professionnel" required />
+                <label class="text-uppercase text-center form-label">Se connecter</label>
                 {% for error in form.email.errors %}
-                <div class="alet alert-danger text-center">{{ error }}</div>
+                  <div class="alert alert-danger text-center">{{ error }}</div>
                 {% endfor %}
-              </div>
-              <div class="form-footer">
-                <button type="submit" class="btn btn-primary btn-block">Valider</button>
-                <a href="/login-agent/" class="btn btn-primary btn-block" >Agent de la cour ?</a>
-              </div>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-6">
+                      {#                      <div class="col-6">#}
+                      <button class="btn btn-primary btn-block"
+                              style="white-space: normal;"
+                              data-toggle="collapse"
+                              href="#loginForm"
+                              role="button"
+                              aria-expanded="{% if messages %}true{% else %}false{% endif %}"
+                              aria-controls="loginForm"
+                      >
+                        Organisme controlé
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <a href="/login-agent/"
+                         class="btn btn-primary btn-block"
+                         style="white-space: normal;"
+                      >
+                        Equipe de contrôle
+                      </a>
+                    </div>
+                    {% if messages %}
+                      <div class="row pt-3">
+                        <div class="col-12">
+                          <div class="text-center" role="alert">
+                            {% for message in messages %}
+                              <p {% if message.tags %}class="alert alert-{{ message.tags }} mb-0"{% endif %}>{{ message }}</p>
+                            {% endfor %}
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="row pt-3">
+                    <div class="col-12 collapse {% if messages %}show{% endif %}" id="loginForm">
+                      <form
+                          action="{% url 'magicauth-login' %}"
+                          method="post"
+                      >
+                        {% csrf_token %}
+                        <input type="email" name="email"
+                               class="form-control {% if form.errors %}state-invalid {% endif %}"
+                               id="id_email" aria-describedby="emailHelp"
+                               placeholder="Votre email professionnel" required />
+                        <div class="form-footer">
+                          <button type="submit" class="btn btn-primary btn-block">Valider</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+
+                  {#                      </div>#}
+                  {#                      <div class="col-6">#}
+                  {#                      </div>#}
+                </div>
+
               {% endif %}
             </div>
-          </form>
-          <div class="text-center text-muted">
-            Vous rencontrez des difficultés pour vous connecter?
-            <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
-          </div>
-          <div class="text-center">
-            <img src="{% static 'img/logo-cc.jpg' %}" alt="logo-cc" />
+            <div class="text-center text-muted">
+              Vous rencontrez des difficultés pour vous connecter?
+              <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
+            </div>
+            <div class="text-center">
+              <img src="{% static 'img/logo-cc.jpg' %}" alt="logo-cc" />
+            </div>
           </div>
         </div>
       </div>
+      {#      </div>#}
     </div>
   </div>
-</div>
-</div>
 {% endblock content %}

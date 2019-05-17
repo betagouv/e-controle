@@ -57,6 +57,11 @@ class ValidateAgentView(generic.RedirectView):
         logging.debug(f'Logging {self.request.user}')
         if self.request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
+        messages.warning(
+          self.request,
+          "Vous n'êtes actuellement pas connecter au réseau des JF. Pour vous connecter, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
+        )
+
         return super().get(*args, **kwargs)
 
 
