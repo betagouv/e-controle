@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import Answer from './details/Answer'
 import Dropzone from 'dropzone';
 import Question from './details/Question';
