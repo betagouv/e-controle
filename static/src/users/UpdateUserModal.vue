@@ -17,7 +17,7 @@
               <button class="btn btn-secondary btn-sm"
                       data-toggle="modal"
                       data-target="#removeUserModal"
-                      @click="updateEditingState(user)">
+                      @click="hideModal">
                 Supprimer l'utilisateur
               </button>
             </div>
@@ -97,6 +97,8 @@
     },
     methods: {
       hideModal() {
+        this.hasErrors = false
+        this.errors = {}
         $('.update-user-modal').modal('hide');
       },
       updateUser() {
@@ -110,13 +112,6 @@
             this.hasErrors = true
             this.errors = error.response.data
           })
-      },
-      remove(user) {
-        this.hideModal()
-        this.editingControl = this.control
-        this.editingUser = user
-        this.hasErrors = false
-        this.errors = {}
       }
     }
   })
