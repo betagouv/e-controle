@@ -53,7 +53,8 @@
     methods: {
       updateEditingState(user) {
         this.editingControl = this.control
-        this.editingUser = user
+        this.editingUser = {}
+        Object.assign(this.editingUser, user)
       }
     }
   });
