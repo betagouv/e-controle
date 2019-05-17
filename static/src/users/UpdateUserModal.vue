@@ -10,8 +10,7 @@
         <div v-if="hasErrors" class="alert alert-danger">
           L'envoi de ce formulaire n'a pas fonctionné.
         </div>
-        <form @submit.prevent="updateUser">
-          <fieldset class="form-fieldset">
+
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
               <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
@@ -23,6 +22,8 @@
               </button>
             </div>
             <hr/>
+        <form @submit.prevent="updateUser">
+          <fieldset class="form-fieldset">
             <div class="form-group">
               <div class="custom-controls-stacked">
                 <label class="custom-control custom-radio custom-control-inline">
