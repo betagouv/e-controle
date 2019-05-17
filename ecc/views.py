@@ -23,8 +23,8 @@ class DemoView(View):
             raise Http404
         logout(request)
         user = User.objects.filter(username=self.demo_username).first()
-        is_not_admin = not user.is_staff and not user.is_superuser
-        if user is not None and is_not_admin:
+        is_not_admin = user and not user.is_staff and not user.is_superuser
+        if is_not_admin:
             django_login(request, user)
             return HttpResponseRedirect(reverse('questionnaire-list'))
         return HttpResponseRedirect(reverse('login'))
