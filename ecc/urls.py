@@ -48,7 +48,7 @@ urlpatterns = [
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
-    path('login-agent/', magicauth_views.kerberos_validation),
+    path(f'{settings.AGENT_LOGIN_URL}', magicauth_views.kerberos_validation),
 ]
 
 urlpatterns += [
