@@ -56,6 +56,8 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += [path('admin/docs/', include('django.contrib.admindocs.urls'))]
     urlpatterns += [path('api/docs/', include_docs_urls(title='e-contrôle API'))]
+
+if settings.DEBUG and settings.ALLOW_DEMO_LOGIN:
     urlpatterns += path('demo-controleur/', ecc_views.demo_inspector, name='demo-inspector'),
     urlpatterns += path('demo-controle/', ecc_views.demo_audited, name='demo-audited'),
 

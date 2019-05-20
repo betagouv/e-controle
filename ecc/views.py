@@ -19,7 +19,7 @@ class DemoView(View):
     demo_username = None
 
     def get(self, request):
-        if not settings.DEBUG:
+        if not settings.DEBUG or not settings.ALLOW_DEMO_LOGIN:
             raise Http404
         logout(request)
         user = User.objects.filter(username=self.demo_username).first()
