@@ -1,4 +1,4 @@
-from pytest import mark, raises
+from pytest import mark
 
 from django.shortcuts import reverse
 from django.test import override_settings
