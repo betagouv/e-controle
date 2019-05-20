@@ -14,15 +14,12 @@
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
               <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
-              <button class="btn btn-secondary btn-sm"
-                      data-toggle="modal"
-                      data-target="#removeUserModal"
-                      @click="updateEditingState(user)">
+              <button class="btn btn-secondary btn-sm" @click="showRemoveModal">
                 Supprimer l'utilisateur
               </button>
             </div>
             <hr/>
-        <form @submit.prevent="updateUser">
+        <form @submit.prevent="updateUser" @keydown.esc="resetFormData">
           <fieldset class="form-fieldset">
             <div class="form-group">
               <div class="custom-controls-stacked">
@@ -39,12 +36,12 @@
             </div>
             <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="editingUser.first_name">
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="editingUser.first_name" required>
               <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
               <label class="form-label">Nom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name">
+              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name" required>
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
@@ -54,7 +51,7 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
         </form>
@@ -96,27 +93,29 @@
       ]),
     },
     methods: {
-      hideModal() {
-        $('.update-user-modal').modal('hide');
+      showRemoveModal() {
+        this.hideThisModal()
+        $('#removeUserModal').modal('show');
+      },
+      hideThisModal() {
+        this.resetFormData()
+        $('#updateUserModal').modal('hide');
+      },
+      resetFormData() {
+        this.hasErrors = false
+        this.errors = []
       },
       updateUser() {
         this.axios.post('/api/user/', this.editingUser)
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
-            this.hideModal()
+            this.hideThisModal()
           })
           .catch((error) => {
             this.hasErrors = true
             this.errors = error.response.data
           })
-      },
-      remove(user) {
-        this.hideModal()
-        this.editingControl = this.control
-        this.editingUser = user
-        this.hasErrors = false
-        this.errors = {}
       }
     }
   })

@@ -17,7 +17,7 @@
             <h4><i class="fe fe-user mr-2"></i><strong>Organisme contrôlé</strong></h3>
         </div>
 
-        <form @submit.prevent="findUser" v-if="showStep1">
+        <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
           <fieldset class="form-fieldset">
             <div class="form-group">
               <label class="form-label">Email<span class="form-required"></span></label>
@@ -26,12 +26,12 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Suivant</button>
           </div>
         </form>
 
-        <form @submit.prevent="addUser" v-if="showStep2">
+        <form @submit.prevent="addUser" v-if="showStep2" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <p class="form-label">Email : {{ formData.email}}</p>
           </div>
@@ -59,7 +59,7 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
@@ -112,8 +112,9 @@
       ]),
     },
     methods: {
-      hideModal() {
-        $('.add-user-modal').modal('hide');
+      hideThisModal() {
+          this.resetFormData()
+        $('#addUserModal').modal('hide');
       },
       resetFormData() {
         this.formData = {
@@ -128,6 +129,7 @@
         this.showStep2 = false
         this.foundUser = false
         this.hasErrors = false
+        this.errors = []
       },
       addUser() {
         this.formData.controls.push(this.editingControl.id)
@@ -136,8 +138,7 @@
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
-            this.resetFormData()
-            this.hideModal()
+            this.hideThisModal()
           })
           .catch((error) => {
             this.hasErrors = true
