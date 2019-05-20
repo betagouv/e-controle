@@ -17,7 +17,7 @@
             <h4><i class="fe fe-user mr-2"></i><strong>Organisme contrôlé</strong></h3>
         </div>
 
-        <form @submit.prevent="findUser" v-if="showStep1">
+        <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
           <fieldset class="form-fieldset">
             <div class="form-group">
               <label class="form-label">Email<span class="form-required"></span></label>
@@ -31,7 +31,7 @@
           </div>
         </form>
 
-        <form @submit.prevent="addUser" v-if="showStep2">
+        <form @submit.prevent="addUser" v-if="showStep2" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <p class="form-label">Email : {{ formData.email}}</p>
           </div>
@@ -128,6 +128,7 @@
         this.showStep2 = false
         this.foundUser = false
         this.hasErrors = false
+        this.errors = []
       },
       addUser() {
         this.formData.controls.push(this.editingControl.id)
