@@ -14,10 +14,7 @@
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
               <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
-              <button class="btn btn-secondary btn-sm"
-                      data-toggle="modal"
-                      data-target="#removeUserModal"
-                      @click="hideModal">
+              <button class="btn btn-secondary btn-sm" @click="showRemoveModal">
                 Supprimer l'utilisateur
               </button>
             </div>
@@ -54,7 +51,7 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Modifier</button>
           </div>
         </form>
@@ -96,9 +93,13 @@
       ]),
     },
     methods: {
-      hideModal() {
+      showRemoveModal() {
+        this.hideThisModal()
+        $('#removeUserModal').modal('show');
+      },
+      hideThisModal() {
         this.resetFormData()
-        $('.update-user-modal').modal('hide');
+        $('#updateUserModal').modal('hide');
       },
       resetFormData() {
         this.hasErrors = false
@@ -109,7 +110,7 @@
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
-            this.hideModal()
+            this.hideThisModal()
           })
           .catch((error) => {
             this.hasErrors = true

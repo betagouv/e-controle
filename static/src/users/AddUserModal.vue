@@ -26,7 +26,7 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Suivant</button>
           </div>
         </form>
@@ -59,7 +59,7 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="resetFormData">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
@@ -112,8 +112,9 @@
       ]),
     },
     methods: {
-      hideModal() {
-        $('.add-user-modal').modal('hide');
+      hideThisModal() {
+          this.resetFormData()
+        $('#addUserModal').modal('hide');
       },
       resetFormData() {
         this.formData = {
@@ -137,8 +138,7 @@
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
-            this.resetFormData()
-            this.hideModal()
+            this.hideThisModal()
           })
           .catch((error) => {
             this.hasErrors = true
