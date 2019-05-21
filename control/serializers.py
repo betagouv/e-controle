@@ -32,20 +32,20 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'description', 'response_files')
+        fields = ('id', 'description', 'response_files', 'theme')
 
 
 class ThemeSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
+    questions = QuestionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Theme
-        fields = ('id', 'title', 'questions')
-        # not serialized : questionnaire, order
+        fields = ('id', 'title', 'questionnaire', 'questions')
+        # not serialized : order
 
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
-    themes = ThemeSerializer(many=True)
+    themes = ThemeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Questionnaire

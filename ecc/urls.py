@@ -19,6 +19,7 @@ admin.site.site_header = 'e-contrôle Administration'
 router = routers.DefaultRouter()
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
 router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basename='questionnaire')
+router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
 
 
