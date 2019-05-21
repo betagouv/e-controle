@@ -106,6 +106,16 @@ def test_questionnaire_create_theme_and_questions_are_hydrated():
     assert question['theme'] == theme['id']
 
 
+def test_questionnaire_create_fails_without_control_id():
+    control = factories.ControlFactory()
+    user = make_user(control)
+    json = make_test_json(control.id)
+    json.pop('control')
+
+    response = call_questionnaire_list_api(user, json)
+    assert response.status_code == 400
+
+
 #### Question API ####
 
 def call_question_api(user, id):

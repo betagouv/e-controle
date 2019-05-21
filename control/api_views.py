@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
+from rest_framework.response import Response
 
 from .models import Question, Questionnaire, Theme
 
@@ -45,6 +46,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
+        if 'control' not in request.data:
+            return Response('Questionnaire needs a "control" field.', status=status.HTTP_400_BAD_REQUEST)
+
+        control_id = int(request.data['control'])
+        if not request.user.profile.controls.filter(id=control_id).exists():
+            return Response('Users can only create questionnaires in controls that they belong to.',
+                            status=status.HTTP_403_FORBIDDEN)
+
         themes_data = request.data.pop('themes')
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
