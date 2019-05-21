@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 
-from .models import Question
+from .models import Question, Questionnaire
 
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, QuestionnaireSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -25,3 +25,13 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
             dict_data[question_id] = elem
         response.data = dict_data
         return response
+
+
+class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = QuestionnaireSerializer
+
+    def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        return queryset
+
