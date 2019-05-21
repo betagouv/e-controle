@@ -2,7 +2,6 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from .models import Question, Questionnaire, Theme
-
 from .serializers import QuestionSerializer, QuestionnaireSerializer, ThemeSerializer
 
 
