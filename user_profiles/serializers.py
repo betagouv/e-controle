@@ -11,21 +11,13 @@ from .models import UserProfile
 User = get_user_model()
 
 
-class ControlPKField(serializers.PrimaryKeyRelatedField):
-
-    def get_queryset(self):
-        user = self.context['request'].user
-        queryset = user.profile.controls.all()
-        return queryset
-
-
 class RemoveControlSerializer(serializers.Serializer):
     control = serializers.PrimaryKeyRelatedField(queryset=Control.objects.all())
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='user.pk', read_only=True)
-    controls = ControlPKField(many=True)
+    controls = serializers.PrimaryKeyRelatedField(many=True, queryset=Control.objects.all())
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     email = serializers.EmailField(source='user.email')
@@ -60,10 +52,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
             profile = UserProfile.objects.create(**profile_data)
             action_details['verb'] = 'add user'
         action_details['action_object'] = profile
-        for control in controls_data:
-            if control not in profile.controls.all():
-                profile.controls.add(control)
-                action_details['verb'] = 'add user'
-                action_details['target'] = control
+        controls_to_be_added = [c for c in controls_data if c not in profile.controls.all()]
+        for control in controls_to_be_added:
+            session_user = self.context['request'].user
+            if control not in session_user.profile.controls.all():
+                raise serializers.ValidationError(
+                    f"{session_user} n'est pas authorisé à modifier ce contrôle: {control}")
+            profile.controls.add(control)
+            action_details['verb'] = 'add user'
+            action_details['target'] = control
         action.send(**action_details)
         return profile
