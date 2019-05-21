@@ -1,14 +1,18 @@
 {
   "name": "e-controle",
   "scripts": {
-    "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
-    "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
-    "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail ",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
-    "build-all": "npm run build-questionnaire-list & npm run build-questionnaire-create"
+    "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
+    "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
+    "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
+    "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
+    "dropzone": "^5.5.1",
     "moment": "^2.24.0",
     "store": "^2.0.12",
     "vue": "^2.6.10",

@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import { mapActions } from 'vuex'
 import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'

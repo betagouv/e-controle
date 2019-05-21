@@ -1,11 +1,11 @@
 import factory
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 from pytest_factoryboy import register
 from faker import Factory as FakerFactory
-
 
 faker = FakerFactory.create('fr_FR')
 
@@ -55,7 +55,7 @@ class QuestionnaireFactory(factory.DjangoModelFactory):
     control = factory.SubFactory(ControlFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
@@ -86,7 +86,7 @@ class ResponseFileFactory(factory.DjangoModelFactory):
     author = factory.SubFactory(UserFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
@@ -98,7 +98,7 @@ class QuestionFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     file = SimpleUploadedFile(
             name='test.pdf',
-            content=open('./tests/data/test.pdf', 'rb').read(),
+            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
             content_type='application/pdf')
 
     class Meta:
