@@ -84,7 +84,31 @@ def test_audited_cannot_create_user():
     response = client.post(url, post_data)
     count_after = User.objects.count()
     assert count_after == count_before
-    assert response.status_code != 201
+    assert response.status_code >= 300
+
+
+def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():
+    inspector = factories.UserProfileFactory(profile_type='inspector')
+    control = factories.ControlFactory()
+    existing_user = factories.UserFactory()
+    assert control not in inspector.controls.all()
+    assert control not in existing_user.profile.controls.all()
+    post_data = {
+        'first_name': existing_user.first_name,
+        'last_name': existing_user.last_name,
+        'profile_type': 'audited',
+        'email': existing_user.email,
+        'organization': '',
+        'controls': [control.id]
+    }
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    response = client.post(url, post_data)
+    count_after = User.objects.count()
+    assert response.status_code >= 300
+    assert count_after == count_before
+    assert control not in existing_user.profile.controls.all()
 
 
 def test_inspector_can_remove_user_from_control():
