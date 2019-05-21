@@ -14,7 +14,7 @@
             </span>
           </span>
         </template>
-        <template v-if="annexe_count">
+        <template v-if="annexe_count > 0">
           <span class="tag tag-orange pull-left">
             {{ annexe_count }} fichier{{ annexe_count===1 ? '': 's' }} annexe{{ annexe_count===1 ? '': 's' }}
             <span class="tag-addon">
