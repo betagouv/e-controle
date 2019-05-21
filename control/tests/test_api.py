@@ -121,6 +121,7 @@ def test_questionnaire_create_fails_without_control_id():
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 403
 
+
 #### Question API ####
 
 def call_question_api(user, id):

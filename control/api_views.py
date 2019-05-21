@@ -2,10 +2,6 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 
 from .models import Question, Questionnaire, Theme
-<<<<<<< ce3f3dee1ec129d8bda987fa6a8889a426469b15
-=======
-
->>>>>>> Added themes api. Writeable questionnaire api.
 from .serializers import QuestionSerializer, QuestionnaireSerializer, ThemeSerializer
 
 
