@@ -11,26 +11,121 @@ pytestmark = mark.django_db
 client = APIClient()
 
 
+def make_user(control):
+    user = factories.UserFactory()
+    user.profile.controls.add(control)
+    user.profile.save()
+    return user
+
+
+#### Questionnaire API ####
+
+def call_questionnaire_detail_api(user, id):
+    utils.login(client, user=user)
+    url = reverse('api:questionnaire-detail', args=[id])
+    response = client.get(url)
+    return response
+
+
+def call_questionnaire_list_api(user, json):
+    utils.login(client, user=user)
+    url = reverse('api:questionnaire-list')
+    response = client.post(url, json, format='json')
+    return response
+
+
+def make_test_json(control_id):
+    return {
+        "title": "questionnaire questionnaire",
+        "control": str(control_id),
+        "themes": [
+           {
+              "title": "theme theme theme",
+              "questions": [
+                {
+                  "description": "bliblibli"
+                }
+              ]
+           }
+        ]
+    }
+
+
+def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
+    questionnaire = factories.QuestionnaireFactory()
+    user = make_user(questionnaire.control)
+
+    assert call_questionnaire_detail_api(user, questionnaire.id).status_code == 200
+
+    json = make_test_json(questionnaire.control.id)
+    assert call_questionnaire_list_api(user, json).status_code == 201
+
+
+def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
+    questionnaire_in = factories.QuestionnaireFactory()
+    questionnaire_out = factories.QuestionnaireFactory()
+    assert questionnaire_in.control.id != questionnaire_out.control.id
+    user = make_user(questionnaire_in.control)
+
+    assert call_questionnaire_detail_api(user, questionnaire_out.id).status_code != 200
+
+    json = make_test_json(questionnaire_out.control.id)
+    assert call_questionnaire_list_api(user, json).status_code != 201
+
+
+def test_no_access_to_questionnaire_api_for_anonymous():
+    question = factories.QuestionFactory()
+
+    url = reverse('api:questionnaire-detail', args=[question.id])
+    response = client.get(url)
+    assert response.status_code == 403
+
+    json = make_test_json(question.theme.questionnaire.control.id)
+    url = reverse('api:questionnaire-list')
+    response = client.post(url, json, format='json')
+    assert response.status_code == 403
+
+
+def test_questionnaire_create_theme_and_questions_are_hydrated():
+    control = factories.ControlFactory()
+    user = make_user(control)
+    json = make_test_json(control.id)
+
+    response = call_questionnaire_list_api(user, json)
+    assert 200 <= response.status_code < 300
+
+    questionnaire = response.data
+    assert questionnaire['id'] > -1
+
+    theme = response.data['themes'][0]
+    assert theme['id'] > -1
+    assert theme['questionnaire'] == questionnaire['id']
+
+    question = theme['questions'][0]
+    assert question['id'] > -1
+    assert question['theme'] == theme['id']
+
+
+#### Question API ####
+
+def call_question_api(user, id):
+    utils.login(client, user=user)
+    url = reverse('api:question-detail', args=[id])
+    response = client.get(url)
+    return response
+
+
 def test_can_access_question_api_if_control_is_associated_with_the_user():
     question = factories.QuestionFactory()
-    user = factories.UserFactory()
-    user.profile.controls.add(question.theme.questionnaire.control)
-    user.profile.save()
-    utils.login(client, user=user)
-    url = reverse('api:question-detail', args=[question.id])
-    response = client.get(url)
-    assert response.status_code == 200
+    user = make_user(question.theme.questionnaire.control)
+    assert call_question_api(user, question.id).status_code == 200
 
 
 def test_no_access_to_question_api_if_control_is_not_associated_with_the_user():
     question_in = factories.QuestionFactory()
     question_out = factories.QuestionFactory()
-    user = factories.UserFactory()
-    user.profile.controls.add(question_in.theme.questionnaire.control)
-    utils.login(client, user=user)
-    url = reverse('api:question-detail', args=[question_out.id])
-    response = client.get(url)
-    assert response.status_code != 200
+    user = make_user(question_in.theme.questionnaire.control)
+    assert call_question_api(user, question_out.id).status_code != 200
 
 
 def test_no_access_to_question_api_for_anonymous():
@@ -42,11 +137,10 @@ def test_no_access_to_question_api_for_anonymous():
 
 def test_response_file_listed_in_question_endpoint():
     response_file = factories.ResponseFileFactory()
-    user = response_file.author
     question = response_file.question
-    user.profile.controls.add(response_file.question.theme.questionnaire.control)
+    user = response_file.author
+    user.profile.controls.add(question.theme.questionnaire.control)
     user.profile.save()
-    utils.login(client, user=response_file.author)
-    url = reverse('api:question-detail', args=[question.id])
-    response = client.get(url)
+
+    response = call_question_api(user, question.id)
     assert response_file.basename in str(response.content)
