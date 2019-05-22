@@ -1,7 +1,7 @@
 from actstream import action
 from rest_framework import status, viewsets
-from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Question, Questionnaire, Theme
 from .serializers import QuestionSerializer, QuestionnaireSerializer, ThemeSerializer
@@ -47,21 +47,61 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        serializer = QuestionnaireSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        control_id = serializer.data['control']
-        if not request.user.profile.controls.filter(id=control_id).exists():
-            return Response('Users can only create questionnaires in controls that they belong to.',
-                            status=status.HTTP_403_FORBIDDEN)
-
-        themes_data = request.data.pop('themes', [])
+        qr_to_save = self.validate_all(request)
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
-        saved_themes = self.save_themes_and_questions(themes_data, response.data['id'])
 
-        response.data['themes'] = saved_themes
+        questionnaire_id = response.data['id']
+        for theme_to_save in qr_to_save['themes']:
+            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=questionnaire_id))
+            response.data['themes'].append(theme_to_save['serializer'].data)
+            theme_id = theme_to_save['serializer'].data['id']
+            for question_to_save in theme_to_save['questions']:
+                question_to_save['serializer'].save(theme=Theme.objects.get(id=theme_id))
+                response.data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
+
         self.log_action(request, response)
         return response
+
+    def validate_all(self, request):
+        qr_to_save = {
+            'serializer': self.validate(QuestionnaireSerializer, 'questionnaire', request.data),
+            'themes': []
+        }
+
+        control_id = qr_to_save['serializer'].data['control']
+        if not request.user.profile.controls.filter(id=control_id).exists():
+            e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
+                                code=status.HTTP_403_FORBIDDEN)
+            raise e
+
+        themes_data = request.data.pop('themes', [])
+        qr_to_save['themes'] = []
+        for theme_data in themes_data:
+            questions_data = theme_data.pop('questions', [])
+            theme_to_save = {
+                'serializer': self.validate(ThemeSerializer, 'theme', theme_data),
+                'questions': []
+            }
+            for question_data in questions_data:
+                question_to_save = {
+                    'serializer': self.validate(QuestionSerializer, 'question', question_data),
+                }
+                theme_to_save['questions'].append(question_to_save)
+            qr_to_save['themes'].append(theme_to_save)
+
+        return qr_to_save
+
+    def validate(self, serializer_class, data_type, data):
+        serializer = serializer_class(data=data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            # add the data_type to the error, otherwise it's unclear for the API client if the error is on
+            # questionnaire, question or theme.
+            e.detail['type'] = data_type
+            raise e
+        return serializer
 
     def log_action(self, request, response):
         control_id = int(request.data['control'])
@@ -74,41 +114,6 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             'target': control,
         }
         action.send(**action_details)
-
-    def save_themes_and_questions(self, themes_data, questionnaire_id):
-        saved_themes = []
-        for theme_data in themes_data:
-            questions_data = theme_data.pop('questions', [])
-            saved_theme_json = self.save_theme(theme_data, questionnaire_id)
-            saved_questions_json = self.save_questions(questions_data, saved_theme_json['id'])
-            saved_theme_json['questions'] = saved_questions_json
-            saved_themes.append(saved_theme_json)
-        return saved_themes
-
-    def save_theme(self, theme_data, questionnaire_id):
-        theme_data['questionnaire'] = questionnaire_id
-        return self.save(ThemeSerializer, 'theme', theme_data)
-
-    def save_questions(self, questions_data, theme_id):
-        saved_questions_json = []
-        for question_data in questions_data:
-            question_data['theme'] = theme_id
-            saved_question_json = self.save(QuestionSerializer, 'question', question_data)
-            saved_questions_json.append(saved_question_json)
-        return saved_questions_json
-
-    def save(self, serializer_class, data_type, data):
-        serializer = serializer_class(data=data)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            # add the data_type to the error, otherwise it's unclear for the API client if the error is on
-            # questionnaire, question or theme.
-            e.detail['type'] = data_type
-            raise e
-        saved = serializer.save()
-        saved_json = serializer.data
-        return saved_json
 
     def update(self, request, *args, **kwargs):
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
