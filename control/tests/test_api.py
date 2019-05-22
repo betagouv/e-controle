@@ -130,6 +130,7 @@ def test_questionnaire_create_fails_with_malformed_theme():
     payload['themes'][0].pop('title')
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
+    assert response.data['type'] == 'theme'
 
 
 def test_questionnaire_create_fails_with_malformed_question():
@@ -140,6 +141,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     payload['themes'][0]['questions'][0].pop('description')
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
+    assert response.data['type'] == 'question'
 
 
 #### Question API ####
