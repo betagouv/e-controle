@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from utils.serializers import DateTimeFieldWihTZ
 
-from .models import Question, Questionnaire, ResponseFile, Theme
+from .models import Question, Questionnaire, ResponseFile, Theme, Control
 
 
 User = get_user_model()
@@ -46,9 +46,9 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
     themes = ThemeSerializer(many=True, read_only=True)
+    control = serializers.PrimaryKeyRelatedField(queryset=Control.objects.all(), required=True)
 
     class Meta:
         model = Questionnaire
         fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes')
-        extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order

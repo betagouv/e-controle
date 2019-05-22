@@ -46,22 +46,23 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        if 'control' not in request.data:
-            return Response('Questionnaire needs a "control" field.', status=status.HTTP_400_BAD_REQUEST)
+        serializer = QuestionnaireSerializer(data=request.data)
+        if serializer.is_valid():
+            control_id = serializer.data['control']
+            if not request.user.profile.controls.filter(id=control_id).exists():
+                return Response('Users can only create questionnaires in controls that they belong to.',
+                                status=status.HTTP_403_FORBIDDEN)
 
-        control_id = int(request.data['control'])
-        if not request.user.profile.controls.filter(id=control_id).exists():
-            return Response('Users can only create questionnaires in controls that they belong to.',
-                            status=status.HTTP_403_FORBIDDEN)
+            themes_data = request.data.pop('themes')
 
-        themes_data = request.data.pop('themes')
+            response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
 
-        response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
+            saved_themes = self.save_themes_and_questions(themes_data, response.data['id'])
 
-        saved_themes = self.save_themes_and_questions(themes_data, response.data['id'])
-
-        response.data['themes'] = saved_themes
-        return response
+            response.data['themes'] = saved_themes
+            return response
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def save_themes_and_questions(self, themes_data, questionnaire_id):
         saved_themes = []
@@ -95,8 +96,3 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
         return response
-
-
-
-
-
