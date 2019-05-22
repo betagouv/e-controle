@@ -46,10 +46,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        if 'control' not in request.data:
-            return Response('Questionnaire needs a "control" field.', status=status.HTTP_400_BAD_REQUEST)
-
-        control_id = int(request.data['control'])
+        serializer = QuestionnaireSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        control_id = serializer.data['control']
         if not request.user.profile.controls.filter(id=control_id).exists():
             return Response('Users can only create questionnaires in controls that they belong to.',
                             status=status.HTTP_403_FORBIDDEN)
@@ -95,8 +94,3 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
         return response
-
-
-
-
-
