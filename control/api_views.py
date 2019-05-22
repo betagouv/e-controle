@@ -1,3 +1,4 @@
+from actstream import action
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 
@@ -55,11 +56,23 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         themes_data = request.data.pop('themes')
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
-
         saved_themes = self.save_themes_and_questions(themes_data, response.data['id'])
 
         response.data['themes'] = saved_themes
+        self.log_action(request, response)
         return response
+
+    def log_action(self, request, response):
+        control_id = int(request.data['control'])
+        control = request.user.profile.controls.get(pk=control_id)
+        questionnaire = control.questionnaires.get(pk=response.data['id'])
+        action_details = {
+            'sender': request.user,
+            'verb': 'created questionnaire',
+            'action_object': questionnaire,
+            'target': control,
+        }
+        action.send(**action_details)
 
     def save_themes_and_questions(self, themes_data, questionnaire_id):
         saved_themes = []
