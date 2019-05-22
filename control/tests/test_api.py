@@ -121,6 +121,29 @@ def test_questionnaire_create_fails_without_control_id():
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 403
 
+
+def test_questionnaire_create_fails_with_malformed_theme():
+    control = factories.ControlFactory()
+    user = make_user(control)
+    payload = make_payload(control.id)
+
+    payload['themes'][0].pop('title')
+    response = call_questionnaire_list_api(user, payload)
+    assert response.status_code == 400
+    assert response.data['type'] == 'theme'
+
+
+def test_questionnaire_create_fails_with_malformed_question():
+    control = factories.ControlFactory()
+    user = make_user(control)
+    payload = make_payload(control.id)
+
+    payload['themes'][0]['questions'][0].pop('description')
+    response = call_questionnaire_list_api(user, payload)
+    assert response.status_code == 400
+    assert response.data['type'] == 'question'
+
+
 #### Question API ####
 
 def call_question_api(user, id):
