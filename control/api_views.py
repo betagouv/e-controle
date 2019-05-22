@@ -53,7 +53,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             return Response('Users can only create questionnaires in controls that they belong to.',
                             status=status.HTTP_403_FORBIDDEN)
 
-        themes_data = request.data.pop('themes')
+        themes_data = request.data.pop('themes', [])
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
         saved_themes = self.save_themes_and_questions(themes_data, response.data['id'])
@@ -77,7 +77,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def save_themes_and_questions(self, themes_data, questionnaire_id):
         saved_themes = []
         for theme_data in themes_data:
-            questions_data = theme_data.pop('questions')
+            questions_data = theme_data.pop('questions', [])
             saved_theme_json = self.save_theme(theme_data, questionnaire_id)
             saved_questions_json = self.save_questions(questions_data, saved_theme_json['id'])
             saved_theme_json['questions'] = saved_questions_json
