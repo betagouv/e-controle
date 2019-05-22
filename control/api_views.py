@@ -1,6 +1,7 @@
 from actstream import action
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from .models import Question, Questionnaire, Theme
 from .serializers import QuestionSerializer, QuestionnaireSerializer, ThemeSerializer
@@ -86,19 +87,25 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
     def save_theme(self, theme_data, questionnaire_id):
         theme_data['questionnaire'] = questionnaire_id
-        return self.save(ThemeSerializer, theme_data)
+        return self.save(ThemeSerializer, 'theme', theme_data)
 
     def save_questions(self, questions_data, theme_id):
         saved_questions_json = []
         for question_data in questions_data:
             question_data['theme'] = theme_id
-            saved_question_json = self.save(QuestionSerializer, question_data)
+            saved_question_json = self.save(QuestionSerializer, 'question', question_data)
             saved_questions_json.append(saved_question_json)
         return saved_questions_json
 
-    def save(self, serializer_class, data):
+    def save(self, serializer_class, data_type, data):
         serializer = serializer_class(data=data)
-        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            # add the data_type to the error, otherwise it's unclear for the API client if the error is on
+            # questionnaire, question or theme.
+            e.detail['type'] = data_type
+            raise e
         saved = serializer.save()
         saved_json = serializer.data
         return saved_json
