@@ -27,14 +27,14 @@ def call_questionnaire_detail_api(user, id):
     return response
 
 
-def call_questionnaire_list_api(user, json):
+def call_questionnaire_list_api(user, payload):
     utils.login(client, user=user)
     url = reverse('api:questionnaire-list')
-    response = client.post(url, json, format='json')
+    response = client.post(url, payload, format='json')
     return response
 
 
-def make_test_json(control_id):
+def make_payload(control_id):
     return {
         "title": "questionnaire questionnaire",
         "control": str(control_id),
@@ -57,8 +57,8 @@ def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
 
     assert call_questionnaire_detail_api(user, questionnaire.id).status_code == 200
 
-    json = make_test_json(questionnaire.control.id)
-    assert call_questionnaire_list_api(user, json).status_code == 201
+    payload = make_payload(questionnaire.control.id)
+    assert call_questionnaire_list_api(user, payload).status_code == 201
 
 
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
@@ -69,8 +69,8 @@ def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_us
 
     assert call_questionnaire_detail_api(user, questionnaire_out.id).status_code != 200
 
-    json = make_test_json(questionnaire_out.control.id)
-    assert call_questionnaire_list_api(user, json).status_code != 201
+    payload = make_payload(questionnaire_out.control.id)
+    assert call_questionnaire_list_api(user, payload).status_code != 201
 
 
 def test_no_access_to_questionnaire_api_for_anonymous():
@@ -80,18 +80,18 @@ def test_no_access_to_questionnaire_api_for_anonymous():
     response = client.get(url)
     assert response.status_code == 403
 
-    json = make_test_json(question.theme.questionnaire.control.id)
+    payload = make_payload(question.theme.questionnaire.control.id)
     url = reverse('api:questionnaire-list')
-    response = client.post(url, json, format='json')
+    response = client.post(url, payload, format='json')
     assert response.status_code == 403
 
 
 def test_questionnaire_create_theme_and_questions_are_hydrated():
     control = factories.ControlFactory()
     user = make_user(control)
-    json = make_test_json(control.id)
+    payload = make_payload(control.id)
 
-    response = call_questionnaire_list_api(user, json)
+    response = call_questionnaire_list_api(user, payload)
     assert 200 <= response.status_code < 300
 
     questionnaire = response.data
@@ -109,12 +109,17 @@ def test_questionnaire_create_theme_and_questions_are_hydrated():
 def test_questionnaire_create_fails_without_control_id():
     control = factories.ControlFactory()
     user = make_user(control)
-    json = make_test_json(control.id)
-    json.pop('control')
+    payload = make_payload(control.id)
 
-    response = call_questionnaire_list_api(user, json)
+    # No control field : malformed request
+    payload.pop('control')
+    response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
 
+    # "control" : "null" : not allowed
+    payload['control'] = None
+    response = call_questionnaire_list_api(user, payload)
+    assert response.status_code == 403
 
 #### Question API ####
 
