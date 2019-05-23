@@ -159,6 +159,7 @@ def test_questionnaire_create_fails_without_control_id():
     payload.pop('control')
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
+    assert response.data['type'] == 'questionnaire'
 
     # "control" : "null" : not allowed
     payload['control'] = None
