@@ -3,6 +3,7 @@ from pytest import mark
 from rest_framework.test import APIClient
 
 from control.models import Control, Questionnaire, Theme, Question
+from control.serializers import QuestionnaireSerializer
 from tests import factories, utils
 
 
@@ -26,10 +27,17 @@ def call_questionnaire_detail_api(user, id):
     return response
 
 
-def call_questionnaire_list_api(user, payload):
+def call_questionnaire_create_api(user, payload):
     utils.login(client, user=user)
     url = reverse('api:questionnaire-list')
     response = client.post(url, payload, format='json')
+    return response
+
+
+def call_questionnaire_update_api(user, payload):
+    utils.login(client, user=user)
+    url = reverse('api:questionnaire-detail', args=[payload['id']])
+    response = client.put(url, payload, format='json')
     return response
 
 
@@ -48,6 +56,11 @@ def make_payload(control_id):
            }
         ]
     }
+
+
+def make_update_payload(questionnaire):
+    serializer = QuestionnaireSerializer(instance=questionnaire)
+    return serializer.data
 
 
 def assert_no_data_is_saved():
@@ -70,7 +83,7 @@ def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
 
     # create
     payload = make_payload(questionnaire.control.id)
-    assert call_questionnaire_list_api(user, payload).status_code == 201
+    assert call_questionnaire_create_api(user, payload).status_code == 201
 
 
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
@@ -85,7 +98,7 @@ def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_us
     # create
     payload = make_payload(questionnaire_out.control.id)
     clear_saved_data()
-    assert call_questionnaire_list_api(user, payload).status_code != 201
+    assert call_questionnaire_create_api(user, payload).status_code != 201
     assert_no_data_is_saved()
 
 
@@ -111,7 +124,7 @@ def test_questionnaire_create__response_contains_themes_and_questions():
     user = make_user(control)
     payload = make_payload(control.id)
 
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
     assert 200 <= response.status_code < 300
 
     questionnaire = response.data
@@ -134,7 +147,7 @@ def test_questionnaire_create__data_is_saved():
     # Before test, no saved data
     assert_no_data_is_saved()
 
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
 
     # After test, expected data is saved, and foreign keys are set.
     assert Questionnaire.objects.all().count() == 1
@@ -157,13 +170,13 @@ def test_questionnaire_create_fails_without_control_id():
 
     # No control field : malformed request
     payload.pop('control')
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
     assert response.data['type'] == 'questionnaire'
 
     # "control" : "null" : not allowed
     payload['control'] = None
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 403
     assert_no_data_is_saved()
 
@@ -174,7 +187,7 @@ def test_questionnaire_create_fails_with_malformed_theme():
     payload = make_payload(control.id)
 
     payload['themes'][0].pop('title')
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
     assert response.data['type'] == 'theme'
     assert_no_data_is_saved()
@@ -183,14 +196,56 @@ def test_questionnaire_create_fails_with_malformed_theme():
 def test_questionnaire_create_fails_with_malformed_question():
     control = factories.ControlFactory()
     user = make_user(control)
-    payload = make_payload(control.id)
+    payload = make_payload(conutrol.id)
 
     payload['themes'][0]['questions'][0].pop('description')
-    response = call_questionnaire_list_api(user, payload)
+    response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
     assert response.data['type'] == 'question'
     assert_no_data_is_saved()
 
+
+def test_questionnaire_update__data_is_saved__no_themes():
+    # Qr with no themes or questions.
+    questionnaire = factories.QuestionnaireFactory()
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+    payload['description'] = 'this is a great questionnaire.'
+
+    assert Questionnaire.objects.all().count() == 1
+    assert payload['description'] != questionnaire.description
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert Questionnaire.objects.all().count() == 1
+    saved_qr = Questionnaire.objects.get(id=questionnaire.id)
+    assert saved_qr.description != questionnaire.description
+    assert saved_qr.description == payload['description']
+
+
+def test_questionnaire_update__data_is_saved__with_themes():
+    theme = factories.ThemeFactory()
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+    payload['description'] = 'this is a great questionnaire.'
+
+    assert Questionnaire.objects.all().count() == 1
+    assert payload['description'] != questionnaire.description
+    assert Theme.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert Questionnaire.objects.all().count() == 1
+    saved_qr = Questionnaire.objects.get(id=questionnaire.id)
+    assert saved_qr.description != questionnaire.description
+    assert saved_qr.description == payload['description']
+
+    assert Theme.objects.all().count() == 1
+    saved_theme = Theme.objects.get(id=theme.id)
+    assert saved_theme == theme
 
 #### Question API ####
 

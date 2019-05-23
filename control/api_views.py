@@ -116,5 +116,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         action.send(**action_details)
 
     def update(self, request, *args, **kwargs):
+        qr_to_save = self.validate_all(request)
+
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
         return response
