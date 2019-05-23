@@ -50,17 +50,20 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save = self.validate_all(request)
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
+        saved_qr = Questionnaire.objects.get(id=response.data['id'])
+        self.log_action(request.user, 'questionnaire', saved_qr, saved_qr.control)
 
-        questionnaire_id = response.data['id']
         for theme_to_save in qr_to_save['themes']:
-            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=questionnaire_id))
+            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
             response.data['themes'].append(theme_to_save['serializer'].data)
-            theme_id = theme_to_save['serializer'].data['id']
+            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
+            self.log_action(request.user, 'theme', saved_theme, saved_qr.control)
             for question_to_save in theme_to_save['questions']:
-                question_to_save['serializer'].save(theme=Theme.objects.get(id=theme_id))
+                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
                 response.data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
+                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
+                self.log_action(request.user, 'question', saved_question, saved_qr.control)
 
-        self.log_action(request, response)
         return response
 
     def validate_all(self, request):
@@ -103,14 +106,11 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             raise e
         return serializer
 
-    def log_action(self, request, response):
-        control_id = int(request.data['control'])
-        control = request.user.profile.controls.get(pk=control_id)
-        questionnaire = control.questionnaires.get(pk=response.data['id'])
+    def log_action(self, user, data_type, saved_object, control):
         action_details = {
-            'sender': request.user,
-            'verb': 'created questionnaire',
-            'action_object': questionnaire,
+            'sender': user,
+            'verb': 'created ' + data_type,
+            'action_object': saved_object,
             'target': control,
         }
         action.send(**action_details)
