@@ -1,9 +1,8 @@
-from pytest import mark
-
 from django.shortcuts import reverse
-
+from pytest import mark
 from rest_framework.test import APIClient
 
+from control.models import Control, Questionnaire, Theme, Question
 from tests import factories, utils
 
 
@@ -51,12 +50,25 @@ def make_payload(control_id):
     }
 
 
+def assert_no_data_is_saved():
+    assert Questionnaire.objects.all().count() == 0
+    assert Theme.objects.all().count() == 0
+    assert Question.objects.all().count() == 0
+
+
+def clear_saved_data():
+    Questionnaire.objects.all().delete()
+    assert_no_data_is_saved()
+
+
 def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     questionnaire = factories.QuestionnaireFactory()
     user = make_user(questionnaire.control)
 
+    # get
     assert call_questionnaire_detail_api(user, questionnaire.id).status_code == 200
 
+    # create
     payload = make_payload(questionnaire.control.id)
     assert call_questionnaire_list_api(user, payload).status_code == 201
 
@@ -67,26 +79,34 @@ def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_us
     assert questionnaire_in.control.id != questionnaire_out.control.id
     user = make_user(questionnaire_in.control)
 
+    # get
     assert call_questionnaire_detail_api(user, questionnaire_out.id).status_code != 200
 
+    # create
     payload = make_payload(questionnaire_out.control.id)
+    clear_saved_data()
     assert call_questionnaire_list_api(user, payload).status_code != 201
+    assert_no_data_is_saved()
 
 
 def test_no_access_to_questionnaire_api_for_anonymous():
     question = factories.QuestionFactory()
 
+    # get
     url = reverse('api:questionnaire-detail', args=[question.id])
     response = client.get(url)
     assert response.status_code == 403
 
+    # create
     payload = make_payload(question.theme.questionnaire.control.id)
+    clear_saved_data()
     url = reverse('api:questionnaire-list')
     response = client.post(url, payload, format='json')
     assert response.status_code == 403
+    assert_no_data_is_saved()
 
 
-def test_questionnaire_create_theme_and_questions_are_hydrated():
+def test_questionnaire_create__response_contains_themes_and_questions():
     control = factories.ControlFactory()
     user = make_user(control)
     payload = make_payload(control.id)
@@ -106,6 +126,30 @@ def test_questionnaire_create_theme_and_questions_are_hydrated():
     assert question['theme'] == theme['id']
 
 
+def test_questionnaire_create__data_is_saved():
+    control = factories.ControlFactory()
+    user = make_user(control)
+    payload = make_payload(control.id)
+
+    # Before test, no saved data
+    assert_no_data_is_saved()
+
+    response = call_questionnaire_list_api(user, payload)
+
+    # After test, expected data is saved, and foreign keys are set.
+    assert Questionnaire.objects.all().count() == 1
+    questionnaire = Questionnaire.objects.get(id=response.data['id'])  # should not throw
+    assert questionnaire.control == control
+
+    assert Theme.objects.all().count() == 1
+    theme = Theme.objects.get(id=response.data['themes'][0]['id'])  # should not throw
+    assert theme.questionnaire == questionnaire
+
+    assert Question.objects.all().count() == 1
+    question = Question.objects.get(id=response.data['themes'][0]['questions'][0]['id'])  # should not throw
+    assert question.theme == theme
+
+
 def test_questionnaire_create_fails_without_control_id():
     control = factories.ControlFactory()
     user = make_user(control)
@@ -120,6 +164,7 @@ def test_questionnaire_create_fails_without_control_id():
     payload['control'] = None
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 403
+    assert_no_data_is_saved()
 
 
 def test_questionnaire_create_fails_with_malformed_theme():
@@ -131,6 +176,7 @@ def test_questionnaire_create_fails_with_malformed_theme():
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
     assert response.data['type'] == 'theme'
+    assert_no_data_is_saved()
 
 
 def test_questionnaire_create_fails_with_malformed_question():
@@ -142,6 +188,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     response = call_questionnaire_list_api(user, payload)
     assert response.status_code == 400
     assert response.data['type'] == 'question'
+    assert_no_data_is_saved()
 
 
 #### Question API ####
