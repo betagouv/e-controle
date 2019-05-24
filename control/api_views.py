@@ -1,4 +1,5 @@
 from actstream import action
+from functools import partial
 from rest_framework import status, viewsets
 from rest_framework.serializers import ValidationError
 from rest_framework.exceptions import PermissionDenied
@@ -46,37 +47,36 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             control__in=self.request.user.profile.controls.all())
         return queryset
 
-    def create(self, request, *args, **kwargs):
-        validated_themes_and_questions = self.validate_all(request)
-
-        response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
-        saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.log_action(request.user, 'created', 'questionnaire', saved_qr, saved_qr.control)
-
-        self.save_themes_and_questions(saved_qr=saved_qr,
-                                       validated_themes_and_questions=validated_themes_and_questions,
-                                       user=request.user,
-                                       is_update=False)
-        response.data = QuestionnaireSerializer(instance=saved_qr).data
-
-        return response
-
-    def update(self, request, *args, **kwargs):
-        pre_existing_qr = self.get_object()  # throws 404 if no qr
+    def create_or_update(self, request, save_questionnaire_func, is_update):
+        if is_update:
+            pre_existing_qr = self.get_object()  # throws 404 if no qr
+            verb = 'updated'
+        else:
+            pre_existing_qr = None
+            verb = 'created'
 
         validated_themes_and_questions = self.validate_all(request, pre_existing_qr)
-
-        response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
+        response = save_questionnaire_func()
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.log_action(request.user, 'updated', 'questionnaire', saved_qr, saved_qr.control)
+        self.log_action(request.user, verb, 'questionnaire', saved_qr, saved_qr.control)
 
         self.save_themes_and_questions(saved_qr=saved_qr,
                                        validated_themes_and_questions=validated_themes_and_questions,
                                        user=request.user,
-                                       is_update=True)
+                                       verb=verb)
         response.data = QuestionnaireSerializer(instance=saved_qr).data
 
         return response
+
+    def create(self, request, *args, **kwargs):
+        save_questionnaire_func = partial(super(QuestionnaireViewSet, self).create, request, *args, **kwargs)
+
+        return self.create_or_update(request, save_questionnaire_func, is_update=False)
+
+    def update(self, request, *args, **kwargs):
+        save_questionnaire_func = partial(super(QuestionnaireViewSet, self).update, request, *args, **kwargs)
+
+        return self.create_or_update(request, save_questionnaire_func, is_update=True)
 
     def get_pre_existing_theme(self, theme_id, pre_existing_questionnaire=None):
         if pre_existing_questionnaire is None:
@@ -151,9 +151,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             raise e
         return serializer
 
-    def save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, is_update=False):
-        verb = 'updated' if is_update else 'created'
-
+    def save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
         def log(data_type, saved_object):
             self.log_action(user, verb, data_type, saved_object, saved_qr.control)
 
