@@ -205,7 +205,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     assert_no_data_is_saved()
 
 
-def test_questionnaire_update__data_is_saved__no_themes():
+def test_questionnaire_update__data_is_saved__questionnaire_update():
     # Qr with no themes or questions.
     questionnaire = factories.QuestionnaireFactory()
     user = make_user(questionnaire.control)
@@ -224,7 +224,7 @@ def test_questionnaire_update__data_is_saved__no_themes():
     assert saved_qr.description == payload['description']
 
 
-def test_questionnaire_update__data_is_saved__with_themes():
+def test_questionnaire_update__data_is_saved__theme_update():
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
     user = make_user(questionnaire.control)
@@ -246,6 +246,32 @@ def test_questionnaire_update__data_is_saved__with_themes():
     saved_theme = Theme.objects.get(id=theme.id)
     assert saved_theme.title != theme.title
     assert saved_theme.title == payload['themes'][0]['title']
+
+
+def test_questionnaire_update__data_is_saved__question_update():
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['questions'][0]['description'] = 'this is a great question.'
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+    assert payload['themes'][0]['questions'][0]['description'] != question.description
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    saved_question = Question.objects.get(id=question.id)
+    assert saved_question.description != question.description
+    assert saved_question.description == payload['themes'][0]['questions'][0]['description']
 
 
 #### Question API ####

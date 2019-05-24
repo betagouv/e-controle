@@ -66,14 +66,24 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return response
 
-    def get_pre_existing_theme(self, theme_data, pre_existing_questionnaire=None):
+    def get_pre_existing_theme(self, theme_id, pre_existing_questionnaire=None):
         if pre_existing_questionnaire is None:
             return None
 
         # Note : Existing themes with a different parent questionnaire are ignored.
         pre_existing_theme_ids = pre_existing_questionnaire.themes.all().values_list('id')
-        if pre_existing_theme_ids.filter(id=theme_data.get('id')).exists():
-            return Theme.objects.get(id=theme_data.get('id'))
+        if pre_existing_theme_ids.filter(id=theme_id).exists():
+            return Theme.objects.get(id=theme_id)
+        return None
+
+    def get_pre_existing_question(self, question_id, pre_existing_theme=None):
+        if pre_existing_theme is None:
+            return None
+
+        # Note : Existing questions with a different parent are ignored.
+        pre_existing_question_ids = pre_existing_theme.questions.all().values_list('id')
+        if pre_existing_question_ids.filter(id=question_id).exists():
+            return Question.objects.get(id=question_id)
         return None
 
     def validate_all(self, request, pre_existing_questionnaire=None):
@@ -95,8 +105,8 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save['themes'] = []
         for theme_data in themes_data:
             questions_data = theme_data.pop('questions', [])
-            pre_existing_theme = self.get_pre_existing_theme(theme_data, pre_existing_questionnaire)
-            # if pre_existing_object is None, serializer.save() with create a new instance.
+            pre_existing_theme = self.get_pre_existing_theme(theme_data.get('id'), pre_existing_questionnaire)
+            # if pre_existing_object is None, serializer.save() will create a new instance.
             theme_to_save = {
                 'serializer': self.validate(serializer_class=ThemeSerializer,
                                             data_type='theme',
@@ -105,8 +115,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 'questions': []
             }
             for question_data in questions_data:
+                pre_existing_question = self.get_pre_existing_question(question_data.get('id'), pre_existing_theme)
                 question_to_save = {
-                    'serializer': self.validate(QuestionSerializer, 'question', question_data),
+                    'serializer': self.validate(serializer_class=QuestionSerializer,
+                                                data_type='question',
+                                                data=question_data,
+                                                pre_existing_object=pre_existing_question),
                 }
                 theme_to_save['questions'].append(question_to_save)
             qr_to_save['themes'].append(theme_to_save)
@@ -151,5 +165,5 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             for question_to_save in theme_to_save['questions']:
                 question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
                 response_data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
-                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
+                saved_question = Question.objects.get(id=question_to_save['serializer'].data['id'])
                 log('question', saved_question)
