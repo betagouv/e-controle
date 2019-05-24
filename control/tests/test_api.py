@@ -291,6 +291,41 @@ def test_questionnaire_update__data_is_saved__question_update():
     assert saved_question.description == payload['themes'][0]['questions'][0]['description']
 
 
+def test_questionnaire_update__response_data__theme_update():
+    increment_ids()
+    theme = factories.ThemeFactory()
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['title'] = 'this is a great theme.'
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert len(response.data['themes']) == 1
+    assert response.data['themes'][0]['title'] == payload['themes'][0]['title']
+
+
+def test_questionnaire_update__response_data__question_update():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['questions'][0]['description'] = 'this is a great question.'
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert len(response.data['themes']) == 1
+    assert len(response.data['themes'][0]['questions']) == 1
+    assert \
+        response.data['themes'][0]['questions'][0]['description'] == payload['themes'][0]['questions'][0]['description']
+
+
 #### Question API ####
 
 def call_question_api(user, id):
