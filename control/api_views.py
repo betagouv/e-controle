@@ -88,7 +88,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         control_id = qr_to_save['serializer'].data['control']
         if not request.user.profile.controls.filter(id=control_id).exists():
             e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
-                                code=status.HTTP_403_FORBIDDEN)
+                                 code=status.HTTP_403_FORBIDDEN)
             raise e
 
         themes_data = request.data.pop('themes', [])
@@ -133,8 +133,13 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         saved_qr = Questionnaire.objects.get(id=response_data['id'])
 
         def log(data_type, saved_object):
-            self.log_action(
-                user=user, verb=verb, data_type=data_type, saved_object=saved_object, control=saved_qr.control)
+            action_details = {
+                'sender': user,
+                'verb': verb + ' ' + data_type,
+                'action_object': saved_object,
+                'target': saved_qr.control,
+            }
+            action.send(**action_details)
 
         log('questionnaire', saved_qr)
 
@@ -148,12 +153,3 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 response_data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
                 saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
                 log('question', saved_question)
-
-    def log_action(self, user, verb, data_type, saved_object, control):
-        action_details = {
-            'sender': user,
-            'verb': verb + ' ' + data_type,
-            'action_object': saved_object,
-            'target': control,
-        }
-        action.send(**action_details)
