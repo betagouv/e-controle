@@ -131,15 +131,18 @@ def test_no_access_to_questionnaire_api_for_anonymous():
     assert_no_data_is_saved()
 
 
-def test_questionnaire_create__response_contains_themes_and_questions():
+def test_questionnaire_create__success():
     increment_ids()
     control = factories.ControlFactory()
     user = make_user(control)
     payload = make_payload(control.id)
+    # Before test, no saved data
+    assert_no_data_is_saved()
 
     response = call_questionnaire_create_api(user, payload)
     assert 200 <= response.status_code < 300
 
+    # Response.data is filled in
     questionnaire = response.data
     assert questionnaire['id'] > -1
 
@@ -151,19 +154,7 @@ def test_questionnaire_create__response_contains_themes_and_questions():
     assert question['id'] > -1
     assert question['theme'] == theme['id']
 
-
-def test_questionnaire_create__data_is_saved():
-    increment_ids()
-    control = factories.ControlFactory()
-    user = make_user(control)
-    payload = make_payload(control.id)
-
-    # Before test, no saved data
-    assert_no_data_is_saved()
-
-    response = call_questionnaire_create_api(user, payload)
-
-    # After test, expected data is saved, and foreign keys are set.
+    # Data is saved, foreign keys are set
     assert Questionnaire.objects.all().count() == 1
     questionnaire = Questionnaire.objects.get(id=response.data['id'])  # should not throw
     assert questionnaire.control == control
@@ -219,7 +210,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     assert_no_data_is_saved()
 
 
-def test_questionnaire_update__data_is_saved__questionnaire_update():
+def test_questionnaire_update__questionnaire_update():
     increment_ids()
     # Qr with no themes or questions.
     questionnaire = factories.QuestionnaireFactory()
@@ -233,13 +224,14 @@ def test_questionnaire_update__data_is_saved__questionnaire_update():
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
+    # Data is saved
     assert Questionnaire.objects.all().count() == 1
     saved_qr = Questionnaire.objects.get(id=questionnaire.id)
     assert saved_qr.description != questionnaire.description
     assert saved_qr.description == payload['description']
 
 
-def test_questionnaire_update__data_is_saved__theme_update():
+def test_questionnaire_update__theme_update():
     increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
@@ -254,6 +246,7 @@ def test_questionnaire_update__data_is_saved__theme_update():
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
+    # data is saved
     assert Questionnaire.objects.all().count() == 1
     saved_qr = Questionnaire.objects.get(id=questionnaire.id)
     assert saved_qr == questionnaire
@@ -263,8 +256,12 @@ def test_questionnaire_update__data_is_saved__theme_update():
     assert saved_theme.title != theme.title
     assert saved_theme.title == payload['themes'][0]['title']
 
+    # Response data is filled in
+    assert len(response.data['themes']) == 1
+    assert response.data['themes'][0]['title'] == payload['themes'][0]['title']
 
-def test_questionnaire_update__data_is_saved__theme_create():
+
+def test_questionnaire_update__theme_create():
     increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
@@ -278,6 +275,7 @@ def test_questionnaire_update__data_is_saved__theme_create():
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
+    # data is saved
     assert Questionnaire.objects.all().count() == 1
     saved_qr = Questionnaire.objects.get(id=questionnaire.id)
     assert saved_qr == questionnaire
@@ -287,8 +285,12 @@ def test_questionnaire_update__data_is_saved__theme_create():
     assert new_theme.title == payload['themes'][1]['title']
     assert new_theme.questionnaire == saved_qr
 
+    # Response data is filled in
+    assert len(response.data['themes']) == 2
+    assert response.data['themes'][1]['title'] == payload['themes'][1]['title']
 
-def test_questionnaire_update__data_is_saved__question_update():
+
+def test_questionnaire_update__question_update():
     increment_ids()
     question = factories.QuestionFactory()
     theme = question.theme
@@ -305,6 +307,7 @@ def test_questionnaire_update__data_is_saved__question_update():
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
+    # Data is saved
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
@@ -313,8 +316,14 @@ def test_questionnaire_update__data_is_saved__question_update():
     assert saved_question.description != question.description
     assert saved_question.description == payload['themes'][0]['questions'][0]['description']
 
+    # Response data is filled
+    assert len(response.data['themes']) == 1
+    assert len(response.data['themes'][0]['questions']) == 1
+    assert \
+        response.data['themes'][0]['questions'][0]['description'] == payload['themes'][0]['questions'][0]['description']
 
-def test_questionnaire_update__data_is_saved__question_create():
+
+def test_questionnaire_update__question_create():
     increment_ids()
     question = factories.QuestionFactory()
     theme = question.theme
@@ -331,6 +340,7 @@ def test_questionnaire_update__data_is_saved__question_create():
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
+    # data is saved
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
 
@@ -338,40 +348,10 @@ def test_questionnaire_update__data_is_saved__question_create():
     new_question = Question.objects.last()
     assert new_question.description == payload['themes'][0]['questions'][1]['description']
 
-
-def test_questionnaire_update__response_data__theme_update():
-    increment_ids()
-    theme = factories.ThemeFactory()
-    questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
-    payload = make_update_payload(questionnaire)
-
-    payload['themes'][0]['title'] = 'this is a great theme.'
-
-    response = call_questionnaire_update_api(user, payload)
-    assert response.status_code == 200
-
-    assert len(response.data['themes']) == 1
-    assert response.data['themes'][0]['title'] == payload['themes'][0]['title']
-
-
-def test_questionnaire_update__response_data__question_update():
-    increment_ids()
-    question = factories.QuestionFactory()
-    theme = question.theme
-    questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
-    payload = make_update_payload(questionnaire)
-
-    payload['themes'][0]['questions'][0]['description'] = 'this is a great question.'
-
-    response = call_questionnaire_update_api(user, payload)
-    assert response.status_code == 200
-
-    assert len(response.data['themes']) == 1
-    assert len(response.data['themes'][0]['questions']) == 1
+    # Response data is filled in
+    assert len(response.data['themes'][0]['questions']) == 2
     assert \
-        response.data['themes'][0]['questions'][0]['description'] == payload['themes'][0]['questions'][0]['description']
+        response.data['themes'][0]['questions'][1]['description'] == payload['themes'][0]['questions'][1]['description']
 
 
 #### Question API ####
