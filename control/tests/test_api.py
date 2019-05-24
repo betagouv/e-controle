@@ -229,23 +229,24 @@ def test_questionnaire_update__data_is_saved__with_themes():
     questionnaire = theme.questionnaire
     user = make_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
-    payload['description'] = 'this is a great questionnaire.'
+    payload['themes'][0]['title'] = 'this is a great theme.'
 
     assert Questionnaire.objects.all().count() == 1
-    assert payload['description'] != questionnaire.description
     assert Theme.objects.all().count() == 1
+    assert payload['themes'][0]['title'] != theme.title
 
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
 
     assert Questionnaire.objects.all().count() == 1
     saved_qr = Questionnaire.objects.get(id=questionnaire.id)
-    assert saved_qr.description != questionnaire.description
-    assert saved_qr.description == payload['description']
+    assert saved_qr == questionnaire
 
     assert Theme.objects.all().count() == 1
     saved_theme = Theme.objects.get(id=theme.id)
-    assert saved_theme == theme
+    assert saved_theme.title != theme.title
+    assert saved_theme.title == payload['themes'][0]['title']
+
 
 #### Question API ####
 

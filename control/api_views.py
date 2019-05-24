@@ -66,9 +66,44 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return response
 
-    def validate_all(self, request):
+    def update(self, request, *args, **kwargs):
+        pre_existing_qr = self.get_object()  # throws 404 if no qr
+        # todo most of this func is the same as create, reuse the code.
+        qr_to_save = self.validate_all(request, pre_existing_qr)
+
+        response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
+        saved_qr = Questionnaire.objects.get(id=response.data['id'])
+        # todo : log action
+
+        for theme_to_save in qr_to_save['themes']:
+            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
+            response.data['themes'].append(theme_to_save['serializer'].data)
+            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
+            self.log_action(request.user, 'theme', saved_theme, saved_qr.control)
+            for question_to_save in theme_to_save['questions']:
+                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
+                response.data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
+                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
+                self.log_action(request.user, 'question', saved_question, saved_qr.control)
+
+        return response
+
+    def get_pre_existing_theme(self, theme_data, pre_existing_questionnaire=None):
+        if pre_existing_questionnaire is None:
+            return None
+
+        # Note : Existing themes with a different parent questionnaire are ignored.
+        pre_existing_theme_ids = pre_existing_questionnaire.themes.all().values_list('id')
+        if pre_existing_theme_ids.filter(id=theme_data.get('id')).exists():
+            return Theme.objects.get(id=theme_data.get('id'))
+        return None
+
+    def validate_all(self, request, pre_existing_questionnaire=None):
         qr_to_save = {
-            'serializer': self.validate(QuestionnaireSerializer, 'questionnaire', request.data),
+            'serializer': self.validate(serializer_class=QuestionnaireSerializer,
+                                        data_type='questionnaire',
+                                        data=request.data,
+                                        pre_existing_object=pre_existing_questionnaire),
             'themes': []
         }
 
@@ -82,8 +117,13 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save['themes'] = []
         for theme_data in themes_data:
             questions_data = theme_data.pop('questions', [])
+            pre_existing_theme = self.get_pre_existing_theme(theme_data, pre_existing_questionnaire)
+            # if pre_existing_object is None, serializer.save() with create a new instance.
             theme_to_save = {
-                'serializer': self.validate(ThemeSerializer, 'theme', theme_data),
+                'serializer': self.validate(serializer_class=ThemeSerializer,
+                                            data_type='theme',
+                                            data=theme_data,
+                                            pre_existing_object=pre_existing_theme),
                 'questions': []
             }
             for question_data in questions_data:
@@ -95,8 +135,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return qr_to_save
 
-    def validate(self, serializer_class, data_type, data):
-        serializer = serializer_class(data=data)
+    def validate(self, serializer_class, data_type, data, pre_existing_object=None):
+        if pre_existing_object is None:
+            serializer = serializer_class(data=data)
+        else:
+            serializer = serializer_class(pre_existing_object, data=data)
+
         try:
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
@@ -114,9 +158,3 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             'target': control,
         }
         action.send(**action_details)
-
-    def update(self, request, *args, **kwargs):
-        qr_to_save = self.validate_all(request)
-
-        response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
-        return response
