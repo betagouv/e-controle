@@ -71,7 +71,19 @@ def assert_no_data_is_saved():
 
 def clear_saved_data():
     Questionnaire.objects.all().delete()
+    Theme.objects.all().delete()
+    Question.objects.all().delete()
     assert_no_data_is_saved()
+
+
+def increment_ids():
+    # We create objects for nothing, to increment ids. Otherwise question.id = theme.id = qr.id = 1, and some errors
+    # are not detected.
+    for _ in range(5):
+        factories.ThemeFactory()
+    for _ in range(5):
+        factories.QuestionnaireFactory()
+    clear_saved_data()
 
 
 def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
@@ -120,6 +132,7 @@ def test_no_access_to_questionnaire_api_for_anonymous():
 
 
 def test_questionnaire_create__response_contains_themes_and_questions():
+    increment_ids()
     control = factories.ControlFactory()
     user = make_user(control)
     payload = make_payload(control.id)
@@ -140,6 +153,7 @@ def test_questionnaire_create__response_contains_themes_and_questions():
 
 
 def test_questionnaire_create__data_is_saved():
+    increment_ids()
     control = factories.ControlFactory()
     user = make_user(control)
     payload = make_payload(control.id)
@@ -206,6 +220,7 @@ def test_questionnaire_create_fails_with_malformed_question():
 
 
 def test_questionnaire_update__data_is_saved__questionnaire_update():
+    increment_ids()
     # Qr with no themes or questions.
     questionnaire = factories.QuestionnaireFactory()
     user = make_user(questionnaire.control)
@@ -225,6 +240,7 @@ def test_questionnaire_update__data_is_saved__questionnaire_update():
 
 
 def test_questionnaire_update__data_is_saved__theme_update():
+    increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
     user = make_user(questionnaire.control)
@@ -249,6 +265,7 @@ def test_questionnaire_update__data_is_saved__theme_update():
 
 
 def test_questionnaire_update__data_is_saved__question_update():
+    increment_ids()
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
