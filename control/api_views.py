@@ -50,41 +50,19 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save = self.validate_all(request)
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
-        saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.log_action(request.user, 'questionnaire', saved_qr, saved_qr.control)
 
-        for theme_to_save in qr_to_save['themes']:
-            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
-            response.data['themes'].append(theme_to_save['serializer'].data)
-            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
-            self.log_action(request.user, 'theme', saved_theme, saved_qr.control)
-            for question_to_save in theme_to_save['questions']:
-                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
-                response.data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
-                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
-                self.log_action(request.user, 'question', saved_question, saved_qr.control)
+        self.save_and_build_response_data(qr_to_save, request.user, response.data, is_update=False)
 
         return response
 
     def update(self, request, *args, **kwargs):
         pre_existing_qr = self.get_object()  # throws 404 if no qr
-        # todo most of this func is the same as create, reuse the code.
+
         qr_to_save = self.validate_all(request, pre_existing_qr)
 
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
-        saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        # todo : log action
 
-        for theme_to_save in qr_to_save['themes']:
-            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
-            response.data['themes'].append(theme_to_save['serializer'].data)
-            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
-            self.log_action(request.user, 'theme', saved_theme, saved_qr.control)
-            for question_to_save in theme_to_save['questions']:
-                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
-                response.data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
-                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
-                self.log_action(request.user, 'question', saved_question, saved_qr.control)
+        self.save_and_build_response_data(qr_to_save, request.user, response.data, is_update=True)
 
         return response
 
@@ -150,10 +128,31 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             raise e
         return serializer
 
-    def log_action(self, user, data_type, saved_object, control):
+    def save_and_build_response_data(self, qr_to_save, user, response_data, is_update=False):
+        verb = 'updated' if is_update else 'created'
+        saved_qr = Questionnaire.objects.get(id=response_data['id'])
+
+        def log(data_type, saved_object):
+            self.log_action(
+                user=user, verb=verb, data_type=data_type, saved_object=saved_object, control=saved_qr.control)
+
+        log('questionnaire', saved_qr)
+
+        for theme_to_save in qr_to_save['themes']:
+            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
+            response_data['themes'].append(theme_to_save['serializer'].data)
+            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
+            log('theme', saved_theme)
+            for question_to_save in theme_to_save['questions']:
+                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
+                response_data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
+                saved_question = Theme.objects.get(id=question_to_save['serializer'].data['id'])
+                log('question', saved_question)
+
+    def log_action(self, user, verb, data_type, saved_object, control):
         action_details = {
             'sender': user,
-            'verb': 'created ' + data_type,
+            'verb': verb + ' ' + data_type,
             'action_object': saved_object,
             'target': control,
         }

@@ -196,7 +196,7 @@ def test_questionnaire_create_fails_with_malformed_theme():
 def test_questionnaire_create_fails_with_malformed_question():
     control = factories.ControlFactory()
     user = make_user(control)
-    payload = make_payload(conutrol.id)
+    payload = make_payload(control.id)
 
     payload['themes'][0]['questions'][0].pop('description')
     response = call_questionnaire_create_api(user, payload)
