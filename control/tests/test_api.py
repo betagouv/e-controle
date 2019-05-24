@@ -264,6 +264,30 @@ def test_questionnaire_update__data_is_saved__theme_update():
     assert saved_theme.title == payload['themes'][0]['title']
 
 
+def test_questionnaire_update__data_is_saved__theme_create():
+    increment_ids()
+    theme = factories.ThemeFactory()
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+    payload['themes'].append({'title': 'this is a great theme.' })
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert Questionnaire.objects.all().count() == 1
+    saved_qr = Questionnaire.objects.get(id=questionnaire.id)
+    assert saved_qr == questionnaire
+
+    assert Theme.objects.all().count() == 2
+    new_theme = Theme.objects.last()
+    assert new_theme.title == payload['themes'][1]['title']
+    assert new_theme.questionnaire == saved_qr
+
+
 def test_questionnaire_update__data_is_saved__question_update():
     increment_ids()
     question = factories.QuestionFactory()
@@ -277,7 +301,6 @@ def test_questionnaire_update__data_is_saved__question_update():
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
-    assert payload['themes'][0]['questions'][0]['description'] != question.description
 
     response = call_questionnaire_update_api(user, payload)
     assert response.status_code == 200
@@ -289,6 +312,31 @@ def test_questionnaire_update__data_is_saved__question_update():
     saved_question = Question.objects.get(id=question.id)
     assert saved_question.description != question.description
     assert saved_question.description == payload['themes'][0]['questions'][0]['description']
+
+
+def test_questionnaire_update__data_is_saved__question_create():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['questions'].append({'description': 'this is a great question.'})
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+
+    assert Question.objects.all().count() == 2
+    new_question = Question.objects.last()
+    assert new_question.description == payload['themes'][0]['questions'][1]['description']
 
 
 def test_questionnaire_update__response_data__theme_update():
