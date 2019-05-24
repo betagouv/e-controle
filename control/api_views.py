@@ -47,14 +47,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        qr_to_save = self.validate_all(request)
+        validated_themes_and_questions = self.validate_all(request)
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
         self.log_action(request.user, 'created', 'questionnaire', saved_qr, saved_qr.control)
 
         self.save_themes_and_questions(saved_qr=saved_qr,
-                                       qr_to_save=qr_to_save,
+                                       validated_themes_and_questions=validated_themes_and_questions,
                                        user=request.user,
                                        is_update=False)
         response.data = QuestionnaireSerializer(instance=saved_qr).data
@@ -64,14 +64,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         pre_existing_qr = self.get_object()  # throws 404 if no qr
 
-        qr_to_save = self.validate_all(request, pre_existing_qr)
+        validated_themes_and_questions = self.validate_all(request, pre_existing_qr)
 
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
         self.log_action(request.user, 'updated', 'questionnaire', saved_qr, saved_qr.control)
 
         self.save_themes_and_questions(saved_qr=saved_qr,
-                                       qr_to_save=qr_to_save,
+                                       validated_themes_and_questions=validated_themes_and_questions,
                                        user=request.user,
                                        is_update=True)
         response.data = QuestionnaireSerializer(instance=saved_qr).data
@@ -99,45 +99,42 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return None
 
     def validate_all(self, request, pre_existing_questionnaire=None):
-        qr_to_save = {
-            'serializer': self.validate(serializer_class=QuestionnaireSerializer,
-                                        data_type='questionnaire',
-                                        data=request.data,
-                                        pre_existing_object=pre_existing_questionnaire),
-            'themes': []
-        }
+        self.validate(serializer_class=QuestionnaireSerializer,
+                      data_type='questionnaire',
+                      data=request.data,
+                      pre_existing_object=pre_existing_questionnaire)
 
-        control_id = qr_to_save['serializer'].data['control']
+        control_id = request.data['control']
         if not request.user.profile.controls.filter(id=control_id).exists():
             e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
                                  code=status.HTTP_403_FORBIDDEN)
             raise e
 
         themes_data = request.data.pop('themes', [])
-        qr_to_save['themes'] = []
+        validated_themes_and_questions = []
         for theme_data in themes_data:
             questions_data = theme_data.pop('questions', [])
             pre_existing_theme = self.get_pre_existing_theme(theme_data.get('id'), pre_existing_questionnaire)
             # if pre_existing_object is None, serializer.save() will create a new instance.
-            theme_to_save = {
+            validated_theme = {
                 'serializer': self.validate(serializer_class=ThemeSerializer,
                                             data_type='theme',
                                             data=theme_data,
                                             pre_existing_object=pre_existing_theme),
                 'questions': []
             }
+            validated_themes_and_questions.append(validated_theme)
             for question_data in questions_data:
                 pre_existing_question = self.get_pre_existing_question(question_data.get('id'), pre_existing_theme)
-                question_to_save = {
+                validated_question = {
                     'serializer': self.validate(serializer_class=QuestionSerializer,
                                                 data_type='question',
                                                 data=question_data,
                                                 pre_existing_object=pre_existing_question),
                 }
-                theme_to_save['questions'].append(question_to_save)
-            qr_to_save['themes'].append(theme_to_save)
+                validated_theme['questions'].append(validated_question)
 
-        return qr_to_save
+        return validated_themes_and_questions
 
     def validate(self, serializer_class, data_type, data, pre_existing_object=None):
         if pre_existing_object is None:
@@ -154,7 +151,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             raise e
         return serializer
 
-    def save_themes_and_questions(self, saved_qr, qr_to_save, user, is_update=False):
+    def save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, is_update=False):
         verb = 'updated' if is_update else 'created'
 
         def log(data_type, saved_object):
@@ -162,13 +159,11 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         log('questionnaire', saved_qr)
 
-        for theme_to_save in qr_to_save['themes']:
-            theme_to_save['serializer'].save(questionnaire=saved_qr)
-            saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
+        for theme_to_save in validated_themes_and_questions:
+            saved_theme = theme_to_save['serializer'].save(questionnaire=saved_qr)
             log('theme', saved_theme)
             for question_to_save in theme_to_save['questions']:
-                question_to_save['serializer'].save(theme=saved_theme)
-                saved_question = Question.objects.get(id=question_to_save['serializer'].data['id'])
+                saved_question = question_to_save['serializer'].save(theme=saved_theme)
                 log('question', saved_question)
 
     def log_action(self, user, verb, data_type, saved_object, control):
