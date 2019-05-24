@@ -261,13 +261,13 @@ def test_questionnaire_update__theme_update():
     assert response.data['themes'][0]['title'] == payload['themes'][0]['title']
 
 
-def test_questionnaire_update__theme_create():
+def run_test_questionnaire_update__theme_create(added_theme):
     increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
     user = make_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
-    payload['themes'].append({'title': 'this is a great theme.' })
+    payload['themes'].append(added_theme)
 
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
@@ -288,6 +288,23 @@ def test_questionnaire_update__theme_create():
     # Response data is filled in
     assert len(response.data['themes']) == 2
     assert response.data['themes'][1]['title'] == payload['themes'][1]['title']
+
+
+def test_questionnaire_update__theme_create():
+    added_theme = {'title': 'this is a great theme.' }
+    run_test_questionnaire_update__theme_create(added_theme)
+
+
+def test_questionnaire_update__theme_create_if_bad_id():
+    added_theme = {
+        'id': 123,  # id is bad. It should be ignored, so that this theme is considered new.
+        'title': 'this is a great theme.'
+    }
+    run_test_questionnaire_update__theme_create(added_theme)
+
+    # Id in payload was ignored and new id was assigned to the new theme
+    new_theme = Theme.objects.last()
+    assert new_theme.id != added_theme['id']
 
 
 def test_questionnaire_update__question_update():
@@ -323,7 +340,7 @@ def test_questionnaire_update__question_update():
         response.data['themes'][0]['questions'][0]['description'] == payload['themes'][0]['questions'][0]['description']
 
 
-def test_questionnaire_update__question_create():
+def run_test_questionnaire_update__question_create(added_question):
     increment_ids()
     question = factories.QuestionFactory()
     theme = question.theme
@@ -331,7 +348,7 @@ def test_questionnaire_update__question_create():
     user = make_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
 
-    payload['themes'][0]['questions'].append({'description': 'this is a great question.'})
+    payload['themes'][0]['questions'].append(added_question)
 
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
@@ -352,6 +369,23 @@ def test_questionnaire_update__question_create():
     assert len(response.data['themes'][0]['questions']) == 2
     assert \
         response.data['themes'][0]['questions'][1]['description'] == payload['themes'][0]['questions'][1]['description']
+
+
+def test_questionnaire_update__question_create():
+    added_question = {'description': 'this is a great question.'}
+    run_test_questionnaire_update__question_create(added_question)
+
+
+def test_questionnaire_update__question_create_if_bad_id():
+    added_question = {
+        'id': 123,  # id is bad. It should be ignored, so that this theme is considered new.
+        'description': 'this is a great question.'
+    }
+    run_test_questionnaire_update__question_create(added_question)
+
+    # Id in payload was ignored and new id was assigned to the new question
+    new_question = Question.objects.last()
+    assert new_question.id != added_question['id']
 
 
 #### Question API ####
