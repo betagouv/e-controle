@@ -50,8 +50,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save = self.validate_all(request)
 
         response = super(QuestionnaireViewSet, self).create(request, *args, **kwargs)
+        saved_qr = Questionnaire.objects.get(id=response.data['id'])
+        self.log_action(request.user, 'created', 'questionnaire', saved_qr, saved_qr.control)
 
-        self.save_and_build_response_data(qr_to_save, request.user, response.data, is_update=False)
+        self.save_themes_and_questions(saved_qr=saved_qr,
+                                       qr_to_save=qr_to_save,
+                                       user=request.user,
+                                       is_update=False)
+        response.data = QuestionnaireSerializer(instance=saved_qr).data
 
         return response
 
@@ -61,8 +67,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         qr_to_save = self.validate_all(request, pre_existing_qr)
 
         response = super(QuestionnaireViewSet, self).update(request, *args, **kwargs)
+        saved_qr = Questionnaire.objects.get(id=response.data['id'])
+        self.log_action(request.user, 'updated', 'questionnaire', saved_qr, saved_qr.control)
 
-        self.save_and_build_response_data(qr_to_save, request.user, response.data, is_update=True)
+        self.save_themes_and_questions(saved_qr=saved_qr,
+                                       qr_to_save=qr_to_save,
+                                       user=request.user,
+                                       is_update=True)
+        response.data = QuestionnaireSerializer(instance=saved_qr).data
 
         return response
 
@@ -142,28 +154,28 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             raise e
         return serializer
 
-    def save_and_build_response_data(self, qr_to_save, user, response_data, is_update=False):
+    def save_themes_and_questions(self, saved_qr, qr_to_save, user, is_update=False):
         verb = 'updated' if is_update else 'created'
-        saved_qr = Questionnaire.objects.get(id=response_data['id'])
 
         def log(data_type, saved_object):
-            action_details = {
-                'sender': user,
-                'verb': verb + ' ' + data_type,
-                'action_object': saved_object,
-                'target': saved_qr.control,
-            }
-            action.send(**action_details)
+            self.log_action(user, verb, data_type, saved_object, saved_qr.control)
 
         log('questionnaire', saved_qr)
 
         for theme_to_save in qr_to_save['themes']:
-            theme_to_save['serializer'].save(questionnaire=Questionnaire.objects.get(id=saved_qr.id))
-            response_data['themes'].append(theme_to_save['serializer'].data)
+            theme_to_save['serializer'].save(questionnaire=saved_qr)
             saved_theme = Theme.objects.get(id=theme_to_save['serializer'].data['id'])
             log('theme', saved_theme)
             for question_to_save in theme_to_save['questions']:
-                question_to_save['serializer'].save(theme=Theme.objects.get(id=saved_theme.id))
-                response_data['themes'][-1]['questions'].append(question_to_save['serializer'].data)
+                question_to_save['serializer'].save(theme=saved_theme)
                 saved_question = Question.objects.get(id=question_to_save['serializer'].data['id'])
                 log('question', saved_question)
+
+    def log_action(self, user, verb, data_type, saved_object, control):
+        action_details = {
+            'sender': user,
+            'verb': verb + ' ' + data_type,
+            'action_object': saved_object,
+            'target': control,
+        }
+        action.send(**action_details)
