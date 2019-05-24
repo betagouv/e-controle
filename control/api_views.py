@@ -78,31 +78,48 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return self.create_or_update(request, save_questionnaire_func, is_update=True)
 
-    def get_pre_existing_theme(self, theme_id, pre_existing_questionnaire=None):
-        if pre_existing_questionnaire is None:
+    def get_pre_existing_child(self, child_id, child_class, pre_existing_parent=None):
+        if pre_existing_parent is None:
             return None
+        child_class_name_plural = child_class.__name__.lower() + 's'
 
-        # Note : Existing themes with a different parent questionnaire are ignored.
-        pre_existing_theme_ids = pre_existing_questionnaire.themes.all().values_list('id')
-        if pre_existing_theme_ids.filter(id=theme_id).exists():
-            return Theme.objects.get(id=theme_id)
-        return None
-
-    def get_pre_existing_question(self, question_id, pre_existing_theme=None):
-        if pre_existing_theme is None:
-            return None
-
-        # Note : Existing questions with a different parent are ignored.
-        pre_existing_question_ids = pre_existing_theme.questions.all().values_list('id')
-        if pre_existing_question_ids.filter(id=question_id).exists():
-            return Question.objects.get(id=question_id)
+        # Note : Existing children with a different parent are ignored.
+        children = getattr(pre_existing_parent, child_class_name_plural)
+        pre_existing_child_ids = children.all().values_list('id')
+        if pre_existing_child_ids.filter(id=child_id).exists():
+            return child_class.objects.get(id=child_id)
         return None
 
     def validate_all(self, request, pre_existing_questionnaire=None):
-        self.validate(serializer_class=QuestionnaireSerializer,
-                      data_type='questionnaire',
-                      data=request.data,
-                      pre_existing_object=pre_existing_questionnaire)
+        def validate(serializer_class, data_type, data, pre_existing_object=None):
+            if pre_existing_object is None:
+                serializer = serializer_class(data=data)
+            else:
+                serializer = serializer_class(pre_existing_object, data=data)
+
+            try:
+                serializer.is_valid(raise_exception=True)
+            except ValidationError as e:
+                # add the data_type to the error, otherwise it's unclear for the API client if the error is on
+                # questionnaire, question or theme.
+                e.detail['type'] = data_type
+                raise e
+            return serializer
+
+        def validate_child(child_data, child_class, child_serializer_class, pre_existing_parent):
+            child_class_name = child_class.__name__.lower()
+            pre_existing_child = self.get_pre_existing_child(child_data.get('id'), child_class, pre_existing_parent)
+            # if pre_existing_object is None, serializer.save() will create a new instance.
+            serializer = validate(serializer_class=child_serializer_class,
+                                  data_type=child_class_name,
+                                  data=child_data,
+                                  pre_existing_object=pre_existing_child)
+            return serializer, pre_existing_child
+
+        validate(serializer_class=QuestionnaireSerializer,
+                 data_type='questionnaire',
+                 data=request.data,
+                 pre_existing_object=pre_existing_questionnaire)
 
         control_id = request.data['control']
         if not request.user.profile.controls.filter(id=control_id).exists():
@@ -114,42 +131,19 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         validated_themes_and_questions = []
         for theme_data in themes_data:
             questions_data = theme_data.pop('questions', [])
-            pre_existing_theme = self.get_pre_existing_theme(theme_data.get('id'), pre_existing_questionnaire)
-            # if pre_existing_object is None, serializer.save() will create a new instance.
-            validated_theme = {
-                'serializer': self.validate(serializer_class=ThemeSerializer,
-                                            data_type='theme',
-                                            data=theme_data,
-                                            pre_existing_object=pre_existing_theme),
+            (serializer, pre_existing_theme) = \
+                validate_child(theme_data, Theme, ThemeSerializer, pre_existing_questionnaire)
+            validated_themes_and_questions.append({
+                'serializer': serializer,
                 'questions': []
-            }
-            validated_themes_and_questions.append(validated_theme)
+            })
             for question_data in questions_data:
-                pre_existing_question = self.get_pre_existing_question(question_data.get('id'), pre_existing_theme)
-                validated_question = {
-                    'serializer': self.validate(serializer_class=QuestionSerializer,
-                                                data_type='question',
-                                                data=question_data,
-                                                pre_existing_object=pre_existing_question),
-                }
-                validated_theme['questions'].append(validated_question)
+                (serializer, _) = validate_child(question_data, Question, QuestionSerializer, pre_existing_theme)
+                validated_themes_and_questions[-1]['questions'].append({
+                    'serializer': serializer
+                })
 
         return validated_themes_and_questions
-
-    def validate(self, serializer_class, data_type, data, pre_existing_object=None):
-        if pre_existing_object is None:
-            serializer = serializer_class(data=data)
-        else:
-            serializer = serializer_class(pre_existing_object, data=data)
-
-        try:
-            serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            # add the data_type to the error, otherwise it's unclear for the API client if the error is on
-            # questionnaire, question or theme.
-            e.detail['type'] = data_type
-            raise e
-        return serializer
 
     def save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
         def log(data_type, saved_object):
