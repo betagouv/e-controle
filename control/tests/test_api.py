@@ -41,6 +41,13 @@ def call_questionnaire_update_api(user, payload):
     return response
 
 
+def call_questionnaire_delete_api(user, id):
+    utils.login(client, user=user)
+    url = reverse('api:questionnaire-detail', args=[id])
+    response = client.delete(url)
+    return response
+
+
 def make_payload(control_id):
     return {
         "title": "questionnaire questionnaire",
@@ -389,6 +396,26 @@ def test_questionnaire_update__question_create_if_bad_id():
     # Id in payload was ignored and new id was assigned to the new question
     new_question = Question.objects.last()
     assert new_question.id != added_question['id']
+
+
+def test_questionnaire_delete():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_delete_api(user, questionnaire.id)
+    assert 200 <= response.status_code < 300
+
+    # Cascade delete : child objects are deleted
+    assert Questionnaire.objects.all().count() == 0
+    assert Theme.objects.all().count() == 0
+    assert Question.objects.all().count() == 0
 
 
 #### Question API ####
