@@ -47,7 +47,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             control__in=self.request.user.profile.controls.all())
         return queryset
 
-    def create_or_update(self, request, save_questionnaire_func, is_update):
+    def __create_or_update(self, request, save_questionnaire_func, is_update):
         if is_update:
             pre_existing_qr = self.get_object()  # throws 404 if no qr
             verb = 'updated'
@@ -55,15 +55,15 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             pre_existing_qr = None
             verb = 'created'
 
-        validated_themes_and_questions = self.validate_all(request, pre_existing_qr)
+        validated_themes_and_questions = self.__validate_all(request, pre_existing_qr)
         response = save_questionnaire_func()
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.log_action(request.user, verb, 'questionnaire', saved_qr, saved_qr.control)
+        self.__log_action(request.user, verb, 'questionnaire', saved_qr, saved_qr.control)
 
-        self.save_themes_and_questions(saved_qr=saved_qr,
-                                       validated_themes_and_questions=validated_themes_and_questions,
-                                       user=request.user,
-                                       verb=verb)
+        self.__save_themes_and_questions(saved_qr=saved_qr,
+                                         validated_themes_and_questions=validated_themes_and_questions,
+                                         user=request.user,
+                                         verb=verb)
         response.data = QuestionnaireSerializer(instance=saved_qr).data
 
         return response
@@ -71,26 +71,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         save_questionnaire_func = partial(super(QuestionnaireViewSet, self).create, request, *args, **kwargs)
 
-        return self.create_or_update(request, save_questionnaire_func, is_update=False)
+        return self.__create_or_update(request, save_questionnaire_func, is_update=False)
 
     def update(self, request, *args, **kwargs):
         save_questionnaire_func = partial(super(QuestionnaireViewSet, self).update, request, *args, **kwargs)
 
-        return self.create_or_update(request, save_questionnaire_func, is_update=True)
+        return self.__create_or_update(request, save_questionnaire_func, is_update=True)
 
-    def get_pre_existing_child(self, child_id, child_class, pre_existing_parent=None):
-        if pre_existing_parent is None:
-            return None
-        child_class_name_plural = child_class.__name__.lower() + 's'
-
-        # Note : Existing children with a different parent are ignored.
-        children = getattr(pre_existing_parent, child_class_name_plural)
-        pre_existing_child_ids = children.all().values_list('id')
-        if pre_existing_child_ids.filter(id=child_id).exists():
-            return child_class.objects.get(id=child_id)
-        return None
-
-    def validate_all(self, request, pre_existing_questionnaire=None):
+    def __validate_all(self, request, pre_existing_questionnaire=None):
         def validate(serializer_class, data_type, data, pre_existing_object=None):
             if pre_existing_object is None:
                 serializer = serializer_class(data=data)
@@ -106,9 +94,21 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 raise e
             return serializer
 
+        def get_pre_existing_child(child_id, child_class, pre_existing_parent=None):
+            if pre_existing_parent is None:
+                return None
+            child_class_name_plural = child_class.__name__.lower() + 's'
+
+            # Note : Existing children with a different parent are ignored.
+            children = getattr(pre_existing_parent, child_class_name_plural)
+            pre_existing_child_ids = children.all().values_list('id')
+            if pre_existing_child_ids.filter(id=child_id).exists():
+                return child_class.objects.get(id=child_id)
+            return None
+
         def validate_child(child_data, child_class, child_serializer_class, pre_existing_parent):
             child_class_name = child_class.__name__.lower()
-            pre_existing_child = self.get_pre_existing_child(child_data.get('id'), child_class, pre_existing_parent)
+            pre_existing_child = get_pre_existing_child(child_data.get('id'), child_class, pre_existing_parent)
             # if pre_existing_object is None, serializer.save() will create a new instance.
             serializer = validate(serializer_class=child_serializer_class,
                                   data_type=child_class_name,
@@ -145,9 +145,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return validated_themes_and_questions
 
-    def save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
+    def __save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
         def log(data_type, saved_object):
-            self.log_action(user, verb, data_type, saved_object, saved_qr.control)
+            self.__log_action(user, verb, data_type, saved_object, saved_qr.control)
 
         log('questionnaire', saved_qr)
 
@@ -158,7 +158,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 saved_question = question_to_save['serializer'].save(theme=saved_theme)
                 log('question', saved_question)
 
-    def log_action(self, user, verb, data_type, saved_object, control):
+    def __log_action(self, user, verb, data_type, saved_object, control):
         action_details = {
             'sender': user,
             'verb': verb + ' ' + data_type,
