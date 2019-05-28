@@ -418,6 +418,33 @@ def test_questionnaire_delete():
     assert Question.objects.all().count() == 0
 
 
+def test_questionnaire_update__question_delete():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['questions'] = []
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    # data is saved
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+
+    assert Question.objects.all().count() == 0
+
+    # Response data is filled in
+    assert len(response.data['themes'][0].get('questions', [])) == 0
+
+
 #### Question API ####
 
 def call_question_api(user, id):
