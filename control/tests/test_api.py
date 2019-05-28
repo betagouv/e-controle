@@ -184,6 +184,12 @@ def test_questionnaire_create_fails_without_control_id():
     assert response.status_code == 400
     assert_no_data_is_saved()
 
+    # "control" : "" : malformed request
+    payload['control'] = ""
+    response = call_questionnaire_create_api(user, payload)
+    assert response.status_code == 400
+    assert_no_data_is_saved()
+
 
 def test_questionnaire_create_fails_with_malformed_theme():
     control = factories.ControlFactory()

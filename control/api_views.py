@@ -63,6 +63,8 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                                          validated_themes_and_questions=validated_themes_and_questions,
                                          user=request.user,
                                          verb=verb)
+
+        # Use the read serializer to output the response data.
         response.data = QuestionnaireSerializer(instance=saved_qr).data
 
         return response
@@ -78,41 +80,8 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return self.__create_or_update(request, save_questionnaire_func, is_update=True)
 
     def __validate_all(self, request, pre_existing_questionnaire=None):
-        def validate(serializer_class, data_type, data, pre_existing_object=None):
-            if pre_existing_object is None:
-                serializer = serializer_class(data=data)
-            else:
-                serializer = serializer_class(pre_existing_object, data=data)
-
-            serializer.is_valid(raise_exception=True)
-            return serializer
-
-        def get_pre_existing_child(child_id, child_class, pre_existing_parent=None):
-            if pre_existing_parent is None:
-                return None
-            child_class_name_plural = child_class.__name__.lower() + 's'
-
-            # Note : Existing children with a different parent are ignored.
-            children = getattr(pre_existing_parent, child_class_name_plural)
-            pre_existing_child_ids = children.all().values_list('id')
-            if pre_existing_child_ids.filter(id=child_id).exists():
-                return child_class.objects.get(id=child_id)
-            return None
-
-        def validate_child(child_data, child_class, child_serializer_class, pre_existing_parent):
-            child_class_name = child_class.__name__.lower()
-            pre_existing_child = get_pre_existing_child(child_data.get('id'), child_class, pre_existing_parent)
-            # if pre_existing_object is None, serializer.save() will create a new instance.
-            serializer = validate(serializer_class=child_serializer_class,
-                                  data_type=child_class_name,
-                                  data=child_data,
-                                  pre_existing_object=pre_existing_child)
-            return serializer, pre_existing_child
-
-        serializer = validate(serializer_class=QuestionnaireWriteSerializer,
-                 data_type='questionnaire',
-                 data=request.data,
-                 pre_existing_object=pre_existing_questionnaire)
+        serializer = QuestionnaireWriteSerializer(pre_existing_questionnaire, data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
         if not request.user.profile.controls.filter(id=control.id).exists():
@@ -120,35 +89,36 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                                  code=status.HTTP_403_FORBIDDEN)
             raise e
 
-        themes_data = request.data.pop('themes', [])
-        validated_themes_and_questions = []
-        for theme_data in themes_data:
-            questions_data = theme_data.pop('questions', [])
-            (serializer, pre_existing_theme) = \
-                validate_child(theme_data, Theme, ThemeSerializer, pre_existing_questionnaire)
-            validated_themes_and_questions.append({
-                'serializer': serializer,
-                'questions': []
-            })
-            for question_data in questions_data:
-                (serializer, _) = validate_child(question_data, Question, QuestionSerializer, pre_existing_theme)
-                validated_themes_and_questions[-1]['questions'].append({
-                    'serializer': serializer
-                })
-
-        return validated_themes_and_questions
+        return serializer.validated_data.get('themes', [])
 
     def __save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
+        def get_pre_existing_child(child_id, child_class, pre_existing_parent=None):
+            if pre_existing_parent is None or child_id is None:
+                return None
+            child_class_name_plural = child_class.__name__.lower() + 's'
+
+            # Note : Existing children with a different parent are ignored.
+            pre_existing_children = getattr(pre_existing_parent, child_class_name_plural)
+            pre_existing_children_ids = pre_existing_children.all().values_list('id')
+            if pre_existing_children_ids.filter(id=child_id).exists():
+                return child_class.objects.get(id=child_id)
+            return None
+
         def log(data_type, saved_object):
             self.__log_action(user, verb, data_type, saved_object, saved_qr.control)
 
-        log('questionnaire', saved_qr)
-
-        for theme_to_save in validated_themes_and_questions:
-            saved_theme = theme_to_save['serializer'].save(questionnaire=saved_qr)
+        for theme_data in validated_themes_and_questions:
+            pre_existing_theme = get_pre_existing_child(theme_data.get('id', None), Theme, saved_qr)
+            theme_ser = ThemeSerializer(pre_existing_theme, data=theme_data)
+            theme_ser.is_valid(raise_exception=True)
+            saved_theme = theme_ser.save(questionnaire=saved_qr)
             log('theme', saved_theme)
-            for question_to_save in theme_to_save['questions']:
-                saved_question = question_to_save['serializer'].save(theme=saved_theme)
+            questions_data = theme_data.get('questions', [])
+            for question_data in questions_data:
+                pre_existing_question = get_pre_existing_child(question_data.get('id', None), Question, saved_theme)
+                question_ser = QuestionSerializer(pre_existing_question, data=question_data)
+                question_ser.is_valid(raise_exception=True)
+                saved_question = question_ser.save(theme=saved_theme)
                 log('question', saved_question)
 
     def __log_action(self, user, verb, data_type, saved_object, control):

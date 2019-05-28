@@ -57,17 +57,20 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class QuestionWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
     class Meta:
         model = Question
-        fields = ('id', 'description', 'theme')
+        fields = ('id', 'description')
 
 
 class ThemeWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
     questions = QuestionWriteSerializer(many=True, required=False)
 
     class Meta:
         model = Theme
-        fields = ('id', 'title', 'questionnaire', 'questions')
+        fields = ('id', 'title', 'questions')
         # not serialized : order
 
 
