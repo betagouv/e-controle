@@ -177,7 +177,6 @@ def test_questionnaire_create_fails_without_control_id():
     payload.pop('control')
     response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
-    assert response.data['type'] == 'questionnaire'
 
     # "control" : "null" : malformed request
     payload['control'] = None
@@ -194,7 +193,6 @@ def test_questionnaire_create_fails_with_malformed_theme():
     payload['themes'][0].pop('title')
     response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
-    assert response.data['type'] == 'theme'
     assert_no_data_is_saved()
 
 
@@ -206,7 +204,6 @@ def test_questionnaire_create_fails_with_malformed_question():
     payload['themes'][0]['questions'][0].pop('description')
     response = call_questionnaire_create_api(user, payload)
     assert response.status_code == 400
-    assert response.data['type'] == 'question'
     assert_no_data_is_saved()
 
 

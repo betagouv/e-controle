@@ -1,11 +1,10 @@
 from actstream import action
 from functools import partial
 from rest_framework import status, viewsets
-from rest_framework.serializers import ValidationError
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Question, Questionnaire, Theme
-from .serializers import QuestionSerializer, QuestionnaireSerializer, ThemeSerializer
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireWriteSerializer, ThemeSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -85,13 +84,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             else:
                 serializer = serializer_class(pre_existing_object, data=data)
 
-            try:
-                serializer.is_valid(raise_exception=True)
-            except ValidationError as e:
-                # add the data_type to the error, otherwise it's unclear for the API client if the error is on
-                # questionnaire, question or theme.
-                e.detail['type'] = data_type
-                raise e
+            serializer.is_valid(raise_exception=True)
             return serializer
 
         def get_pre_existing_child(child_id, child_class, pre_existing_parent=None):
@@ -116,16 +109,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                                   pre_existing_object=pre_existing_child)
             return serializer, pre_existing_child
 
-        serializer = validate(serializer_class=QuestionnaireSerializer,
+        serializer = validate(serializer_class=QuestionnaireWriteSerializer,
                  data_type='questionnaire',
                  data=request.data,
                  pre_existing_object=pre_existing_questionnaire)
 
         control = serializer.validated_data['control']
-        # Deal with "control": null, which the serializer allows (None counts as a value)
-        if control is None:
-            raise ValidationError(detail='Ce champ ne peut être vide.')
-
         if not request.user.profile.controls.filter(id=control.id).exists():
             e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
                                  code=status.HTTP_403_FORBIDDEN)
