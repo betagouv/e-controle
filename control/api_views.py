@@ -92,30 +92,29 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return serializer.validated_data.get('themes', [])
 
     def __save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
-        def get_pre_existing_child(child_id, child_class, pre_existing_parent=None):
-            if pre_existing_parent is None or child_id is None:
+        def find_child_obj_by_id(parent_obj, obj_id, obj_class):
+            if parent_obj is None or obj_id is None:
                 return None
-            child_class_name_plural = child_class.__name__.lower() + 's'
+            child_class_name_plural = obj_class.__name__.lower() + 's'
 
-            # Note : Existing children with a different parent are ignored.
-            pre_existing_children = getattr(pre_existing_parent, child_class_name_plural)
-            pre_existing_children_ids = pre_existing_children.all().values_list('id')
-            if pre_existing_children_ids.filter(id=child_id).exists():
-                return child_class.objects.get(id=child_id)
+            children = getattr(parent_obj, child_class_name_plural)
+            children_ids = children.all().values_list('id')
+            if children_ids.filter(id=obj_id).exists():
+                return obj_class.objects.get(id=obj_id)
             return None
 
         def log(data_type, saved_object):
             self.__log_action(user, verb, data_type, saved_object, saved_qr.control)
 
         for theme_data in validated_themes_and_questions:
-            pre_existing_theme = get_pre_existing_child(theme_data.get('id', None), Theme, saved_qr)
+            pre_existing_theme = find_child_obj_by_id(saved_qr, theme_data.get('id', None), Theme)
             theme_ser = ThemeSerializer(pre_existing_theme, data=theme_data)
             theme_ser.is_valid(raise_exception=True)
             saved_theme = theme_ser.save(questionnaire=saved_qr)
             log('theme', saved_theme)
             questions_data = theme_data.get('questions', [])
             for question_data in questions_data:
-                pre_existing_question = get_pre_existing_child(question_data.get('id', None), Question, saved_theme)
+                pre_existing_question = find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
                 question_ser = QuestionSerializer(pre_existing_question, data=question_data)
                 question_ser.is_valid(raise_exception=True)
                 saved_question = question_ser.save(theme=saved_theme)
