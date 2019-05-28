@@ -18,7 +18,7 @@ class CCDomainController(BaseDomainController):
 
     - On startup, to check if anonymous access is allowed for a given share.
     In this case, `environ` is None.
-    - For every request, before basic or digest authentication is handled.
+    - For every request, before basic or digest magicauth is handled.
 
     A domain controller that uses the share path as realm name may use
     the `_calc_realm_from_path_provider()` helper.
@@ -41,18 +41,18 @@ class CCDomainController(BaseDomainController):
 
 
   def require_authentication(self, realm, environ):
-    """Return False to disable authentication for this request.
+    """Return False to disable magicauth for this request.
 
     This method is called
 
     - On startup, to check if anonymous access is allowed for a given share.
     In this case, `environ` is None.
-    - For every request, before basic or digest authentication is handled.
+    - For every request, before basic or digest magicauth is handled.
     If False is returned, we MAY also set environment variables for
     anonymous access::
 
-        environment["wsgidav.auth.roles"] = (<role>, ...)
-        environment["wsgidav.auth.permissions"] = (<perm>, ...)
+        environment["wsgidav.magicauth.roles"] = (<role>, ...)
+        environment["wsgidav.magicauth.permissions"] = (<perm>, ...)
         return False
 
     Args:
@@ -60,19 +60,19 @@ class CCDomainController(BaseDomainController):
     environ (dict | None):
     Returns:
     False to allow anonymous access
-    True to force subsequent digest or basic authentication
+    True to force subsequent digest or basic magicauth
     """
     return True
 
   def basic_auth_user(self, realm, user_name, password, environ):
     """Check request access permissions for realm/user_name/password.
 
-    Called by http_authenticator for basic authentication requests.
+    Called by http_authenticator for basic magicauth requests.
 
     Optionally set environment variables:
 
-    environ["wsgidav.auth.roles"] = (<role>, ...)
-    environ["wsgidav.auth.permissions"] = (<perm>, ...)
+    environ["wsgidav.magicauth.roles"] = (<role>, ...)
+    environ["wsgidav.magicauth.permissions"] = (<perm>, ...)
 
     Args:
     realm (str): In this case the realm is equal to the control code or ab empty string
@@ -83,27 +83,27 @@ class CCDomainController(BaseDomainController):
     False if user is not known or not authorized
     True if user is authorized
     """
-    logging.debug('Start basic auth user')
+    logging.debug('Start basic magicauth user')
     username = environ['REMOTE_USER'] # example avalingot@CCOMPTES.FR
     username = username.split('@', 1)[0]
 
     # We know that the following user exists in the LDAP
     # We now check the realm
     try:
-      logging.info(f'Basic auth: LDAP Sever (username: {username})')
+      logging.info(f'Basic magicauth: LDAP Sever (username: {username})')
       server = Server(settings.LDAP_SERVER, get_info=ALL)
       conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
-      logging.debug('Basic auth: LDAP Binding')
+      logging.debug('Basic magicauth: LDAP Binding')
       if conn.bind():
         conn.search(settings.LDAP_DC,
                     f'(&(objectClass=user)(sAMAccountName={username}))',
                     attributes=['mail'])
-        logging.debug('Basic auth: LDAP search')
+        logging.debug('Basic magicauth: LDAP search')
         if len(conn.entries) == 1:
           email = conn.entries[0].mail.value
-          user = User.objects.get(email=email)
-          environ["wsgidav.auth.roles"] = ("reader")
+          user = User.objects.get(username=email.lower())
+          environ["wsgidav.magicauth.roles"] = ("reader")
           if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
             return True
         else:
@@ -118,7 +118,7 @@ class CCDomainController(BaseDomainController):
       return False
 
   def supports_http_digest_auth(self):
-    """Signal if this DC instance supports the HTTP digest authentication theme.
+    """Signal if this DC instance supports the HTTP digest magicauth theme.
 
     If true, `HTTPAuthenticator` will call `dc.digest_auth_user()`,
     so this method must be implemented as well.
@@ -132,7 +132,7 @@ class CCDomainController(BaseDomainController):
     pass
     """Check access permissions for realm/user_name.
 
-    Called by http_authenticator for basic authentication requests.
+    Called by http_authenticator for basic magicauth requests.
 
     Compute the HTTP digest hash A1 part.
 
@@ -141,8 +141,8 @@ class CCDomainController(BaseDomainController):
 
     Optionally set environment variables:
 
-        environ["wsgidav.auth.roles"] = (<role>, ...)
-        environ["wsgidav.auth.permissions"] = (<perm>, ...)
+        environ["wsgidav.magicauth.roles"] = (<role>, ...)
+        environ["wsgidav.magicauth.permissions"] = (<perm>, ...)
 
     Note that in order to calculate A1, we need either
 
