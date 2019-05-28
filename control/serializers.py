@@ -52,3 +52,38 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
+
+
+
+
+class QuestionWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = Question
+        fields = ('id', 'description')
+
+
+class ThemeWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    questions = QuestionWriteSerializer(many=True, required=False)
+
+    class Meta:
+        model = Theme
+        fields = ('id', 'title', 'questions')
+        # not serialized : order
+
+
+class QuestionnaireWriteSerializer(serializers.ModelSerializer):
+    themes = ThemeWriteSerializer(many=True, required=False)
+
+    class Meta:
+        model = Questionnaire
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes')
+        extra_kwargs = {
+            'control': {
+                'required': True,
+                'allow_null': False,
+            }
+        }
+        # not serialized (yet) : file, order
