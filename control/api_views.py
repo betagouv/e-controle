@@ -116,13 +116,17 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                                   pre_existing_object=pre_existing_child)
             return serializer, pre_existing_child
 
-        validate(serializer_class=QuestionnaireSerializer,
+        serializer = validate(serializer_class=QuestionnaireSerializer,
                  data_type='questionnaire',
                  data=request.data,
                  pre_existing_object=pre_existing_questionnaire)
 
-        control_id = request.data['control']
-        if not request.user.profile.controls.filter(id=control_id).exists():
+        control = serializer.validated_data['control']
+        # Deal with "control": null, which the serializer allows (None counts as a value)
+        if control is None:
+            raise ValidationError(detail='Ce champ ne peut être vide.')
+
+        if not request.user.profile.controls.filter(id=control.id).exists():
             e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
                                  code=status.HTTP_403_FORBIDDEN)
             raise e

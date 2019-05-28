@@ -179,10 +179,10 @@ def test_questionnaire_create_fails_without_control_id():
     assert response.status_code == 400
     assert response.data['type'] == 'questionnaire'
 
-    # "control" : "null" : not allowed
+    # "control" : "null" : malformed request
     payload['control'] = None
     response = call_questionnaire_create_api(user, payload)
-    assert response.status_code == 403
+    assert response.status_code == 400
     assert_no_data_is_saved()
 
 
