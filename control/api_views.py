@@ -93,6 +93,13 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
     def __save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
         def find_child_obj_by_id(parent_obj, obj_id, obj_class):
+            """
+            If obj_id is in parent_obj's children, return the corresponding object. Else return none.
+            :param parent_obj: e.g. an instance of Questionnaire
+            :param obj_id: e.g. 3
+            :param obj_class: e.g. Theme
+            :return:
+            """
             if parent_obj is None or obj_id is None:
                 return None
             child_class_name_plural = obj_class.__name__.lower() + 's'
