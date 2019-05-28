@@ -57,7 +57,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         validated_themes_and_questions = self.__validate_all(request, pre_existing_qr)
         response = save_questionnaire_func()
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.__log_action(request.user, verb, 'questionnaire', saved_qr, saved_qr.control)
+        self.__log_action(request.user, verb, saved_qr, saved_qr.control)
 
         self.__save_themes_and_questions(saved_qr=saved_qr,
                                          validated_themes_and_questions=validated_themes_and_questions,
@@ -103,27 +103,27 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 return obj_class.objects.get(id=obj_id)
             return None
 
-        def log(data_type, saved_object):
-            self.__log_action(user, verb, data_type, saved_object, saved_qr.control)
+        def log(saved_object):
+            self.__log_action(user, verb, saved_object, saved_qr.control)
 
         for theme_data in validated_themes_and_questions:
             pre_existing_theme = find_child_obj_by_id(saved_qr, theme_data.get('id', None), Theme)
             theme_ser = ThemeSerializer(pre_existing_theme, data=theme_data)
             theme_ser.is_valid(raise_exception=True)
             saved_theme = theme_ser.save(questionnaire=saved_qr)
-            log('theme', saved_theme)
+            log(saved_theme)
             questions_data = theme_data.get('questions', [])
             for question_data in questions_data:
                 pre_existing_question = find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
                 question_ser = QuestionSerializer(pre_existing_question, data=question_data)
                 question_ser.is_valid(raise_exception=True)
                 saved_question = question_ser.save(theme=saved_theme)
-                log('question', saved_question)
+                log(saved_question)
 
-    def __log_action(self, user, verb, data_type, saved_object, control):
+    def __log_action(self, user, verb, saved_object, control):
         action_details = {
             'sender': user,
-            'verb': verb + ' ' + data_type,
+            'verb': verb + ' ' + saved_object.__class__.__name__.lower(),
             'action_object': saved_object,
             'target': control,
         }
