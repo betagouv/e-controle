@@ -120,6 +120,11 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             saved_theme = theme_ser.save(questionnaire=saved_qr)
             log(saved_theme)
             questions_data = theme_data.get('questions', [])
+            # remove questions that aren't in request.
+            for pre_existing_question in saved_theme.questions.all():
+                if pre_existing_question.id not in set(map(lambda x: x.get('id', None), questions_data)):
+                    pre_existing_question.delete()
+            # add questions that are in request
             for question_data in questions_data:
                 pre_existing_question = find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
                 question_ser = QuestionSerializer(pre_existing_question, data=question_data)
