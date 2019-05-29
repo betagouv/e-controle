@@ -51,7 +51,10 @@
             done: function() {
                 if (this.questionnaire.end_date) {
                     this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
+                } else {
+                    delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
                 }
+
                 console.log('Questionnaire to save : ', this.questionnaire)
                 this.createQuestionnaire()
             },
@@ -59,6 +62,7 @@
                 axios.post(create_questionnaire_url, this.questionnaire)
                     .then(function (response) {
                         console.log(response)
+                        window.location.href = '/accueil/'
                     }).catch(function(e) {
                         console.log(e)
                     });
