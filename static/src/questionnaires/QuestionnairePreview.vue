@@ -16,9 +16,14 @@
 </template>
 
 <script>
+    import axios from "axios"
     import moment from "moment"
     import Vue from "vue"
     import QuestionnaireDetail from "./QuestionnaireDetail"
+
+    const create_questionnaire_url = "/api/questionnaire/"
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
     export default Vue.extend({
         data: function() {
@@ -48,7 +53,15 @@
                     this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
                 }
                 console.log('Questionnaire to save : ', this.questionnaire)
-                alert("C'est fini pour cette activité! Merci!");
+                this.createQuestionnaire()
+            },
+            createQuestionnaire(){
+                axios.post(create_questionnaire_url, this.questionnaire)
+                    .then(function (response) {
+                        console.log(response)
+                    }).catch(function(e) {
+                        console.log(e)
+                    });
             }
         },
         components: {
