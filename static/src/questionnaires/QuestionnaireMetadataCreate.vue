@@ -52,7 +52,6 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       return {
         metadata: {
             'description': DESCRIPTION_DEFAULT,
-            'sent_date': '',
             'end_date': '',
             'title': ''
         },
@@ -62,8 +61,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
     },
     methods: {
       createMetadata: function () {
-        console.log('metadata created sortof')
-        console.log(this.metadata)
+        console.log('metadata created', this.metadata)
         this.$emit('metadata-created', this.metadata)
       }
     },
