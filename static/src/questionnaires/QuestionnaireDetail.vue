@@ -1,24 +1,24 @@
 <template>
   <div>
-    <div v-if="questionnaire.metadata">
-      <div v-if="questionnaire.metadata.title" class="card-header">
-        <h3 class="card-title">{{questionnaire.metadata.title}}</h3>
+    <div>
+      <div v-if="questionnaire.title" class="card-header">
+        <h3 class="card-title">{{questionnaire.title}}</h3>
       </div>
       <div id="metadata" class="card">
         <div class="card-body">
           <p>
-            {{ questionnaire.metadata.description }}
+            {{ questionnaire.description }}
           </p>
-          <p v-if="questionnaire.metadata.sent_date">
+          <p v-if="questionnaire.sent_date">
             <i class="fe fe-send"></i>
             Date de transmission du questionnaire :
-            {{ questionnaire.metadata.sent_date}}
+            {{ questionnaire.sent_date}}
           </p>
 
-          <p v-if="questionnaire.metadata.end_date">
+          <p v-if="questionnaire.end_date">
             <i class="fe fe-clock"></i>
             Date de réponse souhaitée :
-            {{ questionnaire.metadata.end_date | DateFormat}}
+            {{ questionnaire.end_date | DateFormat}}
           </p>
         </div>
       </div>

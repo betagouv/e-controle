@@ -28,9 +28,9 @@
         mounted() {
             let updateQuestionnaire = function(data) {
                 // Use Vue's $set to make the properties reactive.
-                this.$set(this.questionnaire, 'control', data.control);
-                this.$set(this.questionnaire, 'metadata', data.metadata);
-                this.$set(this.questionnaire, 'body', data.body);
+                for (const [key, value] of Object.entries(data)) {
+                    this.$set(this.questionnaire, key, value)
+                }
             }.bind(this);
 
             this.$parent.$on('questionnaire-updated', function(data) {

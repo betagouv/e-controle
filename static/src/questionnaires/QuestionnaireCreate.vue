@@ -65,15 +65,15 @@
       },
       bodyCreated: function(data) {
         console.log('got body', data);
-        // "this" is the child component.
         this.questionnaire.body = data;
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
       metadataCreated: function(data) {
         console.log('got metadata', data);
-        // "this" is the child component.
-        this.questionnaire.metadata = data;
+        for (const [key, value] of Object.entries(data)) {
+          this.questionnaire[key] = value
+        }
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
       },
