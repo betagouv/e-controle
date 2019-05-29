@@ -16,6 +16,7 @@
 </template>
 
 <script>
+    import moment from "moment"
     import Vue from "vue"
     import QuestionnaireDetail from "./QuestionnaireDetail"
 
@@ -43,6 +44,9 @@
                 this.$emit('back');
             },
             done: function() {
+                if (this.questionnaire.end_date) {
+                    this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
+                }
                 console.log('Questionnaire to save : ', this.questionnaire)
                 alert("C'est fini pour cette activité! Merci!");
             }
