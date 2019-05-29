@@ -4,7 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Question, Questionnaire, Theme
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireWriteSerializer, ThemeSerializer
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer, ThemeSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -80,7 +80,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return self.__create_or_update(request, save_questionnaire_func, is_update=True)
 
     def __validate_all(self, request, pre_existing_questionnaire=None):
-        serializer = QuestionnaireWriteSerializer(pre_existing_questionnaire, data=request.data)
+        serializer = QuestionnaireUpdateSerializer(pre_existing_questionnaire, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
@@ -120,6 +120,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             saved_theme = theme_ser.save(questionnaire=saved_qr)
             log(saved_theme)
             questions_data = theme_data.get('questions', [])
+            # remove questions that aren't in request.
+            ids_in_request = [questions_data[i].get('id', None) for i in range(len(questions_data))]
+            for pre_existing_question in saved_theme.questions.all():
+                if pre_existing_question.id not in ids_in_request:
+                    pre_existing_question.delete()
+            # add questions that are in request
             for question_data in questions_data:
                 pre_existing_question = find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
                 question_ser = QuestionSerializer(pre_existing_question, data=question_data)

@@ -41,6 +41,13 @@ def call_questionnaire_update_api(user, payload):
     return response
 
 
+def call_questionnaire_delete_api(user, id):
+    utils.login(client, user=user)
+    url = reverse('api:questionnaire-detail', args=[id])
+    response = client.delete(url)
+    return response
+
+
 def make_payload(control_id):
     return {
         "title": "questionnaire questionnaire",
@@ -381,7 +388,7 @@ def test_questionnaire_update__question_create():
 
 def test_questionnaire_update__question_create_if_bad_id():
     added_question = {
-        'id': 123,  # id is bad. It should be ignored, so that this theme is considered new.
+        'id': 123,  # id is bad. It should be ignored, so that this question is considered new.
         'description': 'this is a great question.'
     }
     run_test_questionnaire_update__question_create(added_question)
@@ -389,6 +396,105 @@ def test_questionnaire_update__question_create_if_bad_id():
     # Id in payload was ignored and new id was assigned to the new question
     new_question = Question.objects.last()
     assert new_question.id != added_question['id']
+
+
+def test_questionnaire_delete():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_delete_api(user, questionnaire.id)
+    assert 200 <= response.status_code < 300
+
+    # Cascade delete : child objects are deleted
+    assert Questionnaire.objects.all().count() == 0
+    assert Theme.objects.all().count() == 0
+    assert Question.objects.all().count() == 0
+
+
+def test_questionnaire_update__question_delete():
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    payload['themes'][0]['questions'] = []
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    # data is saved
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+
+    assert Question.objects.all().count() == 0
+
+    # Response data is filled in
+    assert len(response.data['themes'][0].get('questions', [])) == 0
+
+
+def run_test_questionnaire_update__question_recreated(modify_payload_func):
+    increment_ids()
+    question = factories.QuestionFactory()
+    theme = question.theme
+    questionnaire = theme.questionnaire
+    user = make_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    original_id = payload['themes'][0]['questions'][0]['id']
+    modify_payload_func(payload)
+
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
+
+    response = call_questionnaire_update_api(user, payload)
+    assert response.status_code == 200
+
+    # data is saved
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+
+    assert Question.objects.all().count() == 1
+    # Original question was deleted
+    assert Question.objects.all().last().id != original_id
+
+    # Response data is filled in
+    assert len(response.data['themes'][0].get('questions', [])) == 1
+
+
+def test_questionnaire_update__question_recreated_if_no_id():
+    def modify_payload(payload):
+        payload['themes'][0]['questions'][0].pop('id')
+
+    run_test_questionnaire_update__question_recreated(modify_payload)
+
+
+def test_questionnaire_update__question_recreated_if_bad_id():
+    bad_id = 123456
+
+    def modify_payload(payload):
+        good_id = payload['themes'][0]['questions'][0]['id']
+        assert good_id != bad_id
+        payload['themes'][0]['questions'][0]['id'] = bad_id
+
+    run_test_questionnaire_update__question_recreated(modify_payload)
+
+    # The new question has a new id.
+    assert Question.objects.all().last().id != bad_id
+
 
 
 #### Question API ####
