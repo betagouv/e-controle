@@ -54,9 +54,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         # not serialized (yet) : file, order
 
 
-
-
-class QuestionWriteSerializer(serializers.ModelSerializer):
+class QuestionUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -64,18 +62,17 @@ class QuestionWriteSerializer(serializers.ModelSerializer):
         fields = ('id', 'description')
 
 
-class ThemeWriteSerializer(serializers.ModelSerializer):
+class ThemeUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-    questions = QuestionWriteSerializer(many=True, required=False)
+    questions = QuestionUpdateSerializer(many=True, required=False)
 
     class Meta:
         model = Theme
         fields = ('id', 'title', 'questions')
-        # not serialized : order
 
 
-class QuestionnaireWriteSerializer(serializers.ModelSerializer):
-    themes = ThemeWriteSerializer(many=True, required=False)
+class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
+    themes = ThemeUpdateSerializer(many=True, required=False)
 
     class Meta:
         model = Questionnaire
@@ -86,4 +83,3 @@ class QuestionnaireWriteSerializer(serializers.ModelSerializer):
                 'allow_null': False,
             }
         }
-        # not serialized (yet) : file, order

@@ -4,7 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Question, Questionnaire, Theme
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireWriteSerializer, ThemeSerializer
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer, ThemeSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -80,7 +80,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         return self.__create_or_update(request, save_questionnaire_func, is_update=True)
 
     def __validate_all(self, request, pre_existing_questionnaire=None):
-        serializer = QuestionnaireWriteSerializer(pre_existing_questionnaire, data=request.data)
+        serializer = QuestionnaireUpdateSerializer(pre_existing_questionnaire, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
