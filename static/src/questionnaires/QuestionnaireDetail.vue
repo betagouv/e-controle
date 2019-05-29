@@ -34,7 +34,7 @@
               </div>
               <table class="table card-table">
                 <tbody>
-                <tr v-for="(theme, themeIndex) in questionnaire.body" class="theme-row">
+                <tr v-for="(theme, themeIndex) in questionnaire.themes" class="theme-row">
                   <td>
                     <a v-bind:href="'#theme' + (themeIndex + 1)">
                       {{ themeIndex + 1 }}. {{ theme.title }}
@@ -50,7 +50,7 @@
 
       <div class="col-lg-8" id="question-detail-app">
         <div v-bind:id="'theme' + (themeIndex + 1)"
-             v-for="(theme, themeIndex) in questionnaire.body"
+             v-for="(theme, themeIndex) in questionnaire.themes"
              class="card">
           <div class="card-status card-status-top bg-blue"></div>
           <div class="card-header">

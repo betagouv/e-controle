@@ -65,7 +65,7 @@
       },
       bodyCreated: function(data) {
         console.log('got body', data);
-        this.questionnaire.body = data;
+        this.questionnaire.themes = data;
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
