@@ -34,10 +34,10 @@
               </div>
               <table class="table card-table">
                 <tbody>
-                <tr v-for="(group, groupIndex) in questionnaire.body" class="theme-row">
+                <tr v-for="(theme, themeIndex) in questionnaire.body" class="theme-row">
                   <td>
-                    <a v-bind:href="'#theme' + (groupIndex + 1)">
-                      {{ groupIndex + 1 }}. {{ group.theme }}
+                    <a v-bind:href="'#theme' + (themeIndex + 1)">
+                      {{ themeIndex + 1 }}. {{ theme.title }}
                     </a>
                   </td>
                 </tr>
@@ -49,22 +49,22 @@
       </div>
 
       <div class="col-lg-8" id="question-detail-app">
-        <div v-bind:id="'theme' + (groupIndex + 1)"
-             v-for="(group, groupIndex) in questionnaire.body"
+        <div v-bind:id="'theme' + (themeIndex + 1)"
+             v-for="(theme, themeIndex) in questionnaire.body"
              class="card">
           <div class="card-status card-status-top bg-blue"></div>
           <div class="card-header">
-            <h3 class="card-title">{{ groupIndex + 1 }}. {{ group.theme }}</h3>
+            <h3 class="card-title">{{ themeIndex + 1 }}. {{ theme.title }}</h3>
           </div>
-          <div v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)"
-               v-for="(question, qIndex) in group.questions"
+          <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+               v-for="(question, qIndex) in theme.questions"
                class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
             <div class="card-header border-1" data-toggle="card-collapse">
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                {{ groupIndex + 1 }}.{{ qIndex + 1 }}
+                {{ themeIndex + 1 }}.{{ qIndex + 1 }}
               </span>
               <div class="card-text" style="cursor: pointer">
-                {{ question }}
+                {{ question.description }}
               </div>
             </div>
 

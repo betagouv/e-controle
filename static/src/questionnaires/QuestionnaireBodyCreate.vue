@@ -2,42 +2,42 @@
   <div>
     <form @submit.prevent="createBody">
 
-      <div class="card" v-for="(group, groupIndex) in body">
+      <div class="card" v-for="(theme, themeIndex) in body">
         <div class="card-status card-status-top bg-blue">
         </div>
 
         <div class="card-header">
-          <label v-bind:for="'theme' + (groupIndex + 1)" class="form-label-h3">
-            <h3 class="card-title">{{groupIndex + 1}}.</h3>
+          <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
+            <h3 class="card-title">{{themeIndex + 1}}.</h3>
           </label>
           <input class="form-control form-control-h3"
                  placeholder="Ecrivez un thème ici"
                  type="text"
-                 v-bind:id="'theme' + (groupIndex + 1)"
-                 v-model="body[groupIndex].theme">
+                 v-bind:id="'theme' + (themeIndex + 1)"
+                 v-model="body[themeIndex].title">
           <span>
-            <a href="javascript:void(0)" @click.prevent="deleteTheme(groupIndex)" class="btn btn-link">
+            <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link">
               <i class="fe fe-trash-2"></i>Supprimer
             </a>
           </span>
         </div>
 
-        <div v-for="(question, qIndex) in body[groupIndex].questions"
+        <div v-for="(question, qIndex) in body[themeIndex].questions"
              class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
           <div class="card-header border-1" data-toggle="card-collapse" >
-            <label v-bind:for="'question' + (groupIndex + 1) + '.' + (qIndex + 1)">
+            <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                {{ groupIndex + 1 }}.{{ qIndex + 1 }}
+                {{ themeIndex + 1 }}.{{ qIndex + 1 }}
               </span>
             </label>
             <textarea class="form-control"
                       placeholder="Ecrivez une question ici"
                       rows="4"
-                      v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)"
-                      v-model="body[groupIndex].questions[qIndex]">
+                      v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                      v-model="body[themeIndex].questions[qIndex].description">
             </textarea>
             <span>
-              <a href="javascript:void(0)" @click.prevent="deleteQuestion(groupIndex, qIndex)" class="btn btn-link">
+              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
                 <i class="fe fe-trash-2"></i>Supprimer
               </a>
             </span>
@@ -45,7 +45,7 @@
         </div>
 
         <div class="card-footer text-right">
-          <a href="javascript:void(0)" @click.prevent="addQuestion(groupIndex)" class="btn btn-primary">
+          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary">
             <i class="fe fe-plus"></i>Ajouter une question
           </a>
         </div>
@@ -56,7 +56,7 @@
         <div class="card-footer text-right">
           <div class="card-status card-status-top bg-blue">
           </div>
-          <a href="javascript:void(0)" @click="addGroup()" class="btn btn-primary">
+          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary">
             <i class="fe fe-plus"></i>Ajouter un thème
           </a>
         </div>
@@ -84,9 +84,9 @@
       return {
         body: [
           {
-            theme: "",
+            title: "",
             questions: [
-                    "",
+              {description: ""},
             ]
           }
         ],
@@ -98,23 +98,22 @@
         this.$emit('back');
       },
       createBody: function () {
-        console.log('body created sortof')
         console.log(this.body)
         this.$emit('body-created', this.body)
       },
-      addQuestion: function (groupIndex) {
-        console.log('addQuestion', groupIndex)
-        this.body[groupIndex].questions.push("");
+      addQuestion: function (themeIndex) {
+        console.log('addQuestion', themeIndex)
+        this.body[themeIndex].questions.push({ description: ""});
       },
-      addGroup: function (index) {
-        console.log('addGroup', index)
-        this.body.push({ theme: "", questions: [""]})
+      addTheme: function () {
+        console.log('addTheme')
+        this.body.push({ title: "", questions: [{description: ""}]})
       },
-      deleteQuestion: function(groupIndex, qIndex) {
-        this.body[groupIndex].questions.splice(qIndex, 1);
+      deleteQuestion: function(themeIndex, qIndex) {
+        this.body[themeIndex].questions.splice(qIndex, 1);
       },
-      deleteTheme: function(groupIndex) {
-        this.body.splice(groupIndex, 1);
+      deleteTheme: function(themeIndex) {
+        this.body.splice(themeIndex, 1);
       }
     }
   });
