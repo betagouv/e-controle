@@ -121,8 +121,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             log(saved_theme)
             questions_data = theme_data.get('questions', [])
             # remove questions that aren't in request.
+            ids_in_request = [questions_data[i].get('id', None) for i in range(len(questions_data))]
             for pre_existing_question in saved_theme.questions.all():
-                if pre_existing_question.id not in set(map(lambda x: x.get('id', None), questions_data)):
+                if pre_existing_question.id not in ids_in_request:
                     pre_existing_question.delete()
             # add questions that are in request
             for question_data in questions_data:
