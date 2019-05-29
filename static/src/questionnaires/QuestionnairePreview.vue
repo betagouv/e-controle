@@ -28,6 +28,7 @@
         mounted() {
             let updateQuestionnaire = function(data) {
                 // Use Vue's $set to make the properties reactive.
+                this.$set(this.questionnaire, 'control', data.control);
                 this.$set(this.questionnaire, 'metadata', data.metadata);
                 this.$set(this.questionnaire, 'body', data.body);
             }.bind(this);
@@ -42,6 +43,7 @@
                 this.$emit('back');
             },
             done: function() {
+                console.log('Questionnaire to save : ', this.questionnaire)
                 alert("C'est fini pour cette activité! Merci!");
             }
         },

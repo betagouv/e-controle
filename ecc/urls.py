@@ -33,7 +33,7 @@ urlpatterns = [
 
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
-    path('questionnaire/controle-<int:controlId>/creer',
+    path('questionnaire/controle-<int:control_id>/creer',
          control_views.QuestionnaireCreate.as_view(),
          name='questionnaire-create'),
     path('fichier-questionnaire/<int:pk>/',

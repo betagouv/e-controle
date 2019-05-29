@@ -35,6 +35,9 @@
   };
 
   export default Vue.extend({
+    props: {
+      controlId: Number,
+    },
     data() {
       return {
         STATES : STATES,
@@ -42,19 +45,20 @@
         state: STATES.START
       }
     },
-    methods: {
-    },
     components: {
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
       QuestionnairePreview
     },
     mounted() {
-      this.emitQuestionnaireUpdated();
+      this.questionnaire.control = this.controlId
+      this.emitQuestionnaireUpdated()
+      console.log('controlId', this.controlId)
+      console.log('questionnaire', this.questionnaire)
     },
     methods: {
       emitQuestionnaireUpdated: function() {
-        this.$emit('questionnaire-updated', this.questionnaire);
+        this.$emit('questionnaire-updated', this.questionnaire)
       },
       moveToState: function(newState) {
         this.state = newState;

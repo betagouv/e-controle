@@ -45,8 +45,6 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
 
 
 class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    # todo : how to pass in the control's id from the url?
-
     template_name = "ecc/questionnaire_create.html"
 
 
