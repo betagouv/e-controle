@@ -25,19 +25,25 @@ router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='u
 
 urlpatterns = [
     path('', ecc_views.login, name='login'),
+    path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-    path('accueil/', control_views.questionnaire_list, name='questionnaire-list'),
-    path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
-    path('questionnaire/controle-<int:controlId>/creer', control_views.questionnaire_create, name='questionnaire-create'),
-    path('faq/', control_views.faq, name='faq'),
     path('login/', magicauth_views.magic_link, name='magicauth-login'),
     path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
     path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
-    path('upload/', control_views.upload_response_file, name='response-upload'),
-    path('fichier-questionnaire/<int:pk>/', control_views.send_questionnaire_file, name='send-questionnaire-file'),
-    path('fichier-question/<int:pk>/', control_views.send_question_file, name='send-question-file'),
-    path('fichier-reponse/<int:pk>/', control_views.send_response_file, name='send-response-file'),
-    path('admin/', admin.site.urls),
+
+    path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
+    path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
+    path('questionnaire/controle-<int:controlId>/creer',
+         control_views.QuestionnaireCreate.as_view(),
+         name='questionnaire-create'),
+    path('fichier-questionnaire/<int:pk>/',
+         control_views.SendQuestionnaireFile.as_view(),
+         name='send-questionnaire-file'),
+    path('fichier-question/<int:pk>/', control_views.SendQuestionFile.as_view(), name='send-question-file'),
+    path('fichier-reponse/<int:pk>/', control_views.SendResponseFile.as_view(), name='send-response-file'),
+
+    path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
+    path('faq/', control_views.FAQ.as_view(), name='faq'),
 ]
 
 urlpatterns += [
