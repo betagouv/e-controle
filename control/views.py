@@ -116,6 +116,16 @@ class SendResponseFile(SendQuestionFile):
     model = ResponseFile
 
 
+class DownloadZip(LoginRequiredMixin, SingleObjectMixin, View):
+
+    def get_queryset(self):
+        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
+
+    def get(self, request, *args, **kwargs):
+        return sendfile(
+            request, 'tests/data/test.pdf', attachment=True, attachment_filename="test.pdf")
+
+
 faq = FAQ.as_view()
 questionnaire_create = QuestionnaireCreate.as_view()
 questionnaire_detail = QuestionnaireDetail.as_view()
@@ -124,3 +134,4 @@ send_question_file = SendQuestionFile.as_view()
 send_questionnaire_file = SendQuestionnaireFile.as_view()
 send_response_file = SendResponseFile.as_view()
 upload_response_file = UploadResponseFile.as_view()
+download_zip = DownloadZip.as_view()

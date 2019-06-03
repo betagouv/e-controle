@@ -27,6 +27,7 @@ urlpatterns = [
     path('', ecc_views.login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('accueil/', control_views.questionnaire_list, name='questionnaire-list'),
+    path('questionnaire/<int:pk>/zip/', control_views.download_zip, name='download-zip'),
     path('questionnaire/<int:pk>/', control_views.questionnaire_detail, name='questionnaire-detail'),
     path('questionnaire/controle-<int:controlId>/creer', control_views.questionnaire_create, name='questionnaire-create'),
     path('faq/', control_views.faq, name='faq'),
