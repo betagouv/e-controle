@@ -60,6 +60,9 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
+    is_draft = models.BooleanField(
+        verbose_name="brouillon", default=False,
+        help_text="Ce questionnaire est-il encore au stade de brouillon?")
 
     class Meta:
         ordering = ('control', 'order')
