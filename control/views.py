@@ -44,8 +44,15 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return context
 
 
-class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
+class QuestionnaireCreate(LoginRequiredMixin, DetailView):
+    """
+    Creates a questionnaire on a given control (pk of control passed in URL).
+    """
     template_name = "ecc/questionnaire_create.html"
+    context_object_name = 'control'
+
+    def get_queryset(self):
+        return Control.objects.filter(id__in=self.request.user.profile.controls.all())
 
 
 class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
