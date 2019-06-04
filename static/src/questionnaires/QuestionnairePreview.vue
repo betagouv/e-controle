@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="hasErrors" class="alert alert-danger">
+          L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+        </div>
         <div class="preview">
             <questionnaire-detail v-bind:questionnaire="questionnaire">
             </questionnaire-detail>
@@ -28,7 +31,9 @@
     export default Vue.extend({
         data: function() {
             return {
-                questionnaire: {}
+                errors: [],
+                hasErrors: false,
+                questionnaire: {},
             }
         },
         mounted() {
@@ -46,7 +51,12 @@
         },
         methods: {
             back: function() {
-                this.$emit('back');
+                this.clearErrors()
+                this.$emit('back')
+            },
+            clearErrors() {
+                this.errors = []
+                this.hasErrors = false
             },
             done: function() {
                 if (this.questionnaire.end_date) {
@@ -59,12 +69,15 @@
                 this.createQuestionnaire()
             },
             createQuestionnaire(){
+                this.clearErrors()
                 axios.post(create_questionnaire_url, this.questionnaire)
-                    .then(function (response) {
+                    .then(response => {
                         console.log(response)
                         window.location.href = '/accueil/'
-                    }).catch(function(e) {
-                        console.log(e)
+                    }).catch(error => {
+                        console.log(error)
+                        this.hasErrors = true
+                        this.errors = error.response.data
                     });
             }
         },
