@@ -20,19 +20,24 @@
 </template>
 
 <script>
-  import Vue from "vue";
+  import axios from "axios"
+  import Vue from "vue"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
-  import QuestionnairePreview from "./QuestionnairePreview";
+  import QuestionnairePreview from "./QuestionnairePreview"
 
   // State machine
-  let STATES = {
+  const STATES = {
     START : "start",
     // Transition : metadata-created / back
     CREATING_BODY : "creating_body",
     // Transition : body-created / back
     PREVIEW: "preview"
   };
+
+  const get_questionnaire_url = "/api/questionnaire/"
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   export default Vue.extend({
     props: {
@@ -43,7 +48,7 @@
       return {
         STATES : STATES,
         questionnaire: {},
-        state: STATES.START
+        state: ""
       }
     },
     components: {
@@ -53,10 +58,31 @@
     },
     mounted() {
       console.log('questionnaireId', this.questionnaireId)
-      this.questionnaire.control = this.controlId
-      this.emitQuestionnaireUpdated()
       console.log('controlId', this.controlId)
-      console.log('questionnaire', this.questionnaire)
+      if (!this.controlId && !this.questionnaireId) {
+        throw 'QuestionnaireCreate needs a controlId or a questionnaireId'
+      }
+
+      if (typeof this.controlId !== 'undefined') {
+        this.questionnaire.control = this.controlId
+        this.emitQuestionnaireUpdated()
+        console.log('questionnaire', this.questionnaire)
+        this.moveToState(STATES.START)
+        return
+      }
+
+      console.log('Fetching draft questionnaire...')
+      axios.get(get_questionnaire_url + this.questionnaireId)
+          .then(response => {
+            console.log('Got draft : ', response.data)
+            // todo : check that it's a draft questionnaire
+            this.questionnaire = response.data
+            this.emitQuestionnaireUpdated()
+            this.moveToState(STATES.START)
+          }).catch(error => {
+            // todo display error
+            console.log(error.response.data)
+          })
     },
     methods: {
       emitQuestionnaireUpdated: function() {
