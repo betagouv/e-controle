@@ -37,6 +37,7 @@
   export default Vue.extend({
     props: {
       controlId: Number,
+      questionnaireId: Number,
     },
     data() {
       return {
@@ -51,6 +52,7 @@
       QuestionnairePreview
     },
     mounted() {
+      console.log('questionnaireId', this.questionnaireId)
       this.questionnaire.control = this.controlId
       this.emitQuestionnaireUpdated()
       console.log('controlId', this.controlId)

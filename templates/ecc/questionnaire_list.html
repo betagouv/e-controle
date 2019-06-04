@@ -57,7 +57,7 @@
                           </a>
                         {% elif user.profile.is_inspector %}
                           {% if questionnaire.is_draft %}
-                            <a href=""
+                            <a href="{% url 'questionnaire-edit' questionnaire.id %}"
                                class="btn btn-primary"
                                title="Modifier le brouillon de questionnaire"
                             >
