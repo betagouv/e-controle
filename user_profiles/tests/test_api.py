@@ -133,3 +133,25 @@ def test_logged_in_user_can_get_current_user():
     url = reverse('api:user-current')
     response = client.get(url)
     assert response.status_code == 200
+
+
+def test_new_audited_user_should_not_have_the_file_reporting_flag_activated():
+    inspector = factories.UserProfileFactory(profile_type='inspector')
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    post_data = {
+        'first_name': 'Marcel',
+        'last_name': 'Proust',
+        'profile_type': 'audited',
+        'email': 'marcel@proust.com',
+        'controls': [control.id]
+    }
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    response = client.post(url, post_data)
+    count_after = User.objects.count()
+    assert count_after == count_before + 1
+    assert response.status_code == 201
+    new_user = User.objects.get(email='marcel@proust.com')
+    assert not new_user.profile.send_files_report
