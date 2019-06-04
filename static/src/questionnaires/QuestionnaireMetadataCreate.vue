@@ -4,12 +4,12 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
-          <label class="form-label">Titre<span class="form-required"></span></label>
-          <input type="text" class="form-control" v-model="metadata.title" >
+          <label class="form-label">Titre<span class="form-required">*</span></label>
+          <input type="text" class="form-control" v-model="metadata.title" required>
         </div>
         <div class="form-group">
           <label class="form-label">
-            Description<span class="form-required"></span>
+            Description
           </label>
           <textarea class="form-control"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
@@ -22,7 +22,7 @@
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Date de réponse souhaitée<span class="form-required"></span></label>
+          <label class="form-label">Date de réponse souhaitée</label>
           <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
           </datepicker>
         </div>
