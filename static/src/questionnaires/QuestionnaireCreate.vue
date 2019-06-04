@@ -35,6 +35,9 @@
   };
 
   export default Vue.extend({
+    props: {
+      controlId: Number,
+    },
     data() {
       return {
         STATES : STATES,
@@ -42,34 +45,35 @@
         state: STATES.START
       }
     },
-    methods: {
-    },
     components: {
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
       QuestionnairePreview
     },
     mounted() {
-      this.emitQuestionnaireUpdated();
+      this.questionnaire.control = this.controlId
+      this.emitQuestionnaireUpdated()
+      console.log('controlId', this.controlId)
+      console.log('questionnaire', this.questionnaire)
     },
     methods: {
       emitQuestionnaireUpdated: function() {
-        this.$emit('questionnaire-updated', this.questionnaire);
+        this.$emit('questionnaire-updated', this.questionnaire)
       },
       moveToState: function(newState) {
         this.state = newState;
       },
       bodyCreated: function(data) {
         console.log('got body', data);
-        // "this" is the child component.
-        this.questionnaire.body = data;
+        this.questionnaire.themes = data;
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
       metadataCreated: function(data) {
         console.log('got metadata', data);
-        // "this" is the child component.
-        this.questionnaire.metadata = data;
+        for (const [key, value] of Object.entries(data)) {
+          this.questionnaire[key] = value
+        }
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
       },

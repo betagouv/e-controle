@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="hasErrors" class="alert alert-danger">
+          L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+        </div>
         <div class="preview">
             <questionnaire-detail v-bind:questionnaire="questionnaire">
             </questionnaire-detail>
@@ -16,20 +19,29 @@
 </template>
 
 <script>
+    import axios from "axios"
+    import moment from "moment"
     import Vue from "vue"
     import QuestionnaireDetail from "./QuestionnaireDetail"
+
+    const create_questionnaire_url = "/api/questionnaire/"
+    axios.defaults.xsrfCookieName = 'csrftoken'
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
     export default Vue.extend({
         data: function() {
             return {
-                questionnaire: {}
+                errors: [],
+                hasErrors: false,
+                questionnaire: {},
             }
         },
         mounted() {
             let updateQuestionnaire = function(data) {
                 // Use Vue's $set to make the properties reactive.
-                this.$set(this.questionnaire, 'metadata', data.metadata);
-                this.$set(this.questionnaire, 'body', data.body);
+                for (const [key, value] of Object.entries(data)) {
+                    this.$set(this.questionnaire, key, value)
+                }
             }.bind(this);
 
             this.$parent.$on('questionnaire-updated', function(data) {
@@ -39,10 +51,34 @@
         },
         methods: {
             back: function() {
-                this.$emit('back');
+                this.clearErrors()
+                this.$emit('back')
+            },
+            clearErrors() {
+                this.errors = []
+                this.hasErrors = false
             },
             done: function() {
-                alert("C'est fini pour cette activité! Merci!");
+                if (this.questionnaire.end_date) {
+                    this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
+                } else {
+                    delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
+                }
+
+                console.log('Questionnaire to save : ', this.questionnaire)
+                this.createQuestionnaire()
+            },
+            createQuestionnaire(){
+                this.clearErrors()
+                axios.post(create_questionnaire_url, this.questionnaire)
+                    .then(response => {
+                        console.log(response)
+                        window.location.href = '/accueil/'
+                    }).catch(error => {
+                        console.log(error)
+                        this.hasErrors = true
+                        this.errors = error.response.data
+                    });
             }
         },
         components: {
