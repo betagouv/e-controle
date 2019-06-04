@@ -44,7 +44,7 @@
              @click="updateEditingState('audited')"
              class="btn btn-primary">
             <i class="fe fe-plus"></i>
-            Ajouter un contrôlé
+            Ajouter une personne
           </a>
         </div>
       </div>
