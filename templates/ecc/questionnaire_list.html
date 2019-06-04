@@ -29,9 +29,12 @@
                 <table class="table card-table table-vcenter">
                   <tbody>
                   {% for questionnaire in control.questionnaires.all %}
-                    <tr>
+                    <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
                       <td>
-                        <h5>{{ questionnaire.title }}</h5>
+                        <h5>
+                          {% if questionnaire.is_draft %} <span>[Brouillon]</span> {% endif %}
+                          <span>{{ questionnaire.title }}</span>
+                        </h5>
                         {% if questionnaire.sent_date %}
                           <div><i class="fe fe-send"></i> Date de transmission du questionnaire :
                             {{ questionnaire.sent_date|date:"l d F Y" }}
@@ -44,21 +47,33 @@
                         {% endif %}
                       </td>
                       <td class="w-1">
-                        <a href="{{ questionnaire.url }}"
-                           class="btn btn-primary"
-                            {% if user.profile.is_audited %}
-                           title="Déposer et consulter vos réponses"
-                            {% elif user.profile.is_inspector %}
-                           title="Consulter les réponses sur E-contrôle"
-                            {% endif %}
-                        >
-                          <i class="fe fe-eye"></i>
-                          {% if user.profile.is_audited %}
+                        {% if user.profile.is_audited %}
+                          <a href="{{ questionnaire.url }}"
+                             class="btn btn-primary"
+                             title="Déposer et consulter vos réponses"
+                          >
+                            <i class="fe fe-eye"></i>
                             Répondre
-                          {% elif user.profile.is_inspector %}
-                            Consulter
+                          </a>
+                        {% elif user.profile.is_inspector %}
+                          {% if questionnaire.is_draft %}
+                            <a href=""
+                               class="btn btn-primary"
+                               title="Modifier le brouillon de questionnaire"
+                            >
+                              <i class="fe fe-edit"></i>
+                              Modifier
+                            </a>
+                          {% else %}
+                            <a href="{{ questionnaire.url }}"
+                               class="btn btn-primary"
+                               title="Consulter les réponses sur E-contrôle"
+                            >
+                              <i class="fe fe-eye"></i>
+                              Consulter
+                            </a>
                           {% endif %}
-                        </a>
+                        {% endif %}
                       </td>
                     </tr>
                   {% endfor %}
