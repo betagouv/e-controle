@@ -16,7 +16,7 @@
             <h4 class="page-title">{{ control.title }}</h4>
             {% if debug %}
               <div class="card-options">
-                <a href="/questionnaire/controle-{{ control.id }}/creer" class="btn btn-primary">
+                <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
                   <i class="fe fe-plus"></i>
                   Ajouter un questionnaire
                 </a>
