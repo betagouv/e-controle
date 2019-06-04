@@ -59,6 +59,20 @@ services pour toute information complémentaire qu’appellerait ce questionnair
         'fr': fr // locale for datepicker
       }
     },
+    mounted() {
+      let updateMetadata = function(data) {
+        // Use Vue's $set to make the properties reactive.
+        for (const key of Object.keys(this.metadata)) {
+          console.log('key', key)
+          this.$set(this.metadata, key, data[key])
+        }
+      }.bind(this);
+
+      this.$parent.$on('questionnaire-updated', function(data) {
+        console.log('new metadata', data);
+        updateMetadata(data);
+      });
+    },
     methods: {
       createMetadata: function () {
         console.log('metadata created', this.metadata)
