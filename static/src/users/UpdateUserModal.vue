@@ -29,7 +29,7 @@
                 </label>
                 <label class="custom-control custom-radio custom-control-inline">
                   <input type="radio" v-model="editingUser.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
-                  <span class="custom-control-label">Organisme Contrôlé</span>
+                  <span class="custom-control-label">Organisme interrogé</span>
                 </label>
                 <p class="text-muted pl-2" v-if="errors.profile_type"><i class="fa fa-warning"></i> Choisissez l'une des options</p>
               </div>
