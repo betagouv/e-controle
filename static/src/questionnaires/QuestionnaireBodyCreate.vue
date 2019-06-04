@@ -14,7 +14,10 @@
                  placeholder="Ecrivez un thème ici"
                  type="text"
                  v-bind:id="'theme' + (themeIndex + 1)"
-                 v-model="body[themeIndex].title">
+                 v-model="body[themeIndex].title"
+                 oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
+                 oninput="this.setCustomValidity('')"
+                 required>
           <span>
             <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link">
               <i class="fe fe-trash-2"></i>Supprimer
@@ -34,7 +37,10 @@
                       placeholder="Ecrivez une question ici"
                       rows="4"
                       v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
-                      v-model="body[themeIndex].questions[qIndex].description">
+                      v-model="body[themeIndex].questions[qIndex].description"
+                      oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
+                      oninput="this.setCustomValidity('')"
+                      required>
             </textarea>
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
