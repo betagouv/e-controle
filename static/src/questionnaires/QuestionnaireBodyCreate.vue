@@ -1,6 +1,9 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
+      <div class="card-options">
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+      </div>
 
       <div class="card" v-for="(theme, themeIndex) in body">
         <div class="card-status card-status-top bg-blue">
@@ -136,7 +139,14 @@
       },
       deleteTheme: function(themeIndex) {
         this.body.splice(themeIndex, 1);
-      }
+      },
+      saveDraft(event) {
+        console.log('save draft', event)
+        if (!event.target.form.reportValidity()) {
+          return
+        }
+        this.$emit('save-draft', this.body)
+      },
     }
   });
 </script>
