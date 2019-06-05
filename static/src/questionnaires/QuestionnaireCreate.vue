@@ -8,6 +8,9 @@
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
+    <div>
+      {{ message }}
+    </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
             v-on:metadata-created="metadataCreated"
@@ -65,7 +68,8 @@
         hasErrors: false,
         STATES : STATES,
         questionnaire: {},
-        state: ""
+        state: "",
+        message: "",
       }
     },
     components: {
@@ -110,6 +114,8 @@
         this.$emit('questionnaire-updated', this.questionnaire)
       },
       moveToState: function(newState) {
+        this.clearErrors()
+        this.clearMessages()
         this.state = newState;
       },
       bodyCreated: function(data) {
@@ -134,7 +140,6 @@
       },
       back: function() {
         console.log('back');
-        this.clearErrors()
         if (this.state === STATES.CREATING_BODY) {
           this.moveToState(STATES.START);
           return;
@@ -148,6 +153,9 @@
       clearErrors() {
         this.errors = []
         this.hasErrors = false
+      },
+      clearMessages() {
+        this.message = ""
       },
       _doSave() {
         const cleanPreSave = () => {
@@ -190,6 +198,11 @@
       saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
+            .then(() => {
+                const today = new Date();
+                const timeString = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                this.message = "Brouillon sauvergardé à " + timeString + "."
+            })
       },
       saveNonDraft() {
         this.questionnaire.is_draft = false
