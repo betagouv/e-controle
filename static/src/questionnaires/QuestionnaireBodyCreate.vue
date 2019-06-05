@@ -99,6 +99,22 @@
         'errors': [],
       }
     },
+    mounted() {
+      let loadBody = function(data) {
+        // Empty old themes
+        this.body.splice(0, this.body.length)
+        // Replace with new themes
+        data.themes.forEach(theme => {
+          console.log('theme', theme)
+          this.body.push(theme)
+        })
+      }.bind(this)
+
+      this.$parent.$on('questionnaire-loaded', function(data) {
+        console.log('new body', data);
+        loadBody(data);
+      })
+    },
     methods: {
       back: function() {
         this.$emit('back');
