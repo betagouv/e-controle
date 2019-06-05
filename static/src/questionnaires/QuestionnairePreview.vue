@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="card-options">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        </div>
         <div class="preview">
             <questionnaire-detail v-bind:questionnaire="questionnaire">
             </questionnaire-detail>
@@ -44,6 +47,10 @@
             },
             done: function() {
                 this.$emit('save-questionnaire')
+            },
+            saveDraft(event) {
+                console.log('save draft', event)
+                this.$emit('save-draft')
             },
         },
         components: {
