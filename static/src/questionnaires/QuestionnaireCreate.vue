@@ -77,6 +77,7 @@
             console.log('Got draft : ', response.data)
             // todo : check that it's a draft questionnaire
             this.questionnaire = response.data
+            this.emitQuestionnaireLoaded()
             this.emitQuestionnaireUpdated()
             this.moveToState(STATES.START)
           }).catch(error => {
@@ -85,6 +86,9 @@
           })
     },
     methods: {
+      emitQuestionnaireLoaded: function() {
+        this.$emit('questionnaire-loaded', this.questionnaire)
+      },
       emitQuestionnaireUpdated: function() {
         this.$emit('questionnaire-updated', this.questionnaire)
       },

@@ -60,7 +60,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       }
     },
     mounted() {
-      let updateMetadata = function(data) {
+      let loadMetadata = function(data) {
         // Use Vue's $set to make the properties reactive.
         for (const key of Object.keys(this.metadata)) {
           console.log('key', key)
@@ -68,9 +68,9 @@ services pour toute information complémentaire qu’appellerait ce questionnair
         }
       }.bind(this);
 
-      this.$parent.$on('questionnaire-updated', function(data) {
+      this.$parent.$on('questionnaire-loaded', function(data) {
         console.log('new metadata', data);
-        updateMetadata(data);
+        loadMetadata(data);
       });
     },
     methods: {
