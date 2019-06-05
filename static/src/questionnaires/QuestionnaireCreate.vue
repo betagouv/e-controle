@@ -1,5 +1,16 @@
 <template>
   <div>
+    <div class="page-header">
+      <div class="page-title">
+        Nouveau questionnaire
+      </div>
+      <div class="card-options">
+        <button type="submit" class="btn btn-primary">Enregistrer le brouillon</button>
+      </div>
+    </div>
+    <div v-if="hasErrors" class="alert alert-danger">
+      L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+    </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
             v-on:metadata-created="metadataCreated"
@@ -13,6 +24,7 @@
     </questionnaire-body-create>
     <questionnaire-preview
             ref="previewChild"
+            v-on:save-questionnaire="saveQuestionnaire"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
@@ -21,6 +33,7 @@
 
 <script>
   import axios from "axios"
+  import moment from "moment"
   import Vue from "vue"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
@@ -36,6 +49,8 @@
   };
 
   const get_questionnaire_url = "/api/questionnaire/"
+  const save_questionnaire_url = "/api/questionnaire/"
+  const home_url = "/accueil/"
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
@@ -46,6 +61,8 @@
     },
     data() {
       return {
+        errors: [],
+        hasErrors: false,
         STATES : STATES,
         questionnaire: {},
         state: ""
@@ -111,6 +128,7 @@
       },
       back: function() {
         console.log('back');
+        this.clearErrors()
         if (this.state === STATES.CREATING_BODY) {
           this.moveToState(STATES.START);
           return;
@@ -120,6 +138,45 @@
           return;
         }
         console.error('Trying to go back from state', this.state);
+      },
+      clearErrors() {
+        this.errors = []
+        this.hasErrors = false
+      },
+      saveQuestionnaire() {
+        const cleanPreSave = () => {
+          if (this.questionnaire.end_date) {
+            this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
+          } else {
+            delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
+          }
+
+          console.log('Questionnaire to save : ', this.questionnaire)
+        }
+
+        const doSave = () => {
+          this.clearErrors()
+          let saveMethod = axios.post.bind(this, save_questionnaire_url)
+          if (this.questionnaire.id !== undefined) {
+            this.questionnaire.is_draft = false
+            console.log('qr', this.questionnaire)
+            console.log('qr id', this.questionnaire.id)
+            saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
+          }
+          saveMethod(this.questionnaire)
+              .then(response => {
+                console.log(response)
+                window.location.href = home_url
+              }).catch(error => {
+                console.log(error)
+                this.hasErrors = true
+                this.errors = error.response.data
+              })
+        }
+
+        cleanPreSave()
+        doSave()
+
       }
     }
   });
