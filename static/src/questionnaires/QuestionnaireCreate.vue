@@ -24,6 +24,7 @@
     <questionnaire-preview
             ref="previewChild"
             v-on:save-questionnaire="saveNonDraft"
+            v-on:save-draft="saveDraft"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
@@ -179,14 +180,14 @@
       },
       saveDraftFromMetadata(data) {
         this._updateMetadata(data)
-        this._saveDraft()
+        this.saveDraft()
       },
       saveDraftFromBody(data) {
         console.log('saveDraftFromBody', data)
         this._updateBody(data)
-        this._saveDraft()
+        this.saveDraft()
       },
-      _saveDraft() {
+      saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
       },
