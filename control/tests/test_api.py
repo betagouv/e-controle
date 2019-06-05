@@ -59,6 +59,7 @@ def make_create_payload(control_id):
     return {
         "title": "questionnaire questionnaire",
         "control": str(control_id),
+        "is_draft": True,
         "themes": [
            {
               "title": "theme theme theme",
@@ -189,6 +190,7 @@ def test_questionnaire_create__success():
     # Response.data is filled in
     questionnaire = response.data
     assert questionnaire['id'] > -1
+    assert questionnaire['is_draft'] == True
 
     theme = response.data['themes'][0]
     assert theme['id'] > -1
@@ -202,6 +204,7 @@ def test_questionnaire_create__success():
     assert Questionnaire.objects.all().count() == 1
     questionnaire = Questionnaire.objects.get(id=response.data['id'])  # should not throw
     assert questionnaire.control == control
+    assert questionnaire.is_draft == True
 
     assert Theme.objects.all().count() == 1
     theme = Theme.objects.get(id=response.data['themes'][0]['id'])  # should not throw
@@ -264,6 +267,7 @@ def test_questionnaire_update__questionnaire_update():
     user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
     payload['description'] = 'this is a great questionnaire.'
+    payload['is_draft'] = False
 
     assert Questionnaire.objects.all().count() == 1
     assert payload['description'] != questionnaire.description
@@ -276,6 +280,7 @@ def test_questionnaire_update__questionnaire_update():
     saved_qr = Questionnaire.objects.get(id=questionnaire.id)
     assert saved_qr.description != questionnaire.description
     assert saved_qr.description == payload['description']
+    assert saved_qr.is_draft == False
 
 
 def test_questionnaire_update__theme_update():

@@ -49,7 +49,7 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes')
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
 
@@ -76,7 +76,7 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes')
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft')
         extra_kwargs = {
             'control': {
                 'required': True,
