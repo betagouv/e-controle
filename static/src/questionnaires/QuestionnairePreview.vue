@@ -24,7 +24,7 @@
     import Vue from "vue"
     import QuestionnaireDetail from "./QuestionnaireDetail"
 
-    const create_questionnaire_url = "/api/questionnaire/"
+    const save_questionnaire_url = "/api/questionnaire/"
     axios.defaults.xsrfCookieName = 'csrftoken'
     axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
@@ -66,11 +66,16 @@
                 }
 
                 console.log('Questionnaire to save : ', this.questionnaire)
-                this.createQuestionnaire()
+                this.saveQuestionnaire()
             },
-            createQuestionnaire(){
+            saveQuestionnaire(){
                 this.clearErrors()
-                axios.post(create_questionnaire_url, this.questionnaire)
+                let saveMethod = axios.post.bind(this, save_questionnaire_url)
+                if (typeof this.questionnaire.id !== undefined) {
+                    this.questionnaire.is_draft = false
+                    saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
+                }
+                saveMethod(this.questionnaire)
                     .then(response => {
                         console.log(response)
                         window.location.href = '/accueil/'
