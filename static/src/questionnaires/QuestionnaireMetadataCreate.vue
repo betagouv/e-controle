@@ -2,6 +2,9 @@
   <div>
 
     <form @submit.prevent="createMetadata">
+      <div class="card-options">
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+      </div>
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Titre<span class="form-required">*</span></label>
@@ -74,9 +77,20 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       });
     },
     methods: {
-      createMetadata: function () {
+      createMetadata: function (event) {
+        console.log('event', event)
         console.log('metadata created', this.metadata)
         this.$emit('metadata-created', this.metadata)
+      },
+      saveDraft(event) {
+        console.log('save draft', event)
+        if (!this.triggerFormValidation(event)) {
+          return
+        }
+        this.$emit('save-draft', this.metadata)
+      },
+      triggerFormValidation(event) {
+        return event.target.form.reportValidity()
       }
     },
     components: {

@@ -4,9 +4,6 @@
       <div class="page-title">
         Nouveau questionnaire
       </div>
-      <div class="card-options">
-        <button type="submit" class="btn btn-primary">Enregistrer le brouillon</button>
-      </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
@@ -14,6 +11,7 @@
     <questionnaire-metadata-create
             ref="createMetadataChild"
             v-on:metadata-created="metadataCreated"
+            v-on:save-draft="saveDraftFromMetadata"
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
@@ -24,7 +22,7 @@
     </questionnaire-body-create>
     <questionnaire-preview
             ref="previewChild"
-            v-on:save-questionnaire="saveQuestionnaire"
+            v-on:save-questionnaire="saveNonDraft"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
@@ -114,17 +112,23 @@
       },
       bodyCreated: function(data) {
         console.log('got body', data);
-        this.questionnaire.themes = data;
+        this._updateBody(data);
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
+      _updateBody(data) {
+        this.questionnaire.themes = data;
+      },
       metadataCreated: function(data) {
         console.log('got metadata', data);
+        this._updateMetadata(data)
+        this.emitQuestionnaireUpdated();
+        this.moveToState(STATES.CREATING_BODY);
+      },
+      _updateMetadata: function(data) {
         for (const [key, value] of Object.entries(data)) {
           this.questionnaire[key] = value
         }
-        this.emitQuestionnaireUpdated();
-        this.moveToState(STATES.CREATING_BODY);
       },
       back: function() {
         console.log('back');
@@ -143,7 +147,7 @@
         this.errors = []
         this.hasErrors = false
       },
-      saveQuestionnaire() {
+      _doSave() {
         const cleanPreSave = () => {
           if (this.questionnaire.end_date) {
             this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
@@ -154,29 +158,38 @@
           console.log('Questionnaire to save : ', this.questionnaire)
         }
 
-        const doSave = () => {
-          this.clearErrors()
-          let saveMethod = axios.post.bind(this, save_questionnaire_url)
-          if (this.questionnaire.id !== undefined) {
-            this.questionnaire.is_draft = false
-            console.log('qr', this.questionnaire)
-            console.log('qr id', this.questionnaire.id)
-            saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
-          }
-          saveMethod(this.questionnaire)
-              .then(response => {
-                console.log(response)
-                window.location.href = home_url
-              }).catch(error => {
-                console.log(error)
-                this.hasErrors = true
-                this.errors = error.response.data
-              })
-        }
-
+        this.clearErrors()
         cleanPreSave()
-        doSave()
 
+        let saveMethod = axios.post.bind(this, save_questionnaire_url)
+        if (this.questionnaire.id !== undefined) {
+          console.log('qr', this.questionnaire)
+          console.log('qr id', this.questionnaire.id)
+          saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
+        }
+        return saveMethod(this.questionnaire)
+            .then(response => {
+              console.log(response)
+            }).catch(error => {
+              console.log(error)
+              this.hasErrors = true
+              this.errors = error.response.data
+            })
+      },
+      saveDraftFromMetadata(data) {
+        this._updateMetadata(data)
+        this._saveDraft()
+      },
+      _saveDraft() {
+        this.questionnaire.is_draft = true
+        this._doSave()
+      },
+      saveNonDraft() {
+        this.questionnaire.is_draft = false
+        this._doSave()
+            .then(() => {
+              window.location.href = home_url
+            })
       }
     }
   });
