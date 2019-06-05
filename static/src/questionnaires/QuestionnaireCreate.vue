@@ -17,6 +17,7 @@
     <questionnaire-body-create
             ref="createBodyChild"
             v-on:body-created="bodyCreated"
+            v-on:save-draft="saveDraftFromBody"
             v-on:back="back"
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
@@ -178,6 +179,11 @@
       },
       saveDraftFromMetadata(data) {
         this._updateMetadata(data)
+        this._saveDraft()
+      },
+      saveDraftFromBody(data) {
+        console.log('saveDraftFromBody', data)
+        this._updateBody(data)
         this._saveDraft()
       },
       _saveDraft() {

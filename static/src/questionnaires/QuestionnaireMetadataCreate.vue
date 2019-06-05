@@ -84,14 +84,11 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       },
       saveDraft(event) {
         console.log('save draft', event)
-        if (!this.triggerFormValidation(event)) {
+        if (!event.target.form.reportValidity()) {
           return
         }
         this.$emit('save-draft', this.metadata)
       },
-      triggerFormValidation(event) {
-        return event.target.form.reportValidity()
-      }
     },
     components: {
       Datepicker
