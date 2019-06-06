@@ -37,18 +37,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile = UserProfile.objects.filter(user__username=user_data.get('email')).first()
         action_details = {}
         action_details['sender'] = self.context['request'].user
+        should_receive_email_report = False
+        if profile_data.get('profile_type') == 'inspector':
+            should_receive_email_report = True
         if profile:
             profile.user.first_name = user_data.get('first_name')
             profile.user.last_name = user_data.get('last_name')
             profile.organization = profile_data.get('organization')
             profile.profile_type = profile_data.get('profile_type')
+            profile.send_files_report = should_receive_email_report
             profile.user.save()
             profile.save()
             action_details['verb'] = 'update user'
         else:
             user = User.objects.create(**user_data)
             profile_data['user'] = user
-            profile_data['send_files_report'] = True
+            profile_data['send_files_report'] = should_receive_email_report
             profile = UserProfile.objects.create(**profile_data)
             action_details['verb'] = 'add user'
         action_details['action_object'] = profile

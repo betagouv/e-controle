@@ -59,6 +59,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
+    order = models.PositiveIntegerField('order', db_index=True)
 
     class Meta:
         ordering = ('control', 'order')
@@ -103,7 +104,8 @@ class Theme(OrderedModel, WithNumberingMixin):
 class Question(OrderedModel, WithNumberingMixin):
     description = models.TextField("description")
     theme = models.ForeignKey(
-        'theme', verbose_name='thème', related_name='questions', on_delete=models.CASCADE)
+        'theme', verbose_name='thème', related_name='questions',
+        null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'theme'
 
     class Meta:
