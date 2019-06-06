@@ -59,6 +59,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
+    order = models.PositiveIntegerField('order', db_index=True)
 
     class Meta:
         ordering = ('control', 'order')

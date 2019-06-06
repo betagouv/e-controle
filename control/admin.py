@@ -8,8 +8,8 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile, Respo
 
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
-    fields = ('title', 'description', 'file', 'end_date', 'move_up_down_links')
-    readonly_fields = ('order', 'move_up_down_links')
+    fields = ('title', 'description', 'file', 'end_date', 'move_up_down_links', 'order')
+    readonly_fields = ('move_up_down_links',)
     extra = 1
 
 
@@ -23,7 +23,9 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 @admin.register(Questionnaire)
 class QuestionnaireAdmin(OrderedModelAdmin):
-    list_display = ('numbering', 'title', 'sent_date', 'end_date', 'control')
+    list_display = ('numbering', 'title', 'sent_date', 'end_date', 'control', 'order')
+    list_editable = ('order',)
+    readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control',)
 
