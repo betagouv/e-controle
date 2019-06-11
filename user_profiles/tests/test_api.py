@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from rest_framework.test import APIClient
 
 from tests import factories, utils
-
+from user_profiles.models import UserProfile
 
 pytestmark = mark.django_db
 client = APIClient()
@@ -24,13 +24,13 @@ def test_logged_in_user_can_list_users():
 
 
 def test_inspector_can_create_user():
-    inspector = factories.UserProfileFactory(profile_type='inspector')
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     inspector.controls.add(control)
     post_data = {
         'first_name': 'Marcel',
         'last_name': 'Proust',
-        'profile_type': 'audited',
+        'profile_type': UserProfile.AUDITED,
         'email': 'marcel@proust.com',
         'controls': [control.id]
     }
@@ -44,7 +44,7 @@ def test_inspector_can_create_user():
 
 
 def test_can_associate_a_control_to_anexisting_user():
-    inspector = factories.UserProfileFactory(profile_type='inspector')
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     inspector.controls.add(control)
     existing_user = factories.UserFactory()
@@ -68,13 +68,13 @@ def test_can_associate_a_control_to_anexisting_user():
 
 
 def test_audited_cannot_create_user():
-    audited = factories.UserProfileFactory(profile_type='audited')
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     control = factories.ControlFactory()
     audited.controls.add(control)
     post_data = {
         'first_name': 'Inspector',
         'last_name': 'Gadget',
-        'profile_type': 'inspector',
+        'profile_type': UserProfile.INSPECTOR,
         'email': 'inspector@gadget.com',
         'controls': [control.id]
     }
@@ -88,7 +88,7 @@ def test_audited_cannot_create_user():
 
 
 def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():
-    inspector = factories.UserProfileFactory(profile_type='inspector')
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     existing_user = factories.UserFactory()
     assert control not in inspector.controls.all()
@@ -112,8 +112,8 @@ def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():
 
 
 def test_inspector_can_remove_user_from_control():
-    someone = factories.UserProfileFactory(profile_type='audited')
-    inspector = factories.UserProfileFactory(profile_type='inspector')
+    someone = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     inspector.controls.add(control)
     someone.controls.add(control)
@@ -136,7 +136,7 @@ def test_logged_in_user_can_get_current_user():
 
 
 def test_new_audited_user_should_not_have_the_file_reporting_flag_activated():
-    inspector = factories.UserProfileFactory(profile_type='inspector')
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     inspector.controls.add(control)
     post_data = {
