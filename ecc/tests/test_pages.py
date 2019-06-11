@@ -72,3 +72,14 @@ def test_demo_user_is_not_logged_in_if_staff(client, settings):
     response = client.get('/')
     session_user = response.context['user']
     assert not session_user.is_authenticated
+
+
+def test_demo_user_is_not_logged_in_if_not_in_setting(client, settings):
+    settings.DEBUG = True
+    settings.ALLOW_DEMO_LOGIN = True
+    settings.DEMO_INSPECTOR_USERNAME = None
+    response = client.get(reverse('demo-inspector'))
+    assert response.status_code == 302
+    response = client.get('/')
+    session_user = response.context['user']
+    assert not session_user.is_authenticated
