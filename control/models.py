@@ -61,6 +61,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
     is_draft = models.BooleanField(
+        null=True, blank=True,
         verbose_name="brouillon", default=False,
         help_text="Ce questionnaire est-il encore au stade de brouillon?")
 
