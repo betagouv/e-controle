@@ -5,17 +5,24 @@ from rest_framework.test import APIClient
 from control.models import Control, Questionnaire, Theme, Question
 from control.serializers import QuestionnaireSerializer
 from tests import factories, utils
-
+from user_profiles.models import UserProfile
 
 pytestmark = mark.django_db
 client = APIClient()
 
 
-def make_user(control):
+def make_audited_user(control):
     user = factories.UserFactory()
     user.profile.controls.add(control)
     user.profile.save()
     return user
+
+
+def make_inspector_user(control):
+    user_profile = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    user_profile.controls.add(control)
+    user_profile.save()
+    return user_profile.user
 
 
 #### Questionnaire API ####
@@ -48,7 +55,7 @@ def call_questionnaire_delete_api(user, id):
     return response
 
 
-def make_payload(control_id):
+def make_create_payload(control_id):
     return {
         "title": "questionnaire questionnaire",
         "control": str(control_id),
@@ -95,54 +102,84 @@ def increment_ids():
 
 def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     questionnaire = factories.QuestionnaireFactory()
-    user = make_user(questionnaire.control)
+    audited_user = make_audited_user(questionnaire.control)
 
     # get
-    assert call_questionnaire_detail_api(user, questionnaire.id).status_code == 200
+    assert call_questionnaire_detail_api(audited_user, questionnaire.id).status_code == 200
 
     # create
-    payload = make_payload(questionnaire.control.id)
-    assert call_questionnaire_create_api(user, payload).status_code == 201
+    inspector_user = make_inspector_user(questionnaire.control)
+    payload = make_create_payload(questionnaire.control.id)
+    assert call_questionnaire_create_api(inspector_user, payload).status_code == 201
 
 
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
     questionnaire_in = factories.QuestionnaireFactory()
     questionnaire_out = factories.QuestionnaireFactory()
     assert questionnaire_in.control.id != questionnaire_out.control.id
-    user = make_user(questionnaire_in.control)
+    user = make_inspector_user(questionnaire_in.control)
 
     # get
     assert call_questionnaire_detail_api(user, questionnaire_out.id).status_code != 200
 
     # create
-    payload = make_payload(questionnaire_out.control.id)
+    payload = make_create_payload(questionnaire_out.control.id)
     clear_saved_data()
     assert call_questionnaire_create_api(user, payload).status_code != 201
     assert_no_data_is_saved()
 
 
 def test_no_access_to_questionnaire_api_for_anonymous():
-    question = factories.QuestionFactory()
+    questionnaire = factories.QuestionnaireFactory()
 
     # get
-    url = reverse('api:questionnaire-detail', args=[question.id])
+    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
     response = client.get(url)
     assert response.status_code == 403
 
+    # update
+    payload = make_update_payload(questionnaire)
+    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
+    response = client.put(url, payload, format='json')
+    assert response.status_code == 403
+
+    # delete
+    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
+    response = client.delete(url)
+    assert response.status_code == 403
+
     # create
-    payload = make_payload(question.theme.questionnaire.control.id)
     clear_saved_data()
+    payload = make_create_payload(questionnaire.control.id)
     url = reverse('api:questionnaire-list')
     response = client.post(url, payload, format='json')
     assert response.status_code == 403
     assert_no_data_is_saved()
 
 
+def test_no_modifying_questionnaire_if_not_inspector():
+    questionnaire = factories.QuestionnaireFactory()
+    audited_user = make_audited_user(questionnaire.control)
+
+    # update
+    payload = make_update_payload(questionnaire)
+    assert call_questionnaire_update_api(audited_user, payload).status_code == 403
+
+    # delete
+    assert call_questionnaire_delete_api(audited_user, questionnaire.id).status_code == 403
+
+    # create
+    clear_saved_data()
+    payload = make_create_payload(questionnaire.control.id)
+    assert call_questionnaire_create_api(audited_user, payload).status_code == 403
+    assert_no_data_is_saved()
+
+
 def test_questionnaire_create__success():
     increment_ids()
     control = factories.ControlFactory()
-    user = make_user(control)
-    payload = make_payload(control.id)
+    user = make_inspector_user(control)
+    payload = make_create_payload(control.id)
     # Before test, no saved data
     assert_no_data_is_saved()
 
@@ -177,8 +214,8 @@ def test_questionnaire_create__success():
 
 def test_questionnaire_create_fails_without_control_id():
     control = factories.ControlFactory()
-    user = make_user(control)
-    payload = make_payload(control.id)
+    user = make_inspector_user(control)
+    payload = make_create_payload(control.id)
 
     # No control field : malformed request
     payload.pop('control')
@@ -200,8 +237,8 @@ def test_questionnaire_create_fails_without_control_id():
 
 def test_questionnaire_create_fails_with_malformed_theme():
     control = factories.ControlFactory()
-    user = make_user(control)
-    payload = make_payload(control.id)
+    user = make_inspector_user(control)
+    payload = make_create_payload(control.id)
 
     payload['themes'][0].pop('title')
     response = call_questionnaire_create_api(user, payload)
@@ -211,8 +248,8 @@ def test_questionnaire_create_fails_with_malformed_theme():
 
 def test_questionnaire_create_fails_with_malformed_question():
     control = factories.ControlFactory()
-    user = make_user(control)
-    payload = make_payload(control.id)
+    user = make_inspector_user(control)
+    payload = make_create_payload(control.id)
 
     payload['themes'][0]['questions'][0].pop('description')
     response = call_questionnaire_create_api(user, payload)
@@ -224,7 +261,7 @@ def test_questionnaire_update__questionnaire_update():
     increment_ids()
     # Qr with no themes or questions.
     questionnaire = factories.QuestionnaireFactory()
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
     payload['description'] = 'this is a great questionnaire.'
 
@@ -245,7 +282,7 @@ def test_questionnaire_update__theme_update():
     increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
     payload['themes'][0]['title'] = 'this is a great theme.'
 
@@ -275,7 +312,7 @@ def run_test_questionnaire_update__theme_create(added_theme):
     increment_ids()
     theme = factories.ThemeFactory()
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
     payload['themes'].append(added_theme)
 
@@ -322,7 +359,7 @@ def test_questionnaire_update__question_update():
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
 
     payload['themes'][0]['questions'][0]['description'] = 'this is a great question.'
@@ -355,7 +392,7 @@ def run_test_questionnaire_update__question_create(added_question):
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
 
     payload['themes'][0]['questions'].append(added_question)
@@ -403,7 +440,7 @@ def test_questionnaire_delete():
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
 
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
@@ -423,7 +460,7 @@ def test_questionnaire_update__question_delete():
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
 
     payload['themes'][0]['questions'] = []
@@ -450,7 +487,7 @@ def run_test_questionnaire_update__question_recreated(modify_payload_func):
     question = factories.QuestionFactory()
     theme = question.theme
     questionnaire = theme.questionnaire
-    user = make_user(questionnaire.control)
+    user = make_inspector_user(questionnaire.control)
     payload = make_update_payload(questionnaire)
 
     original_id = payload['themes'][0]['questions'][0]['id']
@@ -508,14 +545,14 @@ def call_question_api(user, id):
 
 def test_can_access_question_api_if_control_is_associated_with_the_user():
     question = factories.QuestionFactory()
-    user = make_user(question.theme.questionnaire.control)
+    user = make_audited_user(question.theme.questionnaire.control)
     assert call_question_api(user, question.id).status_code == 200
 
 
 def test_no_access_to_question_api_if_control_is_not_associated_with_the_user():
     question_in = factories.QuestionFactory()
     question_out = factories.QuestionFactory()
-    user = make_user(question_in.theme.questionnaire.control)
+    user = make_audited_user(question_in.theme.questionnaire.control)
     assert call_question_api(user, question_out.id).status_code != 200
 
 
