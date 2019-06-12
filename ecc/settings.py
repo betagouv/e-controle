@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'utils',
     'reporting',
     'faq',
+    'demo',
 ]
 
 

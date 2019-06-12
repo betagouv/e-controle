@@ -12,6 +12,7 @@ from control import views as control_views
 from control import api_views as control_api_views
 from magicauth import views as magicauth_views
 from user_profiles import api_views as user_profiles_api_views
+from demo import views as demo_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
@@ -58,8 +59,10 @@ if settings.DEBUG:
     urlpatterns += [path('api/docs/', include_docs_urls(title='e-contrôle API'))]
 
 if settings.DEBUG and settings.ALLOW_DEMO_LOGIN:
-    urlpatterns += path('demo-controleur/', ecc_views.demo_inspector, name='demo-inspector'),
-    urlpatterns += path('demo-controle/', ecc_views.demo_audited, name='demo-audited'),
+    urlpatterns += path(
+        'demo-controleur/', demo_views.DemoInspectorView.as_view(), name='demo-inspector'),
+    urlpatterns += path(
+        'demo-controle/', demo_views.DemoAuditedView.as_view(), name='demo-audited'),
 
 
 TESTING_MODE = 'test' in sys.argv[0]  # We want to enable the toolbar when runing tests
