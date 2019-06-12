@@ -1,4 +1,4 @@
-Django==2.1.7
+Django==2.1.9
 ipdb==0.12
 pytest-django==3.5.0
 pytest-cov==2.7.1
