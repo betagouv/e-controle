@@ -8,11 +8,11 @@ from django.urls import path, include
 from rest_framework import routers
 
 from . import views as ecc_views
-from control import views as control_views
 from control import api_views as control_api_views
+from control import views as control_views
+from demo import views as demo_views
 from magicauth import views as magicauth_views
 from user_profiles import api_views as user_profiles_api_views
-from demo import views as demo_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
@@ -62,7 +62,7 @@ if settings.DEBUG and settings.ALLOW_DEMO_LOGIN:
     urlpatterns += path(
         'demo-controleur/', demo_views.DemoInspectorView.as_view(), name='demo-inspector'),
     urlpatterns += path(
-        'demo-controle/', demo_views.DemoAuditedView.as_view(), name='demo-audited'),
+        'demo/', demo_views.DemoAuditedView.as_view(), name='demo-audited'),
 
 
 TESTING_MODE = 'test' in sys.argv[0]  # We want to enable the toolbar when runing tests

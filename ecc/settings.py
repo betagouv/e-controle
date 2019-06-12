@@ -53,14 +53,14 @@ INSTALLED_APPS = [
     'ckeditor',
     'django_filters',
 
-    'ecc',
     'control',
+    'demo',
+    'ecc',
+    'faq',
     'magicauth',
+    'reporting',
     'user_profiles',
     'utils',
-    'reporting',
-    'faq',
-    'demo',
 ]
 
 
