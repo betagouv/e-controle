@@ -3,6 +3,10 @@ FROM centos:centos7
 ENV PYTHONUNBUFFERED 1
 ENV PORT 8080
 
+# PostgreSQL, client only. Useful for CLI operations on the DB.
+RUN rpm -Uvh https://yum.postgresql.org/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
+RUN yum -y install postgresql10; yum clean all
+
 # Python
 RUN yum -y update; yum clean all
 RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm
