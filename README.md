@@ -11,6 +11,9 @@ Autres technos utilisées (pas besoin de les installer localement, elles sont su
  - python
  - Django
 
+Notre code review process pour collaborer dans la bonne humeur :
+https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
+
 ## Présentation des services
 Nous utilisons deux containers Dockers : un pour postgres, un pour django (définis dans https://github.com/betagouv/e-controle/blob/develop/docker-compose.yml).
 
