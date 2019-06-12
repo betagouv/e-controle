@@ -10,7 +10,7 @@
     "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "dropzone": "^5.5.1",
     "moment": "^2.24.0",
@@ -19,17 +19,17 @@
     "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3",
     "vuejs-datepicker": "^1.5.4",
-    "vuex": "^3.1.0",
-    "vuex-map-fields": "^1.3.3"
+    "vuex": "^3.1.1",
+    "vuex-map-fields": "^1.3.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "@babel/preset-stage-2": "^7.0.0",
-    "@vue/component-compiler-utils": "^2.6.0",
+    "@vue/component-compiler-utils": "^3.0.0",
     "babel-preset-stage-2": "^6.24.1",
     "parcel-bundler": "^1.12.3",
-    "typescript": "^3.4.1",
+    "typescript": "^3.5.1",
     "vue-template-compiler": "^2.6.10"
   }
 }
