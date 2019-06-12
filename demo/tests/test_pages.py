@@ -40,6 +40,10 @@ def test_login_as_demo_user_is_not_available_if_setting_prevents(client, setting
     utils.reload_urlconf()
     with pytest.raises(NoReverseMatch):
         reverse('demo-inspector')
+    response = client.get('/demo-controleur/')
+    assert response.status_code == 404
+    response = client.get('/demo/')
+    assert response.status_code == 404
 
 
 def test_demo_user_is_not_logged_in_if_superuser(client, settings):
