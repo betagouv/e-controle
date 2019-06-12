@@ -52,9 +52,7 @@ def test_demo_user_is_not_logged_in_if_superuser(client, settings):
     user.is_staff = False
     user.save()
     response = client.get(reverse('demo-inspector'), follow=True)
-    assert response.status_code == 200
-    session_user = response.context['user']
-    assert not session_user.is_authenticated
+    assert response.status_code != 200
 
 
 def test_demo_user_is_not_logged_in_if_staff(client, settings):
@@ -67,9 +65,7 @@ def test_demo_user_is_not_logged_in_if_staff(client, settings):
     user.is_staff = True
     user.save()
     response = client.get(reverse('demo-inspector'), follow=True)
-    assert response.status_code == 200
-    session_user = response.context['user']
-    assert not session_user.is_authenticated
+    assert response.status_code != 200
 
 
 def test_demo_user_is_not_logged_in_if_username_not_in_setting(client, settings):
@@ -78,6 +74,4 @@ def test_demo_user_is_not_logged_in_if_username_not_in_setting(client, settings)
     settings.DEMO_INSPECTOR_USERNAME = None
     utils.reload_urlconf()
     response = client.get(reverse('demo-inspector'), follow=True)
-    assert response.status_code == 200
-    session_user = response.context['user']
-    assert not session_user.is_authenticated
+    assert response.status_code != 200
