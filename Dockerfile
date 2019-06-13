@@ -19,7 +19,7 @@ RUN easy_install-3.6 pip
 RUN curl -sL https://rpm.nodesource.com/setup_10.x | bash -
 RUN yum -y install nodejs; yum clean all
 
-# Make python3 the default
+# Make python3 the default. Breaks yum, so make sure you run all the yum commands before this line.
 RUN ln -fs /usr/bin/python3.6 /usr/bin/python
 
 # Locales
