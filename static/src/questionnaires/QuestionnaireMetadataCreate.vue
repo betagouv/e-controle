@@ -2,8 +2,10 @@
   <div>
 
     <form @submit.prevent="createMetadata">
-      <div class="card-options">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+      <div class="card-header">
+        <div class="card-options">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        </div>
       </div>
       <fieldset class="form-fieldset">
         <div class="form-group">

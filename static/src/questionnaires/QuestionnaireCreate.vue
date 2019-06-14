@@ -2,14 +2,14 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Nouveau questionnaire
+        Rédiger un questionnaire
+      </div>
+      <div class="card-options">
+        {{ message }}
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
-    </div>
-    <div>
-      {{ message }}
     </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
@@ -115,7 +115,6 @@
       },
       moveToState: function(newState) {
         this.clearErrors()
-        this.clearMessages()
         this.state = newState;
       },
       bodyCreated: function(data) {

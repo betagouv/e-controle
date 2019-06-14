@@ -1,8 +1,10 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
-      <div class="card-options">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+      <div class="card-header">
+        <div class="card-options">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        </div>
       </div>
 
       <div class="card" v-for="(theme, themeIndex) in body">
