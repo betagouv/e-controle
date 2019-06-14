@@ -66,7 +66,6 @@
       return {
         errors: [],
         hasErrors: false,
-        STATES : STATES,
         questionnaire: {},
         state: "",
         message: "",
@@ -85,35 +84,41 @@
       }
 
       if (typeof this.controlId !== 'undefined') {
+        this._loadQuestionnaireCreate()
+        return
+      }
+
+      this._loadQuestionnaireUpdate()
+    },
+    methods: {
+      _loadQuestionnaireCreate: function() {
         this.questionnaire.control = this.controlId
         this.emitQuestionnaireUpdated()
         console.debug('questionnaire', this.questionnaire)
         console.log('questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
-        return
-      }
-
-      console.debug('Fetching draft questionnaire...')
-      axios.get(get_questionnaire_url + this.questionnaireId)
-          .then(response => {
-            console.debug('Got draft : ', response.data)
-            if (response.data.is_draft !== undefined && !response.data.is_draft) {
-              const errorMessage = 'Le questionnaire ' + response.data.id +
-                  ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
-              console.error(errorMessage)
-              this.displayErrors(errorMessage)
-              return
-            }
-            this.questionnaire = response.data
-            this.emitQuestionnaireLoaded()
-            this.emitQuestionnaireUpdated()
-            this.moveToState(STATES.START)
-          }).catch(error => {
-            console.error(error)
-            this.displayErrors(error.response.data)
-          })
-    },
-    methods: {
+      },
+      _loadQuestionnaireUpdate: function() {
+        console.debug('Fetching draft questionnaire...')
+        axios.get(get_questionnaire_url + this.questionnaireId)
+            .then(response => {
+              console.debug('Got draft : ', response.data)
+              if (response.data.is_draft !== undefined && !response.data.is_draft) {
+                const errorMessage = 'Le questionnaire ' + response.data.id +
+                    ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
+                console.error(errorMessage)
+                this.displayErrors(errorMessage)
+                return
+              }
+              this.questionnaire = response.data
+              this.emitQuestionnaireLoaded()
+              this.emitQuestionnaireUpdated()
+              this.moveToState(STATES.START)
+            }).catch(error => {
+          console.error(error)
+          this.displayErrors(error.response.data)
+        })
+      },
       emitQuestionnaireLoaded: function() {
         this.$emit('questionnaire-loaded', this.questionnaire)
       },
