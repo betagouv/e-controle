@@ -9,8 +9,12 @@ class ChangeQuestionnairePermission(permissions.BasePermission):
             if request.user.profile.is_inspector:
                 return True
         except AttributeError:
+            # user not logged in
             return False
 
+        # logged in user, not inspector
         if request.method in permissions.SAFE_METHODS:
+            # can read
             return True
+        # cannot write
         return False
