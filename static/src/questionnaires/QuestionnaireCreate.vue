@@ -97,14 +97,20 @@
       axios.get(get_questionnaire_url + this.questionnaireId)
           .then(response => {
             console.debug('Got draft : ', response.data)
-            // todo : check that it's a draft questionnaire
+            if (response.data.is_draft !== undefined && !response.data.is_draft) {
+              const errorMessage = 'Le questionnaire ' + response.data.id +
+                  ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
+              console.error(errorMessage)
+              this.displayErrors(errorMessage)
+              return
+            }
             this.questionnaire = response.data
             this.emitQuestionnaireLoaded()
             this.emitQuestionnaireUpdated()
             this.moveToState(STATES.START)
           }).catch(error => {
-            // todo display error
-            console.error(error.response.data)
+            console.error(error)
+            this.displayErrors(error.response.data)
           })
     },
     methods: {
@@ -150,6 +156,10 @@
         }
         console.error('Trying to go back from state', this.state);
       },
+      displayErrors: function(errors) {
+        this.hasErrors = true
+        this.errors = errors
+      },
       clearErrors() {
         this.errors = []
         this.hasErrors = false
@@ -181,8 +191,7 @@
               console.debug(response)
             }).catch(error => {
               console.error(error)
-              this.hasErrors = true
-              this.errors = error.response.data
+              this.displayErrors(error.response.data)
             })
       },
       saveDraftFromMetadata(data) {
@@ -204,7 +213,7 @@
             })
       },
       saveNonDraft() {
-        this.questionnaire.is_draft = false
+        this.questionnaire.is_draft = falset
         this._doSave()
             .then(() => {
               window.location.href = home_url
