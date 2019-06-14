@@ -52,6 +52,8 @@ class QuestionnaireCreate(LoginRequiredMixin, DetailView):
     context_object_name = 'control'
 
     def get_queryset(self):
+        if not self.request.user.profile.is_inspector:
+            return Control.objects.none()
         return Control.objects.filter(id__in=self.request.user.profile.controls.all())
 
 

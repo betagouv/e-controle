@@ -7,9 +7,11 @@ from .managers import UserProfileQuerySet
 
 
 class UserProfile(models.Model):
+    AUDITED = 'audited'
+    INSPECTOR = 'inspector'
     PROFILE_TYPE = (
-        ('audited', 'Organisme interrogé'),
-        ('inspector', 'Contrôleur'),
+        (AUDITED, 'Organisme interrogé'),
+        (INSPECTOR, 'Contrôleur'),
     )
     user = AutoOneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE,
@@ -30,11 +32,11 @@ class UserProfile(models.Model):
 
     @property
     def is_inspector(self):
-        return self.profile_type == 'inspector'
+        return self.profile_type == self.INSPECTOR
 
     @property
     def is_audited(self):
-        return self.profile_type == 'audited'
+        return self.profile_type == self.AUDITED
 
     def __str__(self):
         return str(self.user)
