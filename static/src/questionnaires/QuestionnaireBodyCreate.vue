@@ -108,13 +108,13 @@
         this.body.splice(0, this.body.length)
         // Replace with new themes
         data.themes.forEach(theme => {
-          console.log('theme', theme)
+          console.debug('theme', theme)
           this.body.push(theme)
         })
       }.bind(this)
 
       this.$parent.$on('questionnaire-loaded', function(data) {
-        console.log('new body', data);
+        console.debug('new body', data);
         loadBody(data);
       })
     },
@@ -123,15 +123,15 @@
         this.$emit('back');
       },
       createBody: function () {
-        console.log(this.body)
+        console.debug(this.body)
         this.$emit('body-created', this.body)
       },
       addQuestion: function (themeIndex) {
-        console.log('addQuestion', themeIndex)
+        console.debug('addQuestion', themeIndex)
         this.body[themeIndex].questions.push({ description: ""});
       },
       addTheme: function () {
-        console.log('addTheme')
+        console.debug('addTheme')
         this.body.push({ title: "", questions: [{description: ""}]})
       },
       deleteQuestion: function(themeIndex, qIndex) {
@@ -141,7 +141,7 @@
         this.body.splice(themeIndex, 1);
       },
       saveDraft(event) {
-        console.log('save draft', event)
+        console.debug('save draft', event)
         if (!event.target.form.reportValidity()) {
           return
         }

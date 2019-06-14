@@ -78,8 +78,8 @@
       QuestionnairePreview
     },
     mounted() {
-      console.log('questionnaireId', this.questionnaireId)
-      console.log('controlId', this.controlId)
+      console.debug('questionnaireId', this.questionnaireId)
+      console.debug('controlId', this.controlId)
       if (!this.controlId && !this.questionnaireId) {
         throw 'QuestionnaireCreate needs a controlId or a questionnaireId'
       }
@@ -87,15 +87,15 @@
       if (typeof this.controlId !== 'undefined') {
         this.questionnaire.control = this.controlId
         this.emitQuestionnaireUpdated()
-        console.log('questionnaire', this.questionnaire)
+        console.debug('questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
         return
       }
 
-      console.log('Fetching draft questionnaire...')
+      console.debug('Fetching draft questionnaire...')
       axios.get(get_questionnaire_url + this.questionnaireId)
           .then(response => {
-            console.log('Got draft : ', response.data)
+            console.debug('Got draft : ', response.data)
             // todo : check that it's a draft questionnaire
             this.questionnaire = response.data
             this.emitQuestionnaireLoaded()
@@ -103,7 +103,7 @@
             this.moveToState(STATES.START)
           }).catch(error => {
             // todo display error
-            console.log(error.response.data)
+            console.error(error.response.data)
           })
     },
     methods: {
@@ -119,7 +119,7 @@
         this.state = newState;
       },
       bodyCreated: function(data) {
-        console.log('got body', data);
+        console.debug('got body', data);
         this._updateBody(data);
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
@@ -128,7 +128,7 @@
         this.questionnaire.themes = data;
       },
       metadataCreated: function(data) {
-        console.log('got metadata', data);
+        console.debug('got metadata', data);
         this._updateMetadata(data)
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
@@ -139,7 +139,7 @@
         }
       },
       back: function() {
-        console.log('back');
+        console.debug('back');
         if (this.state === STATES.CREATING_BODY) {
           this.moveToState(STATES.START);
           return;
@@ -165,7 +165,7 @@
             delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
           }
 
-          console.log('Questionnaire to save : ', this.questionnaire)
+          console.debug('Questionnaire to save : ', this.questionnaire)
         }
 
         this.clearErrors()
@@ -173,15 +173,14 @@
 
         let saveMethod = axios.post.bind(this, save_questionnaire_url)
         if (this.questionnaire.id !== undefined) {
-          console.log('qr', this.questionnaire)
-          console.log('qr id', this.questionnaire.id)
+          console.debug('questionnaire', this.questionnaire)
           saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
         }
         return saveMethod(this.questionnaire)
             .then(response => {
-              console.log(response)
+              console.debug(response)
             }).catch(error => {
-              console.log(error)
+              console.error(error)
               this.hasErrors = true
               this.errors = error.response.data
             })
@@ -191,7 +190,7 @@
         this.saveDraft()
       },
       saveDraftFromBody(data) {
-        console.log('saveDraftFromBody', data)
+        console.debug('saveDraftFromBody', data)
         this._updateBody(data)
         this.saveDraft()
       },

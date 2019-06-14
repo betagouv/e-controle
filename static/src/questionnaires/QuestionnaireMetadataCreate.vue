@@ -66,24 +66,24 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       let loadMetadata = function(data) {
         // Use Vue's $set to make the properties reactive.
         for (const key of Object.keys(this.metadata)) {
-          console.log('key', key)
+          console.debug('key', key)
           this.$set(this.metadata, key, data[key])
         }
       }.bind(this);
 
       this.$parent.$on('questionnaire-loaded', function(data) {
-        console.log('new metadata', data);
+        console.debug('new metadata', data);
         loadMetadata(data);
       });
     },
     methods: {
       createMetadata: function (event) {
-        console.log('event', event)
-        console.log('metadata created', this.metadata)
+        console.debug('event', event)
+        console.debug('metadata created', this.metadata)
         this.$emit('metadata-created', this.metadata)
       },
       saveDraft(event) {
-        console.log('save draft', event)
+        console.debug('save draft', event)
         if (!event.target.form.reportValidity()) {
           return
         }

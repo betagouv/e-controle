@@ -37,7 +37,7 @@
             }.bind(this);
 
             this.$parent.$on('questionnaire-updated', function(data) {
-                console.log('new questionnaire', data);
+                console.debug('new questionnaire', data);
                 updateQuestionnaire(data);
             });
         },
@@ -49,7 +49,7 @@
                 this.$emit('save-questionnaire')
             },
             saveDraft(event) {
-                console.log('save draft', event)
+                console.debug('save draft', event)
                 this.$emit('save-draft')
             },
         },
