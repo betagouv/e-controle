@@ -66,6 +66,7 @@
       return {
         errors: [],
         hasErrors: false,
+        STATES: STATES,
         questionnaire: {},
         state: "",
         message: "",
