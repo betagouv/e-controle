@@ -15,12 +15,14 @@
           <div class="card-header">
             <h4 class="page-title">{{ control.title }}</h4>
             {% if debug %}
+            {% if user.profile.is_inspector %}
               <div class="card-options">
                 <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
                   <i class="fe fe-plus"></i>
                   Ajouter un questionnaire
                 </a>
               </div>
+            {% endif %}
             {% endif %}
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->

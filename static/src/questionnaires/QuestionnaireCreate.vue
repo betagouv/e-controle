@@ -88,6 +88,7 @@
         this.questionnaire.control = this.controlId
         this.emitQuestionnaireUpdated()
         console.debug('questionnaire', this.questionnaire)
+        console.log('questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
         return
       }

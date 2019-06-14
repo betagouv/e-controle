@@ -3,6 +3,7 @@ from functools import partial
 from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
 
+from control.permissions import ChangeQuestionnairePermission
 from .models import Question, Questionnaire, Theme
 from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer, ThemeSerializer
 
@@ -40,6 +41,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
 class QuestionnaireViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionnaireSerializer
+    permission_classes = (ChangeQuestionnairePermission,)
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
