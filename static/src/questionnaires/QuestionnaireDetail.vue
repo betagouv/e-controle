@@ -64,7 +64,7 @@
                       :theme_numbering="themeIndex + 1"
                       :question_numbering="qIndex + 1"
                       :question_id="question.id"
-                      :annexe_count="0">
+                      :annexe_count="question.question_files && question.question_files.length">
             </question>
           </div>
         </div>
