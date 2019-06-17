@@ -31,15 +31,17 @@
                            cancel-button="Non, retour"
                            @confirm="deleteTheme(themeIndex)"
             >
-              Ce thème contient {{ body[themeIndex].questions.length }}
-              <span v-if="body[themeIndex].questions.length === 1">
-                {{ body[themeIndex].questions.length }} questions, qui seront supprimées avec lui.
-              </span>
-              <span v-else>
-                {{ body[themeIndex].questions.length }}
-                une question, qui sera supprimée avec lui.
-              </span>
-              Êtes-vous sûr.e de vouloir supprimer ce thème?
+              <p>Ce thème contient
+                <span v-if="body[themeIndex].questions.length === 1">
+                  une question, qui sera supprimée avec lui.
+                </span>
+                <span v-else>
+                  {{ body[themeIndex].questions.length }} questions, qui seront supprimées avec lui.
+                </span>
+              </p>
+              <p>
+                Êtes-vous sûr.e de vouloir supprimer ce thème?
+              </p>
             </confirm-modal>
 
             <a v-if="body[themeIndex].questions.length === 0"
