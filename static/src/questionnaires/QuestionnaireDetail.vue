@@ -6,9 +6,7 @@
       </div>
       <div id="metadata" class="card">
         <div class="card-body">
-          <p>
-            {{ questionnaire.description }}
-          </p>
+          <p class="with-line-breaks">{{ questionnaire.description }}</p>
           <p v-if="questionnaire.sent_date">
             <i class="fe fe-send"></i>
             Date de transmission du questionnaire :
