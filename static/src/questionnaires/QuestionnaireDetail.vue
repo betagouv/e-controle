@@ -63,9 +63,7 @@
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
                 {{ themeIndex + 1 }}.{{ qIndex + 1 }}
               </span>
-              <div class="card-text" style="cursor: pointer">
-                {{ question.description }}
-              </div>
+              <div class="card-text" style="cursor: pointer; white-space:pre-wrap">{{ question.description }}</div>
             </div>
 
           </div>
