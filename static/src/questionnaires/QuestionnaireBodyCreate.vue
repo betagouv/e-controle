@@ -1,24 +1,5 @@
 <template>
   <div>
-    <div id="deleteThemeConfirmModal" class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Are you sure???</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Really sure?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Yes, go</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Nah, nvm</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <form @submit.prevent="createBody">
       <div class="card-header">
         <div class="card-options">
@@ -43,7 +24,37 @@
                  oninput="this.setCustomValidity('')"
                  required>
           <span>
-            <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link">
+
+            <confirm-modal id="deleteThemeConfirmModal"
+                           title="Confirmer la suppression"
+                           confirm-button="Oui, supprimer"
+                           cancel-button="Non, retour"
+                           @confirm="deleteTheme(themeIndex)"
+            >
+              Ce thème contient {{ body[themeIndex].questions.length }}
+              <span v-if="body[themeIndex].questions.length === 1">
+                {{ body[themeIndex].questions.length }} questions, qui seront supprimées avec lui.
+              </span>
+              <span v-else>
+                {{ body[themeIndex].questions.length }}
+                une question, qui sera supprimée avec lui.
+              </span>
+              Êtes-vous sûr.e de vouloir supprimer ce thème?
+            </confirm-modal>
+
+            <a v-if="body[themeIndex].questions.length === 0"
+               href="javascript:void(0)"
+               @click.prevent="deleteTheme(themeIndex)"
+               class="btn btn-link"
+            >
+              <i class="fe fe-trash-2"></i>Supprimer
+            </a>
+            <a v-else
+               href="javascript:void(0)"
+               class="btn btn-link"
+               data-toggle="modal"
+               data-target="#deleteThemeConfirmModal"
+            >
               <i class="fe fe-trash-2"></i>Supprimer
             </a>
           </span>
@@ -67,12 +78,6 @@
                       required>
             </textarea>
             <span>
-              <a data-toggle="modal"
-                 data-target="#deleteThemeConfirmModal"
-                 href=""
-              >
-                bloup
-              </a>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
                 <i class="fe fe-trash-2"></i>Supprimer
               </a>
@@ -114,6 +119,7 @@
 
 <script>
   import Vue from "vue";
+  import ConfirmModal from "../utils/ConfirmModal"
 
   export default Vue.extend({
     data() {
@@ -128,6 +134,9 @@
         ],
         'errors': [],
       }
+    },
+    components: {
+      ConfirmModal
     },
     mounted() {
       let loadBody = function (data) {
