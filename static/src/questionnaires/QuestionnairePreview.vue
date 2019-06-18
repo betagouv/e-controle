@@ -13,15 +13,30 @@
       <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
         < Retour
       </a>
-      <button type="submit" @click.prevent="done()" class="btn btn-primary ml-auto">
-        Confirmer la création
+      <button type="submit"
+              data-toggle="modal"
+              data-target="#saveQuestionnaireConfirmModal"
+              class="btn btn-primary ml-auto"
+              title="Publier le questionnaire à l'organisme interrogé">
+        Publier
       </button>
     </div>
+
+    <confirm-modal id="saveQuestionnaireConfirmModal"
+                   title="Confirmer la publication"
+                   confirm-button="Oui, j'ai compris"
+                   cancel-button="Retour"
+                   @confirm="done()"
+    >
+      En publiant ce questionnaire, vous allez le rendre visible à l'organisme interrogé, et vous ne pourrez plus le modifier.
+    </confirm-modal>
+
   </div>
 </template>
 
 <script>
   import Vue from "vue"
+  import ConfirmModal from "../utils/ConfirmModal"
   import QuestionnaireDetail from "./QuestionnaireDetail"
 
   export default Vue.extend({
@@ -56,6 +71,7 @@
       },
     },
     components: {
+      ConfirmModal,
       QuestionnaireDetail
     }
   });
