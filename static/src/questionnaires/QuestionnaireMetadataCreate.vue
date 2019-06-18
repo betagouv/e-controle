@@ -2,6 +2,11 @@
   <div>
 
     <form @submit.prevent="createMetadata">
+      <div class="card-header">
+        <div class="card-options">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        </div>
+      </div>
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Titre<span class="form-required">*</span></label>
@@ -59,11 +64,33 @@ services pour toute information complémentaire qu’appellerait ce questionnair
         'fr': fr // locale for datepicker
       }
     },
+    mounted() {
+      let loadMetadata = function(data) {
+        // Use Vue's $set to make the properties reactive.
+        for (const key of Object.keys(this.metadata)) {
+          console.debug('key', key)
+          this.$set(this.metadata, key, data[key])
+        }
+      }.bind(this);
+
+      this.$parent.$on('questionnaire-loaded', function(data) {
+        console.debug('new metadata', data);
+        loadMetadata(data);
+      });
+    },
     methods: {
-      createMetadata: function () {
-        console.log('metadata created', this.metadata)
+      createMetadata: function (event) {
+        console.debug('event', event)
+        console.debug('metadata created', this.metadata)
         this.$emit('metadata-created', this.metadata)
-      }
+      },
+      saveDraft(event) {
+        console.debug('save draft', event)
+        if (!event.target.form.reportValidity()) {
+          return
+        }
+        this.$emit('save-draft', this.metadata)
+      },
     },
     components: {
       Datepicker

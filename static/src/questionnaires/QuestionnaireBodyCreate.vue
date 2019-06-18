@@ -1,6 +1,11 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
+      <div class="card-header">
+        <div class="card-options">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        </div>
+      </div>
 
       <div class="card" v-for="(theme, themeIndex) in body">
         <div class="card-status card-status-top bg-blue">
@@ -99,20 +104,36 @@
         'errors': [],
       }
     },
+    mounted() {
+      let loadBody = function(data) {
+        // Empty old themes
+        this.body.splice(0, this.body.length)
+        // Replace with new themes
+        data.themes.forEach(theme => {
+          console.debug('theme', theme)
+          this.body.push(theme)
+        })
+      }.bind(this)
+
+      this.$parent.$on('questionnaire-loaded', function(data) {
+        console.debug('new body', data);
+        loadBody(data);
+      })
+    },
     methods: {
       back: function() {
         this.$emit('back');
       },
       createBody: function () {
-        console.log(this.body)
+        console.debug(this.body)
         this.$emit('body-created', this.body)
       },
       addQuestion: function (themeIndex) {
-        console.log('addQuestion', themeIndex)
+        console.debug('addQuestion', themeIndex)
         this.body[themeIndex].questions.push({ description: ""});
       },
       addTheme: function () {
-        console.log('addTheme')
+        console.debug('addTheme')
         this.body.push({ title: "", questions: [{description: ""}]})
       },
       deleteQuestion: function(themeIndex, qIndex) {
@@ -120,7 +141,14 @@
       },
       deleteTheme: function(themeIndex) {
         this.body.splice(themeIndex, 1);
-      }
+      },
+      saveDraft(event) {
+        console.debug('save draft', event)
+        if (!event.target.form.reportValidity()) {
+          return
+        }
+        this.$emit('save-draft', this.body)
+      },
     }
   });
 </script>

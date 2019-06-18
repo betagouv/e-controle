@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_title %}
-Nouveau questionnaire
-{% endblock page_title %}
-
 {% block extra_static_header %}
 {{ block.super }}
 {% endblock extra_static_header %}
@@ -12,9 +8,13 @@ Nouveau questionnaire
 {% block page_content %}
 
 <div id="questionnaire-create-vm">
-    <questionnaire-create v-bind:control-id="{{ control.id }}">
-
-    </questionnaire-create>
+    {% if control is not None %}
+      <questionnaire-create v-bind:control-id="{{ control.id}}">
+      </questionnaire-create>
+    {% elif questionnaire is not None %}
+      <questionnaire-create v-bind:questionnaire-id="{{ questionnaire.id}}">
+      </questionnaire-create>
+    {% endif %}
 </div>
 
 {% endblock page_content %}
