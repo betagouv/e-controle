@@ -79,6 +79,7 @@
                       oninput="this.setCustomValidity('')"
                       required>
             </textarea>
+            <question-file-upload :questionId="22"></question-file-upload>
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
                 <i class="fe fe-trash-2"></i>Supprimer
@@ -120,8 +121,10 @@
 </template>
 
 <script>
-  import Vue from "vue";
+  import "vue2-dropzone/dist/vue2Dropzone.min.css"
   import ConfirmModal from "../utils/ConfirmModal"
+  import QuestionFileUpload from "./QuestionFileUpload"
+  import Vue from "vue";
 
   export default Vue.extend({
     data() {
@@ -138,7 +141,8 @@
       }
     },
     components: {
-      ConfirmModal
+      ConfirmModal,
+      QuestionFileUpload
     },
     mounted() {
       let loadBody = function (data) {
