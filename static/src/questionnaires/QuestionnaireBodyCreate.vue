@@ -24,8 +24,8 @@
                  oninput="this.setCustomValidity('')"
                  required>
           <span>
-            <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link">
-              <i class="fe fe-trash-2"></i>Supprimer
+            <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link" title="Supprimer le thème">
+              <i class="fe fe-trash-2"></i>
             </a>
           </span>
         </div>
@@ -48,26 +48,26 @@
                       required>
             </textarea>
             <span>
-              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
-                <i class="fe fe-trash-2"></i>Supprimer
+              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+                <i class="fe fe-trash-2"></i>
               </a>
             </span>
           </div>
         </div>
 
-        <div class="card-footer text-right">
-          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary">
-            <i class="fe fe-plus"></i>Ajouter une question
+        <div class="card-footer">
+          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
+            <i class="fe fe-plus"></i>
           </a>
         </div>
 
       </div>
 
       <div class="card">
-        <div class="card-footer text-right">
+        <div class="card-footer">
           <div class="card-status card-status-top bg-blue">
           </div>
-          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary">
+          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
             <i class="fe fe-plus"></i>Ajouter un thème
           </a>
         </div>

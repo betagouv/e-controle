@@ -213,9 +213,8 @@
         this.questionnaire.is_draft = true
         this._doSave()
             .then(() => {
-                const today = new Date();
-                const timeString = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                this.message = "Brouillon sauvergardé à " + timeString + "."
+                const timeString = moment(new Date()).format('HH:mm:ss')
+                this.message = "Votre dernière sauvergarde a eu lieu à " + timeString + "."
             })
       },
       saveNonDraft() {
