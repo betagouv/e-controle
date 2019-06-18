@@ -24,15 +24,47 @@
                  oninput="this.setCustomValidity('')"
                  required>
           <span>
-            <a href="javascript:void(0)" @click.prevent="deleteTheme(themeIndex)" class="btn btn-link">
+
+            <confirm-modal id="deleteThemeConfirmModal"
+                           title="Confirmer la suppression"
+                           confirm-button="Oui, supprimer"
+                           cancel-button="Non, retour"
+                           @confirm="deleteTheme(themeIndex)"
+            >
+              <p>Ce thème contient
+                <span v-if="body[themeIndex].questions.length === 1">
+                  une question, qui sera supprimée avec lui.
+                </span>
+                <span v-else>
+                  {{ body[themeIndex].questions.length }} questions, qui seront supprimées avec lui.
+                </span>
+              </p>
+              <p>
+                Êtes-vous sûr.e de vouloir supprimer ce thème?
+              </p>
+            </confirm-modal>
+
+            <a v-if="body[themeIndex].questions.length === 0"
+               href="javascript:void(0)"
+               @click.prevent="deleteTheme(themeIndex)"
+               class="btn btn-link"
+            >
+              <i class="fe fe-trash-2"></i>Supprimer
+            </a>
+            <a v-else
+               href="javascript:void(0)"
+               class="btn btn-link"
+               data-toggle="modal"
+               data-target="#deleteThemeConfirmModal"
+            >
               <i class="fe fe-trash-2"></i>Supprimer
             </a>
           </span>
         </div>
 
         <div v-for="(question, qIndex) in body[themeIndex].questions"
-             class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-          <div class="card-header border-1" data-toggle="card-collapse" >
+             class="card border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
+          <div class="card-header border-1">
             <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
                 {{ themeIndex + 1 }}.{{ qIndex + 1 }}
@@ -89,6 +121,7 @@
 
 <script>
   import Vue from "vue";
+  import ConfirmModal from "../utils/ConfirmModal"
 
   export default Vue.extend({
     data() {
@@ -104,8 +137,11 @@
         'errors': [],
       }
     },
+    components: {
+      ConfirmModal
+    },
     mounted() {
-      let loadBody = function(data) {
+      let loadBody = function (data) {
         // Empty old themes
         this.body.splice(0, this.body.length)
         // Replace with new themes
@@ -121,7 +157,7 @@
       })
     },
     methods: {
-      back: function() {
+      back: function () {
         this.$emit('back');
       },
       createBody: function () {
@@ -136,10 +172,10 @@
         console.debug('addTheme')
         this.body.push({ title: "", questions: [{description: ""}]})
       },
-      deleteQuestion: function(themeIndex, qIndex) {
+      deleteQuestion: function (themeIndex, qIndex) {
         this.body[themeIndex].questions.splice(qIndex, 1);
       },
-      deleteTheme: function(themeIndex) {
+      deleteTheme: function (themeIndex) {
         this.body.splice(themeIndex, 1);
       },
       saveDraft(event) {
