@@ -1,4 +1,5 @@
 import sys
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -6,6 +7,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
 from rest_framework import routers
+
 
 from . import views as ecc_views
 from control import api_views as control_api_views
@@ -22,6 +24,7 @@ router.register(r'question', control_api_views.QuestionViewSet, basename='questi
 router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basename='questionnaire')
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
+router.register(r'annexe', control_api_views.QuestionFileUploadViewSet, basename='annexe')
 
 
 urlpatterns = [

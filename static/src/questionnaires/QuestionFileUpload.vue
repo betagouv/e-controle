@@ -17,7 +17,7 @@
     },
     data: () => ({
       dropOptions: {
-        url: "https://httpbin.org/post"
+        url: "/api/annexe/"
       }
     }),
     components: {
