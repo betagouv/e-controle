@@ -61,7 +61,7 @@
             </div>
             <table class="table card-table">
               <tbody>
-              {% for theme in themes %}
+              {% for theme in questionnaire.themes.all %}
                 <tr data-id="{{ forloop.counter }}" class="theme-row">
                   <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
                 </tr>
@@ -73,7 +73,7 @@
       </div>
     </div> <!--// closing: side_theme_list  //-->
     <div class="col-lg-8" id="questionaire-detail-app"> <!--// opening: main_list_of_questions  //-->
-      {% for theme in themes %}
+      {% for theme in questionnaire.themes.all %}
         <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
           <div class="card-status card-status-top bg-blue"></div>
           <div class="card-header">

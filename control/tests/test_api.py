@@ -176,6 +176,13 @@ def test_no_modifying_questionnaire_if_not_inspector():
     assert_no_data_is_saved()
 
 
+def test_access_to_draft_if_not_inspector():
+    questionnaire = factories.QuestionnaireFactory(is_draft=True)
+    audited_user = make_audited_user(questionnaire.control)
+
+    assert call_questionnaire_detail_api(audited_user, questionnaire.id).status_code != 200
+
+
 def test_questionnaire_create__success():
     increment_ids()
     control = factories.ControlFactory()

@@ -16,8 +16,8 @@ def make_user(profile_type, control=None):
     return user_profile.user
 
 
-def access_questionnaire_page(client, page_name, is_control_associated_with_user, profile_type):
-    questionnaire = factories.QuestionnaireFactory()
+def access_questionnaire_page(client, page_name, is_control_associated_with_user, profile_type, is_draft=False):
+    questionnaire = factories.QuestionnaireFactory(is_draft=is_draft)
     control = questionnaire.control
     if is_control_associated_with_user:
         user = make_user(profile_type, control)
@@ -49,6 +49,24 @@ def test_can_access_questionnaire_page_if_control_is_associated_with_the_user(cl
                                          is_control_associated_with_user=True,
                                          profile_type=UserProfile.AUDITED)
     assert response.status_code == 200
+
+
+def test_can_access_to_questionnaire_page_if_questionnaire_is_draft_and_user_is_inspector(client):
+    response = access_questionnaire_page(client,
+                                         page_name='questionnaire-detail',
+                                         is_control_associated_with_user=True,
+                                         profile_type=UserProfile.INSPECTOR,
+                                         is_draft=True)
+    assert response.status_code == 200
+
+
+def test_no_access_to_questionnaire_page_if_questionnaire_is_draft_and_user_is_not_inspector(client):
+    response = access_questionnaire_page(client,
+                                         page_name='questionnaire-detail',
+                                         is_control_associated_with_user=True,
+                                         profile_type=UserProfile.AUDITED,
+                                         is_draft=True)
+    assert response.status_code == 404
 
 
 def test_no_access_to_questionnaire_page_if_control_is_not_associated_with_the_user(client):

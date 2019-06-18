@@ -46,6 +46,8 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
             control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            queryset = queryset.filter(is_draft=False)
         return queryset
 
     def __create_or_update(self, request, save_questionnaire_func, is_update):
