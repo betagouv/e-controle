@@ -6,9 +6,7 @@
       </div>
       <div id="metadata" class="card">
         <div class="card-body">
-          <p>
-            {{ questionnaire.description }}
-          </p>
+          <p class="with-line-breaks">{{ questionnaire.description }}</p>
           <p v-if="questionnaire.sent_date">
             <i class="fe fe-send"></i>
             Date de transmission du questionnaire :
@@ -59,15 +57,13 @@
           <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
                v-for="(question, qIndex) in theme.questions"
                class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-            <div class="card-header border-1" data-toggle="card-collapse">
-              <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                {{ themeIndex + 1 }}.{{ qIndex + 1 }}
-              </span>
-              <div class="card-text" style="cursor: pointer">
-                {{ question.description }}
-              </div>
-            </div>
 
+            <question :question_description="question.description"
+                      :theme_numbering="themeIndex + 1"
+                      :question_numbering="qIndex + 1"
+                      :question_id="question.id"
+                      :annexe_count="question.question_files && question.question_files.length">
+            </question>
           </div>
         </div>
       </div>
@@ -78,6 +74,7 @@
 <script>
   import Vue from "vue";
   import DateFormat from '../utils/DateFormat.js';
+  import Question from '../details/Question.vue';
 
   export default Vue.extend({
     props: ['questionnaire'],
@@ -86,6 +83,9 @@
     },
     filters: {
       DateFormat
+    },
+    components: {
+      Question
     }
   });
 </script>

@@ -31,6 +31,10 @@
     padding: 1.5rem;
 }
 
+.with-line-breaks {
+    white-space: pre-wrap;
+}
+
 .draft {
     background: rgba(70, 127, 207, 0.04)
 }

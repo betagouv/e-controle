@@ -3,8 +3,8 @@
     <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
       {{ theme_numbering }}.{{ question_numbering }}
     </span>
-    <div class="card-text" style="cursor: pointer">
-      {{ question_description }}
+    <div class="card-text" style="cursor: pointer;">
+      <div class="with-line-breaks">{{ question_description }}</div>
       <div class="tags">
         <template v-if="answer_count">
           <span class="tag tag-azure pull-left" style="cursor: pointer">
@@ -43,10 +43,10 @@
     },
     props: {
       question_description: String,
-      theme_numbering: String,
-      question_numbering: String,
+      theme_numbering: String|Number,
+      question_numbering: String|Number,
       question_id: String,
-      annexe_count: String,
+      annexe_count: String|Number,
     },
     methods: {}
   });

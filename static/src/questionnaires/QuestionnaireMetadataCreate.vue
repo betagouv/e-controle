@@ -18,7 +18,7 @@
           </label>
           <textarea class="form-control"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
-                    rows="4"
+                    rows="6"
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
@@ -47,9 +47,9 @@
 
   let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
-sur les points énumérés dans ce questionnaire. Vous voudrez bien me faire \
+sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
 parvenir au fur et à mesure votre réponse, au plus tard avant la date \
-de réponse indiquée. Je reste à votre disposition ainsi qu’à celle de vos \
+de réponse indiquée.\nJe reste à votre disposition ainsi qu’à celle de vos \
 services pour toute information complémentaire qu’appellerait ce questionnaire.";
 
   export default Vue.extend({
