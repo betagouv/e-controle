@@ -219,7 +219,7 @@
             })
       },
       saveNonDraft() {
-        this.questionnaire.is_draft = falset
+        this.questionnaire.is_draft = false
         this._doSave()
             .then(() => {
               window.location.href = home_url
