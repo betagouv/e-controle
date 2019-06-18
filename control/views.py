@@ -35,7 +35,10 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
     context_object_name = 'questionnaire'
 
     def get_queryset(self):
-        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
+        set = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            set = set.filter(is_draft=False)
+        return set
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
