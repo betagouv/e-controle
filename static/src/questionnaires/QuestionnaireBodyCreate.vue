@@ -1,12 +1,6 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
-      <div class="card-header">
-        <div class="card-options">
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        </div>
-      </div>
-
       <div class="card" v-for="(theme, themeIndex) in body">
         <div class="card-status card-status-top bg-blue">
         </div>
@@ -74,11 +68,12 @@
       </div>
 
       <div class="text-right">
-        <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
+        <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
           < Retour
-        </a>
-        <button type="submit" class="btn btn-primary ml-auto">
-          Prévisualiser >
+        </button>
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        <button type="submit" class="btn btn-secondary ml-auto">
+          Suivant >
         </button>
       </div>
 
