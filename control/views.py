@@ -22,29 +22,19 @@ class WithListOfControlsMixin(object):
         return context
 
 
-class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, ListView):
+class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
     template_name = "ecc/questionnaire_list.html"
-    context_object_name = 'questionnaires'
-
-    def get_queryset(self):
-        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
 
-class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
+class QuestionnaireDetail(LoginRequiredMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
 
     def get_queryset(self):
-        set = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
+        queryset = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
         if not self.request.user.profile.is_inspector:
-            set = set.filter(is_draft=False)
-        return set
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        theme_list = Theme.objects.filter(questionnaire=self.object)
-        context['themes'] = theme_list
-        return context
+            queryset = queryset.filter(is_draft=False)
+        return queryset
 
 
 class QuestionnaireEdit(LoginRequiredMixin, DetailView):
