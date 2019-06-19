@@ -18,7 +18,7 @@
                  oninput="this.setCustomValidity('')"
                  required>
           <span>
-            <confirm-modal id="deleteThemeConfirmModal"
+            <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
                            title="Confirmer la suppression"
                            confirm-button="Oui, supprimer"
                            cancel-button="Non, retour"
@@ -49,7 +49,7 @@
                href="javascript:void(0)"
                class="btn btn-link"
                data-toggle="modal"
-               data-target="#deleteThemeConfirmModal"
+               :data-target="'#deleteThemeConfirmModal' + themeIndex"
             >
               <i class="fe fe-trash-2"></i>
             </a>
