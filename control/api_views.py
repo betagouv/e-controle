@@ -117,18 +117,35 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         def log(saved_object):
             self.__log_action(user, verb, saved_object, saved_qr.control)
 
+        def log_delete(saved_object):
+            self.__log_action(user, 'deleted', saved_object, saved_qr.control)
+
+        # remove themes that aren't in request.
+        theme_ids_in_request = [
+            validated_themes_and_questions[i].get('id', None) for i in range(len(validated_themes_and_questions))
+        ]
+        for pre_existing_theme in saved_qr.themes.all():
+            if pre_existing_theme.id not in theme_ids_in_request:
+                pre_existing_theme.delete()
+                log_delete(pre_existing_theme)
+
+        # add themes that are in request
         for theme_data in validated_themes_and_questions:
+            # save theme
             pre_existing_theme = find_child_obj_by_id(saved_qr, theme_data.get('id', None), Theme)
             theme_ser = ThemeSerializer(pre_existing_theme, data=theme_data)
             theme_ser.is_valid(raise_exception=True)
             saved_theme = theme_ser.save(questionnaire=saved_qr)
             log(saved_theme)
-            questions_data = theme_data.get('questions', [])
+
             # remove questions that aren't in request.
-            ids_in_request = [questions_data[i].get('id', None) for i in range(len(questions_data))]
+            questions_data = theme_data.get('questions', [])
+            question_ids_in_request = [questions_data[i].get('id', None) for i in range(len(questions_data))]
             for pre_existing_question in saved_theme.questions.all():
-                if pre_existing_question.id not in ids_in_request:
+                if pre_existing_question.id not in question_ids_in_request:
                     pre_existing_question.delete()
+                    log_delete(pre_existing_question)
+
             # add questions that are in request
             for question_data in questions_data:
                 pre_existing_question = find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
