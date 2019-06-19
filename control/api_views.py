@@ -121,9 +121,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             self.__log_action(user, 'deleted', saved_object, saved_qr.control)
 
         # remove themes that aren't in request.
-        theme_ids_in_request = [
-            validated_themes_and_questions[i].get('id', None) for i in range(len(validated_themes_and_questions))
-        ]
+        theme_ids_in_request = [theme_data.get('id') for theme_data in validated_themes_and_questions]
         for pre_existing_theme in saved_qr.themes.all():
             if pre_existing_theme.id not in theme_ids_in_request:
                 pre_existing_theme.delete()
@@ -140,7 +138,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
             # remove questions that aren't in request.
             questions_data = theme_data.get('questions', [])
-            question_ids_in_request = [questions_data[i].get('id', None) for i in range(len(questions_data))]
+            question_ids_in_request = [question_data.get('id') for question_data in questions_data]
             for pre_existing_question in saved_theme.questions.all():
                 if pre_existing_question.id not in question_ids_in_request:
                     pre_existing_question.delete()
