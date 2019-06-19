@@ -39,8 +39,7 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     filterset_fields = ('question',)
 
     def perform_create(self, serializer):
-        q = Question.objects.first()
-        serializer.save(file=self.request.data.get('file'), question=q)
+        serializer.save(file=self.request.data.get('file'))
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(

@@ -31,7 +31,7 @@ class QuestionFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuestionFile
-        fields = ('id', 'url', 'basename', 'file')
+        fields = ('id', 'url', 'basename', 'file', 'question')
 
 
 class QuestionSerializer(serializers.ModelSerializer):

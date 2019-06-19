@@ -74,7 +74,7 @@
                       required>
             </textarea>
 
-            <question-file-upload :questionId="question.id"></question-file-upload>
+            <question-file-upload :question-id="question.id"></question-file-upload>
 
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
@@ -82,6 +82,9 @@
               </a>
             </span>
           </div>
+
+          <question-file-list :question-id="question.id"></question-file-list>
+
         </div>
 
         <div class="card-footer">
@@ -120,7 +123,8 @@
 <script>
   import Vue from "vue";
   import ConfirmModal from "../utils/ConfirmModal"
-  import QuestionFileUpload from "QuestionFileUpload"
+  import QuestionFileUpload from "./QuestionFileUpload"
+  import QuestionFileList from "./QuestionFileList"
 
   export default Vue.extend({
     data() {
@@ -138,7 +142,8 @@
     },
     components: {
       ConfirmModal,
-      QuestionFileUpload
+      QuestionFileUpload,
+      QuestionFileList,
     },
     mounted() {
       let loadBody = function (data) {
