@@ -35,7 +35,10 @@
                       <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
                         <td>
                           <h5>
-                            {% if questionnaire.is_draft %} <span>[Brouillon]</span> {% endif %}
+                            {% if questionnaire.is_draft %}
+                              <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
+                              <span>[Brouillon]</span>
+                            {% endif %}
                             <span>{{ questionnaire.title }}</span>
                           </h5>
                           {% if questionnaire.sent_date %}
