@@ -1,18 +1,14 @@
 <template>
   <div>
-    <div class="card-header">
-      <div class="card-options">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-      </div>
-    </div>
     <div class="preview">
       <questionnaire-detail v-bind:questionnaire="questionnaire">
       </questionnaire-detail>
     </div>
     <div class="text-right">
-      <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
+      <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
         < Retour
-      </a>
+      </button>
+      <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
       <button type="submit"
               data-toggle="modal"
               data-target="#saveQuestionnaireConfirmModal"

@@ -45,7 +45,7 @@
       question_description: String,
       theme_numbering: String|Number,
       question_numbering: String|Number,
-      question_id: String,
+      question_id: String|Number,
       annexe_count: String|Number,
     },
     methods: {}

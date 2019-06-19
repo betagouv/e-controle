@@ -2,11 +2,6 @@
   <div>
 
     <form @submit.prevent="createMetadata">
-      <div class="card-header">
-        <div class="card-options">
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        </div>
-      </div>
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Titre<span class="form-required">*</span></label>
@@ -33,7 +28,8 @@
         </div>
       </fieldset>
       <div class="text-right">
-        <button type="submit" class="btn btn-primary">Suivant ></button>
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        <button type="submit" class="btn btn-secondary">Suivant ></button>
       </div>
     </form>
 

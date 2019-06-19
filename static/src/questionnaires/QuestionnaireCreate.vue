@@ -4,9 +4,6 @@
       <div class="page-title">
         Rédiger un questionnaire
       </div>
-      <div class="card-options">
-        {{ message }}
-      </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
@@ -31,6 +28,11 @@
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
+    <div class="card-header border-0">
+      <div class="card-options">
+        {{ message }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -213,9 +215,8 @@
         this.questionnaire.is_draft = true
         this._doSave()
             .then(() => {
-                const today = new Date();
-                const timeString = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                this.message = "Brouillon sauvergardé à " + timeString + "."
+                const timeString = moment(new Date()).format('HH:mm:ss')
+                this.message = "Votre dernière sauvergarde a eu lieu à " + timeString + "."
             })
       },
       saveNonDraft() {

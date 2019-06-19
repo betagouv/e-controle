@@ -1,12 +1,6 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
-      <div class="card-header">
-        <div class="card-options">
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        </div>
-      </div>
-
       <div class="card" v-for="(theme, themeIndex) in body">
         <div class="card-status card-status-top bg-blue">
         </div>
@@ -24,7 +18,6 @@
                  oninput="this.setCustomValidity('')"
                  required>
           <span>
-
             <confirm-modal id="deleteThemeConfirmModal"
                            title="Confirmer la suppression"
                            confirm-button="Oui, supprimer"
@@ -48,8 +41,9 @@
                href="javascript:void(0)"
                @click.prevent="deleteTheme(themeIndex)"
                class="btn btn-link"
+               title="Supprimer le thème"
             >
-              <i class="fe fe-trash-2"></i>Supprimer
+              <i class="fe fe-trash-2"></i>
             </a>
             <a v-else
                href="javascript:void(0)"
@@ -57,7 +51,7 @@
                data-toggle="modal"
                data-target="#deleteThemeConfirmModal"
             >
-              <i class="fe fe-trash-2"></i>Supprimer
+              <i class="fe fe-trash-2"></i>
             </a>
           </span>
         </div>
@@ -80,37 +74,38 @@
                       required>
             </textarea>
             <span>
-              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link">
-                <i class="fe fe-trash-2"></i>Supprimer
+              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+                <i class="fe fe-trash-2"></i>
               </a>
             </span>
           </div>
         </div>
 
-        <div class="card-footer text-right">
-          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary">
-            <i class="fe fe-plus"></i>Ajouter une question
+        <div class="card-footer">
+          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
+            <i class="fe fe-plus"></i>
           </a>
         </div>
 
       </div>
 
       <div class="card">
-        <div class="card-footer text-right">
+        <div class="card-footer">
           <div class="card-status card-status-top bg-blue">
           </div>
-          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary">
+          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
             <i class="fe fe-plus"></i>Ajouter un thème
           </a>
         </div>
       </div>
 
       <div class="text-right">
-        <a href="javascript:void(0)" @click.prevent="back()" class="btn btn-link">
+        <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
           < Retour
-        </a>
-        <button type="submit" class="btn btn-primary ml-auto">
-          Prévisualiser >
+        </button>
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        <button type="submit" class="btn btn-secondary ml-auto">
+          Suivant >
         </button>
       </div>
 
