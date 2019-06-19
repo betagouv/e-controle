@@ -73,6 +73,9 @@
                       oninput="this.setCustomValidity('')"
                       required>
             </textarea>
+
+            <question-file-upload :questionId="question.id"></question-file-upload>
+
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
                 <i class="fe fe-trash-2"></i>
@@ -117,6 +120,7 @@
 <script>
   import Vue from "vue";
   import ConfirmModal from "../utils/ConfirmModal"
+  import QuestionFileUpload from "QuestionFileUpload"
 
   export default Vue.extend({
     data() {
@@ -133,7 +137,8 @@
       }
     },
     components: {
-      ConfirmModal
+      ConfirmModal,
+      QuestionFileUpload
     },
     mounted() {
       let loadBody = function (data) {
