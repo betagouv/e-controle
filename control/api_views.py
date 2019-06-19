@@ -2,10 +2,13 @@ from actstream import action
 from functools import partial
 from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import FormParser, MultiPartParser
+
 
 from control.permissions import ChangeQuestionnairePermission
-from .models import Question, Questionnaire, Theme
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer, ThemeSerializer
+from .models import Question, Questionnaire, Theme, QuestionFile
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from .serializers import ThemeSerializer, QuestionFileSerializer
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -28,6 +31,21 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
             dict_data[question_id] = elem
         response.data = dict_data
         return response
+
+
+class QuestionFileViewSet(viewsets.ModelViewSet):
+    serializer_class = QuestionFileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    filterset_fields = ('question',)
+
+    def perform_create(self, serializer):
+        q = Question.objects.first()
+        serializer.save(file=self.request.data.get('file'), question=q)
+
+    def get_queryset(self):
+        queryset = QuestionFile.objects.filter(
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        return queryset
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
