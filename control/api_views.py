@@ -58,20 +58,25 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             pre_existing_qr = None
             verb = 'created'
 
+        def log(saved_object):
+            self.__log_action(request.user, verb, saved_object, saved_qr.control)
+
         validated_themes_and_questions = self.__validate_all(request, pre_existing_qr)
         response = save_questionnaire_func()
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
-        self.__log_action(request.user, verb, saved_qr, saved_qr.control)
+        log(saved_qr)
 
         if is_update:
+            def log_delete(saved_object):
+                self.__log_action(request.user, 'deleted', saved_object, saved_qr.control)
+
             self.__delete_objects_not_in_request_data(qr_in_db=saved_qr,
                                                       themes_request_data=validated_themes_and_questions,
-                                                      user=request.user)
+                                                      log_delete_func=log_delete)
 
         self.__save_themes_and_questions(qr_in_db=saved_qr,
                                          themes_request_data=validated_themes_and_questions,
-                                         user=request.user,
-                                         verb=verb)
+                                         log_func=log)
 
         # Use the read serializer to output the response data.
         response.data = QuestionnaireSerializer(instance=saved_qr).data
@@ -106,7 +111,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return serializer.validated_data.get('themes', [])
 
-    def __delete_objects_not_in_request_data(self, qr_in_db, themes_request_data, user):
+    def __delete_objects_not_in_request_data(self, qr_in_db, themes_request_data, log_delete_func):
         """
         This is for an questionnaire update request only.
         This function deletes objects (questions or themes) that are present in the request data, but not in the DB.
@@ -120,10 +125,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         :param qr_in_db: questionnaire currently in DB.
         :param themes_request_data: list of themes coming from update request.
+        :param function for logging the action of deleting.
         :return:
         """
-        def log_delete(saved_object):
-            self.__log_action(user, 'deleted', saved_object, qr_in_db.control)
 
         def __find_child_theme_by_id(parent_questionnaire, theme_id):
             return self.__find_child_obj_by_id(parent_questionnaire, theme_id, Theme)
@@ -133,7 +137,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         for theme_in_db in qr_in_db.themes.all():
             if theme_in_db.id not in theme_ids_in_request:
                 theme_in_db.delete()
-                log_delete(theme_in_db)
+                log_delete_func(theme_in_db)
 
         for theme_request_data in themes_request_data:
             # Find theme in DB corresponding to theme in request_data.
@@ -148,7 +152,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 # if question not in request : delete it.
                 if question_in_db.id not in question_ids_in_request:
                     question_in_db.delete()
-                    log_delete(question_in_db)
+                    log_delete_func(question_in_db)
 
     def __find_child_obj_by_id(self, parent_obj, child_id, child_class):
         """
@@ -168,7 +172,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             return child_class.objects.get(id=child_id)
         return None
 
-    def __save_themes_and_questions(self, qr_in_db, themes_request_data, user, verb):
+    def __save_themes_and_questions(self, qr_in_db, themes_request_data, log_func):
         """
         For create- or update-questionnaire request : save the data from the request in the db.
         If the object in request
@@ -184,15 +188,13 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         :param verb: create or update
         :return:
         """
-        def log(saved_object):
-            self.__log_action(user, verb, saved_object, qr_in_db.control)
 
         for theme_request_data in themes_request_data:
             theme_in_db = self.__find_child_obj_by_id(qr_in_db, theme_request_data.get('id'), Theme)
             theme_serializer = ThemeSerializer(theme_in_db, data=theme_request_data)
             theme_serializer.is_valid(raise_exception=True)
             saved_theme = theme_serializer.save(questionnaire=qr_in_db)
-            log(saved_theme)
+            log_func(saved_theme)
 
             questions_data = theme_request_data.get('questions', [])
             for question_data in questions_data:
@@ -200,7 +202,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                 question_serializer = QuestionSerializer(question_in_db, data=question_data)
                 question_serializer.is_valid(raise_exception=True)
                 saved_question = question_serializer.save(theme=saved_theme)
-                log(saved_question)
+                log_func(saved_question)
 
     def __log_action(self, user, verb, saved_object, control):
         action_details = {
