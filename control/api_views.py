@@ -63,8 +63,13 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
         self.__log_action(request.user, verb, saved_qr, saved_qr.control)
 
-        self.__save_themes_and_questions(saved_qr=saved_qr,
-                                         validated_themes_and_questions=validated_themes_and_questions,
+        if is_update:
+            self.__delete_objects_not_in_request_data(qr_in_db=saved_qr,
+                                                      themes_request_data=validated_themes_and_questions,
+                                                      user=request.user)
+
+        self.__save_themes_and_questions(qr_in_db=saved_qr,
+                                         themes_request_data=validated_themes_and_questions,
                                          user=request.user,
                                          verb=verb)
 
@@ -83,8 +88,14 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
         return self.__create_or_update(request, save_questionnaire_func, is_update=True)
 
-    def __validate_all(self, request, pre_existing_questionnaire=None):
-        serializer = QuestionnaireUpdateSerializer(pre_existing_questionnaire, data=request.data)
+    def __validate_all(self, request, questionnaire_in_db=None):
+        """
+        Validate the themes and questions coming from the request. If it's an update request, we validate that the
+        request data is appropriate for updating the questionnaire already in db.
+        :param questionnaire_in_db: questionnaire already saved in db.
+        :return:
+        """
+        serializer = QuestionnaireUpdateSerializer(questionnaire_in_db, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
@@ -97,12 +108,16 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
     def __delete_objects_not_in_request_data(self, qr_in_db, themes_request_data, user):
         """
-        This is for an questionnaire update request.
-        If the request data contains themes 1 and 3, while the corresponding questionnaire in DB contains themes 1, 2
-        and 3, this function deletes theme 2 from DB.
-        Same thing with questions.
-        Note that in request data, themes and questions may have an id (if the corresponding DB object should be
-        updated), or not (if there is no DB object yet, and it should be created).
+        This is for an questionnaire update request only.
+        This function deletes objects (questions or themes) that are present in the request data, but not in the DB.
+        Example :
+        The request has : themes: [ {id:1, title:"AAA"}, {id:3, title:"CCC"} ]
+        The DB has themes with ids 1, 2 and 3.
+        This function will delete theme 2 from DB.
+
+        Note that in request data, themes and questions don't always have an id : objects created in front-end don't
+        have an id because they haven't been saved to DB yet.
+
         :param qr_in_db: questionnaire currently in DB.
         :param themes_request_data: list of themes coming from update request.
         :return:
@@ -135,61 +150,56 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
                     question_in_db.delete()
                     log_delete(question_in_db)
 
-    def __find_child_obj_by_id(self, parent_obj, obj_id, obj_class):
+    def __find_child_obj_by_id(self, parent_obj, child_id, child_class):
         """
-        If obj_id is in parent_obj's children, return the corresponding object. Else return none.
+        Look through the children of parent_obj, and return a child object with id=child_id. If not found return none.
         :param parent_obj: e.g. an instance of Questionnaire
-        :param obj_id: e.g. 3
-        :param obj_class: e.g. Theme
+        :param child_id: e.g. 3 (we are looking for a child with id=3)
+        :param child_class: e.g. Theme (the children to look through are of type Theme)
         :return:
         """
-        if parent_obj is None or obj_id is None:
+        if parent_obj is None or child_id is None:
             return None
-        child_class_name_plural = obj_class.__name__.lower() + 's'
+        child_class_name_plural = child_class.__name__.lower() + 's'
 
         children = getattr(parent_obj, child_class_name_plural)
         children_ids = children.all().values_list('id')
-        if children_ids.filter(id=obj_id).exists():
-            return obj_class.objects.get(id=obj_id)
+        if children_ids.filter(id=child_id).exists():
+            return child_class.objects.get(id=child_id)
         return None
 
-    def __save_themes_and_questions(self, saved_qr, validated_themes_and_questions, user, verb):
+    def __save_themes_and_questions(self, qr_in_db, themes_request_data, user, verb):
+        """
+        For create- or update-questionnaire request : save the data from the request in the db.
+        If the object in request
+        data (theme or question) has an id, we try to find a corresponding existing object in DB and update it.
+        Otherwise we will create a new object in DB.
+        Example :
+        The request has : themes: [ {id:2, title:"AAA"}, {title:"BBB"}, {id:12345, title:"CCC"} ]
+        The DB has one theme with id 2.
+        This function will update theme 2, create a new theme "BBB", and create a new theme "CCC" (because the id is
+        bad, so it is ignored.)
+        :param qr_in_db: questionnaire currently saved in DB
+        :param themes_request_data: themes coming from the data in the http request
+        :param verb: create or update
+        :return:
+        """
         def log(saved_object):
-            self.__log_action(user, verb, saved_object, saved_qr.control)
+            self.__log_action(user, verb, saved_object, qr_in_db.control)
 
-        def log_delete(saved_object):
-            self.__log_action(user, 'deleted', saved_object, saved_qr.control)
-
-        # remove themes that aren't in request.
-        theme_ids_in_request = [theme_data.get('id') for theme_data in validated_themes_and_questions]
-        for pre_existing_theme in saved_qr.themes.all():
-            if pre_existing_theme.id not in theme_ids_in_request:
-                pre_existing_theme.delete()
-                log_delete(pre_existing_theme)
-
-        # add themes that are in request
-        for theme_data in validated_themes_and_questions:
-            # save theme
-            pre_existing_theme = self.__find_child_obj_by_id(saved_qr, theme_data.get('id', None), Theme)
-            theme_ser = ThemeSerializer(pre_existing_theme, data=theme_data)
-            theme_ser.is_valid(raise_exception=True)
-            saved_theme = theme_ser.save(questionnaire=saved_qr)
+        for theme_request_data in themes_request_data:
+            theme_in_db = self.__find_child_obj_by_id(qr_in_db, theme_request_data.get('id'), Theme)
+            theme_serializer = ThemeSerializer(theme_in_db, data=theme_request_data)
+            theme_serializer.is_valid(raise_exception=True)
+            saved_theme = theme_serializer.save(questionnaire=qr_in_db)
             log(saved_theme)
 
-            # remove questions that aren't in request.
-            questions_data = theme_data.get('questions', [])
-            question_ids_in_request = [question_data.get('id') for question_data in questions_data]
-            for pre_existing_question in saved_theme.questions.all():
-                if pre_existing_question.id not in question_ids_in_request:
-                    pre_existing_question.delete()
-                    log_delete(pre_existing_question)
-
-            # add questions that are in request
+            questions_data = theme_request_data.get('questions', [])
             for question_data in questions_data:
-                pre_existing_question = self.__find_child_obj_by_id(saved_theme, question_data.get('id', None), Question)
-                question_ser = QuestionSerializer(pre_existing_question, data=question_data)
-                question_ser.is_valid(raise_exception=True)
-                saved_question = question_ser.save(theme=saved_theme)
+                question_in_db = self.__find_child_obj_by_id(saved_theme, question_data.get('id'), Question)
+                question_serializer = QuestionSerializer(question_in_db, data=question_data)
+                question_serializer.is_valid(raise_exception=True)
+                saved_question = question_serializer.save(theme=saved_theme)
                 log(saved_question)
 
     def __log_action(self, user, verb, saved_object, control):
