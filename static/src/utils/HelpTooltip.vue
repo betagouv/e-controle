@@ -1,17 +1,9 @@
 <template>
   <span>
-    <a href="javascript:void(0);" data-toggle="tooltip" :title="text">
+    <a href="javascript:void(0);" data-toggle="tooltip" :title="text" style="color:#467fcf">
       <i class="fe fe-help-circle"></i>
     </a>
-
-    <div class="tooltip bs-tooltip-top" role="tooltip">
-      <div class="arrow"></div>
-      <div class="tooltip-inner">
-        {{ text }}
-      </div>
-    </div>
-</span>
-
+  </span>
 </template>
 
 <script>
