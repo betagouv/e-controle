@@ -13,7 +13,13 @@
         <div class="card">
           <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
           <div class="card-header">
-            <h4 class="page-title">{{ control.title }}</h4>
+            <div>
+              <h4 class="page-title">{{ control.title }}</h4>
+              {% if user.profile.is_inspector %}
+                Code contrôle : <a href="https://github.com/betagouv/e-controle/wiki/Connecter-via-webdav">{{ control.reference_code }}</a>
+                <help-tooltip text="Bonus! Visualisez toutes les pièces déposées depuis votre explorateur Windows! Cliquez le code du contrôle pour savoir comment."></help-tooltip>
+              {% endif %}
+            </div>
             {% if debug %}
               {% if user.profile.is_inspector %}
                 <div class="card-options">
