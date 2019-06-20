@@ -132,25 +132,32 @@
         this.clearErrors()
         this.state = newState;
       },
-      bodyCreated: function(data) {
-        console.debug('got body', data);
-        this._updateBody(data);
+      bodyCreated: function(body) {
+        console.debug('got body', body);
+        this._updateBody(body);
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
-      _updateBody(data) {
-        this.questionnaire.themes = data;
+      _updateBody(body) {
+        this.questionnaire.themes = body;
       },
-      metadataCreated: function(data) {
-        console.debug('got metadata', data);
-        this._updateMetadata(data)
+      metadataCreated: function(metadata) {
+        console.debug('got metadata', metadata);
+        this._updateMetadata(metadata)
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
       },
-      _updateMetadata: function(data) {
-        for (const [key, value] of Object.entries(data)) {
+      _updateMetadata: function(metadata) {
+        for (const [key, value] of Object.entries(metadata)) {
           this.questionnaire[key] = value
         }
+      },
+      _updateQuestionnaire: function(questionnaire) {
+        this.questionnaire.id = questionnaire.id
+        this.questionnaire.description = questionnaire.description
+        this.questionnaire.end_date = questionnaire.end_date
+        this.questionnaire.title = questionnaire.title
+        this._updateBody(questionnaire.themes)
       },
       back: function() {
         console.debug('back');
@@ -197,6 +204,8 @@
         return saveMethod(this.questionnaire)
             .then(response => {
               console.debug(response)
+              this._updateQuestionnaire(response.data)
+              this.emitQuestionnaireUpdated()
             }).catch(error => {
               console.error(error)
               this.displayErrors(error.response.data)
