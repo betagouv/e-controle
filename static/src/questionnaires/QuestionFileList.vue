@@ -36,11 +36,14 @@
           }
         }).then((response) => {
           this.files = response.data
+          console.log(this.files)
         })
       }
     },
     mounted() {
-      this.getFiles()
+      if(this.questionID) {
+        this.getFiles()
+      }
       EventBus.$on('question-files-changed', data => {
         this.getFiles()
       })
