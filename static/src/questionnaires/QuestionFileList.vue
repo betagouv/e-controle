@@ -1,5 +1,7 @@
 <template>
-<div v-if="files && files.length">
+<div class="card-body" v-if="files && files.length">
+  <div v-if="files.length > 1">Fichiers annexes à la question:</div>
+  <div v-else>Fichier annexe à la question:</div>
   <ul>
     <li v-for="(file, index) in files" :key="index">
       <a :href="file.url">{{ file.basename }}</a>
@@ -28,7 +30,6 @@
     },
     methods: {
       getFiles() {
-        console.log('LIST ' + this.questionId)
         Vue.axios.get('/api/annexe/', {
           params: {
             question: this.questionId

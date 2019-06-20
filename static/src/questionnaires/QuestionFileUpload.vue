@@ -1,6 +1,8 @@
 <template>
 <div>
-  <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+  <label class="btn btn-primary">
+    <i class="fe fe-upload mr-2"></i>Fichier Annexe<input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
+  </label>
 </div>
 </template>
 
@@ -16,7 +18,6 @@
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
-
   export default Vue.extend({
     props: {
       questionId: Number
@@ -27,6 +28,10 @@
       }
     },
     methods: {
+      handleFileUpload() {
+        this.file = this.$refs.file.files[0]
+        this.submitFile()
+      },
       submitFile() {
         let formData = new FormData()
         formData.append('file', this.file)
@@ -40,15 +45,10 @@
           }
         ).then(function(){
           EventBus.$emit('question-files-changed');
-          console.log('SUCCESS!!');
         })
         .catch(function(){
-          console.log('FAILURE!!');
+          console.log('Error when posting question file');
         })
-      },
-      handleFileUpload() {
-        this.file = this.$refs.file.files[0]
-        this.submitFile()
       }
     }
   })
