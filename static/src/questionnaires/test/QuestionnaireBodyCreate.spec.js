@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import QuestionnaireBodyCreate from '../src/questionnaires/QuestionnaireBodyCreate.vue'
+import QuestionnaireBodyCreate from '../QuestionnaireBodyCreate.vue'
 
 describe('QuestionnaireBodyCreate.vue', () => {
   test('is a Vue instance', () => {
@@ -7,3 +7,4 @@ describe('QuestionnaireBodyCreate.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 })
+
