@@ -74,7 +74,16 @@
                       required>
             </textarea>
 
-            <question-file-upload :question-id="question.id"></question-file-upload>
+            <button class="btn btn-orange"
+                    type="button"
+                    data-toggle="collapse"
+                    aria-expanded="false"
+                    :data-target="'#filelist' + (themeIndex + 1) + (qIndex + 1)"
+                    :aria-controls="'filelist' + (themeIndex + 1) + (qIndex + 1)"
+                    @click="showFiles()"
+                    >
+                    <i class="fe fe-paperclip"></i> voir les annexes
+            </button>
 
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
@@ -83,17 +92,16 @@
             </span>
           </div>
 
-          <question-file-list :question-id="question.id"></question-file-list>
+          <question-file-list :question-id="question.id" :theme-index="themeIndex" :q-index="qIndex"></question-file-list>
 
         </div>
+
 
         <div class="card-footer">
           <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
             <i class="fe fe-plus"></i>
           </a>
         </div>
-
-      </div>
 
       <div class="card">
         <div class="card-footer">
@@ -115,6 +123,8 @@
         </button>
       </div>
 
+    </div>
+
     </form>
 
   </div>
@@ -122,8 +132,8 @@
 
 <script>
   import Vue from "vue";
+  import EventBus from '../events'
   import ConfirmModal from "../utils/ConfirmModal"
-  import QuestionFileUpload from "./QuestionFileUpload"
   import QuestionFileList from "./QuestionFileList"
 
   export default Vue.extend({
@@ -142,7 +152,6 @@
     },
     components: {
       ConfirmModal,
-      QuestionFileUpload,
       QuestionFileList,
     },
     mounted() {
@@ -190,6 +199,9 @@
         }
         this.$emit('save-draft', this.body)
       },
+      showFiles(){
+          EventBus.$emit('question-files-changed');
+      }
     }
   });
 </script>

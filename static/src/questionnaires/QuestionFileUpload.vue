@@ -1,7 +1,7 @@
 <template>
 <div>
   <label class="btn btn-primary">
-    <i class="fe fe-upload mr-2"></i>Fichier Annexe<input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
+    <i class="fe fe-upload mr-2"></i>Ajouter un fichier annexe<input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
   </label>
 </div>
 </template>
