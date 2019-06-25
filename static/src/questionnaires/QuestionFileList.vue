@@ -1,20 +1,20 @@
 <template>
-<div class="collapse" :id="'filelist' + (themeIndex + 1) + (qIndex + 1)">
   <div>
-    <div class="card card-body">
-      <div v-if="files && files.length">
-        <div v-if="files.length > 1">Fichiers annexes à la question:</div>
-        <div v-else>Fichier annexe à la question:</div>
-        <ul>
-          <li v-for="(file, index) in files" :key="index">
-            <a :href="file.url">{{ file.basename }}</a>
-          </li>
-        </ul>
+    <div>
+      <div class="card card-body">
+        <div v-if="files && files.length">
+          <div v-if="files.length > 1">Fichiers annexes à la question:</div>
+          <div v-else>Fichier annexe à la question:</div>
+          <ul>
+            <li v-for="(file, index) in files" :key="index">
+              <a :href="file.url">{{ file.basename }}</a>
+            </li>
+          </ul>
+        </div>
+        <question-file-upload :question-id="questionId"></question-file-upload>
       </div>
-      <question-file-upload :question-id="questionId"></question-file-upload>
     </div>
   </div>
-</div>
 
 </template>
 
@@ -46,6 +46,7 @@
       getFiles() {
         Vue.axios.get('/api/annexe/', {
           params: {
+            // Todo on first load, the questionId is not found so all files are fetched.
             question: this.questionId
           }
         }).then((response) => {
@@ -55,7 +56,7 @@
       }
     },
     mounted() {
-      EventBus.$on('question-files-changed', data => {
+      EventBus.$on('question-files-changed', () => {
         this.getFiles()
       })
     }

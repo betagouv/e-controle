@@ -44,6 +44,7 @@
             }
           }
         ).then(function(){
+          // todo send event for individual questions to avoid reloading all questions
           EventBus.$emit('question-files-changed');
         })
         .catch(function(){

@@ -74,17 +74,6 @@
                       required>
             </textarea>
 
-            <button class="btn btn-orange"
-                    type="button"
-                    data-toggle="collapse"
-                    aria-expanded="false"
-                    :data-target="'#filelist' + (themeIndex + 1) + (qIndex + 1)"
-                    :aria-controls="'filelist' + (themeIndex + 1) + (qIndex + 1)"
-                    @click="showFiles()"
-                    >
-                    <i class="fe fe-paperclip"></i> voir les annexes
-            </button>
-
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
                 <i class="fe fe-trash-2"></i>
@@ -123,7 +112,7 @@
           Suivant >
         </button>
       </div>
-      
+
     </form>
 
   </div>
@@ -167,6 +156,7 @@
       this.$parent.$on('questionnaire-loaded', function(data) {
         console.debug('new body', data);
         loadBody(data);
+        EventBus.$emit('question-files-changed');
       })
     },
     methods: {
@@ -197,9 +187,6 @@
           return
         }
         this.$emit('save-draft', this.body)
-      },
-      showFiles(){
-          EventBus.$emit('question-files-changed');
       }
     }
   });
