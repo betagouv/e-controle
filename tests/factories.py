@@ -10,6 +10,12 @@ from faker import Factory as FakerFactory
 faker = FakerFactory.create('fr_FR')
 
 
+dummy_file = SimpleUploadedFile(
+    name='test.pdf',
+    content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
+    content_type='application/pdf')
+
+
 @register
 class UserFactory(factory.DjangoModelFactory):
     first_name = factory.LazyFunction(faker.first_name)
@@ -53,10 +59,7 @@ class ControlFactory(factory.DjangoModelFactory):
 class QuestionnaireFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
     control = factory.SubFactory(ControlFactory)
-    file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
-            content_type='application/pdf')
+    file = dummy_file
 
     class Meta:
         model = 'control.Questionnaire'
@@ -84,10 +87,7 @@ class QuestionFactory(factory.DjangoModelFactory):
 class ResponseFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)
-    file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
-            content_type='application/pdf')
+    file = dummy_file
 
     class Meta:
         model = 'control.ResponseFile'
@@ -96,10 +96,7 @@ class ResponseFileFactory(factory.DjangoModelFactory):
 @register
 class QuestionFileFactory(factory.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory)
-    file = SimpleUploadedFile(
-            name='test.pdf',
-            content=open(settings.BASE_DIR + '/tests/data/test.pdf', 'rb').read(),
-            content_type='application/pdf')
+    file = dummy_file
 
     class Meta:
         model = 'control.QuestionFile'
