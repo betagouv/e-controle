@@ -82,7 +82,7 @@
             <question-file-upload :question-id="question.id"></question-file-upload>
           </div>
 
-          <question-file-list :question-id="question.id" :theme-index="themeIndex" :q-index="qIndex"></question-file-list>
+          <question-file-list :question-id="question.id"></question-file-list>
 
         </div>
 

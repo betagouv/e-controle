@@ -29,8 +29,6 @@
   export default Vue.extend({
     props: {
       questionId: Number,
-      qIndex: Number,
-      themeIndex: Number
     },
     data() {
       return {
