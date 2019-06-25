@@ -89,6 +89,23 @@
               </div>
             </div> <!--// closing: list of questionnaires for control  //-->
 
+            <div class="alert alert-primary alert-dismissible" role="alert">
+              <button data-dismiss="alert" class="close"></button>
+              <p>
+                Bonus : visualisez les fichiers déposés en arborescence
+              </p>
+              <div class="btn-list">
+                <a href="https://github.com/betagouv/e-controle/wiki/Visualiser-les-fichiers-d%C3%A9pos%C3%A9s-dans-une-arborescence"
+                   class="btn btn-success"
+                   role="button">
+                  Dites-m'en plus
+                </a>
+                <button class="btn btn-secondary" type="button" data-dismiss="alert">Non merci</button>
+              </div>
+              <p></p>
+              <div class="small">Code contrôle : {{ control.reference_code }}</div>
+            </div>
+
             <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
 
           </div>  <!--// closing: questionnaire_description_card_body  //-->
