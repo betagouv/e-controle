@@ -79,6 +79,7 @@
                 <i class="fe fe-trash-2"></i>
               </a>
             </span>
+            <question-file-upload :question-id="question.id"></question-file-upload>
           </div>
 
           <question-file-list :question-id="question.id" :theme-index="themeIndex" :q-index="qIndex"></question-file-list>
@@ -123,6 +124,7 @@
   import EventBus from '../events'
   import ConfirmModal from "../utils/ConfirmModal"
   import QuestionFileList from "./QuestionFileList"
+  import QuestionFileUpload from "./QuestionFileUpload"
 
   export default Vue.extend({
     data() {
@@ -141,6 +143,7 @@
     components: {
       ConfirmModal,
       QuestionFileList,
+      QuestionFileUpload,
     },
     mounted() {
       let loadBody = function (data) {

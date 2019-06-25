@@ -33,6 +33,9 @@
         this.submitFile()
       },
       submitFile() {
+        if (this.questionId === undefined) {
+          console.log('No questionId. We need to save the questionnaire to get an id for this question.')
+        }
         let formData = new FormData()
         formData.append('file', this.file)
         formData.append('question', this.questionId)
@@ -47,8 +50,9 @@
           // todo send event for individual questions to avoid reloading all questions
           EventBus.$emit('question-files-changed');
         })
-        .catch(function(){
-          console.log('Error when posting question file');
+        .catch(function(error){
+          console.log('Error when posting question file', error);
+          EventBus.$emit('display-error', 'L\'annexe n\'a pu être sauvée.')
         })
       }
     }

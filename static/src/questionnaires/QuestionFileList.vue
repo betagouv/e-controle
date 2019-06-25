@@ -11,7 +11,6 @@
             </li>
           </ul>
         </div>
-        <question-file-upload :question-id="questionId"></question-file-upload>
       </div>
     </div>
   </div>
@@ -22,7 +21,6 @@
 <script>
   import axios from 'axios'
   import EventBus from '../events'
-  import QuestionFileUpload from "./QuestionFileUpload"
   import Vue from "vue"
   import VueAxios from 'vue-axios'
 
@@ -38,9 +36,6 @@
       return {
         files: []
       }
-    },
-    components: {
-      QuestionFileUpload
     },
     methods: {
       getFiles() {

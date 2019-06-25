@@ -40,6 +40,7 @@
   import axios from "axios"
   import moment from "moment"
   import Vue from "vue"
+  import EventBus from '../events'
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
@@ -86,6 +87,10 @@
         throw 'QuestionnaireCreate needs a controlId or a questionnaireId'
       }
 
+      EventBus.$on('display-error', (errorMessage) => {
+        this.displayErrors(errorMessage)
+      })
+      
       if (typeof this.controlId !== 'undefined') {
         this._loadQuestionnaireCreate()
         return
