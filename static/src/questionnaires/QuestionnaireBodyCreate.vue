@@ -102,6 +102,7 @@
             <i class="fe fe-plus"></i>
           </a>
         </div>
+      </div>
 
       <div class="card">
         <div class="card-footer">
@@ -122,9 +123,7 @@
           Suivant >
         </button>
       </div>
-
-    </div>
-
+      
     </form>
 
   </div>
