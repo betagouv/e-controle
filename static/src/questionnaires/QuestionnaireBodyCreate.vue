@@ -145,9 +145,9 @@
     },
     mounted() {
       let loadBody = function (data) {
-        console.debug('new body', data);
+        console.debug('QuestionnaireBodyCreate loadBody', data);
         // Empty old themes
-        this.body.splice(0, this.body.length)
+        this.body = []
         // Replace with new themes
         data.themes.forEach(theme => {
           console.debug('theme', theme)
@@ -169,7 +169,7 @@
         this.$emit('back');
       },
       createBody: function () {
-        console.debug(this.body)
+        console.debug('QuestionnaireBodyCreate createBody', this.body)
         this.$emit('body-created', this.body)
       },
       addQuestion: function (themeIndex) {

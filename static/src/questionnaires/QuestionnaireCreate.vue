@@ -138,7 +138,7 @@
         this.state = newState;
       },
       bodyCreated: function(body) {
-        console.debug('got body', body);
+        console.debug('QuestionnaireCreate got body', body);
         this._updateBody(body);
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
