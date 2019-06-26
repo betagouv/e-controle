@@ -58,6 +58,16 @@
               <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
             </div>
           </fieldset>
+          <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
+            <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+            <button type="button" class="close" data-dismiss="alert"></button>
+            <p>
+              Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
+              avec son email. Voici le lien à lui envoyer :
+            </p>
+            <p style="word-wrap: break-word;">
+            https://e-controle-beta.ccomptes.fr</p>
+          </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
