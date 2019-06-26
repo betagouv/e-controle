@@ -56,7 +56,7 @@
           </div>
           <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
                v-for="(question, qIndex) in theme.questions"
-               class="card border-0 m-0 p-0 pb-0">
+               class="card m-0 p-0 pb-0">
             <question :question_description="question.description"
                       :theme_numbering="themeIndex + 1"
                       :question_numbering="qIndex + 1"

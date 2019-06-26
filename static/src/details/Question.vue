@@ -1,5 +1,5 @@
 <template>
-  <div class="card-header border-1" data-toggle="card-collapse">
+  <div class="card-header border-0" data-toggle="card-collapse">
     <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
       {{ theme_numbering }}.{{ question_numbering }}
     </span>
