@@ -1,7 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
-      <div class="card" v-for="(theme, themeIndex) in body">
+      <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
         <div class="card-status card-status-top bg-blue">
         </div>
 
@@ -57,8 +57,8 @@
         </div>
 
         <div v-for="(question, qIndex) in body[themeIndex].questions"
-             class="card border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-          <div class="card-header border-1">
+             class="card m-0 pt-2"> <!-- Card for each question -->
+          <div class="card-header border-0">
             <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
                 {{ themeIndex + 1 }}.{{ qIndex + 1 }}
@@ -81,9 +81,7 @@
             </span>
             <question-file-upload :question-id="question.id"></question-file-upload>
           </div>
-
           <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
-
         </div>
 
 
