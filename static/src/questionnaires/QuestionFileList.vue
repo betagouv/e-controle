@@ -5,7 +5,7 @@
       <ul>
         <li v-for="(file, index) in files" :key="index">
           <a :href="file.url">{{ file.basename }}</a>
-          <question-file-delete :question-file-id="file.id"></question-file-delete>
+            <question-file-delete v-if="withDelete" :question-file-id="file.id"></question-file-delete>
         </li>
       </ul>
     </div>
@@ -25,6 +25,10 @@
     props: {
       questionId: Number,
       questionNumber: String,
+      withDelete: {
+        type: Boolean,
+        default: true
+      }
     },
     data() {
       return {
