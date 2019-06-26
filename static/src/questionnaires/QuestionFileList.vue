@@ -42,12 +42,10 @@
         }
         Vue.axios.get('/api/annexe/', {
           params: {
-            // Todo on first load, the questionId is not found so all files are fetched.
             question: this.questionId
           }
         }).then((response) => {
           this.files = response.data
-          console.log(this.files)
         })
       }
     },
