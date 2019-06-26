@@ -31,6 +31,7 @@
   export default Vue.extend({
     props: {
       questionId: Number,
+      questionNumber: String,
     },
     data() {
       return {
@@ -42,6 +43,10 @@
     },
     methods: {
       getFiles() {
+        if (this.questionId === undefined) {
+          console.debug('No questionId for question', this.questionNumber, ', so cannot fetch file list.')
+          return
+        }
         Vue.axios.get('/api/annexe/', {
           params: {
             // Todo on first load, the questionId is not found so all files are fetched.
