@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-left:0.5em;">
     <button class="btn btn-sm btn-secondary" type="button" @click="copyLink" style="position: relative;">
       <i class="fe fe-copy"></i>
       {{ buttontext }}
