@@ -1,9 +1,17 @@
 <template>
   <div>
-    <button class="btn btn-sm btn-secondary" type="button" @click="copyLink">
+    <button class="btn btn-sm btn-secondary" type="button" @click="copyLink" style="position: relative;">
       <i class="fe fe-copy"></i>
       {{ buttontext }}
     </button>
+
+    <div v-if="confirmMessage" class="alert alert-warning alert-dismissible fade show" role="alert"
+        style="position: absolute; z-index:1000;">
+      {{ confirmMessage }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close" @click="dismissMessage">
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -13,11 +21,12 @@
   export default Vue.extend({
     props: [
         'tocopy',
-        'buttontext'
+        'buttontext',
+        'confirmtext'
     ],
     data: function() {
       return {
-        tooltip: ""
+        confirmMessage: ""
       }
     },
     mounted: function() {
@@ -35,18 +44,21 @@
         let msg = ""
         try {
           const copyWorked = document.execCommand('copy')
-          msg = copyWorked ? 'Copié' : 'La copie a échoué'
+          msg = copyWorked ? this.confirmtext : 'La copie a échoué'
         } catch (err) {
           console.error("document.execCommand('copy') did not work.", err)
           msg = 'La copie a échoué'
         }
 
         console.log(msg)
-        // Todo display msg
+        this.confirmMessage = msg
 
         // Remove the hidden input
         document.body.removeChild(tempInput);
 
+      },
+      dismissMessage: function() {
+        this.confirmMessage = undefined
       }
     }
   })
