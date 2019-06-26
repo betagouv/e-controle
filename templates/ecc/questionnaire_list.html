@@ -103,7 +103,10 @@
                 <button class="btn btn-secondary" type="button" data-dismiss="alert">Non merci</button>
               </div>
               <p></p>
-              <div class="small">Code contrôle : {{ control.reference_code }}</div>
+              <div class="flex-row-container">
+                <div class="small">Lien du contrôle : https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}</div>
+                <div><i style="padding: 0.5em;" class="fe fe-copy"></i></div>
+              </div>
             </div>
 
             <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
