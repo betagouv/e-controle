@@ -1,8 +1,16 @@
 <template>
 <div>
-  <label class="btn btn-primary">
-    <i class="fe fe-upload mr-2"></i>Ajouter un fichier annexe<input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
-  </label>
+  <div v-if="questionId">
+    <label class="btn btn-primary" >
+      <i class="fe fe-upload mr-2" ></i>Ajouter un fichier annexe<input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
+    </label>
+  </div>
+  <div v-else>
+    <label class="btn btn-primary disabled" >
+      <i class="fe fe-upload mr-2" ></i>Ajouter un fichier annexe
+    </label>
+    <div class="small">Pour pouvoir ajouter des annexes, vous devez d'abord enregistrer votre brouillon.</div>
+  </div>
 </div>
 </template>
 
@@ -33,9 +41,6 @@
         this.submitFile()
       },
       submitFile() {
-        if (this.questionId === undefined) {
-          console.log('No questionId. We need to save the questionnaire to get an id for this question.')
-        }
         let formData = new FormData()
         formData.append('file', this.file)
         formData.append('question', this.questionId)
