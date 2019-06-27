@@ -201,6 +201,9 @@ REST_FRAMEWORK = {
     )
 }
 
+AUTHENTICATION_BACKENDS = ['ad_authentication.ad_backend',
+                        'django.contrib.auth.backends.ModelBackend',]
+
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
 
@@ -223,7 +226,10 @@ LDAP_USER = env('LDAP_USER', default=None)
 LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
+TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)
 ALLOW_DEMO_LOGIN = env('ALLOW_DEMO_LOGIN', default=False)
+
+
