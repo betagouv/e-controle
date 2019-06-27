@@ -26,18 +26,19 @@ class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateVie
     template_name = "ecc/questionnaire_list.html"
 
 
-class QuestionnaireDetail(LoginRequiredMixin, DetailView):
+class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
 
     def get_queryset(self):
-        queryset = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
 
 
-class QuestionnaireEdit(LoginRequiredMixin, DetailView):
+class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     template_name = "ecc/questionnaire_create.html"
     context_object_name = 'questionnaire'
 
@@ -47,7 +48,7 @@ class QuestionnaireEdit(LoginRequiredMixin, DetailView):
         return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
 
-class QuestionnaireCreate(LoginRequiredMixin, DetailView):
+class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     """
     Creates a questionnaire on a given control (pk of control passed in URL).
     """
@@ -92,7 +93,8 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 class SendFileMixin(SingleObjectMixin):
     """
     Inheriting classes should override :
-    - model to specify the data type of the file. The model class should implement a basename property.
+    - model to specify the data type of the file. The model class should implement
+      a basename property.
     - (optional) get_query_set() to restrict the accessible files.
     """
     model = None
