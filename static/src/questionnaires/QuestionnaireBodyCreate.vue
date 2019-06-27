@@ -1,10 +1,9 @@
 <template>
   <div>
     <div class="card-header pl-0">
-      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;" disabled>Etape 1/4: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
-      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;">Etape 2/4: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
-      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/4: Aperçu avant publication<i class="fa fa-angle-double-right ml-4"></button>
-      <button type="button" class="btn btn-sm btn-outline-primary" style="cursor: Text;" disabled>Etape 4/4: Publier<i class="fa fe fe-check ml-4"></button>
+      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;" disabled>Etape 1/3: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
+      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;">Etape 2/3: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
+      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/3: Aperçu avant publication<i class="fa fe fe-check ml-4"></button>
     </div>
     <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
       <i class="fe fe-bell mr-2" aria-hidden="true"></i>
