@@ -25,6 +25,9 @@
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
+          <span class="text-muted">
+            Le texte ci-dessus est donné comme exemple, vous pouvez le modifier
+          </span>
           <p class="text-muted pl-2" v-if="errors.description">
             <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
           </p>
@@ -52,8 +55,8 @@
   let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
 sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
-parvenir au fur et à mesure votre réponse, au plus tard avant la date \
-de réponse indiquée.\nJe reste à votre disposition ainsi qu’à celle de vos \
+parvenir au fur et à mesure votre réponse. \
+\nJe reste à votre disposition ainsi qu’à celle de vos \
 services pour toute information complémentaire qu’appellerait ce questionnaire.";
 
   export default Vue.extend({
