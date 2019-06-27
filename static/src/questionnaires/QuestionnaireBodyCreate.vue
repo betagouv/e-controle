@@ -87,7 +87,7 @@
 
         <div class="card-footer">
           <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
-            <i class="fe fe-plus"></i>
+            <i class="fe fe-plus"></i> Ajouter une question
           </a>
         </div>
       </div>
