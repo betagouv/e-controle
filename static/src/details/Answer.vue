@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive" v-if="files">
+  <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
