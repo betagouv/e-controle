@@ -6,6 +6,12 @@
       <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/4: Pré-visualiser<i class="fa fa-angle-double-right ml-4"></button>
       <button type="button" class="btn btn-sm btn-outline-primary" style="cursor: Text;" disabled>Etape 4/4: Publier<i class="fa fe fe-check ml-4"></button>
     </div>
+    <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
+      <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+      <button type="button" class="close" data-dismiss="alert"></button>
+      A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
+      des questions et des annexes à vos questions.
+    </div>
     <form @submit.prevent="createBody">
       <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
         <div class="card-status card-status-top bg-blue">
