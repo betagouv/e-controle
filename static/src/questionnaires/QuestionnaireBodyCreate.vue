@@ -1,7 +1,7 @@
 <template>
   <div>
     <form @submit.prevent="createBody">
-      <div class="card" v-for="(theme, themeIndex) in body">
+      <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
         <div class="card-status card-status-top bg-blue">
         </div>
 
@@ -57,8 +57,8 @@
         </div>
 
         <div v-for="(question, qIndex) in body[themeIndex].questions"
-             class="card border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-          <div class="card-header border-1">
+             class="card m-0 pt-2"> <!-- Card for each question -->
+          <div class="card-header border-0">
             <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
               <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
                 {{ themeIndex + 1 }}.{{ qIndex + 1 }}
@@ -73,20 +73,23 @@
                       oninput="this.setCustomValidity('')"
                       required>
             </textarea>
+
             <span>
               <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
                 <i class="fe fe-trash-2"></i>
               </a>
             </span>
+            <question-file-upload :question-id="question.id"></question-file-upload>
           </div>
+          <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
         </div>
+
 
         <div class="card-footer">
           <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
-            <i class="fe fe-plus"></i>
+            <i class="fe fe-plus"></i> Ajouter une question
           </a>
         </div>
-
       </div>
 
       <div class="card">
@@ -116,7 +119,10 @@
 
 <script>
   import Vue from "vue";
+  import EventBus from '../events'
   import ConfirmModal from "../utils/ConfirmModal"
+  import QuestionFileList from "./QuestionFileList"
+  import QuestionFileUpload from "./QuestionFileUpload"
 
   export default Vue.extend({
     data() {
@@ -133,12 +139,15 @@
       }
     },
     components: {
-      ConfirmModal
+      ConfirmModal,
+      QuestionFileList,
+      QuestionFileUpload,
     },
     mounted() {
       let loadBody = function (data) {
+        console.debug('QuestionnaireBodyCreate loadBody', data);
         // Empty old themes
-        this.body.splice(0, this.body.length)
+        this.body = []
         // Replace with new themes
         data.themes.forEach(theme => {
           console.debug('theme', theme)
@@ -147,8 +156,12 @@
       }.bind(this)
 
       this.$parent.$on('questionnaire-loaded', function(data) {
-        console.debug('new body', data);
         loadBody(data);
+        EventBus.$emit('question-files-changed');
+      })
+      this.$parent.$on('questionnaire-updated', function(data) {
+        loadBody(data);
+        EventBus.$emit('question-files-changed');
       })
     },
     methods: {
@@ -156,7 +169,7 @@
         this.$emit('back');
       },
       createBody: function () {
-        console.debug(this.body)
+        console.debug('QuestionnaireBodyCreate createBody', this.body)
         this.$emit('body-created', this.body)
       },
       addQuestion: function (themeIndex) {
@@ -179,7 +192,7 @@
           return
         }
         this.$emit('save-draft', this.body)
-      },
+      }
     }
   });
 </script>

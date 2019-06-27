@@ -56,14 +56,16 @@
           </div>
           <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
                v-for="(question, qIndex) in theme.questions"
-               class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-
+               class="card m-0 p-0 pb-0">
             <question :question_description="question.description"
                       :theme_numbering="themeIndex + 1"
                       :question_numbering="qIndex + 1"
                       :question_id="question.id"
                       :annexe_count="question.question_files && question.question_files.length">
             </question>
+
+            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+
           </div>
         </div>
       </div>
@@ -75,6 +77,7 @@
   import Vue from "vue";
   import DateFormat from '../utils/DateFormat.js';
   import Question from '../details/Question.vue';
+  import QuestionFileList from "./QuestionFileList"
 
   export default Vue.extend({
     props: ['questionnaire'],
@@ -85,7 +88,8 @@
       DateFormat
     },
     components: {
-      Question
+      Question,
+      QuestionFileList
     }
   });
 </script>
