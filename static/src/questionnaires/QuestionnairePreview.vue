@@ -30,7 +30,7 @@
                    @confirm="done()"
     >
       <p>
-        En publiant ce questionnaire, il sera visible à l'organisme interrogé et vous ne pourrez plus le modifier.
+        En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
       </p>
       <div class="alert alert-icon alert-primary" role="alert">
         <i class="fe fe-bell mr-2" aria-hidden="true"></i>
