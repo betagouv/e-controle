@@ -1,5 +1,11 @@
 <template>
   <div>
+      <div class="card-header pl-0">
+        <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;" disabled>Etape 1/4: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
+        <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;" disabled>Etape 2/4: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
+        <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;" disabled>Etape 3/4: Pré-visualiser<i class="fa fa-angle-double-right ml-4"></button>
+        <button type="button" class="btn btn-sm btn-success" style="cursor: Text;">Etape 4/4: Publier<i class="fa fe fe-check ml-4"></button>
+      </div>
     <div class="preview">
       <questionnaire-detail v-bind:questionnaire="questionnaire">
       </questionnaire-detail>
