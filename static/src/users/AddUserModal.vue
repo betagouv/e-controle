@@ -66,7 +66,8 @@
               avec son email. Voici le lien à lui envoyer :
             </p>
             <p style="word-wrap: break-word;">
-            https://e-controle-beta.ccomptes.fr</p>
+              https://e-controle-beta.ccomptes.fr
+            </p>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>

@@ -30,7 +30,19 @@
                    cancel-button="Retour"
                    @confirm="done()"
     >
-      En publiant ce questionnaire, vous allez le rendre visible à l'organisme interrogé, et vous ne pourrez plus le modifier.
+      <p>
+        En publiant ce questionnaire, il sera visible à l'organisme interrogé et vous ne pourrez plus le modifier.
+      </p>
+      <div class="alert alert-icon alert-primary" role="alert">
+        <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+      <p>
+        Pensez à informer l'organisme interrogé que vous avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse&nbsp;:
+      </p>
+        <p style="word-wrap: break-word;">
+          https://e-controle-beta.ccomptes.fr
+        </p>
+      </div>
+
     </confirm-modal>
 
   </div>
