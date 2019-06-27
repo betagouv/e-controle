@@ -9,10 +9,16 @@
 
 <div id="questionnaire-create-vm">
     {% if control is not None %}
-      <questionnaire-create v-bind:control-id="{{ control.id}}">
+      <questionnaire-create
+        :control-id="{{ control.id}}"
+        :questionnaire-numbering="{{ control.next_questionnaire_numbering }}"
+      >
       </questionnaire-create>
     {% elif questionnaire is not None %}
-      <questionnaire-create v-bind:questionnaire-id="{{ questionnaire.id}}">
+      <questionnaire-create
+        :questionnaire-id="{{ questionnaire.id}}"
+        :questionnaire-numbering="{{ questionnaire.numbering }}"
+      >
       </questionnaire-create>
     {% endif %}
 </div>

@@ -2,7 +2,7 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Rédiger un questionnaire
+        Rédaction du questionnaire n°{{ questionnaireNumbering }}
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
@@ -10,6 +10,7 @@
     </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
+            :questionnaire-numbering="questionnaireNumbering"
             v-on:metadata-created="metadataCreated"
             v-on:save-draft="saveDraftFromMetadata"
             v-show="state === STATES.START">
@@ -64,6 +65,7 @@
     props: {
       controlId: Number,
       questionnaireId: Number,
+      questionnaireNumbering: Number,
     },
     data() {
       return {
