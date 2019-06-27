@@ -2,7 +2,7 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Rédaction du questionnaire n°{{ questionnaireNumbering }}
+        Rédaction du questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
@@ -92,7 +92,7 @@
       EventBus.$on('display-error', (errorMessage) => {
         this.displayErrors(errorMessage)
       })
-      
+
       if (typeof this.controlId !== 'undefined') {
         this._loadQuestionnaireCreate()
         return

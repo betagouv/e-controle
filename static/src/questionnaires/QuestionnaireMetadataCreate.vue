@@ -11,7 +11,10 @@
         <div class="form-group">
           <label class="form-label">Titre<span class="form-required">*</span></label>
           <input type="text" class="form-control" v-model="metadata.title" required>
-          <span class="text-muted" v-if="metadata.title">Le titre sera affiché comme ceci : <strong>Questionnaire n°{{ questionnaireNumbering }} - {{ metadata.title }}</strong></span>
+          <span class="text-muted" v-if="metadata.title">
+            Le titre sera affiché comme ceci :
+            <strong>Questionnaire n°{{ questionnaireNumbering }} - {{ metadata.title }}</strong>
+          </span>
         </div>
         <div class="form-group">
           <label class="form-label">

@@ -14,9 +14,6 @@
       </button>
     </div>
     <div>
-      <div v-if="questionnaire.title" class="card-header">
-        <h3 class="card-title">{{questionnaire.title}}</h3>
-      </div>
       <div id="metadata" class="card">
         <div class="card-body">
           <p class="with-line-breaks">{{ questionnaire.description }}</p>
