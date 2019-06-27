@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, QuestionFile, ResponseFile, Control
+from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
 
 class WithListOfControlsMixin(object):
