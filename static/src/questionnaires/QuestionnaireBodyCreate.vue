@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div class="card-header pl-0">
+      <button type="button" class="btn btn-success mr-2" style="cursor: Text;" disabled>Etape 1/4: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
+      <button type="button" class="btn btn-success mr-2" style="cursor: Text;">Etape 2/4: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
+      <button type="button" class="btn btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/4: Pré-visualiser<i class="fa fa-angle-double-right ml-4"></button>
+      <button type="button" class="btn btn-outline-primary" style="cursor: Text;" disabled>Etape 4/4: Publier<i class="fa fe fe-check ml-4"></button>
+    </div>
     <form @submit.prevent="createBody">
       <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
         <div class="card-status card-status-top bg-blue">
