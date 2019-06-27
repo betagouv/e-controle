@@ -31,21 +31,18 @@
                  required>
           <span>
             <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
-                           title="Confirmer la suppression"
+                           title="Confirmer la suppression de ce thème"
                            confirm-button="Oui, supprimer"
                            cancel-button="Non, retour"
                            @confirm="deleteTheme(themeIndex)"
             >
-              <p>Ce thème contient
+              <p>
                 <span v-if="body[themeIndex].questions.length === 1">
-                  une question, qui sera supprimée avec lui.
+                  La question associée à ce thème sera également supprimée.
                 </span>
                 <span v-else>
-                  {{ body[themeIndex].questions.length }} questions, qui seront supprimées avec lui.
+                  Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
                 </span>
-              </p>
-              <p>
-                Êtes-vous sûr.e de vouloir supprimer ce thème?
               </p>
             </confirm-modal>
 
