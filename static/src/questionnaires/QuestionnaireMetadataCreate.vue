@@ -51,6 +51,8 @@
   import Vue from "vue";
   import Datepicker from 'vuejs-datepicker';
   import fr from "../utils/vuejs-datepicker-locale-fr"
+  import reportValidity from 'report-validity';
+
 
   let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
