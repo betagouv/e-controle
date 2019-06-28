@@ -131,6 +131,8 @@
   import ConfirmModal from "../utils/ConfirmModal"
   import QuestionFileList from "./QuestionFileList"
   import QuestionFileUpload from "./QuestionFileUpload"
+  import reportValidity from 'report-validity';
+
 
   export default Vue.extend({
     data() {
@@ -196,7 +198,8 @@
       },
       saveDraft(event) {
         console.debug('save draft', event)
-        if (!event.target.form.reportValidity()) {
+        let isValid = reportValidity(event.target.form)
+        if (!isValid) {
           return
         }
         this.$emit('save-draft', this.body)

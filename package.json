@@ -19,6 +19,7 @@
     "babel-polyfill": "^6.26.0",
     "dropzone": "^5.5.1",
     "moment": "^2.24.0",
+    "report-validity": "^1.0.0",
     "store": "^2.0.12",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",

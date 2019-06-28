@@ -96,7 +96,8 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       },
       saveDraft(event) {
         console.debug('save draft', event)
-        if (!event.target.form.reportValidity()) {
+        let isValid = reportValidity(event.target.form)
+        if (!isValid) {
           return
         }
         this.$emit('save-draft', this.metadata)
