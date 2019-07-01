@@ -89,29 +89,7 @@
               </div>
             </div> <!--// closing: list of questionnaires for control  //-->
 
-            <div class="alert alert-primary alert-dismissible" role="alert">
-              <button data-dismiss="alert" class="close"></button>
-              <p>
-                Bonus : visualisez les fichiers déposés en arborescence
-              </p>
-              <div class="btn-list">
-                <a target="_blank" href="https://github.com/betagouv/e-controle/wiki/Visualiser-les-fichiers-d%C3%A9pos%C3%A9s-dans-une-arborescence"
-                   class="btn btn-success"
-                   role="button">
-                  Dites-m'en plus
-                </a>
-                <button class="btn btn-secondary" type="button" data-dismiss="alert">Non merci</button>
-              </div>
-              <p></p>
-              <div class="flex-row-container">
-                <div class="small">Lien du contrôle : https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}</div>
-                <copy-button tocopy="https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}"
-                             buttontext="Copier le lien"
-                             confirmtext="La copie a été effectuée"
-                >
-                </copy-button>
-              </div>
-            </div>
+            {% include "ecc/includes/tips-explorer.html" %}
 
             <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
 

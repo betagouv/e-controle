@@ -1,0 +1,40 @@
+<div class="card border-0 card-collapsed">
+
+  <div class="card-header border-0 pl-0" data-toggle="card-collapse">
+    <div class="card-title m-0">
+      <button type="button" class="btn btn-warning"><i class="fa fa-folder-open mr-2"></i>Bonus : visualisez les fichiers déposés en arborescence</button>
+    </div>
+    <div class="card-options">
+      <a href="#" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
+    </div>
+  </div>
+
+  <div class="alert alert-primary" role="alert">
+    <p>
+      Toutes les réponses déposées sont automatiquement classées et renommées dans une dossier
+      accessible à tous les membres de l’équipe de contrôle.
+    </p>
+    <div class="btn-list">
+      <a target="_blank" href="https://github.com/betagouv/e-controle/wiki/Visualiser-les-fichiers-d%C3%A9pos%C3%A9s-dans-une-arborescence"
+         class="btn btn-success"
+         role="button">
+        Dites-m'en plus
+      </a>
+      <button class="btn btn-secondary" type="button" data-toggle="card-collapse">Non merci</button>
+    </div>
+    <p></p>
+    <div class="flex-row-container">
+      <div class="small">Vous aurez besoin de ce lien : https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}</div>
+      <copy-button tocopy="https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}"
+                   buttontext="Copier le lien"
+                   confirmtext="La copie a été effectuée"
+      >
+      </copy-button>
+    </div>
+  </div>
+
+  <div data-toggle="card-collapse" class="text-center bg-waring cursor-pointer text-white" style="cursor: pointer;">
+    <i class="fe fe-chevron-up"></i>
+  </div>
+
+</div>
