@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
     'debug_toolbar',
     'model_utils',
     'easy_thumbnails',
@@ -52,7 +51,6 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'ckeditor',
     'django_filters',
-
     'control',
     'demo',
     'ecc',
@@ -200,8 +198,9 @@ REST_FRAMEWORK = {
     )
 }
 
-AUTHENTICATION_BACKENDS = ['ad_authentication.ad_backend',
-                        'django.contrib.auth.backends.ModelBackend',]
+AUTHENTICATION_BACKENDS = ['ad_authentication.ad_backend.AdUserBackend',
+                            'django.contrib.auth.backends.ModelBackend',
+                           ]
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)

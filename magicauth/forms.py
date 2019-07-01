@@ -1,13 +1,15 @@
 from django import forms
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
-
+from ldap3 import Server, Connection, ALL, NTLM
+import logging
 from .models import MagicToken
+import re
+from django.contrib.auth.models import User
+from user_profiles.models import UserProfile
 
-User = get_user_model()
 
 
 class EmailForm(forms.Form):
@@ -16,9 +18,61 @@ class EmailForm(forms.Form):
     def clean_email(self):
         user_email = self.cleaned_data['email']
         user_email = user_email.lower()
+
         if not User.objects.filter(username__iexact=user_email).exists():
-            raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
+            # We now check if the user is in the active directory
+            user_info = self._check_user_in_ad(user_email)
+            if user_info:
+                # We now create the user if it is authorized
+                self._create_user_via_ad(user_info)
+            else:
+                raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
+
         return user_email
+
+    def _check_user_in_ad(self, user_email):
+        """
+
+        :param user_email:
+        :return: Boolean
+        """
+        mail_regex = r'^[a-zA-Z0-9_.+-]+@(crtc\.)?ccomptes.fr$'
+        if re.match(mail_regex, user_email):
+            try:
+                logging.info(f'Basic magicauth: LDAP Sever (username: {user_email})')
+                server = Server(settings.LDAP_SERVER, get_info=ALL)
+                conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
+                                  password=settings.LDAP_PASSWORD, authentication=NTLM)
+                logging.debug('Basic magicauth: LDAP Binding')
+                if conn.bind():
+                    conn.search(settings.LDAP_DC,
+                                f'(&(objectClass=user)(mail={user_email}))',
+                                attributes=['givenName',
+                                            'company',
+                                            'sn',
+                                            'department',
+                                            'mail'
+                                            ])
+                    logging.debug('Basic magicauth: LDAP search')
+                    if len(conn.entries) > 0:
+                        return conn.entries[0]
+            except Exception as e:
+                logging.error(e)
+        return False
+
+    def _create_user_via_ad(self, user_info):
+        """
+
+        :param user_info:
+        """
+        user = User.objects.create_user(user_info.mail.value,
+                                        user_info.mail.value,
+                                        '?',
+                                        first_name=user_info.givenName.value,
+                                        last_name=user_info.sn.value)
+        UserProfile.objects.create(user=user,
+                                   organization=user_info.department.value,
+                                   profile_type='inspector')
 
     def create_token(self, user):
         token = MagicToken.objects.create(user=user)
