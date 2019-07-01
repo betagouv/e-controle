@@ -14,7 +14,6 @@
           <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
           <div class="card-header">
             <h4 class="page-title">{{ control.title }}</h4>
-            {% if debug %}
               {% if user.profile.is_inspector %}
                 <div class="card-options">
                   <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
@@ -23,7 +22,6 @@
                   </a>
                 </div>
               {% endif %}
-            {% endif %}
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
             <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->
