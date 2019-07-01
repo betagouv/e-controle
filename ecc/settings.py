@@ -199,10 +199,6 @@ REST_FRAMEWORK = {
     )
 }
 
-AUTHENTICATION_BACKENDS = ['ad_authentication.ad_backend.AdUserBackend',
-                            'django.contrib.auth.backends.ModelBackend',
-                           ]
-
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
 
