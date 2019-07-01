@@ -1,24 +1,19 @@
 <template>
   <div>
-    <div v-if="questionnaire.metadata">
-      <div v-if="questionnaire.metadata.title" class="card-header">
-        <h3 class="card-title">{{questionnaire.metadata.title}}</h3>
-      </div>
+    <div>
       <div id="metadata" class="card">
         <div class="card-body">
-          <p>
-            {{ questionnaire.metadata.description }}
-          </p>
-          <p v-if="questionnaire.metadata.sent_date">
+          <p class="with-line-breaks">{{ questionnaire.description }}</p>
+          <p v-if="questionnaire.sent_date">
             <i class="fe fe-send"></i>
             Date de transmission du questionnaire :
-            {{ questionnaire.metadata.sent_date}}
+            {{ questionnaire.sent_date}}
           </p>
 
-          <p v-if="questionnaire.metadata.end_date">
+          <p v-if="questionnaire.end_date">
             <i class="fe fe-clock"></i>
             Date de réponse souhaitée :
-            {{ questionnaire.metadata.end_date | DateFormat}}
+            {{ questionnaire.end_date | DateFormat}}
           </p>
         </div>
       </div>
@@ -34,10 +29,10 @@
               </div>
               <table class="table card-table">
                 <tbody>
-                <tr v-for="(group, groupIndex) in questionnaire.body" class="theme-row">
+                <tr v-for="(theme, themeIndex) in questionnaire.themes" class="theme-row">
                   <td>
-                    <a v-bind:href="'#theme' + (groupIndex + 1)">
-                      {{ groupIndex + 1 }}. {{ group.theme }}
+                    <a v-bind:href="'#theme' + (themeIndex + 1)">
+                      {{ themeIndex + 1 }}. {{ theme.title }}
                     </a>
                   </td>
                 </tr>
@@ -49,24 +44,24 @@
       </div>
 
       <div class="col-lg-8" id="question-detail-app">
-        <div v-bind:id="'theme' + (groupIndex + 1)"
-             v-for="(group, groupIndex) in questionnaire.body"
+        <div v-bind:id="'theme' + (themeIndex + 1)"
+             v-for="(theme, themeIndex) in questionnaire.themes"
              class="card">
           <div class="card-status card-status-top bg-blue"></div>
           <div class="card-header">
-            <h3 class="card-title">{{ groupIndex + 1 }}. {{ group.theme }}</h3>
+            <h3 class="card-title">{{ themeIndex + 1 }}. {{ theme.title }}</h3>
           </div>
-          <div v-bind:id="'question' + (groupIndex + 1) + '.' + (qIndex + 1)"
-               v-for="(question, qIndex) in group.questions"
-               class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}">
-            <div class="card-header border-1" data-toggle="card-collapse">
-              <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                {{ groupIndex + 1 }}.{{ qIndex + 1 }}
-              </span>
-              <div class="card-text" style="cursor: pointer">
-                {{ question }}
-              </div>
-            </div>
+          <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+               v-for="(question, qIndex) in theme.questions"
+               class="card m-0 p-0 pb-0">
+            <question :question_description="question.description"
+                      :theme_numbering="themeIndex + 1"
+                      :question_numbering="qIndex + 1"
+                      :question_id="question.id"
+                      :annexe_count="question.question_files && question.question_files.length">
+            </question>
+
+            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
 
           </div>
         </div>
@@ -78,6 +73,8 @@
 <script>
   import Vue from "vue";
   import DateFormat from '../utils/DateFormat.js';
+  import Question from '../details/Question.vue';
+  import QuestionFileList from "./QuestionFileList"
 
   export default Vue.extend({
     props: ['questionnaire'],
@@ -86,6 +83,10 @@
     },
     filters: {
       DateFormat
+    },
+    components: {
+      Question,
+      QuestionFileList
     }
   });
 </script>

@@ -1,5 +1,8 @@
 {
   "name": "e-controle",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
     "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail ",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
@@ -7,29 +10,52 @@
     "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
-    "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js"
+    "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "postinstall": "npm run build-all",
+    "test": "jest"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "dropzone": "^5.5.1",
     "moment": "^2.24.0",
+    "report-validity": "^1.0.0",
     "store": "^2.0.12",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3",
     "vuejs-datepicker": "^1.5.4",
-    "vuex": "^3.1.0",
-    "vuex-map-fields": "^1.3.3"
+    "vuex": "^3.1.1",
+    "vuex-map-fields": "^1.3.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
+    "@babel/core": "^7.4.5",
     "@babel/preset-stage-2": "^7.0.0",
-    "@vue/component-compiler-utils": "^2.6.0",
+    "@vue/component-compiler-utils": "^3.0.0",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.8.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
+    "jest": "^24.8.0",
+    "jest-serializer-vue": "^2.0.2",
     "parcel-bundler": "^1.12.3",
-    "typescript": "^3.4.1",
+    "typescript": "^3.5.1",
+    "vue-jest": "^3.0.4",
     "vue-template-compiler": "^2.6.10"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/vue-jest"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ]
   }
 }

@@ -23,7 +23,7 @@ class PathBuilder(object):
         self.theme_path = f'{self.questionnaire_path}/{self.theme_folder}'
 
     def get_question_file_path(self):
-        question_path = f'{self.theme_path}/ANNEXES-QUESTION-{self.question_num:02}'
+        question_path = f'{self.questionnaire_path}/ANNEXES-AUX-QUESTIONS'
         path = f'{question_path}/{self.filename}'
         return path
 

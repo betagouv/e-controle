@@ -2,13 +2,13 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
 from sendfile import sendfile
 
-from .models import Questionnaire, Theme, QuestionFile, ResponseFile, Control
+from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
 
 class WithListOfControlsMixin(object):
@@ -22,12 +22,8 @@ class WithListOfControlsMixin(object):
         return context
 
 
-class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, ListView):
+class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
     template_name = "ecc/questionnaire_list.html"
-    context_object_name = 'questionnaires'
-
-    def get_queryset(self):
-        return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
 
 class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
@@ -35,19 +31,34 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
     context_object_name = 'questionnaire'
 
     def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            queryset = queryset.filter(is_draft=False)
+        return queryset
+
+
+class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
+    template_name = "ecc/questionnaire_create.html"
+    context_object_name = 'questionnaire'
+
+    def get_queryset(self):
+        if not self.request.user.profile.is_inspector:
+            return Control.objects.none()
         return Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        theme_list = Theme.objects.filter(questionnaire=self.object)
-        context['themes'] = theme_list
-        return context
 
-
-class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    # todo : how to pass in the control's id from the url?
-
+class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
+    """
+    Creates a questionnaire on a given control (pk of control passed in URL).
+    """
     template_name = "ecc/questionnaire_create.html"
+    context_object_name = 'control'
+
+    def get_queryset(self):
+        if not self.request.user.profile.is_inspector:
+            return Control.objects.none()
+        return Control.objects.filter(id__in=self.request.user.profile.controls.all())
 
 
 class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
@@ -82,7 +93,8 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 class SendFileMixin(SingleObjectMixin):
     """
     Inheriting classes should override :
-    - model to specify the data type of the file. The model class should implement a basename property.
+    - model to specify the data type of the file. The model class should implement
+      a basename property.
     - (optional) get_query_set() to restrict the accessible files.
     """
     model = None
@@ -114,13 +126,3 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
-
-
-faq = FAQ.as_view()
-questionnaire_create = QuestionnaireCreate.as_view()
-questionnaire_detail = QuestionnaireDetail.as_view()
-questionnaire_list = QuestionnaireList.as_view()
-send_question_file = SendQuestionFile.as_view()
-send_questionnaire_file = SendQuestionnaireFile.as_view()
-send_response_file = SendResponseFile.as_view()
-upload_response_file = UploadResponseFile.as_view()

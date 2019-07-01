@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block page_title %}
-  {{ questionnaire.title }}
+  {{ questionnaire.title_display }}
 {% endblock page_title %}
 
 {% block extra_static_header %}
@@ -61,7 +61,7 @@
             </div>
             <table class="table card-table">
               <tbody>
-              {% for theme in themes %}
+              {% for theme in questionnaire.themes.all %}
                 <tr data-id="{{ forloop.counter }}" class="theme-row">
                   <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
                 </tr>
@@ -73,7 +73,7 @@
       </div>
     </div> <!--// closing: side_theme_list  //-->
     <div class="col-lg-8" id="questionaire-detail-app"> <!--// opening: main_list_of_questions  //-->
-      {% for theme in themes %}
+      {% for theme in questionnaire.themes.all %}
         <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
           <div class="card-status card-status-top bg-blue"></div>
           <div class="card-header">
@@ -107,9 +107,13 @@
                         {% if user.profile.is_audited %}
                         <div class="form-group">
                             <div class="form-label">Déposer vos réponses</div>
+                            <div class="alert alert-icon alert-primary" role="alert">
+                               <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+                                 Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
+                             </div>
                             <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data" id="dropzone-area">
                               {% csrf_token %}
-                              <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
+                              <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
                               <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}" />
                               <div class="fallback">
                                 <input name="file" type="file" multiple />

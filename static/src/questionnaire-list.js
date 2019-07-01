@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
+import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
 import Users from './users/Users'
@@ -20,7 +21,8 @@ new Vue({
     'users-for-control': Users,
     AddUserModal,
     UpdateUserModal,
-    RemoveUserModal
+    RemoveUserModal,
+    HelpTooltip
   },
   methods: {
     ...mapActions(['setSessionUser'])

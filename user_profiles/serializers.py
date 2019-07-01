@@ -38,7 +38,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         action_details = {}
         action_details['sender'] = self.context['request'].user
         should_receive_email_report = False
-        if profile_data.get('profile_type') == 'inspector':
+        if profile_data.get('profile_type') == UserProfile.INSPECTOR:
             should_receive_email_report = True
         if profile:
             profile.user.first_name = user_data.get('first_name')

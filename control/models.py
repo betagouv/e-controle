@@ -43,6 +43,12 @@ class Control(models.Model):
             'title': self.title,
         }
 
+    @property
+    def next_questionnaire_numbering(self):
+        if not self.questionnaires.exists():
+            return 1
+        return self.questionnaires.last().numbering + 1
+
 
 class Questionnaire(OrderedModel, WithNumberingMixin):
     title = models.CharField("titre", max_length=255)
@@ -60,6 +66,9 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
+    is_draft = models.BooleanField(
+        verbose_name="brouillon", default=False,
+        help_text="Ce questionnaire est-il encore au stade de brouillon?")
 
     class Meta:
         ordering = ('control', 'order')
@@ -81,8 +90,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         """
         return os.path.basename(self.file.name)
 
+    @property
+    def title_display(self):
+        return f"Questionnaire n°{self.numbering} - {self.title}"
+
     def __str__(self):
-        return self.title
+        return self.title_display
 
 
 class Theme(OrderedModel, WithNumberingMixin):
