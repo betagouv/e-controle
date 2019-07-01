@@ -3,7 +3,7 @@
 
     <div class="card-header border-0 pl-0" data-toggle="card-collapse">
       <div class="card-title">
-        <button type="button" class="btn btn-info"><i class="fe fe-users mr-2"></i>Personnes ayant accès au contrôle</button>
+        <button type="button" class="btn btn-info"><i class="fe fe-users mr-2"></i>Qui a accès aux questions et aux réponses ?</button>
       </div>
       <div class="card-options">
         <a href="#" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
