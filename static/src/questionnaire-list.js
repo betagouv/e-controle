@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
+import CopyButton from "./utils/CopyButton"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
@@ -20,6 +21,7 @@ new Vue({
   components: {
     'users-for-control': Users,
     AddUserModal,
+    CopyButton,
     UpdateUserModal,
     RemoveUserModal,
     HelpTooltip
