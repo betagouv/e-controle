@@ -22,8 +22,8 @@
     </div>
     <p></p>
     <div class="flex-row-container">
-      <div class="small">Vous aurez besoin de ce lien : https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}</div>
-      <copy-button tocopy="https://e-controle-webdav.ccomptes.fr/{{ control.reference_code }}"
+      <div class="small">Vous aurez besoin de ce lien : {{ settings.WEBDAV_URL }}/{{ control.reference_code }}</div>
+      <copy-button tocopy="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"
                    buttontext="Copier le lien"
                    confirmtext="La copie a été effectuée"
       >

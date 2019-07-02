@@ -188,6 +188,7 @@ PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 SETTINGS_EXPORT = [
     'PIWIK_TRACKER_BASE_URL',
     'PIWIK_SITE_ID',
+    'WEBDAV_URL'
 ]
 
 REST_FRAMEWORK = {
@@ -222,6 +223,7 @@ LDAP_USER = env('LDAP_USER', default=None)
 LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
+WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)
