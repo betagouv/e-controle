@@ -6,6 +6,7 @@ from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
+from django_xhtml2pdf.views import PdfMixin
 from sendfile import sendfile
 
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
@@ -36,6 +37,10 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
+
+
+class QuestionnairePDF(PdfMixin, QuestionnaireDetail):
+    template_name = "ecc/questionnaire_pdf.html"
 
 
 class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):

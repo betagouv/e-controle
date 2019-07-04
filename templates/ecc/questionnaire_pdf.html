@@ -1,0 +1,160 @@
+{% extends "base_pdf.html" %}
+
+{% block layout_style %}
+    <style type="text/css">
+        @page {
+            size: {{ pagesize|default:"A4" }};
+            margin-left: 1.5cm;
+            margin-right: 1.5cm;
+            margin-top: 2.5cm;
+            margin-bottom: 2cm;
+
+            @frame header {
+                -pdf-frame-content: page-header;
+                margin-top: 1.3cm;
+                margin-right: 2mm;
+                margin-bottom: 1cm;
+                margin-left: 1.2cm;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block extra_style %}
+    <style type="text/css">
+
+        html {
+            font-family: "Helvetica", "sans-serif";
+            color: #333333;
+        }
+
+        p {
+            margin: 0 0 6px 0;
+            font-size: 11pt;
+        }
+
+        table {
+            line-height: 140%;
+            margin-bottom: 20px;
+        }
+            table.bordered {
+                border-top: 0.1pt solid #999999;
+                border-bottom: 0.1pt solid #999999;
+            }
+
+            tr, td, th { border: none; }
+
+            th {
+                font-size: 10pt;
+                border-bottom: 0.1pt solid #999999;
+                padding: 3px 0;
+                line-height: 1;
+                font-weight: bold;
+            }
+
+            td {
+                font-size: 10pt;
+                vertical-align: top;
+                padding: 3px 0;
+            }
+
+            td:last-child { padding-bottom: 0; }
+
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        .bottom-10 { margin-bottom: 10px; }
+        .bottom-20 { margin-bottom: 20px; }
+
+        .header { color: #7f7f7f; }
+        .header p { font-size: 13px; line-height: 1.5em; }
+        .small p { font-size: 50%; }
+        .header-link { font-weight: bold; text-decoration: none; color: #4F81BD; font-size: 14px; }
+        .logo { margin-bottom: 20px; margin-left: -25px; }
+        .logo img { zoom: 60%; }
+
+        .recipient { margin-left: 7cm; }
+
+        .main h1 {
+            margin: 18px 0 18px 0;
+            font-size: 250%;
+            font-weight: normal;
+            color: #4F81BD;
+        }
+
+        .main h2 {
+            margin: 18px 0 6px 0;
+            font-size: 180%;
+            font-weight: normal;
+        }
+
+        .info { border: 1px solid #4F81BD; padding: 10px; margin-top: 50px; margin-bottom: 50px; }
+        .info a { color: #4F81BD; text-decoration: none; }
+
+    </style>
+{% endblock %}
+
+{%block page_header%}
+    <div id="page-header">
+        <div class="header">
+            <p>
+              {{ questionnaire.title_display }}
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_title %}
+  {{ questionnaire.title_display }}
+{% endblock page_title %}
+
+{% block page_content %}
+    <div id="content">
+        <div class="main">
+            <h1>{{ questionnaire.title }}</h1>
+
+            <p class="info">
+            {{ questionnaire.description }}
+            </p>
+            <ul>
+            {% if questionnaire.sent_date %}
+                <li>Date de transmission du questionnaire :
+                    <u>{{ questionnaire.sent_date|date:"l d F Y" }}</u>
+                </li>
+            {% endif %}
+
+            {% if questionnaire.end_date %}
+                <li>Date de réponse souhaitée :
+                    <u>{{ questionnaire.end_date|date:"l d F Y" }}</u>
+                  </li>
+            {% endif %}
+            </ul>
+
+
+            <h2>Thèmes</h2>
+            <table>
+                <tbody>
+                    {% for theme in questionnaire.themes.all %}
+                    <tr>
+                    <td class="text-left"><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Questions</h2>
+
+            {% for theme in questionnaire.themes.all %}
+            <h3>{{ theme.numbering }}. {{ theme.title }}</h3>
+                {% for question in theme.questions.all %}
+                    {{ question }}
+                {% with question_files=question.question_files.all %}
+                    {% if question_files %}
+                        <br />Il y a des fichiers annexes à cette question
+                    {% endif %}
+                {% endwith %}
+                {% endfor %}
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
