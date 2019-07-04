@@ -33,6 +33,12 @@
             font-size: 11pt;
         }
 
+        ul {
+            list-style-type: circle;
+            margin: 0;
+            padding: 0;
+        }
+
         table {
             line-height: 140%;
             margin-bottom: 20px;
@@ -67,7 +73,6 @@
 
         .header { color: #7f7f7f; }
         .header p { font-size: 13px; line-height: 1.5em; }
-        .small p { font-size: 50%; }
         .header-link { font-weight: bold; text-decoration: none; color: #4F81BD; font-size: 14px; }
         .logo { margin-bottom: 20px; margin-left: -25px; }
         .logo img { zoom: 60%; }
@@ -76,12 +81,23 @@
 
         .main h1 {
             margin: 18px 0 18px 0;
-            font-size: 250%;
+            font-size: 220%;
             font-weight: normal;
             color: #4F81BD;
+            line-height: 1.8;
+            text-align: center;
         }
 
         .main h2 {
+            margin: 38px 0 18px 0;
+            font-size: 200%;
+            font-weight: normal;
+            color: #4F81BD;
+            text-decoration: underline;
+            line-height: 1.8;
+        }
+
+        .main h3 {
             margin: 18px 0 6px 0;
             font-size: 180%;
             font-weight: normal;
@@ -93,9 +109,9 @@
     </style>
 {% endblock %}
 
-{%block page_header%}
-    <div id="page-header">
-        <div class="header">
+{% block page_foot %}
+    <div id="page-footer">
+        <div class="text-right">
             <p>
               {{ questionnaire.title_display }}
             </p>
@@ -110,11 +126,13 @@
 {% block page_content %}
     <div id="content">
         <div class="main">
-            <h1>{{ questionnaire.title }}</h1>
+            <h1>{{ questionnaire.title_display }}</h1>
 
-            <p class="info">
-            {{ questionnaire.description }}
-            </p>
+            <div class="info">
+            {{ questionnaire.description|linebreaks }}
+            </div>
+
+            <p>
             <ul>
             {% if questionnaire.sent_date %}
                 <li>Date de transmission du questionnaire :
@@ -128,9 +146,9 @@
                   </li>
             {% endif %}
             </ul>
+            </p>
 
-
-            <h2>Thèmes</h2>
+            <h2>THÈMES</h2>
             <table>
                 <tbody>
                     {% for theme in questionnaire.themes.all %}
@@ -141,19 +159,46 @@
                 </tbody>
             </table>
 
-            <h2>Questions</h2>
+            <p style="page-break-before: always">
+
+            <h2>QUESTIONS</h2>
 
             {% for theme in questionnaire.themes.all %}
-            <h3>{{ theme.numbering }}. {{ theme.title }}</h3>
-                {% for question in theme.questions.all %}
-                    {{ question }}
-                {% with question_files=question.question_files.all %}
-                    {% if question_files %}
-                        <br />Il y a des fichiers annexes à cette question
-                    {% endif %}
-                {% endwith %}
-                {% endfor %}
+                <h3 id="question{{ theme.numbering }}.{{ question.numbering }}">
+                    {{ theme.numbering }}. {{ theme.title }}
+                </h3>
 
+                {% for question in theme.questions.all %}
+                <table>
+                    <tbody>
+                        <tr>
+                            <td width="5%">{{ theme.numbering }}.{{ question.numbering }}</td>
+                            <td>{{ question.description|linebreaks }}</td>
+                        </tr>
+                        {% with question_files=question.question_files.all %}
+                        {% if question_files %}
+                        <tr>
+                            <td width="5%"></td>
+                            <td class="text-left">
+                                <p style="font-style: italic;">
+                                Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:
+                                <ul>
+                                  {% for file in question_files %}
+                                  <li><a href="{{ file.url }}">{{ file.basename }}</a></li>
+                                  {% endfor %}
+                                </ul>
+                                </p>
+
+                            </td>
+                        </tr>
+
+                        {% endif %}
+                        {% endwith %}
+                    </tbody>
+                </table>
+
+
+                {% endfor %}
             {% endfor %}
         </div>
     </div>
