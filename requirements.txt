@@ -30,4 +30,5 @@ redis==3.2.1
 coreapi==2.3.3
 django-cleanup==3.2.0
 django-ckeditor==5.7.1
+ldap3==2.6
 git+https://github.com/justquick/django-activity-stream.git
