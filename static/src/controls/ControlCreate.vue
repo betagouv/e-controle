@@ -6,14 +6,12 @@
       </div>
     </div>
 
-    <div class="alert alert-info alert-icon alert-dismissible">
-      <button type="button" class="close" data-dismiss="alert"></button>
-      <i class="fe fe-info" aria-hidden="true"></i>
+    <info-bar>
       Vous pouvez créer un espace de dépôt pour chaque organisme interrogé dans le cadre de votre contrôle. Par exemple,
       pour le contrôle des comptes et de la gestion de l’Agence Z, vous pouvez créer deux espaces de dépôt distincts :
       un pour l’Agence Z et un autre pour le Ministère Z chargé de sa tutelle. L’Agence Z ne verra pas l’espace de dépôt
       du Ministère et inversement.
-    </div>
+    </info-bar>
 
     <form @submit.prevent="bloup">
       <fieldset class="form-fieldset">
@@ -71,12 +69,10 @@
           {{title}}
         </em>
       </p>
-      <div class="alert alert-info alert-icon alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert"></button>
-        <i class="fe fe-info" aria-hidden="true"></i>
+      <info-bar>
         Si vous confirmez, vous pourrez créer votre premier questionnaire et ajouter les comptes d’accès des membres de
         votre équipe de contrôle.
-      </div>
+      </info-bar>
     </confirm-modal>
 
   </div>
@@ -86,6 +82,7 @@
   import Vue from "vue"
 
   import ConfirmModal from "../utils/ConfirmModal"
+  import InfoBar from "../utils/InfoBar"
 
   export default Vue.extend({
     data: function() {
@@ -98,6 +95,7 @@
     },
     components: {
       ConfirmModal,
+      InfoBar,
     },
   })
 
