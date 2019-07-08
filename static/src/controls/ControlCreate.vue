@@ -71,6 +71,12 @@
           {{title}}
         </em>
       </p>
+      <div class="alert alert-info alert-icon alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert"></button>
+        <i class="fe fe-info" aria-hidden="true"></i>
+        Si vous confirmez, vous pourrez créer votre premier questionnaire et ajouter les comptes d’accès des membres de
+        votre équipe de contrôle.
+      </div>
     </confirm-modal>
 
   </div>
