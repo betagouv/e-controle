@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_static_header %}
+{{ block.super }}
+{% endblock extra_static_header %}
+
+{% block page_content %}
+coucou
+{% endblock page_content %}
+
+{% block js_bundle %}
+    <script src="{% static 'dist/control-create-bundle.js' %}"></script>
+{% endblock js_bundle %}
