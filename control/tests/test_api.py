@@ -63,3 +63,67 @@ def test_response_file_listed_in_question_endpoint():
 
     response = call_question_api(user, question.id)
     assert response_file.basename in str(response.content)
+
+
+#### Control API ####
+
+### Get
+def call_control_get_api(user, id):
+    utils.login(client, user=user)
+    url = reverse('api:control-detail', args=[id])
+    response = client.get(url)
+    return response
+
+
+def test_can_access_control_get_api_if_control_is_associated_with_the_user():
+    control = factories.ControlFactory()
+    user = make_audited_user(control)
+    assert call_control_get_api(user, control.id).status_code == 200
+
+
+def test_no_access_to_control_get_api_if_control_is_not_associated_with_the_user():
+    control_in = factories.ControlFactory()
+    control_out = factories.ControlFactory()
+    user = make_audited_user(control_in)
+    assert call_control_get_api(user, control_out.id).status_code != 200
+
+
+def test_no_access_to_control_get_api_for_anonymous():
+    control = factories.ControlFactory()
+    url = reverse('api:control-detail', args=[control.id])
+    response = client.get(url)
+    assert response.status_code == 403
+
+
+### Create
+def call_control_create_api(user, payload):
+    utils.login(client, user=user)
+    url = reverse('api:control-list')
+    response = client.post(url, payload, format='json')
+    return response
+
+
+def make_payload():
+    return {
+        "title": "new control",
+        "reference_code": "ABC_2019",
+    }
+
+
+def test_can_access_control_create_api_if_inspector_user():
+    control = factories.ControlFactory()
+    user = make_inspector_user(control)
+    assert call_control_create_api(user, make_payload()).status_code == 201
+
+
+def test_no_access_to_control_create_api_if_not_inspector():
+    control = factories.ControlFactory()
+    user = make_audited_user(control)
+    assert call_control_create_api(user, make_payload()).status_code == 403
+
+
+def test_no_access_to_control_create_api_for_anonymous():
+    control = factories.ControlFactory()
+    url = reverse('api:control-list')
+    response = client.post(url, make_payload(), format='json')
+    assert response.status_code == 403
