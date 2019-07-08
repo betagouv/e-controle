@@ -40,15 +40,46 @@
         <a :href="backUrl" class="btn btn-secondary">
           Annuler
         </a>
-        <button type="submit" @click.prevent="bloup" class="btn btn-primary">Créer l'espace de dépôt</button>
+        <button type="submit"
+                @click.prevent=""
+                data-toggle="modal"
+                data-target="#confirmModal"
+                class="btn btn-primary">
+          Créer l'espace de dépôt
+        </button>
       </div>
     </form>
+
+    <confirm-modal id="confirmModal"
+               title="Confirmer la création d'un espace de dépôt"
+               confirm-button="Oui, créer l'espace"
+               cancel-button="Non, j'ai encore des modifications"
+    >
+      <p>
+        Vous êtes sur le point de confirmer la création d’un espace de dépôt pour :
+      </p>
+      <p>
+        <em>
+          {{organization}}
+        </em>
+      </p>
+      <p>
+        dans le cadre de la procédure :
+      </p>
+      <p>
+        <em>
+          {{title}}
+        </em>
+      </p>
+    </confirm-modal>
 
   </div>
 </template>
 
 <script>
   import Vue from "vue"
+
+  import ConfirmModal from "../utils/ConfirmModal"
 
   export default Vue.extend({
     data: function() {
@@ -58,7 +89,10 @@
         reference_code: "",
         title: "",
       }
-    }
+    },
+    components: {
+      ConfirmModal,
+    },
   })
 
 </script>
