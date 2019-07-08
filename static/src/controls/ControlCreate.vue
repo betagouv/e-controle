@@ -13,7 +13,7 @@
       du Ministère et inversement.
     </info-bar>
 
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="showModal">
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Nom de l’organisme interrogé<span class="form-required">*</span></label>
@@ -49,6 +49,7 @@
                title="Confirmer la création d'un espace de dépôt"
                confirm-button="Oui, créer l'espace"
                cancel-button="Non, j'ai encore des modifications"
+               @confirm="createControl"
     >
       <p>
         Vous êtes sur le point de confirmer la création d’un espace de dépôt pour :
@@ -76,10 +77,16 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import Vue from "vue"
 
   import ConfirmModal from "../utils/ConfirmModal"
   import InfoBar from "../utils/InfoBar"
+
+  const create_control_url = "/api/control/"
+
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   export default Vue.extend({
     data: function() {
@@ -95,9 +102,22 @@
       InfoBar,
     },
     methods: {
-      submitForm: function() {
+      showModal: function() {
         $('#confirmModal').modal('show');
-      }
+      },
+      createControl: function() {
+        const payload = {
+          title: this.title,
+          reference_code: this.reference_code,
+        }
+        axios.post(create_control_url, payload)
+          .then(response => {
+            console.log(response)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
     }
   })
 
