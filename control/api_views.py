@@ -6,7 +6,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 
 
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
-from .models import Question, Questionnaire, Theme, QuestionFile
+from .models import Control, Question, Questionnaire, Theme, QuestionFile
 from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer
 
@@ -17,6 +17,15 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.request.user.profile.controls.all()
+
+    def create(self, request, *args, **kwargs):
+        response = super(ControlViewSet, self).create(request, *args, **kwargs)
+        control = Control.objects.get(id=response.data['id'])
+
+        # Add the control to the current user
+        self.request.user.profile.controls.add(control)
+
+        return response
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
