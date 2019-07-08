@@ -1,4 +1,7 @@
+import os
+
 from django import forms
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
@@ -6,10 +9,11 @@ from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
-from django_xhtml2pdf.views import PdfMixin
+from docxtpl import DocxTemplate
 from sendfile import sendfile
 
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
+from .upload_path import questionnaire_file_path
 
 
 class WithListOfControlsMixin(object):
@@ -39,8 +43,19 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return queryset
 
 
-class QuestionnairePDF(PdfMixin, QuestionnaireDetail):
-    template_name = "ecc/questionnaire_pdf.html"
+class QuestionnaireDocx(QuestionnaireDetail):
+
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+        context = self.get_context_data()
+        doc = DocxTemplate("templates/ecc/questionnaire.docx")
+        doc.render(context)
+        questionnaire = self.object
+        filename = f'questionnaire-{questionnaire.numbering}.docx'
+        path = questionnaire_file_path(questionnaire, filename)
+        root_path = os.path.join(settings.MEDIA_ROOT, path)
+        doc.save(root_path)
+        return sendfile(request, root_path, attachment=True, attachment_filename=filename)
 
 
 class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
