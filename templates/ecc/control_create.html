@@ -6,9 +6,12 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-coucou
+  <div id="control-create-vm">
+    <control-create>
+    </control-create>
+  </div>
 {% endblock page_content %}
 
 {% block js_bundle %}
-    <script src="{% static 'dist/control-create-bundle.js' %}"></script>
+  <script src="{% static 'dist/control-create-bundle.js' %}"></script>
 {% endblock js_bundle %}
