@@ -1,15 +1,18 @@
+from ldap3 import Server, Connection, ALL, NTLM
+import logging
+import re
+
 from django import forms
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template import loader
 from django.utils.module_loading import import_string
-from ldap3 import Server, Connection, ALL, NTLM
-import logging
-from .models import MagicToken
-import re
-from django.contrib.auth.models import User
+
 from user_profiles.models import UserProfile
+
 from . import settings as magicauth_settings
+from .models import MagicToken
 
 
 no_user_call_back = import_string(magicauth_settings.NO_USER_CALL_BACK)
