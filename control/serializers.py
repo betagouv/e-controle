@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from utils.serializers import DateTimeFieldWihTZ
 
-from .models import Question, Questionnaire, ResponseFile, QuestionFile, Theme
+from .models import Control, Question, QuestionFile, Questionnaire, ResponseFile, Theme
 
 
 User = get_user_model()
@@ -15,6 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
+
+
+class ControlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'reference_code')
 
 
 class ResponseFileSerializer(serializers.ModelSerializer):

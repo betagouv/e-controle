@@ -5,10 +5,18 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
 
 
-from control.permissions import ChangeQuestionnairePermission
+from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .models import Question, Questionnaire, Theme, QuestionFile
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer
+
+
+class ControlViewSet(viewsets.ModelViewSet):
+    serializer_class = ControlSerializer
+    permission_classes = (ChangeControlPermission,)
+
+    def get_queryset(self):
+        return self.request.user.profile.controls.all()
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
