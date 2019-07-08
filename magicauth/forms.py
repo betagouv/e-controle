@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template import loader
-from django.utils.translation import ugettext_lazy as _
+from django.utils.module_loading import import_string
 from ldap3 import Server, Connection, ALL, NTLM
 import logging
 from .models import MagicToken
@@ -10,6 +10,12 @@ import re
 from django.contrib.auth.models import User
 from user_profiles.models import UserProfile
 
+
+call_back_module = getattr(
+    settings, 'MAGICAUTH_NO_USER_CALL_BACK', 'magicauth.utils.raise_error')
+
+
+no_user_call_back = import_string(call_back_module)
 
 
 class EmailForm(forms.Form):
@@ -20,13 +26,14 @@ class EmailForm(forms.Form):
         user_email = user_email.lower()
 
         if not User.objects.filter(username__iexact=user_email).exists():
-            # We now check if the user is in the active directory
-            user_info = self._check_user_in_ad(user_email)
-            if user_info:
-                # We now create the user if it is authorized
-                self._create_user_via_ad(user_info)
-            else:
-                raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
+            return no_user_call_back()
+            # # We now check if the user is in the active directory
+            # user_info = self._check_user_in_ad(user_email)
+            # if user_info:
+            #     # We now create the user if it is authorized
+            #     self._create_user_via_ad(user_info)
+            # else:
+            #     raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
 
         return user_email
 
