@@ -9,13 +9,10 @@ from .models import MagicToken
 import re
 from django.contrib.auth.models import User
 from user_profiles.models import UserProfile
+from . import settings as magicauth_settings
 
 
-call_back_module = getattr(
-    settings, 'MAGICAUTH_NO_USER_CALL_BACK', 'magicauth.utils.raise_error')
-
-
-no_user_call_back = import_string(call_back_module)
+no_user_call_back = import_string(magicauth_settings.NO_USER_CALL_BACK)
 
 
 class EmailForm(forms.Form):
@@ -89,10 +86,10 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user = User.objects.get(username__iexact=user_email)
         token = self.create_token(user)
-        email_subject = getattr(settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Connexion e-controle')
-        html_template = getattr(settings, 'MAGICAUTH_EMAIL_HTML_TEMPLATE', 'magicauth/email.html')
-        text_template = getattr(settings, 'MAGICAUTH_EMAIL_TEXT_TEMPLATE', 'magicauth/email.txt')
-        from_email = getattr(settings, 'MAGICAUTH_FROM_EMAIL')
+        email_subject = magicauth_settings.EMAIL_SUBJECT
+        html_template = magicauth_settings.EMAIL_HTML_TEMPLATE
+        text_template = magicauth_settings.EMAIL_TEXT_TEMPLATE
+        from_email = magicauth_settings.FROM_EMAIL
         context = {
             'token': token,
             'user': user,
