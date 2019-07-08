@@ -13,7 +13,7 @@
       du Ministère et inversement.
     </info-bar>
 
-    <form @submit.prevent="bloup">
+    <form @submit.prevent="submitForm">
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Nom de l’organisme interrogé<span class="form-required">*</span></label>
@@ -39,9 +39,6 @@
           Annuler
         </a>
         <button type="submit"
-                @click.prevent=""
-                data-toggle="modal"
-                data-target="#confirmModal"
                 class="btn btn-primary">
           Créer l'espace de dépôt
         </button>
@@ -97,6 +94,11 @@
       ConfirmModal,
       InfoBar,
     },
+    methods: {
+      submitForm: function() {
+        $('#confirmModal').modal('show');
+      }
+    }
   })
 
 </script>
