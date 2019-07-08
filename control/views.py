@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import DetailView, CreateView, TemplateView
@@ -20,6 +21,16 @@ class WithListOfControlsMixin(object):
         control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all())
         context['controls'] = control_list
         return context
+
+
+class ControlCreate(LoginRequiredMixin, TemplateView):
+    template_name = "ecc/control_create.html"
+
+    def get(self, request, **kwargs):
+        if request.user.profile.is_inspector:
+            return super().get(request, **kwargs)
+
+        raise Http404()
 
 
 class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
