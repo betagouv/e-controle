@@ -20,7 +20,7 @@
       </p>
       <p>
         Exemple : lors du contrôle de la DINSIC, vous avez besoin d'interroger la DINSIC elle-même ainsi que le bureau
-        du Premier Ministre. Vous créez un espace avec "Organisme interrogé : DINSIC", puis ensuite un second espace avec
+        du Premier Ministre. Vous créez un espace avec "Organisme interrogé : DINSIC", puis vous recommencez pour un second espace avec
         "Organisme interrogé : Premier Ministre". L'équipe de la DINSIC n'aura pas accès à l'espace du Premier Ministre, et vice versa.
       </p>
     </info-bar>
