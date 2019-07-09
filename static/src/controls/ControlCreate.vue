@@ -175,6 +175,7 @@
         this.hasErrors = false
       },
       showModal: function() {
+        this.clearErrors()
         $('#confirmModal').modal('show');
       },
       createControl: function() {
