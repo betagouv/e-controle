@@ -50,7 +50,7 @@ def get_user_form_ad(user_email):
     return False
 
 
-def create_user(self, user_info):
+def create_user(user_info):
     """
 
     :param user_info:
