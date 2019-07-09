@@ -45,7 +45,7 @@
               <div class="form-group mb-6">
                 <label class="form-label">Type de contrôle : <span class="form-required">*</span></label>
                 <div id="control_type-help" class="text-muted">Exemple : CCG - Contrôle des Comptes et de la Gestion </div>
-                <select class="form-control custom-select"
+                <select class="form-control"
                         v-model="control_type"
                         required
                         aria-describedby="control_type-help">
@@ -67,7 +67,7 @@
         <div class="form-group mb-6">
           <label class="form-label">Année d'ouverture du contrôle<span class="form-required">*</span></label>
           <div id="year-help" class="text-muted">Exemple : 2019</div>
-          <select class="form-control custom-select"
+          <select class="form-control"
                   v-model="year"
                   required
                   aria-describedby="year-help"
