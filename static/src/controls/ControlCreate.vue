@@ -27,36 +27,34 @@
 
     <form @submit.prevent="showModal">
       <fieldset class="form-fieldset">
-        <div class="form-group">
+        <div class="form-group mb-6">
           <label class="form-label">Nom de l’organisme interrogé<span class="form-required">*</span></label>
-          <div id="name-help" class="text-muted">L'organisme qui va déposer les pièces. Exemple : Premier Ministre</div>
-          <input type="text" class="form-control" v-model="organization" required aria-describedby="name-help">
+          <div id="depositing-help" class="text-muted">L'organisme qui va déposer les pièces. Exemple : Premier Ministre</div>
+          <input type="text" class="form-control" v-model="depositing_organization" required aria-describedby="depositing-help">
         </div>
-        <div class="form-group">
-          <div class="row">
+        <div class="row">
             <div class="col-6">
-              <div class="form-group">
+              <div class="form-group mb-6">
                 <label class="form-label">Type de contrôle : <span class="form-required">*</span></label>
-                <div class="text-muted">Exemple : CCG</div>
+                <div id="control_type-help" class="text-muted">Exemple : CCG - Contrôle des Comptes et de la Gestion </div>
                 <select class="form-control custom-select"
                         v-model="control_type"
                         required
-                        aria-describedby="type-help">
+                        aria-describedby="control_type-help">
                   <option value="">Type de contrôle</option>
-                  <option v-for="t in control_types" :value="t.code">{{ t.name }}</option>
+                  <option v-for="t in control_types" :value="t.code">{{ t.code + ' - ' + t.name }}</option>
                 </select>
               </div>
             </div>
             <div class="col-6">
-              <div class="form-group">
+              <div class="form-group mb-6">
                 <label class="form-label">Organisme contrôlé: <span class="form-required">*</span></label>
-                <div class="text-muted">L'organisme qui est contôlé. Exemple : DINSIC</div>
-                <input type="text" class="form-control">
+                <div id="control_organization-help" class="text-muted">L'organisme qui est contrôlé. Exemple : DINSIC</div>
+                <input type="text" class="form-control" v-model="controlled_organization" aria-describedby="control_organization-help" required>
               </div>
             </div>
           </div>
-        </div>
-        <div class="form-group">
+        <div class="form-group mb-6">
           <label class="form-label">Année d'ouverture du contrôle<span class="form-required">*</span></label>
           <div id="year-help" class="text-muted">Exemple : 2019</div>
           <select class="form-control custom-select"
@@ -68,7 +66,7 @@
             <option v-for="y in 30" :value="y + 2015">{{ y + 2015 }}</option>
           </select>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-6">
           <label class="form-label">Nom court de cet espace de dépôt</label>
           <div id="reference-code-help" class="text-muted">
             Il s’agit du nom du dossier contenant les pièces déposées. Il est généré automatiquement en fonction de vos
@@ -99,7 +97,7 @@
       </p>
       <p>
         <em>
-          {{organization}}
+          {{depositing_organization}}
         </em>
       </p>
       <p>
@@ -107,7 +105,7 @@
       </p>
       <p>
         <em>
-          {{title}}
+          {{control_type}} - {{ controlled_organization }}
         </em>
       </p>
       <info-bar>
@@ -138,25 +136,30 @@
       return {
         backUrl: home_url,
         control_type: "CCG",
-        organization: "",
-        title: "",
+        controlled_organization: "",
+        depositing_organization: "",
         year: 2019,
         errors: "",
         hasErrors: false,
         control_types: [
-          { code: "CCG", name: "CCG (Contrôle des Comptes et de la Gestion) pour la Cour et les CRTC" },
-          { code: "CAB", name: "CAB (Contrôle des Actes Budgétaires) pour les CRTC" },
-          { code: "JUG-PROG", name: "JUG-PROG (Jugement suite à contrôle programmé par la juridiction) pour la Cour et les CRTC" },
-          { code: "JUG-ACP", name: "JUG-ACP (Jugement suite à arrêté de charge provisoire) pour les CRTC" },
-          { code: "EQ", name: "EQ (Enquête) pour la Cour" },
+          { code: "CCG", name: "Contrôle des Comptes et de la Gestion" },
+          { code: "CAB", name: "Contrôle des Actes Budgétaires" },
+          { code: "JUG-PROG", name: "Jugement suite à contrôle programmé par la juridiction" },
+          { code: "JUG-ACP", name: "Jugement suite à arrêté de charge provisoire" },
+          { code: "EQ", name: "Enquête" },
           { code: "", name: "Autre" }
         ]
       }
     },
     computed: {
       reference_code: function () {
-        const control_code = this.control_type ? ("_" + this.control_type + "_") : "_"
-        return this.year + control_code + this.organization.replace(/\s+/g, '')
+        let out = this.year
+        if (this.control_type) {
+          out += "_" + this.control_type
+        }
+        out += "_" + this.controlled_organization
+        out += "_" + this.depositing_organization.replace(/\s+/g, '')
+        return out
       }
     },
     components: {
