@@ -61,5 +61,5 @@ def create_user(self, user_info):
                                     first_name=user_info.givenName.value,
                                     last_name=user_info.sn.value)
     UserProfile.objects.create(user=user,
-                               organization=user_info.department.value,
+                               organization=user_info.company.value,
                                profile_type='inspector')
