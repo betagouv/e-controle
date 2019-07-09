@@ -127,3 +127,21 @@ def test_no_access_to_control_create_api_for_anonymous():
     url = reverse('api:control-list')
     response = client.post(url, make_payload(), format='json')
     assert response.status_code == 403
+
+
+def test_creates_control_and_adds_to_current_user():
+    control = factories.ControlFactory()
+    user = make_inspector_user(control)
+    payload = make_payload()
+    response = call_control_create_api(user, payload)
+    response_control = response.data
+
+    # Response data
+    assert response_control['title'] == payload['title']
+    assert response_control['reference_code'] == payload['reference_code']
+
+    # Saved data
+    saved_control = Control.objects.get(id=response_control['id'])
+    assert saved_control.title == payload['title']
+    assert saved_control.reference_code == payload['reference_code']
+    assert user.profile.controls.all().get(id=response_control['id']) == saved_control
