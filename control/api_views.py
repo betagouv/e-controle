@@ -25,6 +25,13 @@ class ControlViewSet(viewsets.ModelViewSet):
         # Add the control to the current user
         self.request.user.profile.controls.add(control)
 
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'created control',
+            'action_object': control,
+        }
+        action.send(**action_details)
+
         return response
 
 
