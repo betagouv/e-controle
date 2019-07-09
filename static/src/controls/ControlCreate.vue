@@ -105,12 +105,14 @@
       </p>
       <p>
         <em>
-          {{control_type}} - {{ controlled_organization }}
+          {{control_types.filter(type => type.code === control_type)[0].name}} - {{ controlled_organization }}
         </em>
       </p>
       <info-bar>
-        Si vous confirmez, vous pourrez créer votre premier questionnaire et ajouter les comptes d’accès des membres de
-        votre équipe de contrôle.
+        Si vous confirmez, l'espace de dépôt sera créé et vous serez le.la seul.e à y avoir accès.
+        <p>
+          Vous pourrez ensuite ouvrir l'accès aux autres membres de votre équipe, créer un questionnaire, puis ouvrir l'accès à l'équipe interrogée.
+        </p>
       </info-bar>
     </confirm-modal>
 
