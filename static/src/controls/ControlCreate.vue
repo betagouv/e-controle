@@ -105,7 +105,7 @@
       </p>
       <p>
         <em>
-          {{control_types.filter(type => type.code === control_type)[0].name}} - {{ controlled_organization }}
+          {{getControlTypeName(control_type)}} - {{ controlled_organization }}
         </em>
       </p>
       <info-bar>
@@ -149,16 +149,13 @@
           { code: "JUG-PROG", name: "Jugement suite à contrôle programmé par la juridiction" },
           { code: "JUG-ACP", name: "Jugement suite à arrêté de charge provisoire" },
           { code: "EQ", name: "Enquête" },
-          { code: "", name: "Autre" }
         ]
       }
     },
     computed: {
       reference_code: function () {
         let out = this.year
-        if (this.control_type) {
-          out += "_" + this.control_type
-        }
+        out += "_" + this.control_type
         out += "_" + this.controlled_organization
         out += "_" + this.depositing_organization.replace(/\s+/g, '')
         return out
@@ -170,6 +167,13 @@
       InfoBar,
     },
     methods: {
+      getControlTypeName: function(control_code) {
+        const types = this.control_types.filter(type => type.code === control_code)
+        if (types.length === 0) {
+          return ""
+        }
+        return types[0].name
+      },
       clearErrors: function() {
         this.errors = ""
         this.hasErrors = false
@@ -182,7 +186,7 @@
         this.clearErrors()
 
         const payload = {
-          title: this.title,
+          title: this.getControlTypeName(this.control_type) + " - " + this.controlled_organization,
           reference_code: this.reference_code,
         }
         axios.post(create_control_url, payload)
