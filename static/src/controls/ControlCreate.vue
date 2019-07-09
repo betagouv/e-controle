@@ -33,15 +33,28 @@
           <input type="text" class="form-control" v-model="organization" required aria-describedby="name-help">
         </div>
         <div class="form-group">
-          <label class="form-label">Type de contrôle<span class="form-required">*</span></label>
-          <div id="type-help" class="text-muted">Exemple : Contrôle des comptes et de la gestion de la DINSIC</div>
-          <select class="form-control custom-select"
-                  v-model="control_type"
-                  required
-                  aria-describedby="type-help">
-            <option value="">Type de contrôle</option>
-            <option v-for="t in control_types" :value="t.code">{{ t.name }}</option>
-          </select>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-label">Type de contrôle : <span class="form-required">*</span></label>
+                <div class="text-muted">Exemple : CCG</div>
+                <select class="form-control custom-select"
+                        v-model="control_type"
+                        required
+                        aria-describedby="type-help">
+                  <option value="">Type de contrôle</option>
+                  <option v-for="t in control_types" :value="t.code">{{ t.name }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label class="form-label">Organisme contrôlé: <span class="form-required">*</span></label>
+                <div class="text-muted">L'organisme qui est contôlé. Exemple : DINSIC</div>
+                <input type="text" class="form-control">
+              </div>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label class="form-label">Année d'ouverture du contrôle<span class="form-required">*</span></label>
