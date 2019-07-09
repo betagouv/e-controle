@@ -18,7 +18,7 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user_email = user_email.lower()
         if not User.objects.filter(username__iexact=user_email).exists():
-            return no_user_call_back(user_email)
+            no_user_call_back(user_email)
         return user_email
 
     def create_token(self, user):
