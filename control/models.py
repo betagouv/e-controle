@@ -81,7 +81,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
 
     @property
     def file_url(self):
-        return reverse('send-questionnaire-file', args=[self.id])
+        return reverse('questionnaire-doc', args=[self.id])
 
     @property
     def basename(self):

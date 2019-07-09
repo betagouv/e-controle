@@ -4,6 +4,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.utils.text import slugify
 from django.views import View
 from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
@@ -51,7 +52,7 @@ class QuestionnaireDocx(QuestionnaireDetail):
         doc = DocxTemplate("templates/ecc/questionnaire.docx")
         doc.render(context)
         questionnaire = self.object
-        filename = f'questionnaire-{questionnaire.numbering}.docx'
+        filename = f'{slugify(questionnaire.title)}.docx'
         path = questionnaire_file_path(questionnaire, filename)
         root_path = os.path.join(settings.MEDIA_ROOT, path)
         doc.save(root_path)
