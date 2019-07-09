@@ -128,7 +128,7 @@
         axios.post(create_control_url, payload)
           .then(response => {
             console.debug(response)
-            window.location.href = home_url
+            window.location.href = home_url + "#control-" + response.data.id
           })
           .catch((error) => {
             console.error(error)
