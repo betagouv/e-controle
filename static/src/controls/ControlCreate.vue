@@ -11,31 +11,57 @@
     </error-bar>
 
     <info-bar>
-      Vous pouvez créer un espace de dépôt pour chaque organisme interrogé dans le cadre de votre contrôle. Par exemple,
-      pour le contrôle des comptes et de la gestion de l’Agence Z, vous pouvez créer deux espaces de dépôt distincts :
-      un pour l’Agence Z et un autre pour le Ministère Z chargé de sa tutelle. L’Agence Z ne verra pas l’espace de dépôt
-      du Ministère et inversement.
+      <p>
+        Vous allez créer un espace de dépôt pour votre contrôle, qui sera par la suite ouvert à l'organisme interrogé pour y déposer ses réponses.
+      </p>
+      <p>
+        Si vous avez besoin d'interroger plusieurs organismes distincts pour un contrôle, créez un espace de dépôt pour
+        chaque organisme. Chaque organisme interrogé n'aura accès qu'à son espace.
+      </p>
+      <p>
+        Exemple : lors du contrôle de la DINSIC, vous avez besoin d'interroger la DINSIC elle-même ainsi que le bureau
+        du Premier Ministre. Vous créez un espace avec "Organisme interrogé : DINSIC", puis ensuite un second espace avec
+        "Organisme interrogé : Premier Ministre". L'équipe de la DINSIC n'aura pas accès à l'espace du Premier Ministre, et vice versa.
+      </p>
     </info-bar>
 
     <form @submit.prevent="showModal">
       <fieldset class="form-fieldset">
         <div class="form-group">
           <label class="form-label">Nom de l’organisme interrogé<span class="form-required">*</span></label>
-          <div id="name-help" class="text-muted">Exemple : Agence Z ou Ministère Z</div>
+          <div id="name-help" class="text-muted">L'organisme qui va déposer les pièces. Exemple : Premier Ministre</div>
           <input type="text" class="form-control" v-model="organization" required aria-describedby="name-help">
         </div>
         <div class="form-group">
-          <label class="form-label">Procédure de contrôle<span class="form-required">*</span></label>
-          <div id="procedure-help" class="text-muted">Exemple : Contrôle des comptes et de la gestion de l’Agence Z</div>
-          <input type="text" class="form-control" v-model="title" required aria-describedby="procedure-help">
+          <label class="form-label">Type de contrôle<span class="form-required">*</span></label>
+          <div id="type-help" class="text-muted">Exemple : Contrôle des comptes et de la gestion de la DINSIC</div>
+          <select class="form-control custom-select"
+                  v-model="control_type"
+                  required
+                  aria-describedby="type-help">
+            <option value="">Type de contrôle</option>
+            <option v-for="t in control_types" :value="t.code">{{ t.name }}</option>
+          </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Nom court de cet espace de dépôt<span class="form-required">*</span></label>
+          <label class="form-label">Année d'ouverture du contrôle<span class="form-required">*</span></label>
+          <div id="year-help" class="text-muted">Exemple : 2019</div>
+          <select class="form-control custom-select"
+                  v-model="year"
+                  required
+                  aria-describedby="year-help"
+                  style="width: 5em;">
+            <option value="">Année d'ouverture du contrôle</option>
+            <option v-for="y in 30" :value="y + 2015">{{ y + 2015 }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nom court de cet espace de dépôt</label>
           <div id="reference-code-help" class="text-muted">
-            Il s’agit du nom du dossier contenant les pièces déposées.
-            Exemple : CCG_2019_AGENCEZ
+            Il s’agit du nom du dossier contenant les pièces déposées. Il est généré automatiquement en fonction de vos
+            réponses aux questions ci-dessus.
           </div>
-          <input type="text" class="form-control" v-model="reference_code" required aria-describedby="reference-code-help">
+          <div>{{ reference_code }}</div>
         </div>
       </fieldset>
       <div class="text-right">
@@ -98,11 +124,26 @@
     data: function() {
       return {
         backUrl: home_url,
+        control_type: "CCG",
         organization: "",
-        reference_code: "",
         title: "",
+        year: 2019,
         errors: "",
         hasErrors: false,
+        control_types: [
+          { code: "CCG", name: "CCG (Contrôle des Comptes et de la Gestion) pour la Cour et les CRTC" },
+          { code: "CAB", name: "CAB (Contrôle des Actes Budgétaires) pour les CRTC" },
+          { code: "JUG-PROG", name: "JUG-PROG (Jugement suite à contrôle programmé par la juridiction) pour la Cour et les CRTC" },
+          { code: "JUG-ACP", name: "JUG-ACP (Jugement suite à arrêté de charge provisoire) pour les CRTC" },
+          { code: "EQ", name: "EQ (Enquête) pour la Cour" },
+          { code: "", name: "Autre" }
+        ]
+      }
+    },
+    computed: {
+      reference_code: function () {
+        const control_code = this.control_type ? ("_" + this.control_type + "_") : "_"
+        return this.year + control_code + this.organization.replace(/\s+/g, '')
       }
     },
     components: {
