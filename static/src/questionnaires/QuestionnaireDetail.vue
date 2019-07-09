@@ -15,6 +15,14 @@
             Date de réponse souhaitée :
             {{ questionnaire.end_date | DateFormat}}
           </p>
+
+          <p class="text-right">
+            <a :href="'/questionnaire/' + questionnaire.id + '/doc'" target="_blank">
+              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
+                Récupérer le questionnaire
+              </button>
+            </a>
+          </p>
         </div>
       </div>
     </div>
