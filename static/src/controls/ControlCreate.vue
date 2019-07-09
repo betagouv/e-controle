@@ -164,10 +164,13 @@
     },
     computed: {
       reference_code: function () {
+        const truncateName = name => {
+          return name.replace(/\s+/g, '')
+        }
         let out = this.year
         out += "_" + this.control_type
-        out += "_" + this.controlled_organization
-        out += "_" + this.depositing_organization.replace(/\s+/g, '')
+        out += "_" + truncateName(this.controlled_organization)
+        out += "_" + truncateName(this.depositing_organization)
         return out
       }
     },
