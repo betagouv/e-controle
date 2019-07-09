@@ -76,14 +76,17 @@
             <option v-for="y in 30" :value="y + 2015">{{ y + 2015 }}</option>
           </select>
         </div>
+
         <div class="form-group mb-6">
-          <label class="form-label">Nom court de cet espace de dépôt</label>
+          <label class="form-label">Nom de dossier de cet espace de dépôt<span class="form-required">*</span></label>
           <div id="reference-code-help" class="text-muted">
-            Il s’agit du nom du dossier contenant les pièces déposées. Il est généré automatiquement en fonction de vos
-            réponses aux questions ci-dessus.
+            Nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous conseillons
+            un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 25 caractères.
+            Exemple : 2019_CCG_FFF_MinSports
           </div>
-          <div>{{ reference_code }}</div>
+          <input type="text" class="form-control" v-model="reference_code" required aria-describedby="reference-code-help">
         </div>
+
       </fieldset>
       <div class="text-right">
         <a :href="backUrl" class="btn btn-secondary">
@@ -106,17 +109,25 @@
         Vous êtes sur le point de confirmer la création d’un espace de dépôt pour :
       </p>
       <p>
-        <em>
+        <b>
           {{depositing_organization}}
-        </em>
+        </b>
       </p>
       <p>
         dans le cadre de la procédure :
       </p>
       <p>
-        <em>
+        <b>
           {{getControlTypeName(control_type)}} - {{ controlled_organization }}
-        </em>
+        </b>
+      </p>
+      <p>
+        Le dossier contenant les réponses s'appellera :
+      </p>
+      <p>
+        <b>
+        {{ reference_code }}.
+        </b>
       </p>
       <info-bar>
         Si vous confirmez, l'espace de dépôt sera créé et vous serez le.la seul.e à y avoir accès.
@@ -150,6 +161,7 @@
         control_type: "CCG",
         controlled_organization: "",
         depositing_organization: "",
+        reference_code: "",
         year: 2019,
         errors: "",
         hasErrors: false,
@@ -160,18 +172,6 @@
           { code: "JUG-ACP", name: "Jugement suite à arrêté de charge provisoire" },
           { code: "EQ", name: "Enquête" },
         ]
-      }
-    },
-    computed: {
-      reference_code: function () {
-        const truncateName = name => {
-          return name.replace(/\s+/g, '')
-        }
-        let out = this.year
-        out += "_" + this.control_type
-        out += "_" + truncateName(this.controlled_organization)
-        out += "_" + truncateName(this.depositing_organization)
-        return out
       }
     },
     components: {
