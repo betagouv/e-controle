@@ -23,7 +23,7 @@
 
       {% endif %}
 
-      {% for control in controls %}
+      {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
           <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
           <div class="card-header">

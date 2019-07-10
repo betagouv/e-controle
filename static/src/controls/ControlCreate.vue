@@ -33,9 +33,6 @@
         </div>
 
         <div class="text-right">
-          <a :href="backUrl" class="btn btn-secondary">
-            Annuler
-          </a>
           <button type="submit"
                   class="btn btn-primary">
             Créer l'espace de dépôt
@@ -63,7 +60,6 @@
   export default Vue.extend({
     data: function() {
       return {
-        backUrl: home_url,
         title: "",
         reference_code_suffix: "",
         year: new Date().getFullYear(),
@@ -95,7 +91,8 @@
         axios.post(create_control_url, payload)
           .then(response => {
             console.debug(response)
-            window.location.href = home_url + "?reload=true#control-" + response.data.id
+            // Force reload
+            window.location.href = home_url + "?reload=" + Math.random()
           })
           .catch((error) => {
             console.error(error)
