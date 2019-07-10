@@ -25,10 +25,31 @@ class WithNumberingMixin(object):
 
 
 class Control(models.Model):
-    title = models.CharField("title", max_length=255)
+    CCG = 'CCG'
+    CAB = 'CAB'
+    JUGPROG = 'JUG-PROG'
+    JUGACP = 'JUG-ACP'
+    EQ = 'EQ'
+    Autre = 'Autre'
+    CONTROL_TYPE = (
+        (CCG, 'Contrôle des Comptes et de la Gestion'),
+        (CAB, 'Contrôle des Actes Budgétaires'),
+        (JUGPROG, 'Jugement suite à contrôle programmé par la juridiction'),
+        (JUGACP, 'Jugement suite à arrêté de charge provisoire'),
+        (EQ, 'Enquête'),
+        (Autre, 'Autre'),
+    )
+    control_type = models.CharField("Type de contrôle", max_length=255, choices=CONTROL_TYPE, blank=True)
+    controlled_organization = models.CharField(
+        "Organisation ou politique publique contrôlée", max_length=255, blank=True)
+    depositing_organization = models.CharField("Organisation interrogée", max_length=255, blank=True)
+    year = models.PositiveIntegerField("Année d'ouverture du contrôle", blank=True, default=0)
     reference_code = models.CharField(
         verbose_name="code de référence", max_length=255, blank=True,
         help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
+
+    # deprecated
+    title = models.CharField("title", max_length=255)
 
     class Meta:
         verbose_name = "Controle"
