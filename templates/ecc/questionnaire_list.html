@@ -13,12 +13,14 @@
         <div class="card">
           <div class="card-status card-status-left bg-blue"></div>
           <div class="card-header">
-            <a href="{% url 'control-create' %}" class="btn btn-primary">
+            <a href="#controlcreate" class="btn btn-primary" data-toggle="collapse">
               <i class="fe fe-plus"></i>
               Ajouter un espace de dépôt
             </a>
           </div>
+          <control-create id="controlcreate" class="collapse"></control-create>
         </div>
+
       {% endif %}
 
       {% for control in controls %}
