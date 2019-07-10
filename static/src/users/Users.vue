@@ -7,7 +7,7 @@
         <a href="">Personnes ayant accès au contrôle</a>
       </div>
       <div class="card-options">
-        <a href="#" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
+        <a href="" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
       </div>
     </div>
 
