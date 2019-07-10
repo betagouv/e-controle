@@ -81,11 +81,17 @@
           <label class="form-label">Nom de dossier de cet espace de dépôt<span class="form-required">*</span></label>
           <div id="reference-code-help" class="text-muted">
             Nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous conseillons
-            un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 25 caractères.
-            Exemple : 2019_CCG_FFF_MinSports
+            un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 20 caractères.
+            Exemple : FFF_MinSports
           </div>
-          <input type="text" class="form-control" v-model="reference_code" required aria-describedby="reference-code-help">
+          <div class="input-group">
+            <span class="input-group-prepend" id="basic-addon3">
+              <span class="input-group-text">{{ reference_code_prefix }}</span>
+            </span>
+            <input type="text" class="form-control" v-model="reference_code_suffix" required aria-describedby="reference-code-help">
+          </div>
         </div>
+
 
       </fieldset>
       <div class="text-right">
@@ -126,7 +132,7 @@
       </p>
       <p>
         <b>
-        {{ reference_code }}.
+          {{ reference_code_prefix }}{{ reference_code_suffix }}
         </b>
       </p>
       <info-bar>
@@ -161,7 +167,7 @@
         control_type: "CCG",
         controlled_organization: "",
         depositing_organization: "",
-        reference_code: "",
+        reference_code_suffix: "",
         year: 2019,
         errors: "",
         hasErrors: false,
@@ -171,7 +177,13 @@
           { code: "JUG-PROG", name: "Jugement suite à contrôle programmé par la juridiction" },
           { code: "JUG-ACP", name: "Jugement suite à arrêté de charge provisoire" },
           { code: "EQ", name: "Enquête" },
+          { code: "Autre", name: "Autre" },
         ]
+      }
+    },
+    computed: {
+      reference_code_prefix: function () {
+        return this.year + "_" + this.control_type + "_"
       }
     },
     components: {
@@ -198,8 +210,10 @@
       createControl: function() {
         this.clearErrors()
 
+        const title = "Organisme interrogé: " + this.depositing_organization +
+            "\nProcédure : " + this.control_type + " " + this.year + " - " + this.controlled_organization
         const payload = {
-          title: this.getControlTypeName(this.control_type) + " - " + this.controlled_organization,
+          title: title,
           reference_code: this.reference_code,
         }
         axios.post(create_control_url, payload)
