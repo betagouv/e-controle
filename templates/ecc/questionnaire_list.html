@@ -12,13 +12,13 @@
       {% if user.profile.is_inspector %}
         <div class="card">
           <div class="card-status card-status-left bg-blue"></div>
+          <control-create id="controlcreate" class="collapse"></control-create>
           <div class="card-header">
             <a href="#controlcreate" class="btn btn-primary" data-toggle="collapse">
               <i class="fe fe-plus"></i>
               Ajouter un espace de dépôt
             </a>
           </div>
-          <control-create id="controlcreate" class="collapse"></control-create>
         </div>
 
       {% endif %}

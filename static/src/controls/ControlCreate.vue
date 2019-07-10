@@ -11,15 +11,10 @@
         L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
       </error-bar>
 
-      <info-bar>
-        Bloup
-      </info-bar>
-
-      <form @submit.prevent="showModal">
+      <form @submit.prevent="createControl">
         <div class="form-group mb-6">
-          <label class="form-label">Nom de l’organisme interrogé<span class="form-required">*</span></label>
-          <div id="depositing-help" class="text-muted">L'organisme qui va déposer les pièces. Exemple : Ministère des Sports</div>
-          <input type="text" class="form-control" v-model="depositing_organization" required aria-describedby="depositing-help">
+          <label class="form-label">Nom de l’espace de dépôt<span class="form-required">*</span></label>
+          <input type="text" class="form-control" v-model="title" required>
         </div>
 
         <div class="form-group mb-6">
@@ -48,45 +43,6 @@
         </div>
       </form>
     </div>
-
-    <confirm-modal id="confirmModal"
-               title="Confirmer la création d'un espace de dépôt"
-               confirm-button="Oui, créer l'espace"
-               cancel-button="Non, j'ai encore des modifications"
-               @confirm="createControl"
-    >
-      <p>
-        Vous êtes sur le point de confirmer la création d’un espace de dépôt pour :
-      </p>
-      <p>
-        <b>
-          {{depositing_organization}}
-        </b>
-      </p>
-      <p>
-        dans le cadre de la procédure :
-      </p>
-      <p>
-        <b>
-          {{getControlTypeName(control_type)}} - {{ controlled_organization }}
-        </b>
-      </p>
-      <p>
-        Le dossier contenant les réponses s'appellera :
-      </p>
-      <p>
-        <b>
-          {{ reference_code_prefix }}{{ reference_code_suffix }}
-        </b>
-      </p>
-      <info-bar>
-        Si vous confirmez, l'espace de dépôt sera créé et vous serez le.la seul.e à y avoir accès.
-        <p>
-          Vous pourrez ensuite ouvrir l'accès aux autres membres de votre équipe, créer un questionnaire, puis ouvrir l'accès à l'équipe interrogée.
-        </p>
-      </info-bar>
-    </confirm-modal>
-
   </div>
 </template>
 
@@ -108,26 +64,16 @@
     data: function() {
       return {
         backUrl: home_url,
-        control_type: "CCG",
-        controlled_organization: "",
-        depositing_organization: "",
+        title: "",
         reference_code_suffix: "",
-        year: 2019,
+        year: new Date().getFullYear(),
         errors: "",
         hasErrors: false,
-        control_types: [
-          { code: "CCG", name: "Contrôle des Comptes et de la Gestion" },
-          { code: "CAB", name: "Contrôle des Actes Budgétaires" },
-          { code: "JUG-PROG", name: "Jugement suite à contrôle programmé par la juridiction" },
-          { code: "JUG-ACP", name: "Jugement suite à arrêté de charge provisoire" },
-          { code: "EQ", name: "Enquête" },
-          { code: "Autre", name: "Autre" },
-        ]
       }
     },
     computed: {
       reference_code_prefix: function () {
-        return this.year + "_" + this.control_type + "_"
+        return this.year + "_"
       }
     },
     components: {
@@ -136,34 +82,20 @@
       InfoBar,
     },
     methods: {
-      getControlTypeName: function(control_code) {
-        const types = this.control_types.filter(type => type.code === control_code)
-        if (types.length === 0) {
-          return ""
-        }
-        return types[0].name
-      },
       clearErrors: function() {
         this.errors = ""
         this.hasErrors = false
       },
-      showModal: function() {
-        this.clearErrors()
-        $('#confirmModal').modal('show');
-      },
       createControl: function() {
         this.clearErrors()
-
-        const title = "Organisme interrogé: " + this.depositing_organization +
-            "\nProcédure : " + this.control_type + " " + this.year + " - " + this.controlled_organization
         const payload = {
-          title: title,
-          reference_code: this.reference_code,
+          title: this.title,
+          reference_code: this.reference_code_prefix + this.reference_code_suffix,
         }
         axios.post(create_control_url, payload)
           .then(response => {
             console.debug(response)
-            window.location.href = home_url + "#control-" + response.data.id
+            window.location.href = home_url + "?reload=true#control-" + response.data.id
           })
           .catch((error) => {
             console.error(error)
