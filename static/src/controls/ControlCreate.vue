@@ -1,8 +1,11 @@
 <template>
   <div class="card">
     <div class="card-status card-status-left bg-blue"></div>
-    <div class="card-header" @click="hideAddControlButton">
-      <a id="add-control-button-bar" href="#controlcreate" class="btn btn-primary" data-toggle="collapse">
+    <div id="add-control-button-bar" class="card-header" @click="hideAddControlButton">
+      <a href="javascript:void(0)"
+         class="btn btn-primary"
+         data-toggle="collapse"
+         data-target="#controlcreate">
         <i class="fe fe-plus"></i>
         Ajouter un espace de dépôt
       </a>
@@ -46,6 +49,13 @@
           </div>
 
           <div class="text-right">
+            <a href="javascript:void(0)"
+               data-toggle="collapse"
+               data-target="#controlcreate"
+               @click="showAddControlButton"
+               class="btn btn-secondary">
+              Annuler
+            </a>
             <button type="submit"
                     class="btn btn-primary">
               Créer l'espace de dépôt
@@ -116,7 +126,10 @@
       },
       hideAddControlButton: function() {
         document.getElementById('add-control-button-bar').style.display = 'none';
-      }
+      },
+      showAddControlButton: function() {
+        document.getElementById('add-control-button-bar').style.display = 'flex';
+      },
     }
   })
 
