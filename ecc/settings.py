@@ -24,6 +24,7 @@ SHOW_DEBUG_TOOLBAR = env('SHOW_DEBUG_TOOLBAR', default=DEBUG)
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda r: SHOW_DEBUG_TOOLBAR,
+    'SHOW_COLLAPSED': True,
 }
 
 # Application definition
