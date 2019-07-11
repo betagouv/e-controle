@@ -18,6 +18,15 @@
         <div class="card-title">
           Créer un nouvel espace de dépôt
         </div>
+
+        <div class="card-options">
+          <button type="button"
+                  class="close"
+                  data-toggle="collapse"
+                  data-target="#controlcreate"
+                  @click="cancel">
+          </button>
+        </div>
       </div>
 
       <div class="card-body">
@@ -124,7 +133,7 @@
       },
       createControl: function() {
         this.clearErrors()
-        const title = "Organisme interrogé : " + this.organization + "\n <h5>Procédure : " + this.title
+        const title = "Organisme interrogé : " + this.organization + "\n Procédure : " + this.title
         const payload = {
           title: title,
           reference_code: this.reference_code_prefix + this.reference_code_suffix,
