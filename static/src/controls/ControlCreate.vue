@@ -1,11 +1,12 @@
 <template>
   <div class="card">
     <div class="card-status card-status-left bg-blue"></div>
-    <div id="add-control-button-bar" class="card-header" @click="hideAddControlButton">
+    <div id="add-control-button-bar" class="card-header">
       <a href="javascript:void(0)"
          class="btn btn-primary"
          data-toggle="collapse"
-         data-target="#controlcreate">
+         data-target="#controlcreate"
+         @click="hideAddControlButton">
         <i class="fe fe-plus"></i>
         Ajouter un espace de dépôt
       </a>
@@ -23,17 +24,31 @@
         <error-bar v-if="hasErrors">
           L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
         </error-bar>
+        <info-bar>
+          Chaque espace de dépôt n'est visible que par les personnes que vous y inviterez.
+        </info-bar>
 
         <form @submit.prevent="createControl">
           <div class="form-group mb-6">
-            <label class="form-label">Nom de l’espace de dépôt<span class="form-required">*</span></label>
-            <input type="text" class="form-control" v-model="title" required>
+            <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt?<span class="form-required">*</span></label>
+            <div id="title-help" class="text-muted">
+              Exemple : CCG de la Fédération Française de Football
+            </div>
+            <input type="text" class="form-control" v-model="title" required aria-describedby="title-help">
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Nom de dossier de cet espace de dépôt<span class="form-required">*</span></label>
+            <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses?<span class="form-required">*</span></label>
+            <div id="organization-help" class="text-muted">
+              Exemple : Ministère des Sports
+            </div>
+            <input type="text" class="form-control" v-model="organization" required aria-describedby="organization-help">
+          </div>
+
+          <div class="form-group mb-6">
+            <label class="form-label">Indiquez un nom abrégé pour cet espace de dépôt :<span class="form-required">*</span></label>
             <div id="reference-code-help" class="text-muted">
-              Nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous
+              Ce sera le nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous
               conseillons
               un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 20
               caractères.
@@ -52,7 +67,7 @@
             <a href="javascript:void(0)"
                data-toggle="collapse"
                data-target="#controlcreate"
-               @click="showAddControlButton"
+               @click="cancel"
                class="btn btn-secondary">
               Annuler
             </a>
@@ -85,6 +100,7 @@
     data: function() {
       return {
         title: "",
+        organization: "",
         reference_code_suffix: "",
         year: new Date().getFullYear(),
         errors: "",
@@ -108,8 +124,9 @@
       },
       createControl: function() {
         this.clearErrors()
+        const title = "Organisme interrogé : " + this.organization + "\n <h5>Procédure : " + this.title
         const payload = {
-          title: this.title,
+          title: title,
           reference_code: this.reference_code_prefix + this.reference_code_suffix,
         }
         axios.post(create_control_url, payload)
@@ -126,6 +143,10 @@
       },
       hideAddControlButton: function() {
         document.getElementById('add-control-button-bar').style.display = 'none';
+      },
+      cancel: function() {
+        this.clearErrors()
+        this.showAddControlButton()
       },
       showAddControlButton: function() {
         document.getElementById('add-control-button-bar').style.display = 'flex';

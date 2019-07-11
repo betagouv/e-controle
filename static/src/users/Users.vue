@@ -18,7 +18,7 @@
         </div>
         <div class="col-auto">
           <a v-if="sessionUser.is_inspector"
-             href=""
+             href="javascript:void(0)"
              data-toggle="modal"
              data-target="#addUserModal"
              @click="updateEditingState('inspector')"

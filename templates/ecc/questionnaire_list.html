@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block page_title %}
-  Accueil
+ Accueil - Mes espaces de dépôt
 {% endblock page_title %}
 
 
@@ -17,7 +17,7 @@
         <div class="card" id="control-{{ control.id }}">
           <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
           <div class="card-header">
-            <h4 class="page-title with-line-breaks">Espace de dépôt : {{ control.title }}</h4>
+            <h4 class="page-title with-line-breaks">{{ control.title }}</h4>
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
             <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->
