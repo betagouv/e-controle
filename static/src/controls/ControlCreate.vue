@@ -1,44 +1,58 @@
 <template>
-  <div>
-    <div class="card-header">
-      <div class="card-title">
-        Créer un nouvel espace de dépôt
-      </div>
+  <div class="card">
+    <div class="card-status card-status-left bg-blue"></div>
+    <div class="card-header" @click="hideAddControlButton">
+      <a id="add-control-button-bar" href="#controlcreate" class="btn btn-primary" data-toggle="collapse">
+        <i class="fe fe-plus"></i>
+        Ajouter un espace de dépôt
+      </a>
     </div>
 
-    <div class="card-body">
-      <error-bar v-if="hasErrors">
-        L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
-      </error-bar>
 
-      <form @submit.prevent="createControl">
-        <div class="form-group mb-6">
-          <label class="form-label">Nom de l’espace de dépôt<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="title" required>
+    <div id="controlcreate" class="collapse">
+      <div class="card-header">
+        <div class="card-title">
+          Créer un nouvel espace de dépôt
         </div>
+      </div>
 
-        <div class="form-group mb-6">
-          <label class="form-label">Nom de dossier de cet espace de dépôt<span class="form-required">*</span></label>
-          <div id="reference-code-help" class="text-muted">
-            Nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous conseillons
-            un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 20 caractères.
-            Exemple : FFF_MinSports
+      <div class="card-body">
+        <error-bar v-if="hasErrors">
+          L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+        </error-bar>
+
+        <form @submit.prevent="createControl">
+          <div class="form-group mb-6">
+            <label class="form-label">Nom de l’espace de dépôt<span class="form-required">*</span></label>
+            <input type="text" class="form-control" v-model="title" required>
           </div>
-          <div class="input-group">
+
+          <div class="form-group mb-6">
+            <label class="form-label">Nom de dossier de cet espace de dépôt<span class="form-required">*</span></label>
+            <div id="reference-code-help" class="text-muted">
+              Nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous
+              conseillons
+              un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 20
+              caractères.
+              Exemple : FFF_MinSports
+            </div>
+            <div class="input-group">
             <span class="input-group-prepend" id="basic-addon3">
               <span class="input-group-text">{{ reference_code_prefix }}</span>
             </span>
-            <input type="text" class="form-control" v-model="reference_code_suffix" required aria-describedby="reference-code-help">
+              <input type="text" class="form-control" v-model="reference_code_suffix" required
+                     aria-describedby="reference-code-help">
+            </div>
           </div>
-        </div>
 
-        <div class="text-right">
-          <button type="submit"
-                  class="btn btn-primary">
-            Créer l'espace de dépôt
-          </button>
-        </div>
-      </form>
+          <div class="text-right">
+            <button type="submit"
+                    class="btn btn-primary">
+              Créer l'espace de dépôt
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -100,6 +114,9 @@
             this.hasErrors = true
           })
       },
+      hideAddControlButton: function() {
+        document.getElementById('add-control-button-bar').style.display = 'none';
+      }
     }
   })
 
