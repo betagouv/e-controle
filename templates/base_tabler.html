@@ -37,7 +37,8 @@
         <script src="{% static "js/require.min.js" %}"></script>
         <script>
             requirejs.config({
-                baseUrl: '.'
+                baseUrl: '.',
+                waitSeconds: 10
             });
             // find the static_url
             var static_url = "{% get_static_prefix %}";
