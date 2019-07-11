@@ -22,6 +22,8 @@
     </div>
     <p></p>
     <div class="flex-row-container">
+      <a href="file://{{ settings.WEBDAV_URL }}/{{ control.reference_code }}">file://{{ settings.WEBDAV_URL }}/{{ control.reference_code }}</a>
+      <a href="file:////{{ settings.WEBDAV_URL }}/{{ control.reference_code }}">file://{{ settings.WEBDAV_URL }}/{{ control.reference_code }}</a>
       <div class="small">Vous aurez besoin de ce lien : {{ settings.WEBDAV_URL }}/{{ control.reference_code }}</div>
       <copy-button tocopy="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"
                    buttontext="Copier le lien"
