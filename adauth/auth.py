@@ -62,4 +62,5 @@ def create_user(user_info):
                                     last_name=user_info.sn.value)
     UserProfile.objects.create(user=user,
                                organization=user_info.company.value,
-                               profile_type='inspector')
+                               profile_type='inspector',
+                               send_files_report=True)
