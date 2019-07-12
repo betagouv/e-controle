@@ -16,13 +16,19 @@
             {{ questionnaire.end_date | DateFormat}}
           </p>
 
-          <p class="text-right">
+          <div class="text-right" v-if="questionnaire.id">
             <a :href="'/fichier-questionnaire/' + questionnaire.id" target="_blank">
               <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
-                Récupérer le questionnaire
+                Exporter la version Word
               </button>
             </a>
-          </p>
+          </div>
+          <div class="text-right" v-else>
+              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" disabled>
+                Exporter la version Word*
+              </button>
+            <div class="small text-muted">*Vous devez d'abord enregistrer votre brouillon.</div>
+          </div>
         </div>
       </div>
     </div>
