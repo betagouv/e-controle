@@ -4,10 +4,8 @@ import re
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
 
 from django_cleanup import cleanup
-from docxtpl import DocxTemplate
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
@@ -112,21 +110,6 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
 
     def __str__(self):
         return self.title_display
-
-    def save(self, *args, **kwargs):
-        doc = DocxTemplate("templates/ecc/questionnaire.docx")
-        questionnaire = self
-        context = {'questionnaire': questionnaire}
-        doc.render(context)
-        filename = f'{slugify(questionnaire.title)}.docx'
-        # Why do we need both relative and absolte path?
-        # For django's FileField, we need a relative path from the root of the MEDIA_ROOT.
-        # For saving the file via DocxTemplate, we need to absolute path.
-        relative_path = questionnaire_file_path(questionnaire, filename)
-        absolute_path = os.path.join(settings.MEDIA_ROOT, relative_path)
-        doc.save(absolute_path)
-        self.generated_file = relative_path
-        super().save(*args, **kwargs)
 
 
 class Theme(OrderedModel, WithNumberingMixin):
