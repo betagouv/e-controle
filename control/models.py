@@ -61,7 +61,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         verbose_name="échéance", blank=True, null=True,
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
-    file = models.FileField(
+    uploaded_file = models.FileField(
         verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True,
         help_text=(
             "Si ce fichier est renseigné, il sera proposé au téléchargement."
@@ -86,12 +86,18 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         verbose_name_plural = "Questionnaires"
 
     @property
+    def file(self):
+        if bool(self.uploaded_file):
+            return self.uploaded_file
+        return self.generated_file
+
+    @property
     def url(self):
         return reverse('questionnaire-detail', args=[self.id])
 
     @property
     def file_url(self):
-        return reverse('questionnaire-doc', args=[self.id])
+        return reverse('send-questionnaire-file', args=[self.id])
 
     @property
     def basename(self):
