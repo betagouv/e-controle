@@ -1,13 +1,14 @@
 from django import forms
-from django.conf import settings
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template import loader
-from django.utils.translation import ugettext_lazy as _
+from django.utils.module_loading import import_string
 
+from . import settings as magicauth_settings
 from .models import MagicToken
 
-User = get_user_model()
+
+no_user_call_back = import_string(magicauth_settings.NO_USER_CALL_BACK)
 
 
 class EmailForm(forms.Form):
@@ -17,7 +18,7 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user_email = user_email.lower()
         if not User.objects.filter(username__iexact=user_email).exists():
-            raise forms.ValidationError(_(f"Aucun utilisateur trouvé"))
+            no_user_call_back(user_email)
         return user_email
 
     def create_token(self, user):
@@ -28,10 +29,10 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user = User.objects.get(username__iexact=user_email)
         token = self.create_token(user)
-        email_subject = getattr(settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Connexion e-controle')
-        html_template = getattr(settings, 'MAGICAUTH_EMAIL_HTML_TEMPLATE', 'magicauth/email.html')
-        text_template = getattr(settings, 'MAGICAUTH_EMAIL_TEXT_TEMPLATE', 'magicauth/email.txt')
-        from_email = getattr(settings, 'MAGICAUTH_FROM_EMAIL')
+        email_subject = magicauth_settings.EMAIL_SUBJECT
+        html_template = magicauth_settings.EMAIL_HTML_TEMPLATE
+        text_template = magicauth_settings.EMAIL_TEXT_TEMPLATE
+        from_email = magicauth_settings.FROM_EMAIL
         context = {
             'token': token,
             'user': user,

@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
     'debug_toolbar',
     'model_utils',
     'easy_thumbnails',
@@ -53,7 +52,6 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'ckeditor',
     'django_filters',
-
     'control',
     'demo',
     'ecc',
@@ -62,6 +60,7 @@ INSTALLED_APPS = [
     'reporting',
     'user_profiles',
     'utils',
+    'adauth',
 ]
 
 
@@ -223,6 +222,8 @@ LDAP_USER = env('LDAP_USER', default=None)
 LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
+TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
+MAGICAUTH_NO_USER_CALL_BACK = 'adauth.auth.active_directory_auth'
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)
