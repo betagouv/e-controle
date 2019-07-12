@@ -34,20 +34,20 @@
           L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
         </error-bar>
         <info-bar>
-          Chaque espace de dépôt n'est visible que par les personnes que vous y inviterez.
+          Chaque espace de dépôt n'est visible que par les personnes que vous inviterez.
         </info-bar>
 
         <form @submit.prevent="createControl">
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt?<span class="form-required">*</span></label>
+            <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
-              Exemple : CCG de la Fédération Française de Football
+              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football
             </div>
             <input type="text" class="form-control" v-model="title" required aria-describedby="title-help">
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses?<span class="form-required">*</span></label>
+            <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
             <div id="organization-help" class="text-muted">
               Exemple : Ministère des Sports
             </div>
@@ -57,10 +57,9 @@
           <div class="form-group mb-6">
             <label class="form-label">Indiquez un nom abrégé pour cet espace de dépôt :<span class="form-required">*</span></label>
             <div id="reference-code-help" class="text-muted">
-              Ce sera le nom du dossier contenant les pièces déposées, qui apparaîtra dans votre explorateur Windows. Nous
+              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre explorateur Windows. Nous
               conseillons
-              un nom qui soit clair pour vous pour que vous retrouviez facilement le dossier, et qui ne dépasse pas 20
-              caractères.
+              un nom court (max 25 caractères) et signifiant, pour que vous retrouviez facilement le dossier.
               Exemple : FFF_MinSports
             </div>
             <div class="input-group">
