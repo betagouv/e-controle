@@ -2,6 +2,8 @@ from rest_framework import permissions
 
 
 class ChangePermissionForInspector(permissions.BasePermission):
+    message_format = 'Adding or changing {} is not allowed.'
+
     def has_permission(self, request, view):
         try:
             if request.user.profile.is_inspector:
@@ -19,8 +21,8 @@ class ChangePermissionForInspector(permissions.BasePermission):
 
 
 class ChangeQuestionnairePermission(ChangePermissionForInspector):
-    message = 'Add or change questionnaire is not allowed.'
+    message = ChangePermissionForInspector.message_format.format('questionnaire')
 
 
 class ChangeControlPermission(ChangePermissionForInspector):
-    message = 'Add or change control is not allowed.'
+    message = ChangePermissionForInspector.message_format.format('control')
