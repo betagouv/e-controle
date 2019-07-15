@@ -133,7 +133,9 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """
-        Before sending the questionnaire file, we first generate it.
+        Before sending the questionnaire file, we generate it.
+        This means that the file is geneated every time this view is called - tipically
+        when the user downloads the file.
         """
         questionnaire = self.get_object()
         generate_questionnaire_file(questionnaire)

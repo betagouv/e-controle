@@ -11,6 +11,11 @@ from .upload_path import questionnaire_file_path
 
 
 def generate_questionnaire_file(questionnaire):
+    """
+    Generate a word Docx document for the given questionnaire.
+    The generated docment is based on a Docx template.
+    This is made possible thanks to docxtepl Python package.
+    """
     doc = DocxTemplate("templates/ecc/questionnaire.docx")
     context = {
         'questionnaire': questionnaire,
