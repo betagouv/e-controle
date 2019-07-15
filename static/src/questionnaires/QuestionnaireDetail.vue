@@ -18,8 +18,8 @@
 
           <div class="text-right" v-if="questionnaire.id">
             <a :href="'/fichier-questionnaire/' + questionnaire.id" target="_blank">
-              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
-                Exporter la version Word
+              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Exporter ce questionnaire">
+                Exporter ce questionnaire
               </button>
             </a>
           </div>
