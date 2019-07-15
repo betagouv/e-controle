@@ -15,7 +15,7 @@
 
       {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
-          <div class="card-status card-status-left {% cycle 'bg-blue' 'bg-red' 'bg-yellow' 'bg-purple' 'bg-green' 'bg-teal' %}"></div>
+          <color-bar id="{{ control.id }}"></color-bar>
           <div class="card-header">
             <h4 class="page-title with-line-breaks">{{ control.title }}</h4>
           </div>
