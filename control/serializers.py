@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = Control
-        fields = ('id', 'title', 'reference_code')
+        fields = ('id', 'title', 'depositing_organization', 'reference_code')
 
 
 class ResponseFileSerializer(serializers.ModelSerializer):
