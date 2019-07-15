@@ -1,16 +1,20 @@
+import os
+
 from django.dispatch import receiver
+from django.conf import settings
 
 from .api_views import questionnaire_api_post_save
 from .models import Questionnaire
-from . import docx
+from .upload_path import questionnaire_path
 
 
 @receiver(questionnaire_api_post_save, sender=Questionnaire)
-def api_post_save_generate_questionnaire_file(instance, **kwargs):
+def create_questionnaire_path(instance, **kwargs):
     """
-    Generate the questionnaire file after the API's save.
-    This means that the file is generated every time the API post save signal
-    is triggered - typically when the user saves a questionnaire.
+    Create the questionnaire folder after the API's save.
     """
     questionnaire = instance
-    docx.generate_questionnaire_file(questionnaire)
+    relative_path = questionnaire_path(questionnaire)
+    absolute_path = os.path.join(settings.MEDIA_ROOT, relative_path)
+    if not os.path.exists(absolute_path):
+        os.makedirs(absolute_path)
