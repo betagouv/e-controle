@@ -1,4 +1,5 @@
-  import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from 'vuex-map-fields';
+import axios from 'axios'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
