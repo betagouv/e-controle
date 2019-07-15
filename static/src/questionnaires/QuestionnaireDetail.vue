@@ -17,10 +17,11 @@
           </p>
 
           <div class="text-right" v-if="questionnaire.id">
-            <a :href="'/fichier-questionnaire/' + questionnaire.id" target="_blank">
-              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Exporter ce questionnaire">
-                Exporter ce questionnaire
-              </button>
+            <a :href="'/fichier-questionnaire/' + questionnaire.id"
+               target="_blank"
+               class="btn btn-primary"
+               title="Exporter ce questionnaire">
+              <i class="fe fe-download mr-2"></i>Exporter ce questionnaire
             </a>
           </div>
           <div class="text-right" v-else>
