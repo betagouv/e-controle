@@ -85,6 +85,9 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
 
     @property
     def file(self):
+        """
+        If there is a manually uplodaed file it will take precedence.
+        """
         if bool(self.uploaded_file):
             return self.uploaded_file
         return self.generated_file

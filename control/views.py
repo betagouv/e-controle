@@ -132,11 +132,12 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
 
     def get(self, request, *args, **kwargs):
+        """
+        Before sending the questionnaire file, we first generate it.
+        """
         questionnaire = self.get_object()
         generate_questionnaire_file(questionnaire)
-        return sendfile(
-            request, questionnaire.file.path,
-            attachment=True, attachment_filename=questionnaire.basename)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.model.objects.filter(control__in=self.request.user.profile.controls.all())
