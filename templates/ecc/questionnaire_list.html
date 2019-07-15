@@ -16,8 +16,13 @@
       {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
           <color-bar id="{{ control.id }}"></color-bar>
-          <div class="card-header">
-            <h4 class="page-title with-line-breaks">{{ control.title }}</h4>
+          <div class="card-header flex-column align-items-start">
+            {% if control.depositing_organization %}
+              <div class="page-title">Organisme interrogé : {{ control.depositing_organization }}</div>
+              <div class="card-title">Procédure : {{ control.title }}</div>
+            {% else %}
+              <div class="page-title">{{ control.title }}</div>
+            {% endif %}
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
             <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->

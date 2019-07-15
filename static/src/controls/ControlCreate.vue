@@ -132,9 +132,9 @@
       },
       createControl: function() {
         this.clearErrors()
-        const title = "Organisme interrogé : " + this.organization + "\n Procédure : " + this.title
         const payload = {
-          title: title,
+          title: this.title,
+          depositing_organization: this.organization,
           reference_code: this.reference_code_prefix + this.reference_code_suffix,
         }
         axios.post(create_control_url, payload)
