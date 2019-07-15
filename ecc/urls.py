@@ -34,7 +34,6 @@ urlpatterns = [
     path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
 
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
-    path('espace-de-depot/creer', control_views.ControlCreate.as_view(), name='control-create'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
     path('questionnaire/controle-<int:pk>/creer',
          control_views.QuestionnaireCreate.as_view(),
