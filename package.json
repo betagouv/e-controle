@@ -4,7 +4,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail ",
+    "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
     "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",

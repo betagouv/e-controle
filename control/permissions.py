@@ -1,8 +1,8 @@
 from rest_framework import permissions
 
 
-class ChangeQuestionnairePermission(permissions.BasePermission):
-    message = 'Add or change questionnaire is not allowed.'
+class ChangePermissionForInspector(permissions.BasePermission):
+    message_format = 'Adding or changing {} is not allowed.'
 
     def has_permission(self, request, view):
         try:
@@ -18,3 +18,11 @@ class ChangeQuestionnairePermission(permissions.BasePermission):
             return True
         # cannot write
         return False
+
+
+class ChangeQuestionnairePermission(ChangePermissionForInspector):
+    message = ChangePermissionForInspector.message_format.format('questionnaire')
+
+
+class ChangeControlPermission(ChangePermissionForInspector):
+    message = ChangePermissionForInspector.message_format.format('control')
