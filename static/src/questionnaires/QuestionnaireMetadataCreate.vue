@@ -8,16 +8,18 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
-          <label class="form-label">Titre<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="metadata.title" required>
-          <span class="text-muted" v-if="metadata.title">
-            Le titre sera affiché comme ceci :
-            <strong>Questionnaire n°{{ questionnaireNumbering }} - {{ metadata.title }}</strong>
+          <label class="form-label">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
+          <span class="text-muted">
+            Exemple :
+            <strong>"Présentation générale"</strong>
+            ou
+            <strong>"Suite à la réunion du 7 Mars 2019"</strong>
           </span>
+          <input type="text" class="form-control" v-model="metadata.title" required>
         </div>
         <div class="form-group">
           <label class="form-label">
-            Description
+            Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
           </label>
           <textarea class="form-control"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
@@ -25,15 +27,12 @@
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
-          <span class="text-muted">
-            Le texte ci-dessus est donné comme exemple, vous pouvez le modifier
-          </span>
           <p class="text-muted pl-2" v-if="errors.description">
             <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Date de réponse souhaitée</label>
+          <label class="form-label">Vous pouvez indiquer ici la date limite de réponse :</label>
           <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
           </datepicker>
         </div>
