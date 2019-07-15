@@ -6,7 +6,7 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.utils.text import slugify
 
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, RichText
 
 from .api_views import questionnaire_api_post_save
 from .models import Questionnaire
@@ -16,10 +16,11 @@ from .upload_path import questionnaire_file_path
 @receiver(questionnaire_api_post_save, sender=Questionnaire)
 def generate_questionnaire_file(instance, **kwargs):
     questionnaire = instance
-    print("generating doc for " + questionnaire.title)
-    # import ipdb ; ipdb.set_trace()
     doc = DocxTemplate("templates/ecc/questionnaire.docx")
-    context = {'questionnaire': questionnaire}
+    context = {
+        'questionnaire': questionnaire,
+        'description': RichText(questionnaire.description)
+    }
     doc.render(context)
     filename = f'{slugify(questionnaire.title)}.docx'
     # Why do we need both relative and absolte path?

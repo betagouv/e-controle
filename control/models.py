@@ -108,6 +108,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     def title_display(self):
         return f"Questionnaire n°{self.numbering} - {self.title}"
 
+    @property
+    def end_date_display(self):
+        if not self.end_date:
+            return None
+        return self.end_date.strftime("%A %d %B %Y")
+
     def __str__(self):
         return self.title_display
 
