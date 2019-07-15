@@ -60,12 +60,14 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
     uploaded_file = models.FileField(
-        verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True,
+        verbose_name="fichier du questionnaire", upload_to=questionnaire_file_path,
+        null=True, blank=True,
         help_text=(
             "Si ce fichier est renseigné, il sera proposé au téléchargement."
             "Sinon, un fichier généré automatiquement sera disponible."))
     generated_file = models.FileField(
-        verbose_name="fichier généré automatiquement", upload_to=questionnaire_file_path,
+        verbose_name="fichier du questionnaire généré automatiquement",
+        upload_to=questionnaire_file_path,
         null=True, blank=True,
         help_text=(
             "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
