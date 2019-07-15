@@ -13,6 +13,7 @@ from actstream import action
 from docxtpl import DocxTemplate
 from sendfile import sendfile
 
+from .docx import generate_questionnaire_file
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
 from .upload_path import questionnaire_file_path
 
@@ -129,6 +130,13 @@ class SendFileMixin(SingleObjectMixin):
 
 class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
+
+    def get(self, request, *args, **kwargs):
+        questionnaire = self.get_object()
+        generate_questionnaire_file(questionnaire)
+        return sendfile(
+            request, questionnaire.file.path,
+            attachment=True, attachment_filename=questionnaire.basename)
 
     def get_queryset(self):
         return self.model.objects.filter(control__in=self.request.user.profile.controls.all())
