@@ -59,8 +59,18 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         verbose_name="échéance", blank=True, null=True,
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
-    file = models.FileField(
-        verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True)
+    uploaded_file = models.FileField(
+        verbose_name="fichier du questionnaire", upload_to=questionnaire_file_path,
+        null=True, blank=True,
+        help_text=(
+            "Si ce fichier est renseigné, il sera proposé au téléchargement."
+            "Sinon, un fichier généré automatiquement sera disponible."))
+    generated_file = models.FileField(
+        verbose_name="fichier du questionnaire généré automatiquement",
+        upload_to=questionnaire_file_path,
+        null=True, blank=True,
+        help_text=(
+            "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
     control = models.ForeignKey(
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
@@ -74,6 +84,15 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         ordering = ('control', 'order')
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
+
+    @property
+    def file(self):
+        """
+        If there is a manually uplodaed file it will take precedence.
+        """
+        if bool(self.uploaded_file):
+            return self.uploaded_file
+        return self.generated_file
 
     @property
     def url(self):
@@ -93,6 +112,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     @property
     def title_display(self):
         return f"Questionnaire n°{self.numbering} - {self.title}"
+
+    @property
+    def end_date_display(self):
+        if not self.end_date:
+            return None
+        return self.end_date.strftime("%A %d %B %Y")
 
     def __str__(self):
         return self.title_display

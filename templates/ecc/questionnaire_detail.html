@@ -38,15 +38,14 @@
         </p>
       {% endif %}
 
-      {% if questionnaire.file %}
         <p class="text-right">
           <a href="{{ questionnaire.file_url }}" target="_blank">
-            <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
-              Récupérer le questionnaire
+            <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
+              <i class="fe fe-download mr-2"></i>
+              Exporter ce questionnaire
             </button>
           </a>
         </p>
-      {% endif %}
 
     </div>
   </div>

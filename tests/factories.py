@@ -59,7 +59,7 @@ class ControlFactory(factory.DjangoModelFactory):
 class QuestionnaireFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
     control = factory.SubFactory(ControlFactory)
-    file = dummy_file
+    uploaded_file = dummy_file
 
     class Meta:
         model = 'control.Questionnaire'
