@@ -5,9 +5,9 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
 import django.dispatch
 
-from control.permissions import ChangeQuestionnairePermission
-from .models import Question, Questionnaire, Theme, QuestionFile
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
+from .models import Control, Question, Questionnaire, Theme, QuestionFile
+from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer
 
 
