@@ -8,8 +8,8 @@ then
 fi
 
 echo "############# Running Django collectstatic and migrate"""
-# python3.6 manage.py collectstatic --noinput
-# python3.6 manage.py migrate
+python3.6 manage.py collectstatic --noinput
+python3.6 manage.py migrate
 
 echo "############# Building bundle"""
 npm run build-all
