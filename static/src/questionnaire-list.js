@@ -6,6 +6,7 @@ import Vuex from 'vuex'
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
 import Clipboard from 'v-clipboard'
+import ColorBar from "./utils/ColorBar"
 import ControlCreate from "./controls/ControlCreate"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
@@ -24,6 +25,7 @@ new Vue({
   components: {
     'users-for-control': Users,
     AddUserModal,
+    ColorBar,
     ControlCreate,
     UpdateUserModal,
     RemoveUserModal,

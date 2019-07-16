@@ -16,7 +16,7 @@ def generate_questionnaire_file(questionnaire):
     The generated docment is based on a Docx template.
     This is made possible thanks to docxtepl Python package.
     """
-    doc = DocxTemplate("templates/ecc/questionnaire.docx")
+    doc = DocxTemplate(settings.TEMPLATE_DIR + "/ecc/questionnaire.docx")
     context = {
         'questionnaire': questionnaire,
         'description': RichText(questionnaire.description)

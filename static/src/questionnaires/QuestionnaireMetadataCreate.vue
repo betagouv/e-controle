@@ -8,33 +8,42 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
-          <label class="form-label">Titre<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="metadata.title" required>
-          <span class="text-muted" v-if="metadata.title">
-            Le titre sera affiché comme ceci :
-            <strong>Questionnaire n°{{ questionnaireNumbering }} - {{ metadata.title }}</strong>
+          <label class="form-label" id="questionnaireTitle">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
+          <span class="text-muted" id="questionnaireTitleHelp">
+            Exemple :
+            <strong>"Présentation générale"</strong>
+            ou
+            <strong>"Suite à la réunion du 7 Mars 2019"</strong>
           </span>
+          <input type="text"
+                 aria-labelledby="questionnaireTitle"
+                 aria-describedby="questionnaireTitleHelp"
+                 class="form-control"
+                 v-model="metadata.title"
+                 required>
         </div>
         <div class="form-group">
-          <label class="form-label">
-            Description
+          <label class="form-label" id="questionnaireDescription">
+            Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
           </label>
           <textarea class="form-control"
+                    aria-labelledby="questionnaireDescription"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
                     rows="6"
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
-          <span class="text-muted">
-            Le texte ci-dessus est donné comme exemple, vous pouvez le modifier
-          </span>
           <p class="text-muted pl-2" v-if="errors.description">
             <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Date de réponse souhaitée</label>
-          <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
+          <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
+          <datepicker class="blue"
+                      aria-labelledby="questionnaireEndDate"
+                      v-model="metadata.end_date"
+                      :language="fr"
+                      :monday-first="true">
           </datepicker>
         </div>
       </fieldset>
