@@ -37,7 +37,10 @@ class Control(models.Model):
     )
     reference_code = models.CharField(
         verbose_name="code de référence", max_length=255, blank=True,
-        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses',
+        unique=True,
+        # This error message is used in the frontend (ConsoleCreate.vue), if you change it you might break the frontend.
+        error_messages={'unique': "UNIQUE"})
 
     class Meta:
         verbose_name = "Controle"

@@ -31,7 +31,12 @@
 
       <div class="card-body">
         <error-bar v-if="hasErrors">
-          L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+          <div v-if="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <div v-else>
+            L'espace de dépôt n'a pas pu être créé. Erreur : {{JSON.stringify(errors)}}
+          </div>
         </error-bar>
         <info-bar>
           Chaque espace de dépôt n'est visible que par les personnes que vous inviterez.
@@ -111,6 +116,7 @@
         organization: "",
         reference_code_suffix: "",
         year: new Date().getFullYear(),
+        errorMessage: "",
         errors: "",
         hasErrors: false,
       }
@@ -145,6 +151,10 @@
           })
           .catch((error) => {
             console.error(error)
+            if (error.response.data['reference_code'][0] === 'UNIQUE') {
+              this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                  '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+            }
             this.errors = error.response.data
             this.hasErrors = true
           })
