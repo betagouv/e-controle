@@ -25,10 +25,23 @@ class WithNumberingMixin(object):
 
 
 class Control(models.Model):
-    title = models.CharField("title", max_length=255)
+    title = models.CharField(
+        "procédure",
+        help_text="Procédure pour laquelle est ouvert cet espace de dépôt",
+        max_length=255)
+    depositing_organization = models.CharField(
+        verbose_name="Organisme interrogé",
+        help_text="Organisme qui va déposer les pièces dans cet espace de dépôt",
+        max_length=255,
+        blank=True,
+    )
     reference_code = models.CharField(
-        verbose_name="code de référence", max_length=255, blank=True,
-        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
+        verbose_name="code de référence",
+        max_length=255,
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses',
+        unique=True,
+        # This error message is used in the frontend (ConsoleCreate.vue), if you change it you might break the frontend.
+        error_messages={'unique': "UNIQUE"})
 
     class Meta:
         verbose_name = "Controle"
