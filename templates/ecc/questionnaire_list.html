@@ -93,6 +93,8 @@
               {% endif %}
             </div> <!--// closing: list of questionnaires for control  //-->
 
+            {% include "ecc/includes/tips-explorer.html" %}
+
             <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
 
           </div>  <!--// closing: questionnaire_description_card_body  //-->
