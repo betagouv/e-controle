@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="card-title">Etape 3 : Aperçu avant publication</div>
     <div class="preview">
       <questionnaire-detail v-bind:questionnaire="questionnaire">
       </questionnaire-detail>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="card-title">Etape 2 : Ajouter des questions</div>
     <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
       <i class="fe fe-bell mr-2" aria-hidden="true"></i>
       <button type="button" class="close" data-dismiss="alert"></button>
