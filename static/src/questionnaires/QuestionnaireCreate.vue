@@ -8,6 +8,11 @@
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
+    <div class="row justify-content-around">
+      <wizard-step number="1">Créer le questionnaire</wizard-step>
+      <wizard-step number="2">Ajouter des questions</wizard-step>
+      <wizard-step number="3">Aperçu avant publication</wizard-step>
+    </div>
     <div class="card-header border-0 row justify-content-around">
       <span class="tag" :class="{ 'tag-azure': state==='start' }">
         Etape 1/3: Créer le questionnaire
@@ -59,6 +64,7 @@
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
+  import WizardStep from "../utils/WizardStep"
 
   // State machine
   const STATES = {
@@ -94,7 +100,8 @@
     components: {
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
-      QuestionnairePreview
+      QuestionnairePreview,
+      WizardStep,
     },
     mounted() {
       console.debug('questionnaireId', this.questionnaireId)

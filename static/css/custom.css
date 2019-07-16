@@ -52,3 +52,14 @@
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {
     border: 1px solid #467fcf;
 }
+
+
+.wizard-step {
+    background-color: #45aaf2;
+    color: #fff;
+    border-radius: 50%;
+    height: 2rem;
+    width: 2rem;
+    padding-top: 0.3rem;
+    text-align: center;
+}
