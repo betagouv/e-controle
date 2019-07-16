@@ -8,7 +8,7 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile, Respo
 
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
-    fields = ('title', 'description', 'file', 'end_date', 'move_up_down_links', 'order')
+    fields = ('title', 'description', 'uploaded_file', 'generated_file', 'end_date', 'move_up_down_links', 'order')
     readonly_fields = ('move_up_down_links',)
     extra = 1
 
