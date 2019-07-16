@@ -32,7 +32,7 @@
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Vous pouvez indiquer ici la date limite de réponse :</label>
+          <label class="form-label">Vous pouvez indiquer la date limite de réponse :</label>
           <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
           </datepicker>
         </div>
