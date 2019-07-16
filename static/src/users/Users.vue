@@ -3,7 +3,10 @@
 
     <div class="card-header border-0 pl-0" data-toggle="card-collapse">
       <div class="card-title">
-        <button type="button" class="btn btn-info"><i class="fe fe-users mr-2"></i>Qui a accès aux questions et aux réponses ?</button>
+        <button type="button" class="btn btn-secondary">
+          <i class="fe fe-users mr-2"></i>
+          Qui a accès à cet espace ?
+        </button>
       </div>
       <div class="card-options">
         <a href="javascript:void(0)" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
