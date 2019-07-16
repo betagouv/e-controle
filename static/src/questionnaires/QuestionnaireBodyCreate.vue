@@ -1,123 +1,125 @@
 <template>
   <div class="card">
+    <div class="card-header">
+      <div class="card-title">Etape 2 : Ajouter des questions</div>
+    </div>
     <div class="card-body">
-    <div class="card-title">Etape 2 : Ajouter des questions</div>
-    <info-bar>
-      A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
-      des questions et des annexes à vos questions.
-    </info-bar>
-    <form @submit.prevent="createBody">
-      <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
-        <div class="card-status card-status-top bg-blue">
-        </div>
+      <info-bar>
+        A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
+        des questions et des annexes à vos questions.
+      </info-bar>
+      <form @submit.prevent="createBody">
+        <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
+          <div class="card-status card-status-top bg-blue">
+          </div>
 
-        <div class="card-header">
-          <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
-            <h3 class="card-title">{{themeIndex + 1}}.</h3>
-          </label>
-          <input class="form-control form-control-h3"
-                 placeholder="Ecrivez un thème ici"
-                 type="text"
-                 v-bind:id="'theme' + (themeIndex + 1)"
-                 v-model="body[themeIndex].title"
-                 oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
-                 oninput="this.setCustomValidity('')"
-                 required>
-          <span>
-            <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
-                           title="Confirmer la suppression de ce thème"
-                           confirm-button="Oui, supprimer"
-                           cancel-button="Non, retour"
-                           @confirm="deleteTheme(themeIndex)"
-            >
-              <p>
-                <span v-if="body[themeIndex].questions.length === 1">
-                  La question associée à ce thème sera également supprimée.
-                </span>
-                <span v-else>
-                  Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
-                </span>
-              </p>
-            </confirm-modal>
-
-            <a v-if="body[themeIndex].questions.length === 0"
-               href="javascript:void(0)"
-               @click.prevent="deleteTheme(themeIndex)"
-               class="btn btn-link"
-               title="Supprimer le thème"
-            >
-              <i class="fe fe-trash-2"></i>
-            </a>
-            <a v-else
-               href="javascript:void(0)"
-               class="btn btn-link"
-               data-toggle="modal"
-               :data-target="'#deleteThemeConfirmModal' + themeIndex"
-            >
-              <i class="fe fe-trash-2"></i>
-            </a>
-          </span>
-        </div>
-
-        <div v-for="(question, qIndex) in body[themeIndex].questions"
-             class="card m-0 pt-2"> <!-- Card for each question -->
-          <div class="card-header border-0">
-            <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
-              <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                {{ themeIndex + 1 }}.{{ qIndex + 1 }}
-              </span>
+          <div class="card-header">
+            <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
+              <h3 class="card-title">{{themeIndex + 1}}.</h3>
             </label>
-            <textarea class="form-control"
-                      placeholder="Ecrivez une question ici"
-                      rows="4"
-                      v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
-                      v-model="body[themeIndex].questions[qIndex].description"
-                      oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
-                      oninput="this.setCustomValidity('')"
-                      required>
-            </textarea>
-
+            <input class="form-control form-control-h3"
+                   placeholder="Ecrivez un thème ici"
+                   type="text"
+                   v-bind:id="'theme' + (themeIndex + 1)"
+                   v-model="body[themeIndex].title"
+                   oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
+                   oninput="this.setCustomValidity('')"
+                   required>
             <span>
-              <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+              <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
+                             title="Confirmer la suppression de ce thème"
+                             confirm-button="Oui, supprimer"
+                             cancel-button="Non, retour"
+                             @confirm="deleteTheme(themeIndex)"
+              >
+                <p>
+                  <span v-if="body[themeIndex].questions.length === 1">
+                    La question associée à ce thème sera également supprimée.
+                  </span>
+                  <span v-else>
+                    Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
+                  </span>
+                </p>
+              </confirm-modal>
+
+              <a v-if="body[themeIndex].questions.length === 0"
+                 href="javascript:void(0)"
+                 @click.prevent="deleteTheme(themeIndex)"
+                 class="btn btn-link"
+                 title="Supprimer le thème"
+              >
+                <i class="fe fe-trash-2"></i>
+              </a>
+              <a v-else
+                 href="javascript:void(0)"
+                 class="btn btn-link"
+                 data-toggle="modal"
+                 :data-target="'#deleteThemeConfirmModal' + themeIndex"
+              >
                 <i class="fe fe-trash-2"></i>
               </a>
             </span>
-            <question-file-upload :question-id="question.id"></question-file-upload>
           </div>
-          <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
-        </div>
 
+          <div v-for="(question, qIndex) in body[themeIndex].questions"
+               class="card m-0 pt-2"> <!-- Card for each question -->
+            <div class="card-header border-0">
+              <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
+                <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
+                  {{ themeIndex + 1 }}.{{ qIndex + 1 }}
+                </span>
+              </label>
+              <textarea class="form-control"
+                        placeholder="Ecrivez une question ici"
+                        rows="4"
+                        v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                        v-model="body[themeIndex].questions[qIndex].description"
+                        oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
+                        oninput="this.setCustomValidity('')"
+                        required>
+              </textarea>
 
-        <div class="card-footer">
-          <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
-            <i class="fe fe-plus"></i> Ajouter une question
-          </a>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-footer">
-          <div class="card-status card-status-top bg-blue">
+              <span>
+                <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+                  <i class="fe fe-trash-2"></i>
+                </a>
+              </span>
+              <question-file-upload :question-id="question.id"></question-file-upload>
+            </div>
+            <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
           </div>
-          <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
-            <i class="fe fe-plus"></i>Ajouter un thème
-          </a>
+
+
+          <div class="card-footer">
+            <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
+              <i class="fe fe-plus"></i> Ajouter une question
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div class="text-right">
-        <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
-          < Retour
-        </button>
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        <button type="submit" class="btn btn-secondary ml-auto">
-          Suivant >
-        </button>
-      </div>
+        <div class="card">
+          <div class="card-footer">
+            <div class="card-status card-status-top bg-blue">
+            </div>
+            <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
+              <i class="fe fe-plus"></i>Ajouter un thème
+            </a>
+          </div>
+        </div>
 
-    </form>
+        <div class="text-right">
+          <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
+            < Retour
+          </button>
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" class="btn btn-secondary ml-auto">
+            Suivant >
+          </button>
+        </div>
 
-  </div>
+      </form>
+
+    </div>
   </div>
 </template>
 

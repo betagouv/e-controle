@@ -1,46 +1,48 @@
 <template>
   <div class="card">
+    <div class="card-header">
+      <div class="card-title">Etape 3 : Aperçu avant publication</div>
+    </div>
     <div class="card-body">
-    <div class="card-title">Etape 3 : Aperçu avant publication</div>
-    <div class="preview">
-      <questionnaire-detail v-bind:questionnaire="questionnaire">
-      </questionnaire-detail>
-    </div>
-    <div class="text-right">
-      <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
-        < Retour
-      </button>
-      <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-      <button type="submit"
-              data-toggle="modal"
-              data-target="#saveQuestionnaireConfirmModal"
-              class="btn btn-primary ml-auto"
-              title="Publier le questionnaire à l'organisme interrogé">
-        Publier
-      </button>
-    </div>
-
-    <confirm-modal id="saveQuestionnaireConfirmModal"
-                   title="Confirmer la publication"
-                   confirm-button="Oui, j'ai compris"
-                   cancel-button="Retour"
-                   @confirm="done()"
-    >
-      <p>
-        En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
-      </p>
-      <div class="alert alert-icon alert-primary" role="alert">
-        <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-      <p>
-        Pensez à informer l'organisme interrogé que vous avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse&nbsp;:
-      </p>
-        <p style="word-wrap: break-word;">
-          https://e-controle-beta.ccomptes.fr
-        </p>
+      <div class="preview">
+        <questionnaire-detail v-bind:questionnaire="questionnaire">
+        </questionnaire-detail>
+      </div>
+      <div class="text-right">
+        <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
+          < Retour
+        </button>
+        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+        <button type="submit"
+                data-toggle="modal"
+                data-target="#saveQuestionnaireConfirmModal"
+                class="btn btn-primary ml-auto"
+                title="Publier le questionnaire à l'organisme interrogé">
+          Publier
+        </button>
       </div>
 
-    </confirm-modal>
-  </div>
+      <confirm-modal id="saveQuestionnaireConfirmModal"
+                     title="Confirmer la publication"
+                     confirm-button="Oui, j'ai compris"
+                     cancel-button="Retour"
+                     @confirm="done()"
+      >
+        <p>
+          En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
+        </p>
+        <div class="alert alert-icon alert-primary" role="alert">
+          <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+        <p>
+          Pensez à informer l'organisme interrogé que vous avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse&nbsp;:
+        </p>
+          <p style="word-wrap: break-word;">
+            https://e-controle-beta.ccomptes.fr
+          </p>
+        </div>
+
+      </confirm-modal>
+    </div>
   </div>
 </template>
 

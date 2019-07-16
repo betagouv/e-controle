@@ -1,8 +1,10 @@
 <template>
   <div class="card">
+    <div class="card-header">
+      <div class="card-title">Etape 1 : Créer le questionnaire</div>
+    </div>
     <div class="card-body">
       <form @submit.prevent="createMetadata">
-        <div class="card-title">Etape 1 : Créer le questionnaire</div>
         <div class="form-group">
           <label class="form-label" id="questionnaireTitle">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
           <span class="text-muted" id="questionnaireTitleHelp">
