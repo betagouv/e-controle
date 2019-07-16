@@ -9,23 +9,9 @@
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
     <div class="row justify-content-around">
-      <wizard-step number="1">Créer le questionnaire</wizard-step>
-      <wizard-step number="2">Ajouter des questions</wizard-step>
-      <wizard-step number="3">Aperçu avant publication</wizard-step>
-    </div>
-    <div class="card-header border-0 row justify-content-around">
-      <span class="tag" :class="{ 'tag-azure': state==='start' }">
-        Etape 1/3: Créer le questionnaire
-        <span class="tag-addon" style="background:none"><i class="fa fa-angle-double-right"></i></span>
-      </span>
-      <span class="tag" :class="{ 'tag-azure': state==='creating_body' }">
-        Etape 2/3: Ajouter des questions
-        <span class="tag-addon" style="background:none"><i class="fa fa-angle-double-right"></i></span>
-      </span>
-      <span class="tag" :class="{ 'tag-azure': state==='preview' }">
-        Etape 3/3: Aperçu avant publication
-        <span class="tag-addon" style="background:none"><i class="fa fe fe-check"></i></span>
-      </span>
+      <wizard-step number="1" :class="{ 'active': state==='start' }">Créer le questionnaire</wizard-step>
+      <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
+      <wizard-step number="3" :class="{ 'active': state==='preview' }">Aperçu avant publication</wizard-step>
     </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"

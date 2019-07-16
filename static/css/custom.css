@@ -55,11 +55,21 @@
 
 
 .wizard-step {
-    background-color: #45aaf2;
-    color: #fff;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wizard-step-number {
     border-radius: 50%;
     height: 2rem;
     width: 2rem;
     padding-top: 0.3rem;
     text-align: center;
+}
+
+.active .wizard-step-number {
+    background-color: #45aaf2;
+    color: #fff;
 }

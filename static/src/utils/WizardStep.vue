@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="wizard-step card-title">{{ number }}</div>
+  <div class="wizard-step">
+    <div class="wizard-step-number card-title">{{ number }}</div>
     <slot></slot>
   </div>
 </template>
