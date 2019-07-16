@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="card">
+    <div class="card-body">
     <div class="card-title">Etape 2 : Ajouter des questions</div>
     <info-bar>
       A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
@@ -116,6 +117,7 @@
 
     </form>
 
+  </div>
   </div>
 </template>
 

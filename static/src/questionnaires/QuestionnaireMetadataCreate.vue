@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <form @submit.prevent="createMetadata">
-      <fieldset class="form-fieldset">
+  <div class="card">
+    <div class="card-body">
+      <form @submit.prevent="createMetadata">
         <div class="card-title">Etape 1 : Créer le questionnaire</div>
         <div class="form-group">
           <label class="form-label" id="questionnaireTitle">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
@@ -42,13 +42,13 @@
                       :monday-first="true">
           </datepicker>
         </div>
-      </fieldset>
-      <div class="text-right">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        <button type="submit" class="btn btn-secondary">Suivant ></button>
-      </div>
-    </form>
+        <div class="text-right">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" class="btn btn-secondary">Suivant ></button>
+        </div>
+      </form>
 
+    </div>
   </div>
 </template>
 

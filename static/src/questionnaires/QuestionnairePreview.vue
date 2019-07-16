@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="card">
+    <div class="card-body">
     <div class="card-title">Etape 3 : Aperçu avant publication</div>
     <div class="preview">
       <questionnaire-detail v-bind:questionnaire="questionnaire">
@@ -39,7 +40,7 @@
       </div>
 
     </confirm-modal>
-
+  </div>
   </div>
 </template>
 

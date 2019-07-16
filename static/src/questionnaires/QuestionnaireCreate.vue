@@ -41,7 +41,7 @@
     </div>
     <a :href="home_url"
        class="btn btn-secondary"
-       style="position:relative; bottom: 94px;">
+       style="position:relative; bottom: 143px; left: 2em;">
       < Annuler et revenir à l'accueil
     </a>
 
