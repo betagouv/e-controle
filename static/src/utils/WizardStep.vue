@@ -1,5 +1,6 @@
 <template>
   <div class="wizard-step">
+    <div class="wizard-step-thread"></div>
     <div class="wizard-step-number card-title">{{ number }}</div>
     <slot></slot>
   </div>
