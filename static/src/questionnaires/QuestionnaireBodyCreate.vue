@@ -1,12 +1,10 @@
 <template>
   <div>
     <div class="card-title">Etape 2 : Ajouter des questions</div>
-    <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
-      <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-      <button type="button" class="close" data-dismiss="alert"></button>
+    <info-bar>
       A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
       des questions et des annexes à vos questions.
-    </div>
+    </info-bar>
     <form @submit.prevent="createBody">
       <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
         <div class="card-status card-status-top bg-blue">
@@ -123,10 +121,13 @@
 
 <script>
   import Vue from "vue";
-  import EventBus from '../events'
+
   import ConfirmModal from "../utils/ConfirmModal"
+  import EventBus from '../events'
+  import InfoBar from '../utils/InfoBar'
   import QuestionFileList from "./QuestionFileList"
   import QuestionFileUpload from "./QuestionFileUpload"
+
   import reportValidity from 'report-validity';
 
 
@@ -146,6 +147,7 @@
     },
     components: {
       ConfirmModal,
+      InfoBar,
       QuestionFileList,
       QuestionFileUpload,
     },
