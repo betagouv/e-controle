@@ -6,7 +6,7 @@ from django.db import migrations, models
 def set_unique_reference_code(apps, schema_editor):
     Control = apps.get_model('control', 'Control')
     for control in Control.objects.all():
-        control.reference_code = f'code-{control.id}'
+        control.reference_code = f'2019_CONTROLE_{control.id}'
         control.save()
 
 
