@@ -8,6 +8,20 @@
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
+    <div class="card-header border-0 row justify-content-around">
+      <span class="tag" :class="{ 'tag-azure': state==='start' }">
+        Etape 1/3: Créer le questionnaire
+        <span class="tag-addon" style="background:none"><i class="fa fa-angle-double-right"></i></span>
+      </span>
+      <span class="tag" :class="{ 'tag-azure': state==='creating_body' }">
+        Etape 2/3: Ajouter des questions
+        <span class="tag-addon" style="background:none"><i class="fa fa-angle-double-right"></i></span>
+      </span>
+      <span class="tag" :class="{ 'tag-azure': state==='preview' }">
+        Etape 3/3: Aperçu avant publication
+        <span class="tag-addon" style="background:none"><i class="fa fe fe-check"></i></span>
+      </span>
+    </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
