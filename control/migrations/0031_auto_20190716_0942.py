@@ -3,6 +3,13 @@
 from django.db import migrations, models
 
 
+def set_unique_reference_code(apps, schema_editor):
+    Control = apps.get_model('control', 'Control')
+    for control in Control.objects.all():
+        control.reference_code = f'code-{control.id}'
+        control.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,6 +17,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(
+            set_unique_reference_code,
+            reverse_code=lambda apps, schema_editor: None
+        ),
         migrations.AlterField(
             model_name='control',
             name='reference_code',
