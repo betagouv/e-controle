@@ -39,6 +39,12 @@
         {{ message }}
       </div>
     </div>
+    <a :href="home_url"
+       class="btn btn-secondary"
+       style="position:relative; bottom: 94px;">
+      < Annuler et revenir à l'accueil
+    </a>
+
   </div>
 </template>
 
@@ -81,6 +87,7 @@
         questionnaire: {},
         state: "",
         message: "",
+        home_url: home_url,
       }
     },
     components: {
