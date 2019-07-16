@@ -8,7 +8,7 @@
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
-    <div class="row justify-content-around">
+    <div class="row justify-content-around mb-6">
       <wizard-step number="1" :class="{ 'active': state==='start' }">Créer le questionnaire</wizard-step>
       <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
       <wizard-step number="3" :class="{ 'active': state==='preview' }">Aperçu avant publication</wizard-step>
