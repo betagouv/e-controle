@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <div class="card-title">Etape 1 : Créer le questionnaire</div>
+      <div class="card-title">Etape 1 : Renseigner l'introduction</div>
     </div>
     <div class="card-body">
       <form @submit.prevent="createMetadata">
