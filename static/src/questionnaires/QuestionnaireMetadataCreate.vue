@@ -8,20 +8,26 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
-          <label class="form-label">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
-          <span class="text-muted">
+          <label class="form-label" id="questionnaireTitle">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
+          <span class="text-muted" id="questionnaireTitleHelp">
             Exemple :
             <strong>"Présentation générale"</strong>
             ou
             <strong>"Suite à la réunion du 7 Mars 2019"</strong>
           </span>
-          <input type="text" class="form-control" v-model="metadata.title" required>
+          <input type="text"
+                 aria-labelledby="questionnaireTitle"
+                 aria-describedby="questionnaireTitleHelp"
+                 class="form-control"
+                 v-model="metadata.title"
+                 required>
         </div>
         <div class="form-group">
-          <label class="form-label">
+          <label class="form-label" id="questionnaireDescription">
             Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
           </label>
           <textarea class="form-control"
+                    aria-labelledby="questionnaireDescription"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
                     rows="6"
                     v-bind:class="{ 'state-invalid': errors.description }"
@@ -32,8 +38,12 @@
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Vous pouvez indiquer la date limite de réponse :</label>
-          <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
+          <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
+          <datepicker class="blue"
+                      aria-labelledby="questionnaireEndDate"
+                      v-model="metadata.end_date"
+                      :language="fr"
+                      :monday-first="true">
           </datepicker>
         </div>
       </fieldset>
