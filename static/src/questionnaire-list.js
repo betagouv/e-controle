@@ -7,7 +7,6 @@ import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
 import Clipboard from 'v-clipboard'
 import ControlCreate from "./controls/ControlCreate"
-import CopyButton from "./utils/CopyButton"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
@@ -20,18 +19,29 @@ new Vue({
   store,
   el: '#questionnaire-list-vm',
   data: {
+    showCopySuccess: false
   },
   components: {
     'users-for-control': Users,
     AddUserModal,
     ControlCreate,
-    CopyButton,
     UpdateUserModal,
     RemoveUserModal,
     HelpTooltip
   },
   methods: {
-    ...mapActions(['setSessionUser'])
+    ...mapActions(['setSessionUser']),
+
+    clipboardSuccessHandler ({ value, event }) {
+      this.showCopySuccess = true
+    },
+
+    enterFade: function(el, done) {
+      var that = this;
+      setTimeout(function() {
+        that.showCopySuccess = false;
+      }, 3000); // hide the message after 3 seconds
+    }
   },
   created() {
     this.setSessionUser()

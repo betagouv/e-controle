@@ -3,7 +3,7 @@
   <div class="card-header border-0 pl-0" data-toggle="card-collapse">
     <div class="card-title m-0">
       <button type="button" class="btn btn-secondary">
-        <i class="fa fa-folder-open mr-2"></i>
+        <i class="fe fe-folder mr-2"></i>
         Comment voir les réponses dans l’Explorateur Windows ?
       </button>
     </div>
@@ -12,36 +12,29 @@
   <div class="alert alert-primary" role="alert">
     <button type="button" class="close" data-toggle="card-collapse"></button>
     <p>
-      Toutes les réponses déposées sont automatiquement classées et renommées dans une dossier
-      accessible à tous les membres de l’équipe de contrôle.
+      Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
+      à tous les membres de l’équipe de contrôle.
+      Pour les consulter, veuillez copier puis coller ce lien dans votre barre de navigation
+      et épinglez-le dans vos accès rapide.
     </p>
-    <div class="btn-list">
-      <a target="_blank" href="https://github.com/betagouv/e-controle/files/3330277/Ajouter.aux.favoris.pdf"
-         class="btn btn-success"
-         role="button">
-        Dites-m'en plus
-      </a>
-      <button class="btn btn-secondary" type="button" data-toggle="card-collapse">Non merci</button>
-    </div>
-    <p></p>
-    <div class="flex-row-container">
-      <div class="small">Vous aurez besoin de ce lien : {{ settings.WEBDAV_URL }}/{{ control.reference_code }}</div>
-      <button class="btn btn-sm btn-secondary"
+
+    <div class="flex-row-container mb-4">
+      <span>{{ settings.WEBDAV_URL }}/{{ control.reference_code }}</span>
+      <button class="btn btn-sm btn-secondary ml-4"
               v-clipboard="'{{ settings.WEBDAV_URL }}/{{ control.reference_code }}'"
+              v-clipboard:success="clipboardSuccessHandler"
               style="position: relative;">
         <i class="fe fe-copy"></i>
         Copier le lien
       </button>
-      <copy-button tocopy="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"
-                   buttontext="Copier le lien"
-                   confirmtext="La copie a été effectuée"
-      >
-      </copy-button>
+      <transition name="fade" v-on:enter="enterFade">
+        <span class="tag tag-success ml-4" v-if="showCopySuccess">C'est copié !</i></span>
+      </transition>
     </div>
-  </div>
 
-  <div data-toggle="card-collapse" class="text-center bg-waring cursor-pointer text-white" style="cursor: pointer;">
-    <i class="fe fe-chevron-up"></i>
+    <a target="_blank" href="https://github.com/betagouv/e-controle/files/3330277/Ajouter.aux.favoris.pdf">
+    Besoin d’aide ? Suivez les instructions en image.
+    </a>
   </div>
 
 </div>
