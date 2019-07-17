@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <div class="card-header pl-0">
-      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;">Etape 1/3: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
-      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 2/3: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
-      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/3: Aperçu avant publication<i class="fa fe fe-check ml-4"></button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Etape 1 : Renseigner l'introduction</div>
     </div>
-    <form @submit.prevent="createMetadata">
-      <fieldset class="form-fieldset">
+    <div class="card-body">
+      <form @submit.prevent="createMetadata">
         <div class="form-group">
           <label class="form-label" id="questionnaireTitle">
             Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
@@ -49,13 +47,13 @@
                       :monday-first="true">
           </datepicker>
         </div>
-      </fieldset>
-      <div class="text-right">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        <button type="submit" class="btn btn-secondary">Suivant ></button>
-      </div>
-    </form>
+        <div class="text-right">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" class="btn btn-secondary">Suivant ></button>
+        </div>
+      </form>
 
+    </div>
   </div>
 </template>
 
