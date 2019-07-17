@@ -8,7 +8,10 @@
     <form @submit.prevent="createMetadata">
       <fieldset class="form-fieldset">
         <div class="form-group">
-          <label class="form-label" id="questionnaireTitle">Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?</label>
+          <label class="form-label" id="questionnaireTitle">
+            Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
+            <span class="form-required">*</span>
+          </label>
           <span class="text-muted" id="questionnaireTitleHelp">
             Exemple :
             <strong>"Présentation générale"</strong>
