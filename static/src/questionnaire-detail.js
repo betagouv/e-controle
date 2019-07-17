@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import "@babel/polyfill"
 
 import Answer from './details/Answer'
 import axios from 'axios'
