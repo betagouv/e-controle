@@ -1,12 +1,12 @@
 <template>
   <collapsible-section buttonicon="fe-users" buttontext="Qui a accès à cet espace ?">
-    <div class="card form-fieldset">
+    <div class="card form-fieldset p-0">
       <div class="card-body pb-0">
         <div class="row">
 
           <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card">
-              <div class="card-header pr-0">
+              <div class="card-header pr-0 pl-2">
                 <div class="col">
                   <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
@@ -28,7 +28,7 @@
 
           <div class="col-sm-12 col-md-12 col-lg-6">
             <div class="card">
-              <div class="card-header pr-0">
+              <div class="card-header pr-0 pl-2">
                 <div class="col">
                   <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme interrogé</strong></h3>
                 </div>
