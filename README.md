@@ -60,16 +60,56 @@ On doit pouvoir se connecter au serveur django, en utilisant soit :
  - (linux only, ne marche pas sur macos) l'adresse IP et le numéro de port du serveur qui s'affiche sur le terminal. Par example : http://172.18.0.3:8080/admin/
  - le port forwarding. Pour cela, lancer le serveur avec le flag `-p` : `docker-compose run -p 8080:8080 django dev`. On peut accéder sur le port 8080 de localhost, qui forwarde au port 8080 du container django : http://localhost:8080/admin
 
+## Lancement en dev sans docker
+
+Surtout utile si Docker utilise trop de mémoire (2 GB).
+
+### Postgres
+Suivre ce tutorial pour installer postgres, et créer un user nommé `ecc` et une database nommée `ecc`.
+https://tutorial-extensions.djangogirls.org/en/optional_postgresql_installation/
+
+Loader le dump dans la base de données qu'on vient de créer : voir paragraphe "Restaurer la base de données en dev"
+
+### Node
+Installer node et npm.
+
+Installer les dependances node : `npm install`
+
+Builder le front : `npm bun build-all` (pour developper par la suite, on pourra utiliser les commandes `watch` qui rebuildent au fur et à mesure des modifications. Voir `package.json`)
+
+### Python et Django
+Installer python 3 (sur mac il y a déja python 2 par default, il faut ajouter python 3 : https://docs.python-guide.org/starting/install3/osx/)
+
+Installer un environnement virtuel python (pipenv ou virtualenv) : https://docs.python-guide.org/dev/virtualenvs/
+
+Installer les dépendences python : `pip install -r requirements.txt`
+
+Dans le fichier `.env`, modifier l'adresse de la db, puis sourcer l'environnement :
+```
+export DATABASE_URL=postgres://ecc:ecc@localhost:5432/ecc
+. .env
+```
+
+Migrer la db : `python manage.py migrate`
+
+Collecter les fichiers statiques : `python manage.py collectstatic --noinput`
+
+Lancer le serveur local sur le port 8080 : `python manage.py runserver 0:8080`
+
+Aller sur `http://localhost:8080/admin` et se logger avec un des utilisateurs mentionnés ci-dessous.
+
 
 ## Restaurer/Sauvegarder la base de données en dev
 
-Pour se connecter à postgres, une méthode simple est de lancer un autre container, depuis lequel on se connecte à postgres. Par exemple le container `django`, sans la commande `dev` (on ne lance pas le serveur), avec la commande `bash` pour obtenir un terminal :
+Pour se connecter à postgres avec l'installation docker, une méthode simple est de lancer un autre container, depuis lequel on se connecte à postgres. Par exemple le container `django`, sans la commande `dev` (on ne lance pas le serveur), avec la commande `bash` pour obtenir un terminal :
 
     docker-compose run django bash
 
 Ensuite charger le dump dans la base :
 
     psql -h postgres -U ecc -d ecc < db_<date>.dump
+    
+(si l'installation postgres est locale, sans docker, utiliser `localhost` au lieu de `postgres` dans la commande)
 
 Le mot de passe est `ecc` (défini dans docker-compose.yml)
 
