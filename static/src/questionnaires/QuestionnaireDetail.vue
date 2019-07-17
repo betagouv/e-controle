@@ -19,15 +19,16 @@
           <div class="text-right" v-if="questionnaire.id">
             <a :href="'/fichier-questionnaire/' + questionnaire.id" target="_blank">
               <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
-                <i class="fe fe-download mr-2"></i>
+                <i class="fe fe-file-text mr-2"></i>
                 Exporter ce questionnaire
               </button>
             </a>
           </div>
 
           <div class="text-right" v-else>
-              <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" disabled>
-                Exporter la version Word*
+              <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire" disabled>
+                <i class="fe fe-file-text mr-2"></i>
+                Exporter ce questionnaire
               </button>
             <div class="small text-muted">*Vous devez d'abord enregistrer votre brouillon.</div>
           </div>
