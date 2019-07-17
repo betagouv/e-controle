@@ -1,6 +1,6 @@
 <template>
   <collapsible-section buttonicon="fe-folder" buttontext="Comment voir les réponses dans l’Explorateur Windows ?">
-    <div class="alert alert-primary" role="alert">
+    <info-bar noclose="true">
       <p>
         Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
         à tous les membres de l’équipe de contrôle.
@@ -18,14 +18,14 @@
           Copier le lien
         </button>
         <transition name="fade" v-on:enter="enterFade">
-          <span class="tag tag-success ml-4" v-if="showCopySuccess">C'est copié !</i></span>
+          <span class="tag tag-success ml-4" v-if="showCopySuccess">C'est copié !</span>
         </transition>
       </div>
 
       <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf">
         Besoin d’aide ? Suivez les instructions en images.
       </a>
-    </div>
+    </info-bar>
 
   </collapsible-section>
 
@@ -35,6 +35,7 @@
   import Vue from 'vue'
   import Clipboard from 'v-clipboard'
   import CollapsibleSection from '../utils/CollapsibleSection'
+  import InfoBar from '../utils/InfoBar'
 
   Vue.use(Clipboard)
 
@@ -42,6 +43,7 @@
     props: [ 'webdavurl' ],
     components: {
       CollapsibleSection,
+      InfoBar,
     },
     data: function (){
       return {
