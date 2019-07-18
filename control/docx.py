@@ -10,6 +10,15 @@ from docxtpl import DocxTemplate, RichText
 from .upload_path import questionnaire_file_path
 
 
+class DocxMixin(object):
+    """
+    Helper class that provides docx utilities.
+    """
+
+    def to_rich_text(self, value):
+        return RichText(value)
+
+
 def generate_questionnaire_file(questionnaire):
     """
     Generate a word Docx document for the given questionnaire.

@@ -9,7 +9,7 @@ from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
-
+from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path
 
 
@@ -67,7 +67,7 @@ class Control(models.Model):
         return self.title
 
 
-class Questionnaire(OrderedModel, WithNumberingMixin):
+class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     title = models.CharField("titre", max_length=255)
     sent_date = models.DateField(
         verbose_name="date d'envoie", blank=True, null=True,
@@ -136,6 +136,10 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
             return None
         return self.end_date.strftime("%A %d %B %Y")
 
+    @property
+    def description_rich_text(self):
+        return self.to_rich_text(self.description)
+
     def __str__(self):
         return self.title_display
 
@@ -156,7 +160,7 @@ class Theme(OrderedModel, WithNumberingMixin):
         return self.title
 
 
-class Question(OrderedModel, WithNumberingMixin):
+class Question(OrderedModel, WithNumberingMixin, DocxMixin):
     description = models.TextField("description")
     theme = models.ForeignKey(
         'theme', verbose_name='thème', related_name='questions',
@@ -167,6 +171,10 @@ class Question(OrderedModel, WithNumberingMixin):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+
+    @property
+    def description_rich_text(self):
+        return self.to_rich_text(self.description)
 
     def __str__(self):
         return self.description
