@@ -100,6 +100,10 @@
 
             <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
 
+            {% if user.profile.is_inspector %}
+              <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
+            {% endif %}
+
           </div>  <!--// closing: questionnaire_description_card_body  //-->
         </div>
       {% endfor %}

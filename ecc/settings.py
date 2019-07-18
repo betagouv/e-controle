@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+
     'debug_toolbar',
     'model_utils',
     'easy_thumbnails',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'ckeditor',
     'django_filters',
+
     'control',
     'demo',
     'ecc',
@@ -190,6 +192,7 @@ PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 SETTINGS_EXPORT = [
     'PIWIK_TRACKER_BASE_URL',
     'PIWIK_SITE_ID',
+    'WEBDAV_URL'
 ]
 
 REST_FRAMEWORK = {
@@ -226,6 +229,7 @@ LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
 TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
 MAGICAUTH_NO_USER_CALL_BACK = 'adauth.auth.active_directory_auth'
+WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)

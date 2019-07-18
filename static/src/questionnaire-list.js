@@ -12,14 +12,13 @@ import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
 import Users from './users/Users'
+import WebdavTip from './controls/WebdavTip'
 
 Vue.use(Vuex);
 
 new Vue({
   store,
   el: '#questionnaire-list-vm',
-  data: {
-  },
   components: {
     'users-for-control': Users,
     AddUserModal,
@@ -27,10 +26,11 @@ new Vue({
     ControlCreate,
     UpdateUserModal,
     RemoveUserModal,
-    HelpTooltip
+    HelpTooltip,
+    WebdavTip,
   },
   methods: {
-    ...mapActions(['setSessionUser'])
+    ...mapActions(['setSessionUser']),
   },
   created() {
     this.setSessionUser()
