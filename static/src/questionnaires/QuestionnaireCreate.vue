@@ -34,7 +34,8 @@
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
-    <div class="card-header border-0">
+    <div class="card-header border-0"
+         style="position:relative; bottom: 4.3rem;">
       <div class="card-options">
         {{ message }}
       </div>

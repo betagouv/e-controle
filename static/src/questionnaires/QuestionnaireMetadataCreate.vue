@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="card-title">Etape 1 : Renseigner l'introduction</div>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-6">
       <form @submit.prevent="createMetadata">
         <div class="form-group">
           <label class="form-label" id="questionnaireTitle">

@@ -3,7 +3,7 @@
     <div class="card-header">
       <div class="card-title">Etape 2 : Ajouter des questions</div>
     </div>
-    <div class="card-body">
+    <div class="card-body pb-6">
       <info-bar>
         A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
         des questions et des annexes à vos questions.
