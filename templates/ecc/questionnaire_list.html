@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load control_tags %}
 
 {% block page_title %}
   Accueil - Mes espaces de dépôt
@@ -25,12 +26,13 @@
             {% endif %}
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
-            <div class="card border-0"> <!--// opening: list of questionnaires for control  //-->
-              {% if control.questionnaires.count > 0 %}
+            <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
+              {% get_user_questionnaires control as questionnaires %}
+              {% if questionnaires.count > 0 %}
                 <div class="card">
                   <table class="table card-table table-vcenter">
                     <tbody>
-                      {% for questionnaire in control.questionnaires.all %}
+                      {% for questionnaire in questionnaires %}
                         {% if user.profile.is_inspector or not questionnaire.is_draft %}
                           <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
                             <td>
@@ -87,9 +89,14 @@
                     </tbody>
                   </table>
                 </div>
+              {% else %}
+                  <div class="alert alert-icon alert-secondary">
+                     <i class="fe fe-info mr-2" aria-hidden="true"></i>
+                       Il n'y a pas encore de questionnaire pour cet espace de dépôt.
+                  </div>
               {% endif %}
               {% if user.profile.is_inspector %}
-                <div>
+                <div class="mb-2">
                   <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
                     <i class="fe fe-plus"></i>
                     Ajouter un questionnaire

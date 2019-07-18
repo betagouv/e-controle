@@ -47,9 +47,6 @@ class Control(models.Model):
         verbose_name = "Controle"
         verbose_name_plural = "Controles"
 
-    def __str__(self):
-        return self.title
-
     def data(self):
         return {
             'id': self.id,
@@ -61,6 +58,13 @@ class Control(models.Model):
         if not self.questionnaires.exists():
             return 1
         return self.questionnaires.last().numbering + 1
+
+    @property
+    def published_questionnaires(self):
+        return self.questionnaires.filter(is_draft=False)
+
+    def __str__(self):
+        return self.title
 
 
 class Questionnaire(OrderedModel, WithNumberingMixin):
