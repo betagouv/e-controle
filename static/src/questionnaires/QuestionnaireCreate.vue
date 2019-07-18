@@ -42,7 +42,7 @@
     <a :href="home_url"
        class="btn btn-secondary"
        style="position:relative; bottom: 143px; left: 2em;">
-      < Annuler et revenir à l'accueil
+      < Revenir à l'accueil
     </a>
 
   </div>
