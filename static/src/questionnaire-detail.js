@@ -1,17 +1,15 @@
-import 'babel-polyfill'
+import "@babel/polyfill"
 
 import Answer from './details/Answer'
+import axios from 'axios'
 import Dropzone from 'dropzone';
 import Question from './details/Question';
 import Vue from 'vue/dist/vue.js';
 
-
-
-
 const url = "/api/question/";
 
 let question_app = new Vue({
-  el: '#questionaire-detail-app',
+  el: '#questionnaire-detail-app',
   data: {},
   methods: {
     fetchQuestionData: function () {

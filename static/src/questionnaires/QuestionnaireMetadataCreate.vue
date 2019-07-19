@@ -1,49 +1,59 @@
 <template>
-  <div>
-    <div class="card-header pl-0">
-      <button type="button" class="btn btn-sm btn-success mr-2" style="cursor: Text;">Etape 1/3: Créer le questionnaire<i class="fa fa-angle-double-right ml-4"></i></button>
-      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 2/3: Ajouter des questions<i class="fa fa-angle-double-right ml-4"></button>
-      <button type="button" class="btn btn-sm btn-outline-primary mr-2" style="cursor: Text;" disabled>Etape 3/3: Aperçu avant publication<i class="fa fe fe-check ml-4"></button>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Etape 1 : Renseigner l'introduction</div>
     </div>
-    <form @submit.prevent="createMetadata">
-      <fieldset class="form-fieldset">
+    <div class="card-body">
+      <form @submit.prevent="createMetadata">
         <div class="form-group">
-          <label class="form-label">Titre<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="metadata.title" required>
-          <span class="text-muted" v-if="metadata.title">
-            Le titre sera affiché comme ceci :
-            <strong>Questionnaire n°{{ questionnaireNumbering }} - {{ metadata.title }}</strong>
+          <label class="form-label" id="questionnaireTitle">
+            Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
+            <span class="form-required">*</span>
+          </label>
+          <span class="text-muted" id="questionnaireTitleHelp">
+            Exemple :
+            <strong>"Présentation générale"</strong>
+            ou
+            <strong>"Suite à la réunion du 7 Mars 2019"</strong>
           </span>
+          <input type="text"
+                 aria-labelledby="questionnaireTitle"
+                 aria-describedby="questionnaireTitleHelp"
+                 class="form-control"
+                 v-model="metadata.title"
+                 required>
         </div>
         <div class="form-group">
-          <label class="form-label">
-            Description
+          <label class="form-label" id="questionnaireDescription">
+            Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
           </label>
           <textarea class="form-control"
+                    aria-labelledby="questionnaireDescription"
                     placeholder="Si nécessaire, décrivez votre questionnaire ici"
                     rows="6"
                     v-bind:class="{ 'state-invalid': errors.description }"
                     v-model="metadata.description">
           </textarea>
-          <span class="text-muted">
-            Le texte ci-dessus est donné comme exemple, vous pouvez le modifier
-          </span>
           <p class="text-muted pl-2" v-if="errors.description">
             <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
           </p>
         </div>
         <div class="form-group">
-          <label class="form-label">Date de réponse souhaitée</label>
-          <datepicker class="blue" v-model="metadata.end_date" :language="fr" :monday-first="true">
+          <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
+          <datepicker class="blue"
+                      aria-labelledby="questionnaireEndDate"
+                      v-model="metadata.end_date"
+                      :language="fr"
+                      :monday-first="true">
           </datepicker>
         </div>
-      </fieldset>
-      <div class="text-right">
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        <button type="submit" class="btn btn-secondary">Suivant ></button>
-      </div>
-    </form>
+        <div class="text-right">
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" class="btn btn-secondary">Suivant ></button>
+        </div>
+      </form>
 
+    </div>
   </div>
 </template>
 

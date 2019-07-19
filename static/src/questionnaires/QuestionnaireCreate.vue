@@ -8,6 +8,11 @@
     <div v-if="hasErrors" class="alert alert-danger">
       L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
     </div>
+    <div class="row justify-content-around mb-6">
+      <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
+      <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
+      <wizard-step number="3" :class="{ 'active': state==='preview' }">Aperçu avant publication</wizard-step>
+    </div>
     <questionnaire-metadata-create
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
@@ -34,6 +39,12 @@
         {{ message }}
       </div>
     </div>
+    <a :href="home_url"
+       class="btn btn-secondary"
+       style="position:relative; bottom: 143px; left: 2em;">
+      < Revenir à l'accueil
+    </a>
+
   </div>
 </template>
 
@@ -45,6 +56,7 @@
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
+  import WizardStep from "../utils/WizardStep"
 
   // State machine
   const STATES = {
@@ -75,12 +87,14 @@
         questionnaire: {},
         state: "",
         message: "",
+        home_url: home_url,
       }
     },
     components: {
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
-      QuestionnairePreview
+      QuestionnairePreview,
+      WizardStep,
     },
     mounted() {
       console.debug('questionnaireId', this.questionnaireId)

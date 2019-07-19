@@ -8,6 +8,7 @@ from django.views.generic.detail import SingleObjectMixin
 from actstream import action
 from sendfile import sendfile
 
+from .docx import generate_questionnaire_file
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
 
@@ -17,7 +18,7 @@ class WithListOfControlsMixin(object):
         context = super().get_context_data(**kwargs)
         # Questionnaires are grouped by control:
         # we get the list of questionnaire from the list of controls
-        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all())
+        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('id')
         context['controls'] = control_list
         return context
 
@@ -108,6 +109,16 @@ class SendFileMixin(SingleObjectMixin):
 
 class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
+
+    def get(self, request, *args, **kwargs):
+        """
+        Before sending the questionnaire file, we generate it.
+        This means that the file is geneated every time this view is called - tipically
+        when the user downloads the file.
+        """
+        questionnaire = self.get_object()
+        generate_questionnaire_file(questionnaire)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         return self.model.objects.filter(control__in=self.request.user.profile.controls.all())

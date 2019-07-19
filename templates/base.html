@@ -9,14 +9,8 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 
     {% if debug %}
-    <script src="{% static 'es6-promise/4.2.5/es6-promise.js' %}"></script>
-    <script src="{% static 'vue/2.5.22/vue.js' %}"></script>
-    <script src="{% static 'axios/0.18.0/axios.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.css' %}">
     {% else %}
-    <script src="{% static 'es6-promise/4.2.5/es6-promise.min.js' %}"></script>
-    <script src="{% static 'vue/2.5.22/vue.min.js' %}"></script>
-    <script src="{% static 'axios/0.18.0/axios.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.min.css' %}">
     {% endif %}
 
@@ -47,11 +41,15 @@
               </a>
               <div class="dropdown-menu dropdown-menu-arrow">
                 {% for control in controls %}
-                <span class='pl-2' style="cursor: text">{{ control.title }}</span>
-                  {% for questionnaire in control.questionnaires.all %}
-                  <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title_display }}</a>
-                  {% endfor %}
-                  {% if not forloop.last %}<div class="dropdown-divider"></div>{% endif %}
+                {% with questionnaires=control.published_questionnaires %}
+                  {% if questionnaires %}
+                    <span class='pl-2' style="cursor: text">{{ control.title }}</span>
+                      {% for questionnaire in questionnaires %}
+                      <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title_display }}</a>
+                      {% endfor %}
+                      {% if not forloop.last %}<div class="dropdown-divider"></div>{% endif %}
+                  {% endif %}
+                {% endwith %}
                 {% endfor %}
               </div>
             </div>
@@ -107,7 +105,7 @@
       <div class="row align-items-center flex-row-reverse">
         <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
           <img src="{% static 'img/logo-cc.jpg' %}" class="img col-3" alt="logo-cc"/>
-          e-contrôle <a href='https://github.com/betagouv/e-controle/blob/develop/docs/releases/0.11.md'>v0.11</a> Beta. Cour des comptes.
+          e-contrôle <a href='https://github.com/betagouv/e-controle/blob/develop/docs/releases/1.0.md'>v1.0</a> Beta. Cour des comptes.
         </div>
       </div>
     </div>

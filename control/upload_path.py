@@ -1,9 +1,15 @@
-def questionnaire_file_path(instance, filename):
-    questionnaire = instance
+def questionnaire_path(questionnaire):
     control_folder = questionnaire.control.reference_code
     questionaire_num = questionnaire.numbering
     questionnaire_folder = f'Q{questionaire_num:02}'
-    path = f'{control_folder}/{questionnaire_folder}/{filename}'
+    path = f'{control_folder}/{questionnaire_folder}'
+    return path
+
+
+def questionnaire_file_path(instance, filename):
+    questionnaire = instance
+    questionnaire_folder = questionnaire_path(questionnaire)
+    path = f'{questionnaire_folder}/{filename}'
     return path
 
 

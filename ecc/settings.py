@@ -24,6 +24,7 @@ SHOW_DEBUG_TOOLBAR = env('SHOW_DEBUG_TOOLBAR', default=DEBUG)
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda r: SHOW_DEBUG_TOOLBAR,
+    'SHOW_COLLAPSED': True,
 }
 
 # Application definition
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
     'reporting',
     'user_profiles',
     'utils',
+    'adauth',
 ]
 
 
@@ -79,10 +81,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'ecc.urls'
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -188,6 +192,7 @@ PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 SETTINGS_EXPORT = [
     'PIWIK_TRACKER_BASE_URL',
     'PIWIK_SITE_ID',
+    'WEBDAV_URL'
 ]
 
 REST_FRAMEWORK = {
@@ -222,6 +227,9 @@ LDAP_USER = env('LDAP_USER', default=None)
 LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
+TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
+MAGICAUTH_NO_USER_CALL_BACK = 'adauth.auth.active_directory_auth'
+WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)

@@ -1,61 +1,59 @@
 <template>
-  <div class="card border-0 card-collapsed">
+  <collapsible-section buttonicon="fe-users" buttontext="Qui a accès à cet espace ?">
+    <div class="card form-fieldset p-0">
+      <div class="card-body pb-0">
+        <div class="row">
 
-    <div class="card-header border-0" data-toggle="card-collapse">
-      <div class="card-title">
-        <i class="fe fe-users dropdown-icon"></i>
-        <a href="#">Personnes ayant accès au contrôle</a>
-      </div>
-      <div class="card-options">
-        <a href="#" class="card-options-collapse"><i class="fe fe-chevron-up"></i></a>
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card">
+              <div class="card-header pr-0 pl-2">
+                <div class="col">
+                  <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
+                </div>
+                <div class="col-auto">
+                  <a v-if="sessionUser.is_inspector"
+                     href="javascript:void(0)"
+                     data-toggle="modal"
+                     data-target="#addUserModal"
+                     @click="updateEditingState('inspector')"
+                     class="btn btn-primary">
+                    <i class="fe fe-plus"></i>
+                    Ajouter un contrôleur
+                  </a>
+                </div>
+              </div>
+              <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <div class="card">
+              <div class="card-header pr-0 pl-2">
+                <div class="col">
+                  <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme interrogé</strong></h3>
+                </div>
+                <div class="col-auto">
+                  <a v-if="sessionUser.is_inspector"
+                     href=""
+                     data-toggle="modal"
+                     data-target="#addUserModal"
+                     @click="updateEditingState('audited')"
+                     class="btn btn-primary">
+                    <i class="fe fe-plus"></i>
+                    Ajouter une personne
+                  </a>
+                </div>
+              </div>
+              <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header pr-0">
-        <div class="col">
-          <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
-        </div>
-        <div class="col-auto">
-          <a v-if="sessionUser.is_inspector"
-             href=""
-             data-toggle="modal"
-             data-target="#addUserModal"
-             @click="updateEditingState('inspector')"
-             class="btn btn-primary">
-            <i class="fe fe-plus"></i>
-            Ajouter un contrôleur
-          </a>
-        </div>
-      </div>
-      <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
-    </div>
+  </collapsible-section>
 
-    <div class="card">
-      <div class="card-header pr-0">
-        <div class="col">
-          <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme interrogé</strong></h3>
-        </div>
-        <div class="col-auto">
-          <a v-if="sessionUser.is_inspector"
-             href=""
-             data-toggle="modal"
-             data-target="#addUserModal"
-             @click="updateEditingState('audited')"
-             class="btn btn-primary">
-            <i class="fe fe-plus"></i>
-            Ajouter une personne
-          </a>
-        </div>
-      </div>
-      <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
-    </div>
-
-    <div data-toggle="card-collapse" class="text-center bg-blue cursor-pointer text-white" style="cursor: pointer;">
-      <i class="fe fe-chevron-up"></i>
-    </div>
-
-  </div>
 </template>
 
 <script lang="ts">
@@ -65,6 +63,7 @@
   import VueAxios from "vue-axios"
 
   import { store } from '../store'
+  import CollapsibleSection from '../utils/CollapsibleSection'
   import EventBus from '../events'
   import UserList from "./UserList"
 
@@ -116,12 +115,13 @@
     },
     mounted() {
       this.getUsers()
-      EventBus.$on('users-changed', data => {
+      EventBus.$on('users-changed', () => {
         this.getUsers()
       })
     },
     components: {
-      UserList
+      CollapsibleSection,
+      UserList,
     }
   });
 </script>

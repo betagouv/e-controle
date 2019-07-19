@@ -38,15 +38,14 @@
         </p>
       {% endif %}
 
-      {% if questionnaire.file %}
         <p class="text-right">
           <a href="{{ questionnaire.file_url }}" target="_blank">
-            <button type="submit" class="fe fe-file-text btn btn-primary btn-azure" title="Récupérer le questionnaire">
-              Récupérer le questionnaire
+            <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
+              <i class="fe fe-file-text mr-2"></i>
+              Exporter ce questionnaire
             </button>
           </a>
         </p>
-      {% endif %}
 
     </div>
   </div>
@@ -72,7 +71,7 @@
         </div>
       </div>
     </div> <!--// closing: side_theme_list  //-->
-    <div class="col-lg-8" id="questionaire-detail-app"> <!--// opening: main_list_of_questions  //-->
+    <div class="col-lg-8" id="questionnaire-detail-app"> <!--// opening: main_list_of_questions  //-->
       {% for theme in questionnaire.themes.all %}
         <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
           <div class="card-status card-status-top bg-blue"></div>

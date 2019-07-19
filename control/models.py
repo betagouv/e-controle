@@ -9,7 +9,7 @@ from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
-
+from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path
 
 
@@ -25,17 +25,27 @@ class WithNumberingMixin(object):
 
 
 class Control(models.Model):
-    title = models.CharField("title", max_length=255)
+    title = models.CharField(
+        "procédure",
+        help_text="Procédure pour laquelle est ouvert cet espace de dépôt",
+        max_length=255)
+    depositing_organization = models.CharField(
+        verbose_name="Organisme interrogé",
+        help_text="Organisme qui va déposer les pièces dans cet espace de dépôt",
+        max_length=255,
+        blank=True,
+    )
     reference_code = models.CharField(
-        verbose_name="code de référence", max_length=255, blank=True,
-        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses')
+        verbose_name="code de référence",
+        max_length=255,
+        help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses',
+        unique=True,
+        # This error message is used in the frontend (ConsoleCreate.vue), if you change it you might break the frontend.
+        error_messages={'unique': "UNIQUE"})
 
     class Meta:
         verbose_name = "Controle"
         verbose_name_plural = "Controles"
-
-    def __str__(self):
-        return self.title
 
     def data(self):
         return {
@@ -49,8 +59,15 @@ class Control(models.Model):
             return 1
         return self.questionnaires.last().numbering + 1
 
+    @property
+    def published_questionnaires(self):
+        return self.questionnaires.filter(is_draft=False)
 
-class Questionnaire(OrderedModel, WithNumberingMixin):
+    def __str__(self):
+        return self.title
+
+
+class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     title = models.CharField("titre", max_length=255)
     sent_date = models.DateField(
         verbose_name="date d'envoie", blank=True, null=True,
@@ -59,8 +76,18 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         verbose_name="échéance", blank=True, null=True,
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
-    file = models.FileField(
-        verbose_name="fichier", upload_to=questionnaire_file_path, null=True, blank=True)
+    uploaded_file = models.FileField(
+        verbose_name="fichier du questionnaire", upload_to=questionnaire_file_path,
+        null=True, blank=True,
+        help_text=(
+            "Si ce fichier est renseigné, il sera proposé au téléchargement."
+            "Sinon, un fichier généré automatiquement sera disponible."))
+    generated_file = models.FileField(
+        verbose_name="fichier du questionnaire généré automatiquement",
+        upload_to=questionnaire_file_path,
+        null=True, blank=True,
+        help_text=(
+            "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
     control = models.ForeignKey(
         to='Control', verbose_name='controle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
@@ -74,6 +101,15 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
         ordering = ('control', 'order')
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
+
+    @property
+    def file(self):
+        """
+        If there is a manually uplodaed file it will take precedence.
+        """
+        if bool(self.uploaded_file):
+            return self.uploaded_file
+        return self.generated_file
 
     @property
     def url(self):
@@ -93,6 +129,16 @@ class Questionnaire(OrderedModel, WithNumberingMixin):
     @property
     def title_display(self):
         return f"Questionnaire n°{self.numbering} - {self.title}"
+
+    @property
+    def end_date_display(self):
+        if not self.end_date:
+            return None
+        return self.end_date.strftime("%A %d %B %Y")
+
+    @property
+    def description_rich_text(self):
+        return self.to_rich_text(self.description)
 
     def __str__(self):
         return self.title_display
@@ -114,7 +160,7 @@ class Theme(OrderedModel, WithNumberingMixin):
         return self.title
 
 
-class Question(OrderedModel, WithNumberingMixin):
+class Question(OrderedModel, WithNumberingMixin, DocxMixin):
     description = models.TextField("description")
     theme = models.ForeignKey(
         'theme', verbose_name='thème', related_name='questions',
@@ -125,6 +171,10 @@ class Question(OrderedModel, WithNumberingMixin):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+
+    @property
+    def description_rich_text(self):
+        return self.to_rich_text(self.description)
 
     def __str__(self):
         return self.description
