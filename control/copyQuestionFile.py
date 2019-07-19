@@ -66,3 +66,8 @@ def copyQuestionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
             question.save()
             new_question_id = question.id
 
+            existing_question = Question.objects.get(id=existing_question_id)
+            new_question = Question.objects.get(id=new_question_id)
+            for question_file in existing_question.question_files.all():
+                copy_question_file(question_file.id, new_question.id)
+
