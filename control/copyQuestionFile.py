@@ -3,6 +3,29 @@ from django.core.files import File
 from control.models import Control, Question, Questionnaire, QuestionFile, Theme
 
 
+# Unused
+def find_ids_of_questions_to_copy_to(existing_question_id):
+    """
+    Find questions with the same description.
+    """
+    existing_question = Question.objects.get(id=existing_question_id)
+    ids = Question.objects.filter(description=existing_question.description).values_list('id', flat=True)
+    return list(ids)
+
+
+# Unused
+def copy_all_the_things(existing_question_file_id):
+    """
+    Copy the given QuestionFile to all Questions with same description as the given Question.
+    """
+    existing_question_id = QuestionFile.objects.get(id=existing_question_file_id).question_id
+
+    ids_of_questions_to_copy_to = find_ids_of_questions_to_copy_to(existing_question_id)
+
+    for id_of_question_to_copy_to in ids_of_questions_to_copy_to:
+        copy_question_file(existing_question_file_id, id_of_question_to_copy_to)
+
+
 def copy_question_file(existing_question_file_id, id_of_question_to_copy_to):
     """
     Copy an existing QuestionFile and add it to a given question.
@@ -15,28 +38,8 @@ def copy_question_file(existing_question_file_id, id_of_question_to_copy_to):
     new_question_file.save()
 
 
-def get_ids_of_questions_to_copy_to(existing_question_id):
-    """
-    Find questions with the same description.
-    """
-    existing_question = Question.objects.get(id=existing_question_id)
-    ids = Question.objects.filter(description=existing_question.description).values_list('id', flat=True)
-    return list(ids)
-
-
-def copy_all_the_things(existing_question_file_id):
-    """
-    Copy the given QuestionFile to all Questions with same description as the given Question.
-    """
-    existing_question_id = QuestionFile.objects.get(id=existing_question_file_id).question_id
-
-    ids_of_questions_to_copy_to = get_ids_of_questions_to_copy_to(existing_question_id)
-
-    for id_of_question_to_copy_to in ids_of_questions_to_copy_to:
-        copy_question_file(existing_question_file_id, id_of_question_to_copy_to)
-
-
-def copyQuestionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
+# Func to add to admin if needed
+def copy_questionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
     existing_questionnaire = Questionnaire.objects.get(id=existing_questionnaire_id)
     control_to_copy_to = Control.objects.get(id=id_of_control_to_copy_to)
 
@@ -71,4 +74,21 @@ def copyQuestionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
             for question_file in existing_question.question_files.all():
                 copy_question_file(question_file.id, new_question.id)
 
+
+def find_ids_of_controls_to_copy_to(existing_control_id):
+    """
+    Find controls with the same title.
+    """
+    existing_control = Control.objects.get(id=existing_control_id)
+    ids = list(Control.objects.filter(title=existing_control.title).values_list('id', flat=True))
+    return list(filter(lambda x: (x != existing_control_id), ids))
+
+
+# Func for megacontrole : run it once to set up the whole megacontrole
+def copy_questionnaire_everywhere(existing_questionnaire_id):
+    existing_questionnaire = Questionnaire.objects.get(id=existing_questionnaire_id)
+    ids_of_controls_to_copy_to = find_ids_of_controls_to_copy_to(existing_questionnaire.control.id)
+
+    for id_of_control_to_copy_to in ids_of_controls_to_copy_to:
+        copy_questionnaire(existing_questionnaire_id, id_of_control_to_copy_to)
 
