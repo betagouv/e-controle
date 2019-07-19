@@ -65,7 +65,7 @@ class Control(models.Model):
 
     def __str__(self):
         if self.depositing_organization:
-            return self.title + ' - ' + self.depositing_organization
+            return f'{self.title} - {self.depositing_organization}'
         return self.title
 
 
