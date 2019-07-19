@@ -16,13 +16,13 @@
     <questionnaire-metadata-create
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
-            v-on:metadata-created="metadataCreated"
+            v-on:metadata-created="onMetadataCreated"
             v-on:save-draft="saveDraftFromMetadata"
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
             ref="createBodyChild"
-            v-on:body-created="bodyCreated"
+            v-on:body-created="onBodyCreated"
             v-on:save-draft="saveDraftFromBody"
             v-on:back="back"
             v-show="state === STATES.CREATING_BODY">
@@ -34,7 +34,8 @@
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
-    <div class="card-header border-0">
+    <div class="card-header border-0"
+         style="position:relative; bottom: 4.3rem;">
       <div class="card-options">
         {{ message }}
       </div>
@@ -153,18 +154,20 @@
         this.clearErrors()
         this.state = newState;
       },
-      bodyCreated: function(body) {
+      onBodyCreated: function(body) {
         console.debug('QuestionnaireCreate got body', body);
         this._updateBody(body);
+        this.saveDraft()
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
       },
       _updateBody(body) {
         this.questionnaire.themes = body;
       },
-      metadataCreated: function(metadata) {
+      onMetadataCreated: function(metadata) {
         console.debug('got metadata', metadata);
         this._updateMetadata(metadata)
+        this.saveDraft()
         this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
       },
