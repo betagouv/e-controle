@@ -42,7 +42,7 @@ def copyQuestionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
 
     existing_questionnaire.id = None
     existing_questionnaire.control = control_to_copy_to
-    # TODO order field is copied along
+    existing_questionnaire.order = None
     existing_questionnaire.save()
     new_questionnaire_id = existing_questionnaire.id
 
@@ -70,4 +70,5 @@ def copyQuestionnaire(existing_questionnaire_id, id_of_control_to_copy_to):
             new_question = Question.objects.get(id=new_question_id)
             for question_file in existing_question.question_files.all():
                 copy_question_file(question_file.id, new_question.id)
+
 
