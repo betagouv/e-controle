@@ -8,6 +8,7 @@ from django.views.generic.detail import SingleObjectMixin
 from actstream import action
 from sendfile import sendfile
 
+from control.questionnaire_duplicate import QuestionnaireDuplicateMixin
 from .docx import generate_questionnaire_file
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
@@ -137,3 +138,41 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
+
+
+class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
+    template_name = "ecc/questionnaire_detail.html"
+    context_object_name = 'questionnaire'
+
+    def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            queryset = queryset.filter(is_draft=False)
+        return queryset
+
+
+class MegacontrolConfirm(QuestionnaireDetail):
+    template_name = "ecc/megacontrol_confirm.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['controls_to_copy_to'] = \
+            Control.objects.filter(title=self.object.control.title).exclude(id=self.object.control.id)
+        return context
+
+
+# Todo : if you reload or naviagte back to the confirmation page, the copy happens again.
+class Megacontrol(QuestionnaireDuplicateMixin, MegacontrolConfirm):
+    template_name = "ecc/megacontrol_done.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        created_questionnaires = []
+        for control_to_copy_to in context['controls_to_copy_to']:
+            created_questionnaire = self.copy_questionnaire(self.object, control_to_copy_to)
+            created_questionnaires.append(created_questionnaire)
+        context['created_questionnaires'] = created_questionnaires
+
+        return context
