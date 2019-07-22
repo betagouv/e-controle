@@ -1,8 +1,10 @@
 from django import forms
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.utils.safestring import mark_safe
 from django.views import View
-from django.views.generic import DetailView, CreateView, TemplateView
+from django.views.generic import DetailView, CreateView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -161,17 +163,35 @@ class MegacontrolConfirm(QuestionnaireDuplicateMixin, QuestionnaireDetail):
         return context
 
 
-# Todo : if you reload or naviagte back to the confirmation page, the copy happens again.
-class Megacontrol(MegacontrolConfirm):
-    template_name = "ecc/megacontrol_done.html"
+class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectMixin, RedirectView):
+    url = '/admin/control/questionnaire/'
+    model = Questionnaire
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            queryset = queryset.filter(is_draft=False)
+        return queryset
+
+    def get(self, *args, **kwargs):
+        questionnaire = self.get_object()
+        controls_to_copy_to = self.get_controls_to_copy_to(questionnaire)
 
         created_questionnaires = []
-        for control_to_copy_to in context['controls_to_copy_to']:
-            created_questionnaire = self.copy_questionnaire(self.object, control_to_copy_to)
+        for control_to_copy_to in controls_to_copy_to:
+            created_questionnaire = self.copy_questionnaire(questionnaire, control_to_copy_to)
             created_questionnaires.append(created_questionnaire)
-        context['created_questionnaires'] = created_questionnaires
 
-        return context
+        message = 'Vous avez créé les questionnaires suivants : <ul>'
+        for created_questionnaire in created_questionnaires:
+            message += f'<li>'
+            message += f'  <a href="/admin/control/questionnaire/{created_questionnaire.id}/change/">'
+            message += f'    <b> {created_questionnaire.id} : {created_questionnaire} </b>'
+            message += f'  </a>'
+            message += f'  dans l\'espace <b>{ created_questionnaire.control }</b>'
+            message += f'</li>'
+        message += '</ul>'
+        messages.success(self.request, mark_safe(message))
+
+        return super().get(*args, **kwargs)
