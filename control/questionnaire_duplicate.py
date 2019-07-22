@@ -3,6 +3,7 @@ import urllib.parse
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.urls import resolve
+from django.urls import reverse
 
 
 from control.models import Control, Question, Questionnaire, QuestionFile, Theme
@@ -54,9 +55,13 @@ class QuestionnaireDuplicateMixin(object):
 
         return Questionnaire.objects.get(id=new_questionnaire_id)
 
-    def megacontrol(self, request, queryset):
+    def get_controls_to_copy_to(self, questionnaire):
+        return Control.objects.filter(title=questionnaire.control.title).exclude(id=questionnaire.control.id)
+
+    def megacontrol_admin_action(self, request, queryset):
         ids_of_questionnaires_to_copy = queryset.values_list('id', flat=True)
         questionnaire_id = ids_of_questionnaires_to_copy[0]  # todo deal with more than 1 questionnaire
-        return HttpResponseRedirect("/megacontrole-confirmer/%s" % questionnaire_id)
+        return HttpResponseRedirect(reverse('megacontrol-confirm', args=[questionnaire_id]))
 
-    megacontrol.short_description = "Mégacontrôle : copier ce questionnaire dans tous les espaces de la procédure"
+    megacontrol_admin_action.short_description = \
+        "Mégacontrôle : copier ce questionnaire dans tous les espaces de la procédure"

@@ -30,7 +30,7 @@ class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
     readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control',)
-    actions = ['megacontrol']
+    actions = ['megacontrol_admin_action']
 
 
 class QuestionInline(OrderedTabularInline):

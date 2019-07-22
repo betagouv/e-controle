@@ -152,18 +152,17 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return queryset
 
 
-class MegacontrolConfirm(QuestionnaireDetail):
+class MegacontrolConfirm(QuestionnaireDuplicateMixin, QuestionnaireDetail):
     template_name = "ecc/megacontrol_confirm.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['controls_to_copy_to'] = \
-            Control.objects.filter(title=self.object.control.title).exclude(id=self.object.control.id)
+        context['controls_to_copy_to'] = self.get_controls_to_copy_to(self.object)
         return context
 
 
 # Todo : if you reload or naviagte back to the confirmation page, the copy happens again.
-class Megacontrol(QuestionnaireDuplicateMixin, MegacontrolConfirm):
+class Megacontrol(MegacontrolConfirm):
     template_name = "ecc/megacontrol_done.html"
 
     def get_context_data(self, **kwargs):

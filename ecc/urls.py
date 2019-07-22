@@ -50,8 +50,12 @@ urlpatterns = [
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
 
-    path('megacontrole-confirmer/<int:pk>/', control_views.MegacontrolConfirm.as_view(), name='megacontrol-confirm'),
-    path('megacontrole/<int:pk>/', control_views.Megacontrol.as_view(), name='megacontrol-done'),
+    path('megacontrole-confirmer/<int:pk>/',
+         control_views.MegacontrolConfirm.as_view(),
+         name='megacontrol-confirm'),
+    path('megacontrole/<int:pk>/',
+         control_views.Megacontrol.as_view(),
+         name='megacontrol-done'),
 ]
 
 urlpatterns += [
