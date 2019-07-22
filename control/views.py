@@ -157,8 +157,12 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
 
 
 @method_decorator(staff_member_required, name='dispatch')
-class MegacontrolConfirm(QuestionnaireDuplicateMixin, QuestionnaireDetail):
+class MegacontrolConfirm(QuestionnaireDuplicateMixin, DetailView):
     template_name = "ecc/megacontrol_confirm.html"
+    context_object_name = 'questionnaire'
+
+    def get_queryset(self):
+        return Questionnaire.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -172,11 +176,7 @@ class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectM
     model = Questionnaire
 
     def get_queryset(self):
-        queryset = Questionnaire.objects.filter(
-            control__in=self.request.user.profile.controls.all())
-        if not self.request.user.profile.is_inspector:
-            queryset = queryset.filter(is_draft=False)
-        return queryset
+        return Questionnaire.objects.all()
 
     def get(self, *args, **kwargs):
         questionnaire = self.get_object()
