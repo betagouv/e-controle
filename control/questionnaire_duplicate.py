@@ -1,10 +1,8 @@
-import urllib.parse
-
+from django.contrib import messages
 from django.core.files import File
 from django.http import HttpResponseRedirect
 from django.urls import resolve
 from django.urls import reverse
-
 
 from control.models import Control, Question, Questionnaire, QuestionFile, Theme
 
@@ -59,6 +57,12 @@ class QuestionnaireDuplicateMixin(object):
         return Control.objects.filter(title=questionnaire.control.title).exclude(id=questionnaire.control.id)
 
     def megacontrol_admin_action(self, request, queryset):
+        if queryset.count() > 1:
+            self.message_user(request,
+                              "Megacontrôle : selectionnez un seul questionnaire à la fois.",
+                              level=messages.ERROR)
+            return
+
         ids_of_questionnaires_to_copy = queryset.values_list('id', flat=True)
         questionnaire_id = ids_of_questionnaires_to_copy[0]  # todo deal with more than 1 questionnaire
         return HttpResponseRedirect(reverse('megacontrol-confirm', args=[questionnaire_id]))
