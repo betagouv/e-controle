@@ -16,7 +16,7 @@
     qui vient de l'espace : <b> {{ questionnaire.control }} </b>
   </p>
   <p>
-    dans les espaces suivants :
+    dans les <b>{{ controls_to_copy_to.count }}</b> espaces suivants :
     <ul>
       {% for control_to_copy_to in controls_to_copy_to %}
         <li><b>{{ control_to_copy_to }}</b></li>

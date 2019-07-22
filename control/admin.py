@@ -123,7 +123,7 @@ class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectM
         questionnaire = self.get_object()
         created_questionnaires = self.do_megacontrol(questionnaire)
 
-        message = 'Vous avez créé les questionnaires suivants : <ul>'
+        message = f'Vous avez créé les <b>{ len(created_questionnaires) }</b> questionnaires suivants : <ul>'
         for created_questionnaire in created_questionnaires:
             message += f'<li>'
             message += f'  <a href="/admin/control/questionnaire/{created_questionnaire.id}/change/">'
