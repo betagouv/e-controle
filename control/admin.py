@@ -121,12 +121,7 @@ class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectM
 
     def get(self, *args, **kwargs):
         questionnaire = self.get_object()
-        controls_to_copy_to = self.get_controls_to_copy_to(questionnaire)
-
-        created_questionnaires = []
-        for control_to_copy_to in controls_to_copy_to:
-            created_questionnaire = self.copy_questionnaire(questionnaire, control_to_copy_to)
-            created_questionnaires.append(created_questionnaire)
+        created_questionnaires = self.do_megacontrol(questionnaire)
 
         message = 'Vous avez créé les questionnaires suivants : <ul>'
         for created_questionnaire in created_questionnaires:

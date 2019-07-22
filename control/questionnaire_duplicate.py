@@ -56,6 +56,16 @@ class QuestionnaireDuplicateMixin(object):
     def get_controls_to_copy_to(self, questionnaire):
         return Control.objects.filter(title=questionnaire.control.title).exclude(id=questionnaire.control.id)
 
+    def do_megacontrol(self, questionnaire):
+        controls_to_copy_to = self.get_controls_to_copy_to(questionnaire)
+
+        created_questionnaires = []
+        for control_to_copy_to in controls_to_copy_to:
+            created_questionnaire = self.copy_questionnaire(questionnaire, control_to_copy_to)
+            created_questionnaires.append(created_questionnaire)
+
+        return created_questionnaires
+
     def megacontrol_admin_action(self, request, queryset):
         if queryset.count() > 1:
             self.message_user(request,
