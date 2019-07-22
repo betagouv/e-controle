@@ -14,8 +14,6 @@ class QuestionnaireDuplicateMixin(object):
         if '_saveasnew' in request.POST:
             original_pk = resolve(request.path).kwargs['object_id']
             original_questionnaire = Questionnaire.objects.get(pk=original_pk)
-            # original_themes = original_questionnaire.themes.all()
-            # original_questions = original_theme.questions.all()
             for theme in original_questionnaire.themes.all():
                 original_theme = Theme.objects.get(pk=theme.pk)
                 theme.id = None
