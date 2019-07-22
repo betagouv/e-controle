@@ -4,6 +4,7 @@ from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
+from .questionnaire_duplicate import QuestionnaireDuplicateMixin
 
 
 class QuestionnaireInline(OrderedTabularInline):
@@ -22,9 +23,10 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(OrderedModelAdmin):
+class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
+    save_as = True
     list_display = ('numbering', 'title', 'sent_date', 'end_date', 'control', 'order')
-    list_editable = ('order',)
+    list_editable = ('order', 'control')
     readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control',)
@@ -75,3 +77,13 @@ class ResponseFileAdmin(admin.ModelAdmin):
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'author', 'question__theme')
     search_fields = ('author', 'file')
+
+
+@admin.register(QuestionFile)
+class QuestionFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'file')
+    readonly_fields = ('question', 'file')
+    list_filter = (
+        'question__theme__questionnaire__control', 'question__theme__questionnaire',
+        'question__theme')
+    search_fields = ('file',)
