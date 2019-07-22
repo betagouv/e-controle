@@ -28,6 +28,7 @@ class QuestionnaireDuplicateMixin(object):
                         file=new_file, question=question)
                     new_question_file.save()
 
+    # used for the save_as button in Questionnaire detail admin page.
     def save_model(self, request, obj, form, change):
         new_questionnaire = obj
         new_questionnaire.save()
@@ -66,6 +67,7 @@ class QuestionnaireDuplicateMixin(object):
 
         return created_questionnaires
 
+    # used for the megacontrol action button in Questionnaire list admin page.
     def megacontrol_admin_action(self, request, queryset):
         if queryset.count() > 1:
             self.message_user(request,
