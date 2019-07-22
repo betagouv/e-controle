@@ -1,4 +1,11 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.utils.safestring import mark_safe
+from django.views.generic import DetailView, RedirectView
+from django.views.generic.detail import SingleObjectMixin
 
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
@@ -88,3 +95,48 @@ class QuestionFileAdmin(admin.ModelAdmin):
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     search_fields = ('file',)
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class MegacontrolConfirm(QuestionnaireDuplicateMixin, DetailView):
+    template_name = "ecc/megacontrol_confirm.html"
+    context_object_name = 'questionnaire'
+
+    def get_queryset(self):
+        return Questionnaire.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['controls_to_copy_to'] = self.get_controls_to_copy_to(self.object)
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectMixin, RedirectView):
+    url = '/admin/control/questionnaire/'
+    model = Questionnaire
+
+    def get_queryset(self):
+        return Questionnaire.objects.all()
+
+    def get(self, *args, **kwargs):
+        questionnaire = self.get_object()
+        controls_to_copy_to = self.get_controls_to_copy_to(questionnaire)
+
+        created_questionnaires = []
+        for control_to_copy_to in controls_to_copy_to:
+            created_questionnaire = self.copy_questionnaire(questionnaire, control_to_copy_to)
+            created_questionnaires.append(created_questionnaire)
+
+        message = 'Vous avez créé les questionnaires suivants : <ul>'
+        for created_questionnaire in created_questionnaires:
+            message += f'<li>'
+            message += f'  <a href="/admin/control/questionnaire/{created_questionnaire.id}/change/">'
+            message += f'    <b> {created_questionnaire.id} : {created_questionnaire} </b>'
+            message += f'  </a>'
+            message += f'  dans l\'espace <b>{ created_questionnaire.control }</b>'
+            message += f'</li>'
+        message += '</ul>'
+        messages.success(self.request, mark_safe(message))
+
+        return super().get(*args, **kwargs)
