@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.views import View
 from django.views.generic import DetailView, CreateView, RedirectView, TemplateView
@@ -154,6 +156,7 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return queryset
 
 
+@method_decorator(staff_member_required, name='dispatch')
 class MegacontrolConfirm(QuestionnaireDuplicateMixin, QuestionnaireDetail):
     template_name = "ecc/megacontrol_confirm.html"
 
@@ -163,6 +166,7 @@ class MegacontrolConfirm(QuestionnaireDuplicateMixin, QuestionnaireDetail):
         return context
 
 
+@method_decorator(staff_member_required, name='dispatch')
 class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectMixin, RedirectView):
     url = '/admin/control/questionnaire/'
     model = Questionnaire
