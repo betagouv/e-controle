@@ -8,6 +8,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from . import views as ecc_views
+from control import admin as admin_views
 from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
@@ -49,6 +50,13 @@ urlpatterns = [
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
+
+    path('megacontrole-confirmer/<int:pk>/',
+         admin_views.MegacontrolConfirm.as_view(),
+         name='megacontrol-confirm'),
+    path('megacontrole/<int:pk>/',
+         admin_views.Megacontrol.as_view(),
+         name='megacontrol-done'),
 ]
 
 urlpatterns += [

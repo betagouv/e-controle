@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_static_header %}
+{{ block.super }}
+{% endblock extra_static_header %}
+
+{% block page_content %}
+
+  <h3>Confirmer Megacontrole</h3>
+
+  <p>
+    Vous allez dupliquer le questionnaire {{questionnaire.id}} : <b>{{ questionnaire }}</b>
+  </p>
+  <p>
+    qui vient de l'espace : <b> {{ questionnaire.control }} </b>
+  </p>
+  <p>
+    dans les <b>{{ controls_to_copy_to.count }}</b> espaces suivants :
+    <ul>
+      {% for control_to_copy_to in controls_to_copy_to %}
+        <li><b>{{ control_to_copy_to }}</b></li>
+      {% endfor %}
+    </ul>
+  </p>
+
+  <a href="{% url 'megacontrol-done' questionnaire.id %}" class="btn btn-primary" title="Faire la copie">
+      Faire la copie
+  </a>
+
+  <a href="/admin/control/questionnaire/" class="btn btn-secondary" title="Annuler">
+      Annuler
+  </a>
+{% endblock page_content %}
+
