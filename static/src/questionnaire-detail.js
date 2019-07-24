@@ -3,7 +3,6 @@ import "@babel/polyfill"
 import Answer from './details/Answer'
 import AnswerFileList from './details/AnswerFileList'
 import axios from 'axios'
-import Dropzone from 'dropzone'
 import EventBus from './events'
 import InfoBar from './utils/InfoBar'
 import Question from './details/Question'
