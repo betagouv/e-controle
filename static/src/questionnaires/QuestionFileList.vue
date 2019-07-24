@@ -23,7 +23,7 @@
 
   export default Vue.extend({
     props: {
-      questionId: Number,
+      questionId: Number | String,
       questionNumber: String,
       withDelete: {
         type: Boolean,
@@ -57,6 +57,7 @@
       EventBus.$on('question-files-changed', () => {
         this.getFiles()
       })
+      this.getFiles()
     }
   })
 </script>

@@ -76,8 +76,6 @@
                       :annexe_count="question.question_files && question.question_files.length">
             </question>
 
-            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-
           </div>
         </div>
       </div>

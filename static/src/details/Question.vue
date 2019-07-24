@@ -3,6 +3,7 @@
     <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
       {{ theme_numbering }}.{{ question_numbering }}
     </span>
+
     <div class="card-text" style="cursor: pointer;">
       <div class="with-line-breaks">{{ question_description }}</div>
       <div class="tags">
@@ -24,12 +25,16 @@
         </template>
       </div>
     </div>
+
+    <question-file-list :question-id="question_id" :with-delete="false"></question-file-list>
+
   </div>
 </template>
 
 <script lang="ts">
 
   import Vue from "vue";
+  import QuestionFileList from '../questionnaires/QuestionFileList'
 
   export default Vue.extend({
     data() {
@@ -41,6 +46,9 @@
         _this.answer_count = answer_count;
       })
     },
+    components: {
+      QuestionFileList,
+    },
     props: {
       question_description: String,
       theme_numbering: String|Number,
@@ -48,7 +56,7 @@
       question_id: String|Number,
       annexe_count: String|Number,
     },
-    methods: {}
+    methods: {},
   });
 </script>
 
