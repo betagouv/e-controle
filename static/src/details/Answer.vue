@@ -37,7 +37,9 @@
 
   export default Vue.extend({
     data() {
-      return {answer_count: 0, files: {}};
+      return {
+        files: {}
+      };
     },
     mounted() {
       var _this = this
@@ -47,7 +49,7 @@
     },
     computed: {
       answer_count: function () {
-         return files ? this.files.length: 0;
+         return this.files ? this.files.length: 0;
       }
     },
     props: {
