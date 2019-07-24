@@ -89,29 +89,10 @@
                         question_id="{{ question.id }}"
                         annexe_count="{{ question.question_files.count }}"></question>
 
-              <div class="card-body">  <!--// opening: question_detail_area  //-->
-                <answer-file-list question_id="{{ question.id }}"></answer-file-list>
-
-                {% if user.profile.is_audited %}
-                  <div class="form-group">
-                    <div class="form-label">Déposer vos réponses</div>
-                    <info-bar>
-                      Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
-                    </info-bar>
-                    <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data" id="dropzone-area">
-                      {% csrf_token %}
-                      <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
-                      <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}" />
-                      <div class="fallback">
-                        <input name="file" type="file" multiple />
-                      </div>
-                    </form>
-                    <div class="text-right">
-                      <i class="dropdown-icon fe fe-help-circle"></i><a href="{% url 'faq' %}">Des questions sur le dépôt de fichiers ?</a>
-                    </div>
-                  </div>
-                {% endif %}
-              </div>  <!--// closing: question_detail_area  //-->
+              <!-- complicated conversion from python string "False" to JS boolean false -->
+              <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
+                      question-id="{{ question.id }}">
+              </answer>
 
               <div class="text-center bg-blue cursor-pointer text-white"
                    style="cursor: pointer"

@@ -1,0 +1,73 @@
+<template>
+  <div class="card-body">
+    <answer-file-list :question_id="questionId"></answer-file-list>
+    cookies {{ cookies }} cookie {{ cookie}}
+    <div v-if="isAudited" class="form-group">
+      <div class="form-label">Déposer vos réponses</div>
+      <info-bar>
+        Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
+      </info-bar>
+      <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" id="dropzone-area">
+        <input type="hidden" name="csrfmiddlewaretoken" :value="cookie">
+        <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
+        <input type="hidden" id="idQuestionId" name="question_id" :value="questionId" />
+        <div class="fallback">
+          <input name="file" type="file" multiple />
+        </div>
+      </form>
+      <div class="text-right">
+        <i class="dropdown-icon fe fe-help-circle"></i><a :href="faqUrl">Des questions sur le dépôt de fichiers ?</a>
+      </div>
+    </div>
+  </div>
+
+</template>
+
+<script>
+  import Vue from 'vue'
+  import AnswerFileList from './AnswerFileList'
+  import InfoBar from '../utils/InfoBar'
+
+  export default Vue.extend({
+    props: [
+        'isAudited',
+        'questionId'
+    ],
+    data: function() {
+      return {
+        faqUrl: '/faq/',
+        uploadUrl: '/upload/',
+        cookie: 'not found',
+        cookies: document.cookie,
+      }
+    },
+    components: {
+      AnswerFileList,
+      InfoBar,
+    },
+    mounted: function(){
+      function getCookie(cookieName) {
+        console.log(document.cookie)
+        const decodedCookie = decodeURIComponent(document.cookie)
+        console.log(decodedCookie)
+        const cookies = decodedCookie.split(';')
+        cookies.forEach((cookie) => {
+          console.log('cookie', cookie)
+          const keyValue = cookie.split('=')
+          console.log('keyValue', keyValue)
+          console.log('keyValue[0].trim()', keyValue[0].trim())
+          console.log('cookieName', cookieName)
+          console.log('equals', keyValue[0].trim() === cookieName)
+          if (keyValue[0].trim() === cookieName) {
+            console.log('keyValue[1]', keyValue[1])
+            return keyValue[1].trim() // why no return here???
+          }
+        })
+      }
+
+      console.log('returned cookie', getCookie('csrftoken'))
+      this.cookie = getCookie('csrftoken')
+
+    },
+  })
+</script>
