@@ -6,19 +6,19 @@
     <div class="card-text" style="cursor: pointer;">
       <div class="with-line-breaks">{{ question_description }}</div>
       <div class="tags">
-        <template v-if="answer_count">
-          <span class="tag tag-azure pull-left" style="cursor: pointer">
-            {{answer_count}} fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}
-            <span class="tag-addon">
-              <i class="fe fe-file"></i>
-            </span>
-          </span>
-        </template>
         <template v-if="annexe_count > 0">
           <span class="tag tag-orange pull-left">
             {{ annexe_count }} fichier{{ annexe_count===1 ? '': 's' }} annexe{{ annexe_count===1 ? '': 's' }}
             <span class="tag-addon">
               <i class="fe fe-paperclip"></i>
+            </span>
+          </span>
+        </template>
+        <template v-if="answer_count">
+          <span class="tag tag-azure pull-left" style="cursor: pointer">
+            {{answer_count}} fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}
+            <span class="tag-addon">
+              <i class="fe fe-file"></i>
             </span>
           </span>
         </template>
