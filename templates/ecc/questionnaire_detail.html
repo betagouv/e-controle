@@ -90,7 +90,7 @@
                         annexe_count="{{ question.question_files.count }}"></question>
 
               <div class="card-body">  <!--// opening: question_detail_area  //-->
-                <answer question_id="{{ question.id }}"></answer>
+                <answer-file-list question_id="{{ question.id }}"></answer-file-list>
 
                 {% if user.profile.is_audited %}
                   <div class="form-group">
