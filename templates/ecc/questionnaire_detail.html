@@ -106,10 +106,9 @@
                 {% if user.profile.is_audited %}
                   <div class="form-group">
                     <div class="form-label">Déposer vos réponses</div>
-                    <div class="alert alert-icon alert-primary" role="alert">
-                      <i class="fe fe-bell mr-2" aria-hidden="true"></i>
+                    <info-bar>
                       Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
-                    </div>
+                    </info-bar>
                     <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data" id="dropzone-area">
                       {% csrf_token %}
                       <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>

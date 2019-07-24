@@ -2,9 +2,10 @@ import "@babel/polyfill"
 
 import Answer from './details/Answer'
 import axios from 'axios'
-import Dropzone from 'dropzone';
-import Question from './details/Question';
-import Vue from 'vue/dist/vue.js';
+import Dropzone from 'dropzone'
+import InfoBar from './utils/InfoBar'
+import Question from './details/Question'
+import Vue from 'vue/dist/vue.js'
 
 const url = "/api/question/";
 
@@ -32,7 +33,8 @@ let question_app = new Vue({
   },
   components: {
     'question': Question,
-    'answer': Answer
+    'answer': Answer,
+    'info-bar': InfoBar,
   },
 });
 
