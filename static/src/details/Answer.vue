@@ -84,6 +84,7 @@
       dropzoneSuccessCallback: function() {
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('answer-updated-' + this.questionId, response_files);
+          EventBus.$emit('answercount-updated-' + this.questionId, response_files.length);
         })
       },
       fetchQuestionData: function () {
