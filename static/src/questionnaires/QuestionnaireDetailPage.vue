@@ -1,6 +1,6 @@
 <template>
   <div>
-    Got questionnaire: {{ questionnaire.title }}
+    <questionnaire-detail :questionnaire="questionnaire"></questionnaire-detail>
   </div>
 
 </template>
@@ -9,6 +9,7 @@
   import Vue from "vue";
 
   import axios from 'axios'
+  import QuestionnaireDetail from './QuestionnaireDetail'
 
   const questionnaire_url = "/api/questionnaire/";
 
@@ -29,6 +30,9 @@
         });
       },
     },
+    components: {
+      QuestionnaireDetail
+    }
   })
 
 </script>
