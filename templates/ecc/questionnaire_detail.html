@@ -90,8 +90,6 @@
                         annexe_count="{{ question.question_files.count }}"></question>
 
               <div class="card-body">  <!--// opening: question_detail_area  //-->
-                <answer question_id="{{ question.id }}"></answer>
-
                 {% if question_files %}
                   <div class="form-group">
                     <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
@@ -102,6 +100,8 @@
                     </ul>
                   </div>
                 {% endif %}
+
+                <answer question_id="{{ question.id }}"></answer>
 
                 {% if user.profile.is_audited %}
                   <div class="form-group">
