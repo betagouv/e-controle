@@ -18,96 +18,98 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <div class="card">
-    <div class="card-body">
-      {{ questionnaire.description|linebreaks }}
+  <div id="content">
+    <div class="card">
+      <div class="card-body">
+        {{ questionnaire.description|linebreaks }}
 
-      {% if questionnaire.sent_date %}
-        <p>
-          <i class="dropdown-icon fe fe-send"></i>
-          Date de transmission du questionnaire :
-          {{ questionnaire.sent_date|date:"l d F Y" }}
+        {% if questionnaire.sent_date %}
+          <p>
+            <i class="dropdown-icon fe fe-send"></i>
+            Date de transmission du questionnaire :
+            {{ questionnaire.sent_date|date:"l d F Y" }}
+          </p>
+        {% endif %}
+
+        {% if questionnaire.end_date %}
+          <p>
+            <i class="fe fe-clock"></i>
+            Date de réponse souhaitée :
+            {{ questionnaire.end_date|date:"l d F Y" }}
+          </p>
+        {% endif %}
+
+        <p class="text-right">
+          <a href="{{ questionnaire.file_url }}" target="_blank">
+            <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
+              <i class="fe fe-file-text mr-2"></i>
+              Exporter ce questionnaire
+            </button>
+          </a>
         </p>
-      {% endif %}
 
-      {% if questionnaire.end_date %}
-        <p>
-          <i class="fe fe-clock"></i>
-          Date de réponse souhaitée :
-          {{ questionnaire.end_date|date:"l d F Y" }}
-        </p>
-      {% endif %}
-
-      <p class="text-right">
-        <a href="{{ questionnaire.file_url }}" target="_blank">
-          <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
-            <i class="fe fe-file-text mr-2"></i>
-            Exporter ce questionnaire
-          </button>
-        </a>
-      </p>
-
-    </div>
-  </div>
-
-  <div class="row row-cards">
-  <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
-    <div class="row sticky">
-      <div class="col-md-6 col-lg-12">
-        <div class="card">
-          <div class="card-header bg-blue text-white">
-            <h4 class="card-title">Thèmes</h4>
-          </div>
-          <table class="table card-table">
-            <tbody>
-            {% for theme in questionnaire.themes.all %}
-              <tr data-id="{{ forloop.counter }}" class="theme-row">
-                <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
-  </div> <!--// closing: side_theme_list  //-->
-  <div class="col-lg-8" id="questionnaire-detail-app"> <!--// opening: main_list_of_questions  //-->
-    {% for theme in questionnaire.themes.all %}
-      <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
-        <div class="card-status card-status-top bg-blue"></div>
-        <div class="card-header">
-          <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
+
+    <div class="row row-cards">
+    <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
+      <div class="row sticky">
+        <div class="col-md-6 col-lg-12">
+          <div class="card">
+            <div class="card-header bg-blue text-white">
+              <h4 class="card-title">Thèmes</h4>
+            </div>
+            <table class="table card-table">
+              <tbody>
+              {% for theme in questionnaire.themes.all %}
+                <tr data-id="{{ forloop.counter }}" class="theme-row">
+                  <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
-        {% for question in theme.questions.all %}
-          {% with response_files=question.response_files.all question_files=question.question_files.all %}
-            <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}"
-                 id="question{{ theme.numbering }}.{{ question.numbering }}">
+      </div>
+    </div> <!--// closing: side_theme_list  //-->
+    <div class="col-lg-8" id="questionnaire-detail-app"> <!--// opening: main_list_of_questions  //-->
+      {% for theme in questionnaire.themes.all %}
+        <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
+          <div class="card-status card-status-top bg-blue"></div>
+          <div class="card-header">
+            <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
+          </div>
+          {% for question in theme.questions.all %}
+            {% with response_files=question.response_files.all question_files=question.question_files.all %}
+              <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}"
+                   id="question{{ theme.numbering }}.{{ question.numbering }}">
 
-              <question question_description="{{ question.description }}"
-                        theme_numbering="{{ theme.numbering }}"
-                        question_numbering="{{ question.numbering }}"
-                        question_id="{{ question.id }}"
-                        annexe_count="{{ question.question_files.count }}"></question>
+                <question question_description="{{ question.description }}"
+                          theme_numbering="{{ theme.numbering }}"
+                          question_numbering="{{ question.numbering }}"
+                          question_id="{{ question.id }}"
+                          annexe_count="{{ question.question_files.count }}"></question>
 
-              <!-- complicated conversion from python string "False" to JS boolean false -->
-              <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
-                      question-id="{{ question.id }}">
-              </answer>
+                <!-- complicated conversion from python string "False" to JS boolean false -->
+                <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
+                        question-id="{{ question.id }}">
+                </answer>
 
-              <div class="text-center bg-blue cursor-pointer text-white"
-                   style="cursor: pointer"
-                   data-toggle="card-collapse">
-                <i class="fe fe-chevron-up"></i>
-              </div>
+                <div class="text-center bg-blue cursor-pointer text-white"
+                     style="cursor: pointer"
+                     data-toggle="card-collapse">
+                  <i class="fe fe-chevron-up"></i>
+                </div>
 
 
-            </div> <!--// closing: main_question_area_inside_a_theme  //-->
-          {% endwith %}
-        {% endfor %}
-        {% resetcycle %}
-      </div> <!--// closing: theme_area_containing_questions  //-->
-    {% endfor %}
-  </div> <!--// closing: main_list_of_questions  //-->
+              </div> <!--// closing: main_question_area_inside_a_theme  //-->
+            {% endwith %}
+          {% endfor %}
+          {% resetcycle %}
+        </div> <!--// closing: theme_area_containing_questions  //-->
+      {% endfor %}
+    </div> <!--// closing: main_list_of_questions  //-->
+  </div>
 {% endblock page_content %}
 
 {% block js_bundle %}
