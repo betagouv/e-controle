@@ -7,6 +7,7 @@ import QuestionBox from './questions/QuestionBox'
 import QuestionFileList from './questions/QuestionFileList'
 import ResponseDropzone from './questions/ResponseDropzone'
 import ResponseFileList from './questions/ResponseFileList'
+import QuestionnaireDetailPage from './questionnaires/QuestionnaireDetailPage'
 import Vue from 'vue/dist/vue.js'
 
 const url = "/api/question/";
@@ -39,5 +40,6 @@ let question_app = new Vue({
     QuestionFileList,
     ResponseDropzone,
     ResponseFileList,
+    QuestionnaireDetailPage,
   },
 });
