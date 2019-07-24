@@ -4,6 +4,7 @@ import Answer from './details/Answer'
 import AnswerFileList from './details/AnswerFileList'
 import axios from 'axios'
 import Dropzone from 'dropzone'
+import EventBus from './events'
 import InfoBar from './utils/InfoBar'
 import Question from './details/Question'
 import Vue from 'vue/dist/vue.js'
@@ -24,8 +25,8 @@ let question_app = new Vue({
     saveResponseFiles: function (question_data) {
       for (var question_id in question_data) {
         let response_files = question_data[question_id].response_files;
-        this.$emit('question-updated-' + question_id, response_files.length);
-        this.$emit('answer-updated-' + question_id, response_files);
+        EventBus.$emit('question-updated-' + question_id, response_files.length);
+        EventBus.$emit('answer-updated-' + question_id, response_files);
       }
     }
   },

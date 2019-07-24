@@ -35,6 +35,8 @@
 
   import Vue from "vue";
 
+  import EventBus from '../events'
+
   export default Vue.extend({
     data() {
       return {
@@ -43,7 +45,7 @@
     },
     mounted() {
       var _this = this
-      this.$parent.$on('answer-updated-' + this.question_id, function (files) {
+      EventBus.$on('answer-updated-' + this.question_id, function (files) {
         _this.files = files;
       })
     },

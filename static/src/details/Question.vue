@@ -34,6 +34,8 @@
 <script lang="ts">
 
   import Vue from "vue";
+
+  import EventBus from '../events'
   import QuestionFileList from '../questionnaires/QuestionFileList'
 
   export default Vue.extend({
@@ -42,7 +44,7 @@
     },
     mounted() {
       var _this = this
-      this.$parent.$on('question-updated-' + this.question_id, function (answer_count) {
+      EventBus.$on('question-updated-' + this.question_id, function (answer_count) {
         _this.answer_count = answer_count;
       })
     },
