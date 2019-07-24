@@ -1,14 +1,13 @@
 <template>
   <div :id="'answer_' + questionId">
     <answer-file-list :question_id="questionId"></answer-file-list>
-    cookies {{ cookies }} cookie {{ cookie}}
     <div v-if="isAudited" class="form-group">
       <div class="form-label">Déposer vos réponses</div>
       <info-bar>
         Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
       </info-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
-        <input type="hidden" name="csrfmiddlewaretoken" :value="cookie">
+        <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
         <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
         <input type="hidden" id="idQuestionId" name="question_id" :value="questionId" />
         <div class="fallback">
@@ -45,8 +44,7 @@
       return {
         faqUrl: '/faq/',
         uploadUrl: '/upload/',
-        cookie: 'not found',
-        cookies: document.cookie,
+        csrftoken: '',
       }
     },
     components: {
@@ -54,27 +52,23 @@
       InfoBar,
     },
     mounted: function(){
-      function getCookie(cookieName) {
-//        console.log(document.cookie)
-        const decodedCookie = decodeURIComponent(document.cookie)
-//        console.log(decodedCookie)
-        const cookies = decodedCookie.split(';')
-        cookies.forEach((cookie) => {
- //         console.log('cookie', cookie)
-          const keyValue = cookie.split('=')
-   //       console.log('keyValue', keyValue)
-     //     console.log('keyValue[0].trim()', keyValue[0].trim())
-       //   console.log('cookieName', cookieName)
-         // console.log('equals', keyValue[0].trim() === cookieName)
-          if (keyValue[0].trim() === cookieName) {
-           // console.log('keyValue[1]', keyValue[1])
-            return keyValue[1].trim() // why no return here???
-          }
-        })
+      // Weird function copied from w3schools
+      function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1,c.length);
+            }
+            if (c.indexOf(nameEQ) === 0) {
+                return c.substring(nameEQ.length,c.length);
+            }
+        }
+        return null;
       }
 
-      this.cookie = getCookie('csrftoken')
-      this.cookie = '5MNNGDOe99seeOD1AGAr0gIy78TqqUgnY5zmUxhvaW8YIoUlFKeTSuA9AoXn8ENK'
+      this.csrftoken = readCookie('csrftoken')
 
       Dropzone.options['dropzoneArea' + this.questionId] = {
         success: this.dropzoneSuccessCallback.bind(this)
