@@ -33,9 +33,9 @@ let question_app = new Vue({
     this.fetchQuestionData();
   },
   components: {
-    'answer': Answer,
-    'answer-file-list': AnswerFileList,
-    'info-bar': InfoBar,
-    'question': Question,
+    Answer,
+    AnswerFileList,
+    InfoBar,
+    Question,
   },
 });
