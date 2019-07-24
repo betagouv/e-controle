@@ -1,14 +1,14 @@
 <template>
-    <div v-if="files && files.length" class="card card-body border-0">
-      <div v-if="files.length > 1">Fichiers annexes à la question:</div>
-      <div v-else>Fichier annexe à la question:</div>
-      <ul>
-        <li v-for="(file, index) in files" :key="index">
-          <a :href="file.url">{{ file.basename }}</a>
-            <question-file-delete v-if="withDelete" :question-file-id="file.id"></question-file-delete>
-        </li>
-      </ul>
-    </div>
+  <div v-if="files && files.length" class="card card-body border-0">
+    <div v-if="files.length > 1">Fichiers annexes à la question:</div>
+    <div v-else>Fichier annexe à la question:</div>
+    <ul>
+      <li v-for="(file, index) in files" :key="index">
+        <a :href="file.url">{{ file.basename }}</a>
+          <question-file-delete v-if="withDelete" :question-file-id="file.id"></question-file-delete>
+      </li>
+    </ul>
+  </div>
 </template>
 
 
