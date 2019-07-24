@@ -44,7 +44,7 @@
     },
     mounted() {
       var _this = this
-      EventBus.$on('question-updated-' + this.question_id, function (answer_count) {
+      EventBus.$on('answercount-updated-' + this.question_id, function (answer_count) {
         _this.answer_count = answer_count;
       })
     },

@@ -25,7 +25,7 @@ let question_app = new Vue({
     saveResponseFiles: function (question_data) {
       for (var question_id in question_data) {
         let response_files = question_data[question_id].response_files;
-        EventBus.$emit('question-updated-' + question_id, response_files.length);
+        EventBus.$emit('answercount-updated-' + question_id, response_files.length);
         EventBus.$emit('answer-updated-' + question_id, response_files);
       }
     }
