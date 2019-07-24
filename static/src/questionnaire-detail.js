@@ -40,9 +40,3 @@ let question_app = new Vue({
     'question': Question,
   },
 });
-
-Dropzone.options.dropzoneArea = {
-  success: function success(file, done) {
-    question_app.fetchQuestionData();
-  }
-};

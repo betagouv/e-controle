@@ -27,6 +27,7 @@
   import Vue from 'vue'
   import AnswerFileList from './AnswerFileList'
   import Dropzone from 'dropzone'
+  import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
 
   import axios from 'axios'
@@ -72,33 +73,22 @@
         })
       }
 
-   //   console.log('returned cookie', getCookie('csrftoken'))
       this.cookie = getCookie('csrftoken')
       this.cookie = '5MNNGDOe99seeOD1AGAr0gIy78TqqUgnY5zmUxhvaW8YIoUlFKeTSuA9AoXn8ENK'
 
-//      this.fetchQuestionData()
-      this.setupDropzone()
-
+      Dropzone.options['dropzoneArea' + this.questionId] = {
+        success: this.dropzoneSuccessCallback.bind(this)
+      }
     },
     methods: {
-      setupDropzone: function(){
-        const questionId = this.questionId
-        Dropzone.options['dropzoneArea' + this.questionId] = {
-          success: function success(file, done) {
-            console.log('individual dropzone callback', questionId, file)
-          }
-        }
-      },
-      fetchAllQuestionData: function () {
-        axios.get(url).then(response =>{
-          console.log('response', response)
-          this.$emit('question-updated-' + question_id, response_files.length);
-
-        });
+      dropzoneSuccessCallback: function() {
+        this.fetchQuestionData().then(response_files => {
+          EventBus.$emit('answer-updated-' + this.questionId, response_files);
+        })
       },
       fetchQuestionData: function () {
-        axios.get(url + this.questionId).then(response =>{
-          console.log('response', response)
+        return axios.get(url + this.questionId).then(response =>{
+          return response.data.response_files
         });
       },
 
