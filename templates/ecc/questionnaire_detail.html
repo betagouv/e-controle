@@ -84,11 +84,13 @@
               <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}"
                    id="question{{ theme.numbering }}.{{ question.numbering }}">
 
-                <question question_description="{{ question.description }}"
-                          theme_numbering="{{ theme.numbering }}"
-                          question_numbering="{{ question.numbering }}"
-                          question_id="{{ question.id }}"
-                          annexe_count="{{ question.question_files.count }}"></question>
+                <div class="card-header border-0" data-toggle="card-collapse">
+                  <question question_description="{{ question.description }}"
+                            theme_numbering="{{ theme.numbering }}"
+                            question_numbering="{{ question.numbering }}"
+                            question_id="{{ question.id }}"
+                            annexe_count="{{ question.question_files.count }}"></question>
+                </div>
 
                 <!-- complicated conversion from python string "False" to JS boolean false -->
                 <div class="card-body">

@@ -38,12 +38,14 @@
           <div v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
                v-for="(question, qIndex) in theme.questions"
                class="card m-0 p-0 pb-0">
-            <question :question_description="question.description"
-                      :theme_numbering="themeIndex + 1"
-                      :question_numbering="qIndex + 1"
-                      :question_id="question.id"
-                      :annexe_count="question.question_files && question.question_files.length">
-            </question>
+            <div class="card-header border-0" data-toggle="card-collapse">
+              <question :question_description="question.description"
+                        :theme_numbering="themeIndex + 1"
+                        :question_numbering="qIndex + 1"
+                        :question_id="question.id"
+                        :annexe_count="question.question_files && question.question_files.length">
+              </question>
+            </div>
             <div class="card-body">
               <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
             </div>
