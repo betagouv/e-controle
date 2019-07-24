@@ -86,7 +86,9 @@
               </span>
               <question-file-upload :question-id="question.id"></question-file-upload>
             </div>
-            <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
+            <div class="card-body">
+              <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
+            </div>
           </div>
 
 
