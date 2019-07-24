@@ -18,7 +18,8 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <div id="content">
+  <div id="questionnaire-detail-app">
+    <questionnaire-detail-page questionnaire-id="{{ questionnaire.id }}"></questionnaire-detail-page>
     <div class="card">
       <div class="card-body">
         {{ questionnaire.description|linebreaks }}
@@ -72,7 +73,7 @@
         </div>
       </div>
     </div> <!--// closing: side_theme_list  //-->
-    <div class="col-lg-8" id="questionnaire-detail-app"> <!--// opening: main_list_of_questions  //-->
+    <div class="col-lg-8"> <!--// opening: main_list_of_questions  //-->
       {% for theme in questionnaire.themes.all %}
         <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
           <div class="card-status card-status-top bg-blue"></div>
