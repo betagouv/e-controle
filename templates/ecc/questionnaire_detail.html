@@ -92,6 +92,7 @@
 
                 <!-- complicated conversion from python string "False" to JS boolean false -->
                 <div class="card-body">
+                  <question-file-list question-id="{{ question.id }}" :with-delete="false"></question-file-list>
                   <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
                           question-id="{{ question.id }}">
                   </answer>

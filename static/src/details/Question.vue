@@ -26,8 +26,6 @@
       </div>
     </div>
 
-    <question-file-list :question-id="question_id" :with-delete="false"></question-file-list>
-
   </div>
 </template>
 
@@ -36,7 +34,6 @@
   import Vue from "vue";
 
   import EventBus from '../events'
-  import QuestionFileList from '../questionnaires/QuestionFileList'
 
   export default Vue.extend({
     data() {
@@ -49,7 +46,6 @@
       })
     },
     components: {
-      QuestionFileList,
     },
     props: {
       question_description: String,

@@ -6,6 +6,7 @@ import axios from 'axios'
 import EventBus from './events'
 import InfoBar from './utils/InfoBar'
 import Question from './details/Question'
+import QuestionFileList from './questionnaires/QuestionFileList'
 import Vue from 'vue/dist/vue.js'
 
 const url = "/api/question/";
@@ -37,5 +38,6 @@ let question_app = new Vue({
     AnswerFileList,
     InfoBar,
     Question,
+    QuestionFileList,
   },
 });
