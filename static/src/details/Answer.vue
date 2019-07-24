@@ -1,5 +1,5 @@
 <template>
-  <div :id="'answer_' + questionId" class="card-body">
+  <div :id="'answer_' + questionId">
     <answer-file-list :question_id="questionId"></answer-file-list>
     cookies {{ cookies }} cookie {{ cookie}}
     <div v-if="isAudited" class="form-group">

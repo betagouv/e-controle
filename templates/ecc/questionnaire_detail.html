@@ -91,9 +91,11 @@
                           annexe_count="{{ question.question_files.count }}"></question>
 
                 <!-- complicated conversion from python string "False" to JS boolean false -->
-                <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
-                        question-id="{{ question.id }}">
-                </answer>
+                <div class="card-body">
+                  <answer :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
+                          question-id="{{ question.id }}">
+                  </answer>
+                </div>
 
                 <div class="text-center bg-blue cursor-pointer text-white"
                      style="cursor: pointer"
