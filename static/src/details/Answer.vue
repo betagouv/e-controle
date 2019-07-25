@@ -1,6 +1,5 @@
 <template>
   <div :id="'answer_' + questionId">
-    <answer-file-list :question_id="questionId"></answer-file-list>
     <div v-if="isAudited" class="form-group">
       <div class="form-label">Déposer vos réponses</div>
       <info-bar>
@@ -24,7 +23,6 @@
 
 <script>
   import Vue from 'vue'
-  import AnswerFileList from './AnswerFileList'
   import Dropzone from 'dropzone'
   import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
@@ -48,7 +46,6 @@
       }
     },
     components: {
-      AnswerFileList,
       InfoBar,
     },
     mounted: function(){
