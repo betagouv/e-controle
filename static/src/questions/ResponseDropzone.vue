@@ -74,7 +74,7 @@
     methods: {
       dropzoneSuccessCallback: function() {
         this.fetchQuestionData().then(response_files => {
-          EventBus.$emit('answer-updated-' + this.questionId, response_files);
+          EventBus.$emit('response-files-updated-' + this.questionId, response_files);
           EventBus.$emit('response-file-count-updated-' + this.questionId, response_files.length);
         })
       },

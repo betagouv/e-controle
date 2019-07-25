@@ -45,7 +45,7 @@
     },
     mounted() {
       var _this = this
-      EventBus.$on('answer-updated-' + this.question_id, function (files) {
+      EventBus.$on('response-files-updated-' + this.question_id, function (files) {
         _this.files = files;
       })
     },
