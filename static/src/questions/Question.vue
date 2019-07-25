@@ -5,7 +5,7 @@
     </span>
 
     <div class="card-text" style="cursor: pointer;">
-      <div class="with-line-breaks">{{ questionDescription }}</div>
+      <div class="with-line-breaks">{{ question.description }}</div>
       <div class="tags">
         <template v-if="questionFileCount > 0">
           <span class="tag tag-orange pull-left">
@@ -43,11 +43,11 @@
     },
     mounted() {
       // todo get the original response-file-count from props, instead of event from questionnaire-detail.js
-      EventBus.$on('response-file-count-updated-' + this.questionId, responseFileCount => {
+      EventBus.$on('response-file-count-updated-' + this.question.id, responseFileCount => {
         this.responseFileCount = responseFileCount;
       })
 
-      EventBus.$on('question-file-count-changed-' + this.questionId, (questionFileCount) => {
+      EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {
         this.questionFileCount = questionFileCount;
       })
 
@@ -57,10 +57,7 @@
     props: {
       themeNumbering: String|Number,
       questionNumbering: String|Number,
-
-      // todo get these 3 from the question object once we switch all to Vue
-      questionDescription: String,
-      questionId: String|Number,
+      question: Object,
     },
     methods: {},
   });
