@@ -1,5 +1,5 @@
 <template>
-  <div :id="'answer_' + questionId">
+  <div :id="'dropzone_' + questionId">
     <div v-if="isAudited" class="form-group">
       <div class="form-label">Déposer vos réponses</div>
       <info-bar>
