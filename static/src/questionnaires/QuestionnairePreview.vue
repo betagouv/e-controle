@@ -5,8 +5,8 @@
     </div>
     <div class="card-body pb-6">
       <div class="preview">
-        <questionnaire-detail v-bind:questionnaire="questionnaire">
-        </questionnaire-detail>
+        <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
+        </questionnaire-detail-for-preview>
       </div>
       <div class="text-right">
         <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
@@ -49,7 +49,7 @@
 <script>
   import Vue from "vue"
   import ConfirmModal from "../utils/ConfirmModal"
-  import QuestionnaireDetail from "./QuestionnaireDetail"
+  import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
 
   export default Vue.extend({
     data: function () {
@@ -84,7 +84,7 @@
     },
     components: {
       ConfirmModal,
-      QuestionnaireDetail
+      QuestionnaireDetailForPreview
     }
   });
 </script>
