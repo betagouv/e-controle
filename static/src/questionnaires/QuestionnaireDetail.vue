@@ -61,7 +61,7 @@
   import Vue from "vue";
   import DateFormat from '../utils/DateFormat.js';
   import Question from '../questions/Question.vue';
-  import QuestionFileList from "./QuestionFileList"
+  import QuestionFileList from "../questions/QuestionFileList"
   import QuestionnaireMetadata from './QuestionnaireMetadata'
 
   export default Vue.extend({

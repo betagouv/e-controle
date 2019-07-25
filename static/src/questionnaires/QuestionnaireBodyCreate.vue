@@ -131,8 +131,8 @@
   import ConfirmModal from "../utils/ConfirmModal"
   import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
-  import QuestionFileList from "./QuestionFileList"
-  import QuestionFileUpload from "./QuestionFileUpload"
+  import QuestionFileList from "../questions/QuestionFileList"
+  import QuestionFileUpload from "../questions/QuestionFileUpload"
 
   import reportValidity from 'report-validity';
 
