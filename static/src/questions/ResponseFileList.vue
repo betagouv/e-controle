@@ -44,8 +44,10 @@
       };
     },
     mounted() {
+      this.files = this.question.response_files
+
       var _this = this
-      EventBus.$on('response-files-updated-' + this.question_id, function (files) {
+      EventBus.$on('response-files-updated-' + this.question.id, function (files) {
         _this.files = files;
       })
     },
@@ -55,9 +57,7 @@
       }
     },
     props: {
-      // todo get the original question files from props, instead of response-files-updated- event from
-      //  questionnaire-detail.js
-      question_id: String|Number,
+      question: Object,
     },
     methods: {}
   });

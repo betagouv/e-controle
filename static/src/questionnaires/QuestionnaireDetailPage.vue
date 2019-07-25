@@ -41,7 +41,7 @@
                         :question-numbering="qIndex + 1"
                         :question="question">
             <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-            <response-file-list :question_id="question.id"></response-file-list>
+            <response-file-list :question="question"></response-file-list>
             <response-dropzone :is-audited="user.is_audited"
                                :question-id="question.id">
             </response-dropzone>
