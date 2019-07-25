@@ -3,19 +3,19 @@
        class="card m-0 p-0 pb-0">
     <div class="card-header border-0" data-toggle="card-collapse">
       <question v-if="question"
-                :question_description="question.description"
-                :theme_numbering="themeNumbering"
-                :question_numbering="questionNumbering"
-                :question_id="question.id"
-                :annexe_count="question.question_files && question.question_files.length">
+                :question-description="question.description"
+                :theme-numbering="themeNumbering"
+                :question-numbering="questionNumbering"
+                :question-id="question.id"
+                :question-file-count="question.question_files && question.question_files.length">
 
       </question>
       <question v-else
-                :question_description="questionDescription"
-                :theme_numbering="themeNumbering"
-                :question_numbering="questionNumbering"
-                :question_id="questionId"
-                :annexe_count="questionFileCount">
+                :question-description="questionDescription"
+                :theme-numbering="themeNumbering"
+                :question-numbering="questionNumbering"
+                :question-id="questionId"
+                :question-file-count="questionFileCount">
       </question>
     </div>
     <div class="card-body">
