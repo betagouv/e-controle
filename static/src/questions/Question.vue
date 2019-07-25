@@ -41,8 +41,7 @@
       };
     },
     mounted() {
-      // todo rename event
-      EventBus.$on('answercount-updated-' + this.questionId, responseFileCount => {
+      EventBus.$on('response-file-count-updated-' + this.questionId, responseFileCount => {
         this.responseFileCount = responseFileCount;
       })
     },
