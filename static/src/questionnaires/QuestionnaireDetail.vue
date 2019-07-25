@@ -60,7 +60,7 @@
 <script>
   import Vue from "vue";
   import DateFormat from '../utils/DateFormat.js';
-  import Question from '../details/Question.vue';
+  import Question from '../questions/Question.vue';
   import QuestionFileList from "./QuestionFileList"
   import QuestionnaireMetadata from './QuestionnaireMetadata'
 

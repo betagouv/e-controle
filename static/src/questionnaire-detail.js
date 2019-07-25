@@ -3,10 +3,10 @@ import "@babel/polyfill"
 import axios from 'axios'
 import EventBus from './events'
 import InfoBar from './utils/InfoBar'
-import Question from './details/Question'
+import Question from './questions/Question'
 import QuestionFileList from './questionnaires/QuestionFileList'
-import ResponseDropzone from './details/ResponseDropzone'
-import ResponseFileList from './details/ResponseFileList'
+import ResponseDropzone from './questions/ResponseDropzone'
+import ResponseFileList from './questions/ResponseFileList'
 import Vue from 'vue/dist/vue.js'
 
 const url = "/api/question/";
