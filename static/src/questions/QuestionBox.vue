@@ -2,10 +2,9 @@
   <div v-bind:id="'question' + themeNumbering + '.' + questionNumbering"
        class="card m-0 p-0 pb-0">
     <div class="card-header border-0" data-toggle="card-collapse">
-      <question :question-description="question.description"
-                :theme-numbering="themeNumbering"
+      <question :theme-numbering="themeNumbering"
                 :question-numbering="questionNumbering"
-                :question-id="question.id">
+                :question="question">
       </question>
     </div>
     <div class="card-body">
