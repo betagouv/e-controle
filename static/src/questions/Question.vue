@@ -42,7 +42,6 @@
       };
     },
     mounted() {
-      // todo get the original response-file-count from props, instead of event from questionnaire-detail.js
       this.responseFileCount = this.question.response_files.length
       EventBus.$on('response-file-count-updated-' + this.question.id, responseFileCount => {
         this.responseFileCount = responseFileCount;
