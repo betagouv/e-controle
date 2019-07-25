@@ -30,7 +30,6 @@
 
 <script>
   import Vue from "vue";
-  import DateFormat from '../utils/DateFormat.js';
   import QuestionBox from '../questions/QuestionBox.vue';
   import QuestionFileList from "../questions/QuestionFileList"
   import QuestionnaireMetadata from './QuestionnaireMetadata'
@@ -41,9 +40,6 @@
     props: ['questionnaire'],
     data: function () {
       return {};
-    },
-    filters: {
-      DateFormat
     },
     components: {
       QuestionBox,
