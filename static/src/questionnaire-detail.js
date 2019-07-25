@@ -1,7 +1,7 @@
 import "@babel/polyfill"
 
 import Answer from './details/Answer'
-import AnswerFileList from './details/AnswerFileList'
+import ResponseFileList from './details/ResponseFileList'
 import axios from 'axios'
 import EventBus from './events'
 import InfoBar from './utils/InfoBar'
@@ -35,7 +35,7 @@ let question_app = new Vue({
   },
   components: {
     Answer,
-    AnswerFileList,
+    ResponseFileList,
     InfoBar,
     Question,
     QuestionFileList,
