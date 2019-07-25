@@ -51,7 +51,7 @@
       theme_numbering: String|Number,
       question_numbering: String|Number,
       question_id: String|Number,
-      annexe_count: String|Number,
+      annexe_count: String|Number, // todo get this from event from QuestionFileList
     },
     methods: {},
   });

@@ -83,11 +83,14 @@
             {% with response_files=question.response_files.all question_files=question.question_files.all %}
               <question-box theme-numbering="{{ theme.numbering }}"
                             question-numbering="{{ question.numbering }}"
-                            question="{{ question }}">
+                            question-id="{{ question.id }}"
+                            question-description="{{ question.description }}"
+                            question-file-count="{{ question.question_files.count }}"
+              >
                 <question-file-list question-id="{{ question.id }}" :with-delete="false"></question-file-list>
                 <response-file-list question_id="{{ question.id }}"></response-file-list>
                 <response-dropzone :is-audited="'{{ user.profile.is_audited }}'.toLowerCase() === 'true'"
-                        question-id="{{ question.id }}">
+                                   question-id="{{ question.id }}">
                 </response-dropzone>
               </question-box>
             {% endwith %}
