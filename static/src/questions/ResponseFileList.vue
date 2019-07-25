@@ -55,7 +55,9 @@
       }
     },
     props: {
-      question_id: String,
+      // todo get the original question files from props, instead of response-files-updated- event from
+      //  questionnaire-detail.js
+      question_id: String|Number,
     },
     methods: {}
   });

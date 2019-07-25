@@ -37,13 +37,20 @@
   export default Vue.extend({
     data() {
       return {
-          responseFileCount: 0
+          questionFileCount: 0,
+          responseFileCount: 0,
       };
     },
     mounted() {
+      // todo get the original response-file-count from props, instead of event from questionnaire-detail.js
       EventBus.$on('response-file-count-updated-' + this.questionId, responseFileCount => {
         this.responseFileCount = responseFileCount;
       })
+
+      EventBus.$on('question-file-count-changed-' + this.questionId, (questionFileCount) => {
+        this.questionFileCount = questionFileCount;
+      })
+
     },
     components: {
     },
@@ -54,7 +61,6 @@
       // todo get these 3 from the question object once we switch all to Vue
       questionDescription: String,
       questionId: String|Number,
-      questionFileCount: String|Number,
     },
     methods: {},
   });
