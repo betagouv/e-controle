@@ -4,28 +4,8 @@
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">
-      <div id="sidebar" class="col-lg-4">
-        <div class="row sticky">
-          <div class="col-md-6 col-lg-12">
-            <div class="card">
-              <div class="card-header bg-blue text-white">
-                <h4 class="card-title">Thèmes</h4>
-              </div>
-              <table class="table card-table">
-                <tbody>
-                <tr v-for="(theme, themeIndex) in questionnaire.themes" class="theme-row">
-                  <td>
-                    <a v-bind:href="'#theme' + (themeIndex + 1)">
-                      {{ themeIndex + 1 }}. {{ theme.title }}
-                    </a>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <theme-list-sidebar :themes="questionnaire.themes">
+      </theme-list-sidebar>
 
       <div class="col-lg-8">
         <div v-bind:id="'theme' + (themeIndex + 1)"
@@ -64,6 +44,7 @@
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
+  import ThemeListSidebar from '../themes/ThemeListSidebar'
 
   const questionnaire_url = "/api/questionnaire/";
   const session_user_url = "/api/user/current/";
@@ -99,6 +80,7 @@
       QuestionnaireMetadata,
       ResponseDropzone,
       ResponseFileList,
+      ThemeListSidebar,
     }
   })
 
