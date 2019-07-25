@@ -6,16 +6,14 @@
                 :question-description="question.description"
                 :theme-numbering="themeNumbering"
                 :question-numbering="questionNumbering"
-                :question-id="question.id"
-                :question-file-count="question.question_files && question.question_files.length">
+                :question-id="question.id">
 
       </question>
       <question v-else
                 :question-description="questionDescription"
                 :theme-numbering="themeNumbering"
                 :question-numbering="questionNumbering"
-                :question-id="questionId"
-                :question-file-count="questionFileCount">
+                :question-id="questionId">
       </question>
     </div>
     <div class="card-body">

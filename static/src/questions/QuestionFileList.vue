@@ -50,6 +50,7 @@
           }
         }).then((response) => {
           this.files = response.data
+          EventBus.$emit('question-file-count-changed-' + this.questionId, this.files.length)
         })
       }
     },
