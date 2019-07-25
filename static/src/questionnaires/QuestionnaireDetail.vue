@@ -37,8 +37,8 @@
           </div>
 
           <question-box v-for="(question, qIndex) in theme.questions"
-                        :theme-index="themeIndex"
-                        :question-index="qIndex"
+                        :theme-numbering="themeIndex + 1"
+                        :question-numbering="qIndex + 1"
                         :question="question">
             <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
           </question-box>

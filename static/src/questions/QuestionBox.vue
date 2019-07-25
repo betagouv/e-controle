@@ -1,10 +1,10 @@
 <template>
-  <div v-bind:id="'question' + (themeIndex + 1) + '.' + (questionIndex + 1)"
+  <div v-bind:id="'question' + themeNumbering + '.' + questionNumbering"
        class="card m-0 p-0 pb-0">
     <div class="card-header border-0" data-toggle="card-collapse">
       <question :question_description="question.description"
-                :theme_numbering="themeIndex + 1"
-                :question_numbering="questionIndex + 1"
+                :theme_numbering="themeNumbering"
+                :question_numbering="questionNumbering"
                 :question_id="question.id"
                 :annexe_count="question.question_files && question.question_files.length">
       </question>
@@ -22,8 +22,8 @@
 
   export default Vue.extend({
     props: [
-      'themeIndex',
-      'questionIndex',
+      'themeNumbering',
+      'questionNumbering',
       'question'
     ],
     components: {
