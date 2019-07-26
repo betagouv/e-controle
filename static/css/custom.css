@@ -95,3 +95,10 @@
     background-color: #45aaf2;
     color: #fff;
 }
+
+.truncate {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

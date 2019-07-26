@@ -4,24 +4,20 @@
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
-          <th class="w-1"></th>
           <th>Date de dépôt</th>
           <th>Nom du document</th>
           <th>Déposant</th>
-          <th class="w-1"></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="file in files" :key="file.id">
-          <td class="text-center">
-            <div class="fe fe-file"></div>
-          </td>
           <td>
             <div>{{  file.creation_date }}</div>
             <div class="small text-muted">{{  file.creation_time }}</div>
           </td>
           <td>
-            <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+            <div class="truncate"><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
           </td>
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
