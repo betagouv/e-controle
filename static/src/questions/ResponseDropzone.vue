@@ -35,6 +35,9 @@
 
   export default Vue.extend({
     props: [
+        // Note : this field will change because the user object is fetched from server and arrives late.
+        // This can break the rendering of the dropbox, it cannot be rendered late.
+        // So we use a v-show in the template, rather than a v-if, to render early.
         'isAudited',
         'questionId'
     ],
