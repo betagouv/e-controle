@@ -5,7 +5,7 @@
     </span>
 
     <div class="card-text" style="cursor: pointer;">
-      <div class="with-line-breaks">{{ questionDescription }}</div>
+      <div class="with-line-breaks">{{ question.description }}</div>
       <div class="tags">
         <template v-if="questionFileCount > 0">
           <span class="tag tag-orange pull-left">
@@ -37,29 +37,32 @@
   export default Vue.extend({
     data() {
       return {
-          responseFileCount: 0
+          questionFileCount: 0,
+          responseFileCount: 0,
       };
     },
     mounted() {
-      EventBus.$on('response-file-count-updated-' + this.questionId, responseFileCount => {
+      this.responseFileCount = this.question.response_files ? this.question.response_files.length : 0
+      EventBus.$on('response-file-count-updated-' + this.question.id, responseFileCount => {
         this.responseFileCount = responseFileCount;
       })
+
+      EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {
+        this.questionFileCount = questionFileCount;
+      })
+
     },
     components: {
     },
     props: {
       themeNumbering: String|Number,
       questionNumbering: String|Number,
-
-      // todo get these 3 from the question object once we switch all to Vue
-      questionDescription: String,
-      questionId: String|Number,
-      questionFileCount: String|Number,
+      question: Object,
     },
     methods: {},
   });
 </script>
 
-<style scoped>
+<style>
 
 </style>

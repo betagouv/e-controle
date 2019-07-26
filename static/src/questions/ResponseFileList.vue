@@ -44,8 +44,10 @@
       };
     },
     mounted() {
+      this.files = this.question.response_files
+
       var _this = this
-      EventBus.$on('response-files-updated-' + this.question_id, function (files) {
+      EventBus.$on('response-files-updated-' + this.question.id, function (files) {
         _this.files = files;
       })
     },
@@ -55,7 +57,7 @@
       }
     },
     props: {
-      question_id: String,
+      question: Object,
     },
     methods: {}
   });

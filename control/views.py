@@ -7,7 +7,9 @@ from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
 from sendfile import sendfile
+import json
 
+from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
@@ -149,3 +151,9 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['questionnaire_json'] = \
+            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
+        return context

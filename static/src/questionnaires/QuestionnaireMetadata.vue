@@ -27,10 +27,15 @@
 </template>
 
 <script>
+  import DateFormat from '../utils/DateFormat.js';
   import Vue from 'vue'
 
   export default Vue.extend({
-    props: [ 'questionnaire' ]
+    props: [ 'questionnaire' ],
+    filters: {
+      DateFormat
+    },
+
   })
 
 </script>

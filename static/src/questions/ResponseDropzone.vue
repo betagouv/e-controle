@@ -1,6 +1,6 @@
 <template>
   <div :id="'dropzone_' + questionId">
-    <div v-if="isAudited" class="form-group">
+    <div v-show="isAudited" class="form-group">
       <div class="form-label">Déposer vos réponses</div>
       <info-bar>
         Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
@@ -35,6 +35,9 @@
 
   export default Vue.extend({
     props: [
+        // Note : this field will change because the user object is fetched from server and arrives late.
+        // This can break the rendering of the dropbox, it cannot be rendered late.
+        // So we use a v-show in the template, rather than a v-if, to render early.
         'isAudited',
         'questionId'
     ],
