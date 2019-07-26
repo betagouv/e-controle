@@ -35,19 +35,23 @@
 
   import Vue from "vue";
 
+  import EventBus from '../events'
+
   export default Vue.extend({
     data() {
-      return {answer_count: 0, files: {}};
+      return {
+        files: {}
+      };
     },
     mounted() {
       var _this = this
-      this.$parent.$on('answer-updated-' + this.question_id, function (files) {
+      EventBus.$on('response-files-updated-' + this.question_id, function (files) {
         _this.files = files;
       })
     },
     computed: {
       answer_count: function () {
-         return files ? this.files.length: 0;
+         return this.files ? this.files.length: 0;
       }
     },
     props: {
