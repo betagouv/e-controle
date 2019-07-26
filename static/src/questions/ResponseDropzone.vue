@@ -1,6 +1,6 @@
 <template>
   <div :id="'dropzone_' + questionId">
-    <div v-if="isAudited" class="form-group">
+    <div v-show="isAudited" class="form-group">
       <div class="form-label">Déposer vos réponses</div>
       <info-bar>
         Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.

@@ -19,7 +19,7 @@
 
 {% block page_content %}
   <div id="questionnaire-detail-app">
-    <questionnaire-detail-page questionnaire-id="{{ questionnaire.id }}"></questionnaire-detail-page>
+    <questionnaire-detail-page :questionnaire="{{ questionnaire_json }}"></questionnaire-detail-page>
   </div>
 {% endblock page_content %}
 

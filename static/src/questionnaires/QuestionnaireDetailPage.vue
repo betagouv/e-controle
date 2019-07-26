@@ -13,7 +13,7 @@
                    :theme-numbering="themeIndex + 1">
 
           <question-box v-for="(question, qIndex) in theme.questions"
-                        with-collapse="true"
+                        :with-collapse="true"
                         :theme-numbering="themeIndex + 1"
                         :question-numbering="qIndex + 1"
                         :question="question">
@@ -50,23 +50,16 @@
   const session_user_url = "/api/user/current/";
 
   export default Vue.extend({
-    props: [ 'questionnaireId' ],
+    props: [ 'questionnaire'],
     data : function () {
       return {
-        questionnaire: '',
-        user: '',
+        user: { is_audited: false },
       }
     },
     mounted: function(){
-      this.getQuestionnaire()
       this.getSessionUser()
     },
     methods: {
-      getQuestionnaire: function() {
-        axios.get(questionnaire_url + this.questionnaireId).then(response => {
-          this.questionnaire = response.data
-        });
-      },
       // todo reuse the Vuex store ?
       getSessionUser: function() {
         axios.get(session_user_url).then(response => {
