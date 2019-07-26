@@ -4,10 +4,11 @@
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
-          <th class="text-center w-1"></th>
+          <th class="w-1"></th>
           <th>Date de dépôt</th>
           <th>Nom du document</th>
-          <th class="text-center">Déposant</th>
+          <th>Déposant</th>
+          <th class="w-1"></th>
         </tr>
       </thead>
       <tbody>
@@ -25,9 +26,28 @@
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
           </td>
+          <td class="text-center">
+            <a href="javascript:void(0)"
+               data-toggle="modal"
+               :data-target="'#trash-confirm-modal-' + file.id"
+            >
+              <div class="fe fe-trash-2"></div>
+            </a>
+          </td>
         </tr>
       </tbody>
     </table>
+    <confirm-modal v-for="file in files" :key="file.id"
+                   :id="'trash-confirm-modal-' + file.id"
+                   title="Corbeille"
+                   confirm-button="Oui, envoyer à la corbeille"
+                   cancel-button="Non, annuler"
+                   @confirm="sendToTrash(file.id)"
+    >
+      <p>
+        Vous allez envoyer “{{ file.basename }}” à la corbeille.
+      </p>
+    </confirm-modal>
   </div>
 </template>
 
@@ -35,6 +55,7 @@
 
   import Vue from "vue";
 
+  import ConfirmModal from '../utils/ConfirmModal'
   import EventBus from '../events'
 
   export default Vue.extend({
@@ -59,7 +80,14 @@
     props: {
       question: Object,
     },
-    methods: {}
+    methods: {
+      sendToTrash: function(fileId) {
+        console.log('sendToTrash', fileId)
+      }
+    },
+    components: {
+      ConfirmModal,
+    }
   });
 </script>
 
