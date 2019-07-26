@@ -42,7 +42,7 @@
       };
     },
     mounted() {
-      this.responseFileCount = this.question.response_files.length
+      this.responseFileCount = this.question.response_files ? this.question.response_files.length : 0
       EventBus.$on('response-file-count-updated-' + this.question.id, responseFileCount => {
         this.responseFileCount = responseFileCount;
       })
