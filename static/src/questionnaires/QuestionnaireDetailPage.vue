@@ -13,6 +13,7 @@
                    :theme-numbering="themeIndex + 1">
 
           <question-box v-for="(question, qIndex) in theme.questions"
+                        with-collapse="true"
                         :theme-numbering="themeIndex + 1"
                         :question-numbering="qIndex + 1"
                         :question="question">

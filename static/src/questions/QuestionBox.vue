@@ -1,13 +1,13 @@
 <template>
   <div v-bind:id="'question' + themeNumbering + '.' + questionNumbering"
        class="card m-0 p-0 pb-0">
-    <div class="card-header border-0" data-toggle="collapse" :data-target="'#question-body-' + question.id">
+    <div class="card-header border-0" :data-toggle="collapseValue" :data-target="'#question-body-' + question.id">
       <question :theme-numbering="themeNumbering"
                 :question-numbering="questionNumbering"
                 :question="question">
       </question>
     </div>
-    <div class="card-body collapse" :id="'question-body-' + question.id">
+    <div class="card-body" :class="collapseValue" :id="'question-body-' + question.id">
       <slot></slot>
     </div>
 
@@ -19,11 +19,21 @@
   import Vue from 'vue'
 
   export default Vue.extend({
-    props: [
-      'question',
-      'questionNumbering',
-      'themeNumbering',
-    ],
+    props: {
+      question: Object,
+      questionNumbering: String|Number,
+      themeNumbering: String|Number,
+      withCollapse: {
+        type: Boolean,
+        default: false
+      },
+    },
+    computed: {
+      collapseValue: function() {
+        if (this.withCollapse) return 'collapse'
+        return ''
+      }
+    },
     components: {
       Question,
     },
