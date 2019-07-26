@@ -30,7 +30,7 @@ class ResponseFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ResponseFile
-        fields = ('id', 'url', 'basename', 'creation_date', 'creation_time', 'author')
+        fields = ('id', 'url', 'basename', 'creation_date', 'creation_time', 'author', 'is_deleted')
 
 
 class QuestionFileSerializer(serializers.ModelSerializer):
