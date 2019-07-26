@@ -61,16 +61,16 @@
       };
     },
     mounted() {
-      this.files = this.question.response_files
+      this.files = this.question.response_files.filter(file => !file.is_deleted)
 
       var _this = this
       EventBus.$on('response-files-updated-' + this.question.id, function (files) {
-        _this.files = files;
+        _this.files = files.filter(file => !file.is_deleted)
       })
     },
     computed: {
       answer_count: function () {
-         return this.files ? this.files.length: 0;
+         return this.files ? this.files.length: 0
       }
     },
     props: {
