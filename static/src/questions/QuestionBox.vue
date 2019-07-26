@@ -23,6 +23,7 @@
       question: Object,
       questionNumbering: String|Number,
       themeNumbering: String|Number,
+      // Note : tabler.io's card-collapse doesn't work within a v-for. So we use bootstrap collapse.
       withCollapse: {
         type: Boolean,
         default: false
