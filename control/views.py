@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, CreateView, TemplateView
+from django.views.generic import DetailView, CreateView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -137,3 +137,15 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
+
+
+class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
+    template_name = "ecc/questionnaire_detail.html"
+    context_object_name = 'questionnaire'
+
+    def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        if not self.request.user.profile.is_inspector:
+            queryset = queryset.filter(is_draft=False)
+        return queryset

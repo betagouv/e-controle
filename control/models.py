@@ -64,6 +64,8 @@ class Control(models.Model):
         return self.questionnaires.filter(is_draft=False)
 
     def __str__(self):
+        if self.depositing_organization:
+            return f'{self.title} - {self.depositing_organization}'
         return self.title
 
 

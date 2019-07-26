@@ -18,22 +18,8 @@
                 Supprimer l'utilisateur
               </button>
             </div>
-            <hr/>
         <form @submit.prevent="updateUser" @keydown.esc="resetFormData">
           <fieldset class="form-fieldset">
-            <div class="form-group">
-              <div class="custom-controls-stacked">
-                <label class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" v-model="editingUser.profile_type" value="inspector" class="custom-control-input" name="control-inline-radios">
-                  <span class="custom-control-label">Équipe de contrôle</span>
-                </label>
-                <label class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" v-model="editingUser.profile_type" value="audited" class="custom-control-input" name="control-inline-radios">
-                  <span class="custom-control-label">Organisme interrogé</span>
-                </label>
-                <p class="text-muted pl-2" v-if="errors.profile_type"><i class="fa fa-warning"></i> Choisissez l'une des options</p>
-              </div>
-            </div>
             <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="editingUser.first_name" required>
