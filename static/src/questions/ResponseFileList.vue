@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="file in files" :key="file.id">
+        <tr v-for="file in sortedFiles" :key="file.id">
           <td>
             <div>{{  file.creation_date }}</div>
             <div class="small text-muted">{{  file.creation_time }}</div>
@@ -74,7 +74,8 @@
       };
     },
     mounted() {
-      this.files = this.question.response_files.filter(file => !file.is_deleted)
+      this.files = this.question.response_files
+          .filter(file => !file.is_deleted)
 
       EventBus.$on(event_name + this.question.id, files => {
         this.files = files.filter(file => !file.is_deleted)
@@ -83,6 +84,17 @@
     computed: {
       answer_count: function () {
          return this.files ? this.files.length: 0
+      },
+      sortedFiles: {
+        get: function () {
+          return this.files
+              .sort((file1, file2) => {
+                return (new Date(file1.created).getTime() - new Date(file2.created).getTime())
+              })
+        },
+        set: function (newFiles) {
+          this.files = newFiles
+        }
       }
     },
     props: {
