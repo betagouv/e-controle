@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_static_header %}
+{{ block.super }}
+{% endblock extra_static_header %}
+
+{% block page_content %}
+
+  <h1>Corbeille</h1>
+  <ul>
+    {% for file in object_list %}
+      <li>{{ file.basename }}</li>
+    {% empty %}
+      <li>Rien dans la corbeille</li>
+    {% endfor %}
+  </ul>
+
+{% endblock page_content %}
+
+{% block js_bundle %}
+{% endblock js_bundle %}

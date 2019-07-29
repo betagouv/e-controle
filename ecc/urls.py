@@ -51,6 +51,7 @@ urlpatterns = [
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
+    path('corbeille/', control_views.Trash.as_view(), name='trash'),
 
     path('megacontrole-confirmer/<int:pk>/',
          admin_views.MegacontrolConfirm.as_view(),

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, CreateView, RedirectView, TemplateView
+from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -27,6 +27,16 @@ class WithListOfControlsMixin(object):
 
 class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
     template_name = "ecc/questionnaire_list.html"
+
+
+class Trash(LoginRequiredMixin, ListView):
+    model = ResponseFile
+    template_name = "ecc/trash.html"
+
+    def get_queryset(self):
+        queryset = ResponseFile.objects.filter(
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        return queryset
 
 
 class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
