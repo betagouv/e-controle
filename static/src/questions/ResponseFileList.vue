@@ -1,8 +1,8 @@
 <template>
   <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
-    <success-bar v-show="message">{{ message }}</success-bar>
-    <error-bar v-show="errorMessage">{{ errorMessage }}</error-bar>
+    <success-bar v-if="message" @dismissed="clearMessage">{{ message }}</success-bar>
+    <error-bar v-if="errorMessage" @dismissed="clearErrorMessage">{{ errorMessage }}</error-bar>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
@@ -117,7 +117,13 @@
           console.error('Error when posting response file', error);
           this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille.`
         })
-      }
+      },
+      clearErrorMessage: function() {
+        this.errorMessage = ''
+      },
+      clearMessage: function() {
+        this.message = ''
+      },
     },
     components: {
       ConfirmModal,
