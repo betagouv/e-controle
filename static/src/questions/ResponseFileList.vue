@@ -1,6 +1,7 @@
 <template>
   <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+    <success-bar v-show="message">{{ message }}</success-bar>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
@@ -51,13 +52,19 @@
 
   import Vue from "vue";
 
+  import axios from 'axios'
   import ConfirmModal from '../utils/ConfirmModal'
   import EventBus from '../events'
+  import SuccessBar from '../utils/SuccessBar'
+
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   export default Vue.extend({
     data() {
       return {
-        files: {}
+        files: {},
+        message: '',
       };
     },
     mounted() {
@@ -79,11 +86,27 @@
     },
     methods: {
       sendToTrash: function(fileId) {
-        console.log('sendToTrash', fileId)
+        let formData = new FormData()
+        formData.append('is_deleted', true)
+        this.axios.patch('/api/fichier-reponse/' + fileId + '/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(response =>{
+          console.debug('success deleting response file', response.data)
+          this.message = 'Le fichier "' + response.data.basename + '" a bien été envoyé à la corbeille.'
+        })
+        .catch(error => {
+          console.error('Error when posting response file', error);
+        })
       }
     },
     components: {
       ConfirmModal,
+      SuccessBar,
     }
   });
 </script>
