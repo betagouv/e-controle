@@ -25,7 +25,7 @@ class ControlSerializer(serializers.ModelSerializer):
 
 class ResponseFileSerializer(serializers.ModelSerializer):
     author = UserSerializer()
-    creation_date = DateTimeFieldWihTZ(source='created', format='%A %d %B %Y')
+    creation_date = DateTimeFieldWihTZ(source='created', format='%a %d %B %Y')
     creation_time = DateTimeFieldWihTZ(source='created', format='%X')
 
     class Meta:
