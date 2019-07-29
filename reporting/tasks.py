@@ -20,12 +20,22 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 
-def get_files(control):
+def get_date_cutoff(control):
+    """
+    The reporting tool looks for files uploaded after a certain date cutoff, which could be :
+    - The last thime a reporting email was sent
+    - 24h from now
+    """
     latest_email_sent = control.actor_actions.filter(verb='sent-files-report').first()
     if latest_email_sent:
         date_cutoff = latest_email_sent.timestamp
     else:
         date_cutoff = timezone.now() - timedelta(hours=24)
+    return date_cutoff
+
+
+def get_files(control):
+    date_cutoff = get_date_cutoff(control)
     logger.info(f"Looking for files uploaded after this timestamp: {date_cutoff}")
     files = ResponseFile.objects.filter(
         question__theme__questionnaire__control=control,
@@ -51,7 +61,12 @@ def send_files_report():
         logger.info(f'Recipients: {recipient_list}')
         if not recipient_list:
             continue
-        context = {'files': files}
+        date_cutoff = get_date_cutoff(control)
+        context = {
+            'control': control,
+            'date_cutoff': date_cutoff.strftime("%A %d %B %Y"),
+            'files': files,
+        }
         number_of_sent_email = send_email(
             subject=subject,
             text_template=text_template,

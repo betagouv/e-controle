@@ -1,7 +1,17 @@
 {% extends "base_email.html" %}
 {% block email_content %}
-<h2 align="center">e-contrôle info</h2>
-<p>De nouveaux documents ont été déposés.</p>
+<h2 class="align-center">Votre notification quotidienne</h2>
+
+{% if control.depositing_organization %}
+<p class="text-strong">Organisme interrogé : {{ control.depositing_organization }}</p>
+<p class="text-strong">Procédure : {{ control.title }}</p>
+{% else %}
+<p class="text-strong">{{ control.title }}</p>
+{% endif %}
+
+<hr />
+
+<p class="align-center subtitle">Liste des fichiers déposés depuis le {{ date_cutoff }}.</p>
 
 <table border="1" cellpadding="0" cellspacing="0">
   <thead>
@@ -9,14 +19,18 @@
       <th>Date de dépôt</th>
       <th>Nom du document</th>
       <th>Déposant</th>
+      <th>Références</th>
     </tr>
   </thead>
   <tbody>
     {% for file in files %}
     <tr>
-      <td>{{ file.created|date:"l, j F Y H:i" }}</td>
-      <td>{{ file.basename }}</td>
-      <td>{{ file.author.first_name }} {{ file.author.last_name }}</td>
+      <td class="text-small">{{ file.created|date:"l, j F Y H:i" }}</td>
+      <td class="text-small">{{ file.basename }}</td>
+      <td class="text-small">{{ file.author.first_name }} {{ file.author.last_name }}</td>
+      <td class="text-small">Questionnaire: Q{{ file.question.theme.questionnaire.numbering|stringformat:"02d" }}
+      <br />Thème: T{{ file.question.theme.numbering|stringformat:"02d" }}
+      <br />Question: {{ file.question.theme.numbering }}.{{ file.question.numbering }}</td>
     </tr>
     {% endfor %}
   </tbody>
