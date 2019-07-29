@@ -1,15 +1,13 @@
 Votre notification quotidienne
 
 {% if control.depositing_organization %}
-Organisme interrogé : {{ control.depositing_organization }}
-Procédure : {{ control.title }}
+{{ control.depositing_organization }}
+{{ control.title }}
 {% else %}
 {{ control.title }}
 {% endif %}
 
 * * *
-
-Liste des fichiers déposés depuis le {{ date_cutoff }}.
 
 {% for file in files %}
 * {{ file.basename }}: {{ file.created|date:"l, j F Y H:i" }} par {{ file.author.first_name }} {{ file.author.last_name }}
