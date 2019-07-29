@@ -34,8 +34,9 @@ class Trash(LoginRequiredMixin, ListView):
     template_name = "ecc/trash.html"
 
     def get_queryset(self):
-        queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        queryset = ResponseFile.objects\
+            .filter(question__theme__questionnaire__control__in=self.request.user.profile.controls.all())\
+            .filter(is_deleted=True)
         return queryset
 
 
