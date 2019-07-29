@@ -51,7 +51,11 @@ def send_files_report():
     text_template = 'reporting/email/files_report.txt'
     for control in Control.objects.all():
         logger.info(f'Processing control: {control}')
-        subject = f'{control.reference_code} - de nouveaux documents déposés !'
+        if control.depositing_organization:
+            subject = control.depositing_organization
+        else:
+            subject = control.title
+        subject += ' - de nouveaux documents déposés !'
         logger.debug(f"Email subject: {subject}")
         files = get_files(control)
         if not files:
