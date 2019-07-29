@@ -29,15 +29,22 @@ class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateVie
     template_name = "ecc/questionnaire_list.html"
 
 
-class Trash(LoginRequiredMixin, ListView):
-    model = ResponseFile
+class Trash(LoginRequiredMixin, DetailView):
+    model = Questionnaire
     template_name = "ecc/trash.html"
 
     def get_queryset(self):
-        queryset = ResponseFile.objects\
-            .filter(question__theme__questionnaire__control__in=self.request.user.profile.controls.all())\
-            .filter(is_deleted=True)
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question_file_list = ResponseFile.objects \
+            .filter(question__theme__questionnaire=self.get_object()) \
+            .filter(is_deleted=True)
+        context['question_file_list'] = question_file_list
+        return context
 
 
 class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):

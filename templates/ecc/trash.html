@@ -6,8 +6,25 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <h1>Corbeille</h1>
+  <div>
+    <div>
+      <a href="{% url 'questionnaire-list' %}#control-{{ questionnaire.control.id }}">
+        <div>
+          {{ questionnaire.control.title }}
+        </div>
+        <div>
+          Organisme : {{ questionnaire.control.depositing_organization }}
+        </div>
+      </a>
+    </div>
 
+    <div class="page-title">
+      Corbeille du
+      <a href="{% url 'questionnaire-detail' questionnaire.id %}">
+        questionnaire {{ questionnaire.numbering }} : {{ questionnaire.title }}
+      </a>
+    </div>
+  </div>
 
   <div>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
@@ -21,7 +38,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for file in object_list %}
+        {% for file in question_file_list %}
           <tr>
             <td>
               <div class="truncate"><a target="_blank" href="{{ file.url }}">{{ file.basename }}</a></div>
