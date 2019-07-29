@@ -2,6 +2,7 @@
   <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
     <success-bar v-show="message">{{ message }}</success-bar>
+    <error-bar v-show="errorMessage">{{ errorMessage }}</error-bar>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
@@ -54,25 +55,29 @@
 
   import axios from 'axios'
   import ConfirmModal from '../utils/ConfirmModal'
+  import ErrorBar from '../utils/ErrorBar'
   import EventBus from '../events'
   import SuccessBar from '../utils/SuccessBar'
 
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
+  const event_name = 'response-files-updated-'
+  const response_file_api_url = '/api/fichier-reponse/'
+
   export default Vue.extend({
     data() {
       return {
         files: {},
+        errorMessage: '',
         message: '',
       };
     },
     mounted() {
       this.files = this.question.response_files.filter(file => !file.is_deleted)
 
-      var _this = this
-      EventBus.$on('response-files-updated-' + this.question.id, function (files) {
-        _this.files = files.filter(file => !file.is_deleted)
+      EventBus.$on(event_name + this.question.id, files => {
+        this.files = files.filter(file => !file.is_deleted)
       })
     },
     computed: {
@@ -86,7 +91,7 @@
     },
     methods: {
       sendUpdateEvent: function() {
-        EventBus.$emit('response-files-updated-' + this.question.id, this.files)
+        EventBus.$emit(event_name + this.question.id, this.files)
       },
       removeFileFromList: function(fileId) {
         const index = this.files.findIndex(file => file.id === fileId)
@@ -95,7 +100,7 @@
       sendToTrash: function(fileId) {
         let formData = new FormData()
         formData.append('is_deleted', true)
-        this.axios.patch('/api/fichier-reponse/' + fileId + '/',
+        this.axios.patch(response_file_api_url + fileId + '/',
           formData,
           {
             headers: {
@@ -106,15 +111,17 @@
           console.debug('success deleting response file', response.data)
           this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
-          this.message = 'Le fichier "' + response.data.basename + '" a bien été envoyé à la corbeille.'
+          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.`
         })
         .catch(error => {
           console.error('Error when posting response file', error);
+          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille.`
         })
       }
     },
     components: {
       ConfirmModal,
+      ErrorBar,
       SuccessBar,
     }
   });
