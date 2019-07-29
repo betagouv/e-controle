@@ -7,7 +7,7 @@
           <th>Date de dépôt</th>
           <th>Nom du document</th>
           <th>Déposant</th>
-          <th></th>
+          <th v-if="isAudited"></th>
         </tr>
       </thead>
       <tbody>
@@ -22,7 +22,7 @@
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
           </td>
-          <td class="text-center">
+          <td v-if="isAudited" class="text-center">
             <a href="javascript:void(0)"
                data-toggle="modal"
                :data-target="'#trash-confirm-modal-' + file.id"
@@ -75,6 +75,7 @@
     },
     props: {
       question: Object,
+      isAudited: Boolean,
     },
     methods: {
       sendToTrash: function(fileId) {
