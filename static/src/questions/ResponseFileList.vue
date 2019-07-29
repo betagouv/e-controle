@@ -85,6 +85,13 @@
       isAudited: Boolean,
     },
     methods: {
+      sendUpdateEvent: function() {
+        EventBus.$emit('response-files-updated-' + this.question.id, this.files)
+      },
+      removeFileFromList: function(fileId) {
+        const index = this.files.findIndex(file => file.id === fileId)
+        this.files.splice(index, 1)
+      },
       sendToTrash: function(fileId) {
         let formData = new FormData()
         formData.append('is_deleted', true)
@@ -97,6 +104,8 @@
           }
         ).then(response =>{
           console.debug('success deleting response file', response.data)
+          this.removeFileFromList(response.data.id)
+          this.sendUpdateEvent()
           this.message = 'Le fichier "' + response.data.basename + '" a bien été envoyé à la corbeille.'
         })
         .catch(error => {
