@@ -113,6 +113,16 @@
 
           </div>  <!--// closing: questionnaire_description_card_body  //-->
         </div>
+      {% empty %}
+        <div class="card">
+          <div class="card-body">
+            {% if user.profile.is_inspector %}
+              Vous n'avez aucun espace de dépôt ouvert.
+            {% else %}
+              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez votre équipe de contrôle.
+            {% endif %}
+          </div>
+        </div>
       {% endfor %}
 
     <add-user-modal></add-user-modal>
