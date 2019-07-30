@@ -3,13 +3,13 @@
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
     <success-bar v-if="message" @dismissed="clearMessage"><div v-html="message"></div></success-bar>
     <error-bar v-if="errorMessage" @dismissed="clearErrorMessage"><div v-html="errorMessage"></div></error-bar>
-    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+    <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
           <th>Date de dépôt</th>
           <th>Nom du document</th>
-          <th>Déposant</th>
-          <th v-if="isAudited"><div class="truncate-small text-center">Mettre à la corbeille</div></th>
+          <th class="text-center">Déposant</th>
+          <th v-if="isAudited"><div class="text-center">Mettre à la corbeille</div></th>
         </tr>
       </thead>
       <tbody>
@@ -19,7 +19,7 @@
             <div class="small text-muted">{{  file.creation_time }}</div>
           </td>
           <td>
-            <div class="truncate"><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+            <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
           </td>
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
