@@ -1,8 +1,8 @@
 <template>
   <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
-    <success-bar v-if="message" @dismissed="clearMessage">{{ message }}</success-bar>
-    <error-bar v-if="errorMessage" @dismissed="clearErrorMessage">{{ errorMessage }}</error-bar>
+    <success-bar v-if="message" @dismissed="clearMessage"><div v-html="message"></div></success-bar>
+    <error-bar v-if="errorMessage" @dismissed="clearErrorMessage"><div v-html="errorMessage"></div></error-bar>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
@@ -64,6 +64,7 @@
 
   const event_name = 'response-files-updated-'
   const response_file_api_url = '/api/fichier-reponse/'
+  const trash_url = '/questionnaire/corbeille/'
 
   export default Vue.extend({
     data() {
@@ -99,6 +100,7 @@
     },
     props: {
       question: Object,
+      questionnaireId: Number|String,
       isAudited: Boolean,
     },
     methods: {
@@ -123,7 +125,8 @@
           console.debug('success deleting response file', response.data)
           this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
-          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.`
+          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.
+              Vous pouvez <a href="${trash_url}${this.questionnaireId}">aller à la corbeille</a> pour le voir.`
         })
         .catch(error => {
           console.error('Error when posting response file', error);
