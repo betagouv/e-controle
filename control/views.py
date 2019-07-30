@@ -42,7 +42,8 @@ class Trash(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         question_file_list = ResponseFile.objects \
             .filter(question__theme__questionnaire=self.get_object()) \
-            .filter(is_deleted=True)
+            .filter(is_deleted=True) \
+            .order_by('created')
         context['question_file_list'] = question_file_list
         return context
 
