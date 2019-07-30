@@ -32,20 +32,20 @@
               <div class="fe fe-trash-2"></div>
             </a>
           </td>
-          <confirm-modal
-                         :id="'trash-confirm-modal-' + file.id"
-                         title="Corbeille"
-                         confirm-button="Oui, envoyer à la corbeille"
-                         cancel-button="Non, annuler"
-                         @confirm="sendToTrash(file.id)"
-          >
-            <p>
-              Vous allez envoyer “{{ file.basename }}” à la corbeille.
-            </p>
-          </confirm-modal>
         </tr>
       </tbody>
     </table>
+    <confirm-modal v-for="file in sortedFiles" :key="file.id"
+                   :id="'trash-confirm-modal-' + file.id"
+                   title="Corbeille"
+                   confirm-button="Oui, envoyer à la corbeille"
+                   cancel-button="Non, annuler"
+                   @confirm="sendToTrash(file.id)"
+    >
+      <p>
+        Vous allez envoyer “{{ file.basename }}” à la corbeille.
+      </p>
+    </confirm-modal>
   </div>
 </template>
 
