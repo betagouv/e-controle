@@ -2,15 +2,19 @@
 <div class="row container-fluid">
   <template v-if="editMode">
     <div class="col">
-      <form @submit.prevent="">
-        <div class="form-group mb-6">
-          <label id="title-label" class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="control.title" required aria-labelledby="title-label">
+      <error-bar v-if="hasErrors">
+        <div>
+          L'espace de dépôt n'a pas pu être modifié. Erreur : {{JSON.stringify(errors)}}
         </div>
-
+      </error-bar>
+      <form @submit.prevent="updateControl">
         <div class="form-group">
           <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="control.depositing_organization" required aria-labelledby="organization-label">
+          <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label">
+        </div>
+        <div class="form-group mb-6">
+          <label id="title-label" class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
+          <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label">
         </div>
         <div class="text-right">
           <a href="javascript:void(0)"
@@ -19,9 +23,8 @@
             Annuler
           </a>
           <button type="submit"
-                  @click="quitEditMode"
                   class="btn btn-primary">
-            Enregistrer
+            Modifier l'espace de dépôt
           </button>
         </div>
       </form>
@@ -55,8 +58,7 @@
   import axios from 'axios'
   import Vue from "vue"
 
-  const update_control_url = "/api/control/"
-  const home_url = "/accueil/"
+  import ErrorBar from "../utils/ErrorBar"
 
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -68,21 +70,50 @@
     data: function() {
       return {
         editMode: false,
-        errorMessage: "",
+        title: "",
+        organization: "",
         errors: "",
-        hasErrors: false,
+        hasErrors: false
       }
     },
+    components: {
+      ErrorBar
+    },
     methods: {
+      resetForm() {
+        this.clearErrors()
+        this.title = this.control.title
+        this.organization = this.control.depositing_organization
+      },
       clearErrors() {
         this.errors = ""
         this.hasErrors = false
       },
       enterEditMode() {
+        this.resetForm()
         this.editMode = true
       },
       quitEditMode() {
+        this.resetForm()
         this.editMode = false
+      },
+      updateControl: function() {
+        const update_control_url = `/api/control/${this.control.id}/`
+        const payload = {
+          title: this.title,
+          depositing_organization: this.organization
+        }
+        axios.put(update_control_url, payload)
+          .then(response => {
+            console.debug(response)
+            this.control = response.data
+            this.quitEditMode()
+          })
+          .catch((error) => {
+            console.error(error)
+            this.errors = error.response.data
+            this.hasErrors = true
+          })
       }
     }
   })
