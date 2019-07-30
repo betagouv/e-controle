@@ -42,9 +42,13 @@
       };
     },
     mounted() {
-      this.responseFileCount = this.question.response_files ? this.question.response_files.length : 0
-      EventBus.$on('response-file-count-updated-' + this.question.id, responseFileCount => {
-        this.responseFileCount = responseFileCount;
+      const numNotDeleted = files => files.filter(file => !file.is_deleted).length
+      this.responseFileCount = 0
+      if (this.question.response_files) {
+        this.responseFileCount = numNotDeleted(this.question.response_files)
+      }
+      EventBus.$on('response-files-updated-' + this.question.id, responseFiles => {
+        this.responseFileCount = numNotDeleted(responseFiles);
       })
 
       EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {

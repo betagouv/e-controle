@@ -1,30 +1,48 @@
 <template>
   <div class="table-responsive" v-if="files && files.length">
     <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+    <success-bar v-if="message" @dismissed="clearMessage">{{ message }}</success-bar>
+    <error-bar v-if="errorMessage" @dismissed="clearErrorMessage">{{ errorMessage }}</error-bar>
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
-          <th class="text-center w-1"></th>
           <th>Date de dépôt</th>
           <th>Nom du document</th>
-          <th class="text-center">Déposant</th>
+          <th>Déposant</th>
+          <th v-if="isAudited"></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="file in files" :key="file.id">
-          <td class="text-center">
-            <div class="fe fe-file"></div>
-          </td>
+        <tr v-for="file in sortedFiles" :key="file.id">
           <td>
             <div>{{  file.creation_date }}</div>
             <div class="small text-muted">{{  file.creation_time }}</div>
           </td>
           <td>
-            <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+            <div class="truncate"><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
           </td>
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
           </td>
+          <td v-if="isAudited" class="text-center">
+            <a href="javascript:void(0)"
+               data-toggle="modal"
+               :data-target="'#trash-confirm-modal-' + file.id"
+            >
+              <div class="fe fe-trash-2"></div>
+            </a>
+          </td>
+          <confirm-modal
+                         :id="'trash-confirm-modal-' + file.id"
+                         title="Corbeille"
+                         confirm-button="Oui, envoyer à la corbeille"
+                         cancel-button="Non, annuler"
+                         @confirm="sendToTrash(file.id)"
+          >
+            <p>
+              Vous allez envoyer “{{ file.basename }}” à la corbeille.
+            </p>
+          </confirm-modal>
         </tr>
       </tbody>
     </table>
@@ -35,31 +53,95 @@
 
   import Vue from "vue";
 
+  import axios from 'axios'
+  import ConfirmModal from '../utils/ConfirmModal'
+  import ErrorBar from '../utils/ErrorBar'
   import EventBus from '../events'
+  import SuccessBar from '../utils/SuccessBar'
+
+  axios.defaults.xsrfCookieName = 'csrftoken'
+  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+
+  const event_name = 'response-files-updated-'
+  const response_file_api_url = '/api/fichier-reponse/'
 
   export default Vue.extend({
     data() {
       return {
-        files: {}
+        files: {},
+        errorMessage: '',
+        message: '',
       };
     },
     mounted() {
       this.files = this.question.response_files
+          .filter(file => !file.is_deleted)
 
-      var _this = this
-      EventBus.$on('response-files-updated-' + this.question.id, function (files) {
-        _this.files = files;
+      EventBus.$on(event_name + this.question.id, files => {
+        this.files = files.filter(file => !file.is_deleted)
       })
     },
     computed: {
       answer_count: function () {
-         return this.files ? this.files.length: 0;
+         return this.files ? this.files.length: 0
+      },
+      sortedFiles: {
+        get: function () {
+          return this.files
+              .sort((file1, file2) => {
+                return (new Date(file1.created).getTime() - new Date(file2.created).getTime())
+              })
+        },
+        set: function (newFiles) {
+          this.files = newFiles
+        }
       }
     },
     props: {
       question: Object,
+      isAudited: Boolean,
     },
-    methods: {}
+    methods: {
+      sendUpdateEvent: function() {
+        EventBus.$emit(event_name + this.question.id, this.files)
+      },
+      removeFileFromList: function(fileId) {
+        const index = this.files.findIndex(file => file.id === fileId)
+        this.files.splice(index, 1)
+      },
+      sendToTrash: function(fileId) {
+        let formData = new FormData()
+        formData.append('is_deleted', true)
+        this.axios.patch(response_file_api_url + fileId + '/',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ).then(response =>{
+          console.debug('success deleting response file', response.data)
+          this.removeFileFromList(response.data.id)
+          this.sendUpdateEvent()
+          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.`
+        })
+        .catch(error => {
+          console.error('Error when posting response file', error);
+          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille.`
+        })
+      },
+      clearErrorMessage: function() {
+        this.errorMessage = ''
+      },
+      clearMessage: function() {
+        this.message = ''
+      },
+    },
+    components: {
+      ConfirmModal,
+      ErrorBar,
+      SuccessBar,
+    }
   });
 </script>
 

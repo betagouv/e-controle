@@ -95,3 +95,9 @@
     background-color: #45aaf2;
     color: #fff;
 }
+
+.truncate {
+    white-space: normal;
+    word-wrap: break-word;
+    width: 250px;
+}

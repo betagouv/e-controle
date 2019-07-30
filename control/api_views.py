@@ -6,9 +6,9 @@ from rest_framework.parsers import FormParser, MultiPartParser
 import django.dispatch
 
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
-from .models import Control, Question, Questionnaire, Theme, QuestionFile
+from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
-from .serializers import ThemeSerializer, QuestionFileSerializer
+from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer
 
 
 # This signal is triggered after the questionnaire is saved via the API
@@ -71,6 +71,20 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        return queryset
+
+
+class ResponseFileViewSet(viewsets.ModelViewSet):
+    serializer_class = ResponseFileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    filterset_fields = ('question',)
+
+    def perform_create(self, serializer):
+        serializer.save(file=self.request.data.get('file'))
+
+    def get_queryset(self):
+        queryset = ResponseFile.objects.filter(
             question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
         return queryset
 
