@@ -51,6 +51,7 @@ class Control(models.Model):
         return {
             'id': self.id,
             'title': self.title,
+            'depositing_organization': self.depositing_organization,
         }
 
     @property
