@@ -6,7 +6,7 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <div>
+  <div class="page-header">
     <div>
       <a href="{% url 'questionnaire-list' %}#control-{{ questionnaire.control.id }}">
         <div>
@@ -27,6 +27,12 @@
   </div>
 
   <div>
+    <div class="alert alert-info alert-icon alert-dismissible">
+      <button type="button" class="close" data-dismiss="alert"></button>
+      <i class="fe fe-info" aria-hidden="true"></i>
+      Les fichiers mis à la corbeille sont toujours visibles par l'équipe de contrôle. Ils peuvent toujours être utilisés pour le contrôle.
+    </div>
+
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
