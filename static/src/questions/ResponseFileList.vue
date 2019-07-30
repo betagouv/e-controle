@@ -126,7 +126,7 @@
           this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
           this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.
-              Vous pouvez <a href="${trash_url}${this.questionnaireId}">aller à la corbeille</a> pour le voir.`
+              <a href="${trash_url}${this.questionnaireId}">Cliquez ici</a> pour le voir dans la corbeille.`
         })
         .catch(error => {
           console.error('Error when posting response file', error);
