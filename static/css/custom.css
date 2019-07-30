@@ -107,3 +107,9 @@
     word-wrap: break-word;
     width: 250px;
 }
+
+.truncate-small {
+    white-space: normal;
+    word-wrap: break-word;
+    width: 70px;
+}

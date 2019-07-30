@@ -9,7 +9,7 @@
           <th>Date de dépôt</th>
           <th>Nom du document</th>
           <th>Déposant</th>
-          <th v-if="isAudited"></th>
+          <th v-if="isAudited"><div class="truncate-small text-center">Mettre à la corbeille</div></th>
         </tr>
       </thead>
       <tbody>
@@ -28,8 +28,8 @@
             <a href="javascript:void(0)"
                data-toggle="modal"
                :data-target="'#trash-confirm-modal-' + file.id"
+               class="fe fe-trash-2 btn btn-outline-primary"
             >
-              <div class="fe fe-trash-2"></div>
             </a>
           </td>
         </tr>
