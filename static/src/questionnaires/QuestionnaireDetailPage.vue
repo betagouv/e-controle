@@ -4,8 +4,11 @@
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">
-      <theme-list-sidebar :themes="questionnaire.themes">
-      </theme-list-sidebar>
+      <div id="sidebar" class="col-lg-4">
+        <theme-list-sidebar :themes="questionnaire.themes">
+        </theme-list-sidebar>
+        <div><a :href="'/questionnaire/corbeille/' "><i class="fe fe-trash-2 mr-1"></i>Corbeille</a></div>
+      </div>
 
       <div class="col-lg-8">
         <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
