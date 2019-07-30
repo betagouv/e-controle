@@ -1,6 +1,6 @@
 <template>
   <div>
-    <questionnaire-metadata :questionnaire="questionnaire">
+    <questionnaire-metadata :questionnaire="questionnaire" with-trash="true">
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">

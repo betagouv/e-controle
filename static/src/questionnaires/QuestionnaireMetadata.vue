@@ -26,7 +26,7 @@
             <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
           </a>
         </div>
-        <div class="card-footer border-0">
+        <div v-if="withTrash" class="card-footer border-0">
           <a class="btn btn-primary"
              :href="'/questionnaire/corbeille/' + questionnaire.id"
              title="Aller à la corbeille">
@@ -43,7 +43,7 @@
   import Vue from 'vue'
 
   export default Vue.extend({
-    props: [ 'questionnaire' ],
+    props: [ 'questionnaire', 'withTrash' ],
     filters: {
       DateFormat
     },
