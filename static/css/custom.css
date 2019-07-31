@@ -114,7 +114,7 @@
     width: 70px;
 }
 
-table {
+table.response-file-list {
     table-layout: fixed;
     width: 100%;
 }
