@@ -10,8 +10,8 @@ Votre notification quotidienne
 * * *
 
 {% for file in files %}
-* {{ file.basename }}: {{ file.created|date:"l, j F Y H:i" }} par {{ file.author.first_name }} {{ file.author.last_name }}
-  Questionnaire: Q{{ file.question.theme.questionnaire.numbering|stringformat:"02d" }} / Thème: T{{ file.question.theme.numbering|stringformat:"02d" }} / Question: {{ file.question.theme.numbering }}.{{ file.question.numbering }}
+* Questionnaire: Q{{ file.question.theme.questionnaire.numbering|stringformat:"02d" }} | Thème: T{{ file.question.theme.numbering|stringformat:"02d" }} | Question: {{ file.question.theme.numbering }}.{{ file.question.numbering }} | {{ file.basename }}: {{ file.created|date:"l, j F Y H:i" }} par {{ file.author.first_name }} {{ file.author.last_name }}
+
 {% endfor %}
 
 Continuer sur e-contrôle: https://{{ site.domain }}/
