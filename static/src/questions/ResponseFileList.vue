@@ -9,7 +9,7 @@
           <th>Date de dépôt</th>
           <th>Nom du document</th>
           <th>Déposant</th>
-          <th v-if="isAudited"></th>
+          <!-- Removed until Trash page is finished th v-if="isAudited"></th-->
         </tr>
       </thead>
       <tbody>
@@ -24,14 +24,14 @@
           <td class="text-center">
             <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
           </td>
-          <td v-if="isAudited" class="text-center">
+          <!-- Removed until Trash page is finished td v-if="isAudited" class="text-center" >
             <a href="javascript:void(0)"
                data-toggle="modal"
                :data-target="'#trash-confirm-modal-' + file.id"
             >
               <div class="fe fe-trash-2"></div>
             </a>
-          </td>
+          </td -->
           <confirm-modal
                          :id="'trash-confirm-modal-' + file.id"
                          title="Corbeille"
