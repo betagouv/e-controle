@@ -4,8 +4,15 @@
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">
-      <theme-list-sidebar :themes="questionnaire.themes">
-      </theme-list-sidebar>
+      <div id="sidebar" class="col-lg-4">
+        <theme-list-sidebar :themes="questionnaire.themes">
+        </theme-list-sidebar>
+        <div>
+          <a class="btn btn-primary" :href="'/questionnaire/corbeille/' + questionnaire.id">
+            <i class="fe fe-trash-2 mr-1"></i>Aller à la Corbeille
+          </a>
+        </div>
+      </div>
 
       <div class="col-lg-8">
         <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
@@ -19,7 +26,7 @@
                         :question="question">
 
             <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-            <response-file-list :question="question" :is-audited="user.is_audited"></response-file-list>
+            <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
             <response-dropzone :is-audited="user.is_audited"
                                :question-id="question.id">
             </response-dropzone>

@@ -1,5 +1,4 @@
 <template>
-  <div id="sidebar" class="col-lg-4">
     <div class="row sticky">
       <div class="col-md-6 col-lg-12">
         <div class="card">
@@ -20,8 +19,6 @@
         </div>
       </div>
     </div>
-  </div>
-
 </template>
 
 <script>
