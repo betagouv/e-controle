@@ -40,7 +40,7 @@
         <div class="page-title mt-2">{{ control.title }}</div>
       </div>
     </div>
-    <div class="col-auto mt-4 pr-0">
+    <div class="col-auto mt-4 pr-0" v-if="sessionUser.is_inspector">
       <a href="javascript:void(0)"
          class="btn btn-secondary"
          title="Modifier l'espace de dépôt"
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+  import { mapFields } from 'vuex-map-fields'
   import axios from 'axios'
   import Vue from "vue"
 
@@ -75,6 +76,11 @@
         errors: "",
         hasErrors: false
       }
+    },
+    computed: {
+      ...mapFields([
+        'sessionUser'
+      ]),
     },
     components: {
       ErrorBar
