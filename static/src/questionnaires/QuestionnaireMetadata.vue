@@ -17,7 +17,7 @@
         </p>
       </div>
 
-      <div>
+      <div class="col text-right">
         <div class="card-footer border-0">
           <a class="btn btn-primary"
              :href="'/fichier-questionnaire/' + questionnaire.id"
