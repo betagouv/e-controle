@@ -175,6 +175,13 @@ def test_no_access_to_control_update_api_if_not_inspector():
     assert call_control_update_api(user, make_update_payload(), control).status_code == 403
 
 
+def test_inspector_cannot_update_a_control_that_does_not_belong_to_him():
+    control1 = factories.ControlFactory()
+    control2 = factories.ControlFactory()
+    user = make_inspector_user(control2)
+    assert call_control_update_api(user, make_update_payload(), control1).status_code == 404
+
+
 def test_no_access_to_control_update_api_for_anonymous():
     control = factories.ControlFactory()
     url = reverse('api:control-detail', args=[control.id])
