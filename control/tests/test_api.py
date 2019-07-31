@@ -103,7 +103,7 @@ def call_control_create_api(user, payload):
     return response
 
 
-def make_payload():
+def make_create_payload():
     return {
         "title": "new control",
         "reference_code": "ABC_2019",
@@ -113,26 +113,26 @@ def make_payload():
 def test_can_access_control_create_api_if_inspector_user():
     control = factories.ControlFactory()
     user = make_inspector_user(control)
-    assert call_control_create_api(user, make_payload()).status_code == 201
+    assert call_control_create_api(user, make_create_payload()).status_code == 201
 
 
 def test_no_access_to_control_create_api_if_not_inspector():
     control = factories.ControlFactory()
     user = make_audited_user(control)
-    assert call_control_create_api(user, make_payload()).status_code == 403
+    assert call_control_create_api(user, make_create_payload()).status_code == 403
 
 
 def test_no_access_to_control_create_api_for_anonymous():
     control = factories.ControlFactory()
     url = reverse('api:control-list')
-    response = client.post(url, make_payload(), format='json')
+    response = client.post(url, make_create_payload(), format='json')
     assert response.status_code == 403
 
 
 def test_creates_control_and_adds_to_current_user():
     control = factories.ControlFactory()
     user = make_inspector_user(control)
-    payload = make_payload()
+    payload = make_create_payload()
     response = call_control_create_api(user, payload)
     response_control = response.data
 
@@ -145,3 +145,38 @@ def test_creates_control_and_adds_to_current_user():
     assert saved_control.title == payload['title']
     assert saved_control.reference_code == payload['reference_code']
     assert user.profile.controls.all().get(id=response_control['id']) == saved_control
+
+
+### Update
+
+def call_control_update_api(user, payload, control):
+    utils.login(client, user=user)
+    url = reverse('api:control-detail', args=[control.id])
+    response = client.put(url, payload, format='json')
+    return response
+
+
+def make_update_payload():
+    return {
+        "title": "updated control",
+        "depositing_organization": "updated organization",
+    }
+
+
+def test_can_access_control_update_api_if_inspector_user():
+    control = factories.ControlFactory()
+    user = make_inspector_user(control)
+    assert call_control_update_api(user, make_update_payload(), control).status_code == 200
+
+
+def test_no_access_to_control_update_api_if_not_inspector():
+    control = factories.ControlFactory()
+    user = make_audited_user(control)
+    assert call_control_update_api(user, make_update_payload(), control).status_code == 403
+
+
+def test_no_access_to_control_update_api_for_anonymous():
+    control = factories.ControlFactory()
+    url = reverse('api:control-detail', args=[control.id])
+    response = client.put(url, make_update_payload(), format='json')
+    assert response.status_code == 403
