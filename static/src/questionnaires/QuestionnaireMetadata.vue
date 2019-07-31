@@ -1,6 +1,6 @@
 <template>
   <div id="metadata" class="card">
-    <div class="card-body flex-row">
+    <div class="card-body flex-row justify-content-between">
       <div>
         <p class="with-line-breaks">{{ questionnaire.description }}</p>
 
