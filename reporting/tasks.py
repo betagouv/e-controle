@@ -36,7 +36,8 @@ def get_date_cutoff(control):
 
 def get_files(control):
     date_cutoff = get_date_cutoff(control)
-    logger.info(f"Looking for files uploaded after this timestamp: {date_cutoff}")
+    logger.info("Looking for files uploaded after this timestamp: {}".format(
+        date_cutoff.strftime("%Y-%m-%d %H:%M:%S")))
     files = ResponseFile.objects.filter(
         question__theme__questionnaire__control=control,
         created__gt=date_cutoff,
