@@ -1,0 +1,177 @@
+  <div class="my-3 my-md-5">
+      <div class="container">
+        <div class="page-header">
+          <h1 class="page-title">
+            
+Conditions générales d'utilisation
+
+          </h1>
+        </div>
+
+        
+<div class="card">
+  <div class="alert alert-primary">
+      <h4> <p class="text-justify"> En utilisant l’application e.contrôle, vous vous engagez sur les points suivants, notamment : </h4>
+   <p/>
+   <p class="text-justify">
+   <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i> L’utilisateur est tenu de 
+    <strong>respecter le secret de l'instruction</strong>  et ne peut en aucun cas communiquer des renseignements ou des documents extraits des procédures de contrôle, en cours ou passés.
+ <p/>
+ <p class="text-justify">
+<i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i> L’utilisateur ne pourra <strong> ni modifier ni supprimer définitivement un document déposé </strong> conformément au principe d’intangibilité des documents échangés.
+
+<p class="text-justify"><h4> Données personnelles </h4>
+<p class="text-justify">L’application e.contrôle respecte la réglementation concernant les données personnelles. <strong>Les données recueillies serviront à l’activité de contrôle des juridictions financières et seront couvertes à ce titre par le secret de l’instruction</strong>. Aucune donnée ne pourra être utilisée à une autre finalité ou transmise à un organisme tiers.
+.
+  </div>
+</div>
+
+<div class="row row-cards">
+  <div class="col-lg-12">
+    
+    
+    <div class="card">
+      <div class="card-status"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">1</span>
+        <h3 class="card-title">Engagements de l’utilisateur
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+            <p class="text-justify">La Cour des comptes, et les Chambres régionales et territoriales des comptes, sont habilitées à accéder à tous documents, données et traitements, de quelque nature que ce soit, relatifs à la gestion des services et organismes soumis à leurs contrôles ou nécessaires à l'exercice de leurs attributions, et à se les faire communiquer.
+<p class="text-justify">Le fait de faire obstacle, de quelque façon que ce soit, à l'exercice des pouvoirs attribués aux membres et personnels de la Cour des comptes, et des Chambres régionales et territoriales des comptes, est puni de 15 000 euros d'amende conformément au code des juridictions financières. Le procureur général près la Cour des comptes peut saisir le parquet près la juridiction compétente en vue de déclencher l'action publique.
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+    
+    
+       <div class="card">
+      <div class="card-status card-status-top bg-black"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">2</span>
+        <h3 class="card-title">Caractéristiques techniques
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+            <p class="text-justify">La liaison avec l’application e.contrôle s'effectue au moyen d'un protocole sécurisé depuis le site https://e-controles-beta.ccomptes.fr/
+<p class="text-justify">L’utilisation d’un navigateur Internet usuel dans une version maintenue par l’éditeur est recommandée pour une utilisation optimale de l’application e.contrôle. L’utilisation de l’application requiert en outre un logiciel permettant la lecture des documents au format PDF (Portable Document Format), DOCX (documentation en format texte) et XLSX (document en format tableau).
+<p class="text-justify">Les navigateurs utilisés doivent activer JavaScript et accepter les cookies.
+<p class="text-justify">Chaque utilisateur doit disposer d’une adresse électronique active qui sera liée à son compte personnel. Chaque utilisateur doit s’assurer de conserver cette adresse électronique en fonctionnement. Il peut, le cas échéant, demander son remplacement en sollicitant l’équipe de contrôle.
+</p>
+            
+          </div>
+        </div>
+        </div>
+    </div>
+
+  
+        <div class="card">
+      <div class="card-status card-status-top bg-black"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">3</span>
+        <h3 class="card-title">Identification et sécurité
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+<p class="text-justify"> <strong> Identifiant </strong>
+<p class="text-justify"> Les agents des juridictions financières sont automatiquement reconnus et authentifiés de manière sécurisée par l'application e.contrôle comme étant des membres internes des juridictions financières.
+<p class="text-justify"> Les agents des organismes interrogés peuvent se connecter à l'application e.contrôle en sollicitant un compte auprès de l'équipe de contrôle.
+<p class="text-justify">Lors de la création d’un compte e.contrôle, l’identifiant est une adresse électronique.
+<p class="text-justify"> La connexion ne nécessite pas de mots de passe. Elle est réalisée par l’envoie d’un email contenant un lien de connexion unique, temporaire et dont la durée de validité est limitée dans le temps.
+<p class="text-justify"> <strong> Traçage et cookies</strong>
+<p class="text-justify"> ’application e.contrôle utilise un cookie (témoin de navigation) sur le navigateur du client pour stocker un identifiant de session. Ce cookie ne contient aucune autre information et est rendu invalide à la fin de la session de navigation.</div>
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+
+
+    <div class="card">
+      <div class="card-status"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">4</span>
+        <h3 class="card-title">Transfert de documents
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+<p class="text-justify"> Seuls les fichiers en rapport avec les procédures des juridictions financières doivent être chargés dans l’application e.contrôle.
+Ces fichiers doivent uniquement avoir un contenu statique et être non protégés. La taille maximale de chaque fichier est fixée à 256 Mo. Les utilisateurs doivent privilégier les formats PDF, DOC, DOCX (document Word), XLS, XLSX (tableur), JPEG (Joint Photographic Expert Group), ZIP et PNG (Portable Network Graphics).
+<p class="text-justify"> Il appartient à l’utilisateur de contrôler l’exactitude du contenu et de la forme des fichiers déposés. L’utilisateur ne pourra ni modifier ni supprimer définitivement les documents déposés. La qualité et la capacité du réseau à la disposition de l’utilisateur peuvent affecter la vitesse de transmission des documents.
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-status"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">5</span>
+        <h3 class="card-title">Aide et précaution
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+<p class="text-justify"> En cas de problèmes rencontrés dans l’utilisation de l’application, les utilisateurs peuvent contacter la plate-forme d’assistance e-controle@beta.gouv.fr .
+<p class="text-justify"> En cas d’indisponibilité temporaire du service e.contrôle, l’utilisateur peut, s’il est contraint par un délai, transmettre ses documents aux équipe de contrôle par voie papier, par télécopie ou par message électronique adressé à l’adresse de l’équipe de contrôle. 
+<p class="text-justify"> Il appartient par ailleurs à l’utilisateur de s’assurer du bon fonctionnement de son matériel et de son réseau. L’utilisateur doit être conscient des limites de sécurité de son poste de travail. Il peut se référer aux bonnes pratiques présentées sur le site http://www.ssi.gouv.fr/administration/bonnes-pratiques/.
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="card">
+      <div class="card-status"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">6</span>
+        <h3 class="card-title">Données personnelles
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+<p class="text-justify"> L’application e.contrôle est mise en œuvre par la direction des systèmes d’information de la Cour des comptes. 
+<p class="text-justify"> Les données recueillies par cette application le sont pour permettre la gestion de l’activité de contrôle des juridictions financières conformément aux dispositions prévues par le code des juridictions financières. Elles sont protégées par le secret de l’instruction et ne peuvent, à ce titre, être transmises à un tiers. La Cour des comptes s’engage à prendre toute disposition pour garantir le secret de ses investigations et la protection des informations transmises. Pour tout renseignement et pour exercer vos droits, vous pouvez prendre contact auprès de la déléguée à la protection des données (DPO) des juridictions financières à l’adresse suivante : dpo-jf[at]ccomptes.fr ou par courrier : Cour des comptes, 13 rue cambon, 75001 Paris.
+
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+
+   <div class="card">
+      <div class="card-status"></div>
+      <div class="card-header">
+        <span class="stamp stamp-md bg-black mr-3">7</span>
+        <h3 class="card-title">Références
+</h3>
+      </div>
+      <div class="card border-0 m-0 p-0 pb-0 pt-2"">
+        <div class="card-header border-1">
+          <div class="card-text">
+<p class="text-justify"> <a href=https://www.legifrance.gouv.fr/affichCode.do?cidTexte=LEGITEXT000006070249>Code des juridictions financières et notamment ses articles L141-2 et suivants<a/>.
+<p class="text-justify"> <a href=https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000037085952&categorieLien=id> Loi n° 2018-493 du 20 juin 2018 relative à la protection des données personnelles. <a/>
+<p class="text-justify"> <a href=https://www.legifrance.gouv.fr/affichTexte.do?cidTexte=JORFTEXT000037800506&categorieLien=id> Ordonnance n° 2018-1125 du 12 décembre 2018 prise en application de l'article 32 de la loi n° 2018-493 du 20 juin 2018 relative à la protection des données personnelles et portant modification de la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés et diverses dispositions concernant la protection des données à caractère personnel et notamment son article 52. <a/>
+
+</p>
+          </div>
+        </div>
+        </div>
+    </div>
+
+
+      </div>
+    </div>
