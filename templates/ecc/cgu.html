@@ -1,4 +1,16 @@
-  <div class="my-3 my-md-5">
+{% extends "base.html" %}
+
+{% block page_title %}
+
+Conditions générales d'utilisation
+
+{% endblock page_title %}
+
+
+
+{% block page_content %}  
+
+<div class="my-3 my-md-5">
       <div class="container">
         <div class="page-header">
           <h1 class="page-title">
@@ -175,3 +187,11 @@ Ces fichiers doivent uniquement avoir un contenu statique et être non protégé
 
       </div>
     </div>
+                       
+    {% endfor %}
+
+  </div>
+
+</div>
+
+{% endblock page_content %} 
