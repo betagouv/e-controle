@@ -49,8 +49,8 @@
         <i class="fe fe-edit"></i>
         Modifier l'espace de dépôt
       </a>
+    </div>
   </template>
-
 </div>
 </template>
 
