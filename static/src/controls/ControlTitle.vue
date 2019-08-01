@@ -10,11 +10,11 @@
       <form @submit.prevent="updateControl">
         <div class="form-group">
           <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label">
+          <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
         </div>
         <div class="form-group mb-6">
           <label id="title-label" class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
-          <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label">
+          <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
         </div>
         <div class="text-right">
           <a href="javascript:void(0)"
