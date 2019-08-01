@@ -3,7 +3,6 @@ import os
 
 
 from django.conf import settings
-from django.utils.text import slugify
 
 from docxtpl import DocxTemplate, RichText
 
@@ -31,7 +30,7 @@ def generate_questionnaire_file(questionnaire):
         'description': RichText(questionnaire.description)
     }
     doc.render(context)
-    filename = f'{slugify(questionnaire.title)}.docx'
+    filename = f'Questionnaire-{questionnaire.numbering}.docx'
     # Why do we need both relative and absolte path?
     # For django's FileField, we need a relative path from the root of the MEDIA_ROOT.
     # For saving the file via DocxTemplate, we need to absolute path.
