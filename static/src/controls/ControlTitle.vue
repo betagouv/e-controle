@@ -18,7 +18,7 @@
         </div>
         <div class="text-right">
           <a href="javascript:void(0)"
-             @click="quitEditMode"
+             @click="cancel"
              class="btn btn-secondary">
             Annuler
           </a>
@@ -32,12 +32,12 @@
   </template>
   <template v-else>
     <div class="col">
-      <div v-if="control.depositing_organization">
-        <div class="page-title">Organisme interrogé : {{ control.depositing_organization }}</div>
-        <div class="card-title">Procédure : {{ control.title }}</div>
+      <div v-if="organization">
+        <div class="page-title">Organisme interrogé : {{ organization }}</div>
+        <div class="card-title">Procédure : {{ title }}</div>
       </div>
       <div v-else>
-        <div class="page-title mt-2">{{ control.title }}</div>
+        <div class="page-title mt-2">{{ title }}</div>
       </div>
     </div>
     <div class="col-auto mt-4 pr-0" v-if="sessionUser.is_inspector">
@@ -85,9 +85,11 @@
     components: {
       ErrorBar
     },
+    mounted() {
+      this.restoreForm()
+    },
     methods: {
-      resetForm() {
-        this.clearErrors()
+      restoreForm() {
         this.title = this.control.title
         this.organization = this.control.depositing_organization
       },
@@ -96,12 +98,16 @@
         this.hasErrors = false
       },
       enterEditMode() {
-        this.resetForm()
+        this.clearErrors()
         this.editMode = true
       },
       quitEditMode() {
-        this.resetForm()
+        this.clearErrors()
         this.editMode = false
+      },
+      cancel() {
+        this.restoreForm()
+        this.quitEditMode()
       },
       updateControl: function() {
         const update_control_url = `/api/control/${this.control.id}/`
@@ -112,7 +118,8 @@
         axios.put(update_control_url, payload)
           .then(response => {
             console.debug(response)
-            this.control = response.data
+            this.title = response.data.title
+            this.organization = response.data.depositing_organization
             this.quitEditMode()
           })
           .catch((error) => {
