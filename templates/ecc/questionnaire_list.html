@@ -17,7 +17,7 @@
       {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
           <color-bar id="{{ control.id }}"></color-bar>
-          <div class="card-header flex-column align-items-start">
+          <div class="card-header">
             <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
