@@ -8,6 +8,7 @@
         </div>
       </error-bar>
       <form @submit.prevent="updateControl" class="mb-4">
+        <div class="card-title mb-4 mt-3">Modifier cet espace de dépôt</div>
         <fieldset class="form-fieldset">
           <div class="form-group">
             <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
