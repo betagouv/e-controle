@@ -109,7 +109,9 @@
       },
       removeFileFromList: function(fileId) {
         const index = this.files.findIndex(file => file.id === fileId)
+        const file = this.files[index]
         this.files.splice(index, 1)
+        return file
       },
       sendToTrash: function(fileId) {
         let formData = new FormData()
@@ -123,9 +125,9 @@
           }
         ).then(response =>{
           console.debug('success deleting response file', response.data)
-          this.removeFileFromList(response.data.id)
+          const removedFile = this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
-          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.
+          this.message = `Le fichier "${removedFile.basename}" a bien été envoyé à la corbeille.
               <a href="${trash_url}${this.questionnaireId}">Cliquez ici</a> pour le voir dans la corbeille.`
         })
         .catch(error => {
