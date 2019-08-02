@@ -63,7 +63,7 @@
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   const event_name = 'response-files-updated-'
-  const response_file_api_url = '/api/fichier-reponse/'
+  const response_file_trash_url = '/api/fichier-reponse/corbeille/'
   const trash_url = '/questionnaire/corbeille/'
 
   export default Vue.extend({
@@ -114,7 +114,7 @@
       sendToTrash: function(fileId) {
         let formData = new FormData()
         formData.append('is_deleted', true)
-        this.axios.patch(response_file_api_url + fileId + '/',
+        this.axios.put(response_file_trash_url + fileId + '/',
           formData,
           {
             headers: {
@@ -130,7 +130,7 @@
         })
         .catch(error => {
           console.error('Error when posting response file', error);
-          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille.`
+          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille. Erreur : ${error}`
         })
       },
       clearErrorMessage: function() {
