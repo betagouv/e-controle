@@ -30,6 +30,7 @@
       >
         <p>
           En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
+          
         </p>
       
         <info-bar>
