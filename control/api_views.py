@@ -77,7 +77,7 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class ResponseFileViewSet(viewsets.ModelViewSet):
+class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ResponseFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
