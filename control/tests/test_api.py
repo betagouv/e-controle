@@ -2,8 +2,7 @@ from django.shortcuts import reverse
 from pytest import mark
 from rest_framework.test import APIClient
 
-from control.models import Control, Questionnaire, Theme, Question
-from control.serializers import QuestionnaireSerializer
+from control.models import Control
 from tests import factories, utils
 from user_profiles.models import UserProfile
 
