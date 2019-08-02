@@ -36,30 +36,30 @@
     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
+          <th>Date de mise à la corbeille</th>
           <th>Nom du document</th>
+          <th class="text-center">Utilisateur qui a mis à la corbeille</th>
           <th>Date de dépôt</th>
           <th class="text-center">Utilisateur qui a déposé</th>
-          <th>Date de mise à la corbeille</th>
-          <th class="text-center">Utilisateur qui a mis à la corbeille</th>
         </tr>
       </thead>
       <tbody>
         {% for file in question_file_list %}
           <tr>
-            <td>
-              <div class="truncate"><a target="_blank" href="{{ file.url }}">{{ file.basename }}</a></div>
-            </td>
-            <td>
-              <div>{{  file.created }}</div>
-            </td>
-            <td class="text-center">
-              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
-            </td>
             <td class="text-center">
               <div>{{ file.deletion_date }}</div>
             </td>
+            <td>
+              <div class="truncate"><a target="_blank" href="{{ file.url }}">{{ file.basename }}</a></div>
+            </td>
             <td class="text-center">
               <div>{{ file.deletion_user.first_name }} {{ file.deletion_user.last_name }}</div>
+            </td>
+            <td>
+              <div>{{ file.created }}</div>
+            </td>
+            <td class="text-center">
+              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
             </td>
           </tr>
         {% empty %}
