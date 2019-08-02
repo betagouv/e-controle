@@ -47,7 +47,6 @@ class Trash(LoginRequiredMixin, DetailView):
 
         question_file_id_list = question_file_list.values_list('id', flat=True)
 
-        # todo get the stream of this questionnaire's deleted questions
         stream = model_stream(ResponseFile)\
             .filter(verb='trashed')\
             .filter(target_object_id__in=list(question_file_id_list)) \

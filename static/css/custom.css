@@ -139,3 +139,14 @@ table.response-file-list {
     white-space: normal;
     word-wrap: break-word;
 }
+
+table.trash-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.trash-list td, .trash-list th {
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
+}
