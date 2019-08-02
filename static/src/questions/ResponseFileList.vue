@@ -1,51 +1,53 @@
 <template>
-  <div class="table-responsive" v-if="files && files.length">
-    <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+  <div>
     <success-bar v-if="message" @dismissed="clearMessage"><div v-html="message"></div></success-bar>
     <error-bar v-if="errorMessage" @dismissed="clearErrorMessage"><div v-html="errorMessage"></div></error-bar>
-    <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
-      <thead>
-        <tr>
-          <th>Date de dépôt</th>
-          <th>Nom du document</th>
-          <th class="text-center">Déposant</th>
-          <th v-if="isAudited"><div class="text-center">Mettre à la corbeille</div></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="file in sortedFiles" :key="file.id">
-          <td>
-            <div>{{  file.creation_date }}</div>
-            <div class="small text-muted">{{  file.creation_time }}</div>
-          </td>
-          <td>
-            <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
-          </td>
-          <td class="text-center">
-            <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
-          </td>
-          <td v-if="isAudited" class="text-center">
-            <a href="javascript:void(0)"
-               data-toggle="modal"
-               :data-target="'#trash-confirm-modal-' + file.id"
-               class="fe fe-trash-2 btn btn-outline-primary"
-            >
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <confirm-modal v-for="file in sortedFiles" :key="file.id"
-                   :id="'trash-confirm-modal-' + file.id"
-                   title="Corbeille"
-                   confirm-button="Oui, envoyer à la corbeille"
-                   cancel-button="Non, annuler"
-                   @confirm="sendToTrash(file.id)"
-    >
-      <p>
-        Vous allez envoyer “{{ file.basename }}” à la corbeille.
-      </p>
-    </confirm-modal>
+    <div class="table-responsive" v-if="files && files.length">
+      <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+      <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
+        <thead>
+          <tr>
+            <th>Date de dépôt</th>
+            <th>Nom du document</th>
+            <th class="text-center">Déposant</th>
+            <th v-if="isAudited"><div class="text-center">Mettre à la corbeille</div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="file in sortedFiles" :key="file.id">
+            <td>
+              <div>{{  file.creation_date }}</div>
+              <div class="small text-muted">{{  file.creation_time }}</div>
+            </td>
+            <td>
+              <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+            </td>
+            <td class="text-center">
+              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
+            </td>
+            <td v-if="isAudited" class="text-center">
+              <a href="javascript:void(0)"
+                 data-toggle="modal"
+                 :data-target="'#trash-confirm-modal-' + file.id"
+                 class="fe fe-trash-2 btn btn-outline-primary"
+              >
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <confirm-modal v-for="file in sortedFiles" :key="file.id"
+                     :id="'trash-confirm-modal-' + file.id"
+                     title="Corbeille"
+                     confirm-button="Oui, envoyer à la corbeille"
+                     cancel-button="Non, annuler"
+                     @confirm="sendToTrash(file.id)"
+      >
+        <p>
+          Vous allez envoyer “{{ file.basename }}” à la corbeille.
+        </p>
+      </confirm-modal>
+    </div>
   </div>
 </template>
 
