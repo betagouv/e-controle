@@ -49,7 +49,7 @@ class MagicTokenFactory(factory.DjangoModelFactory):
 @register
 class ControlFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
-    reference_code = 'CONTROL'
+    reference_code = factory.LazyFunction(faker.md5)
 
     class Meta:
         model = 'control.Control'
