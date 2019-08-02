@@ -1,18 +1,19 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
+from actstream.models import model_stream
 from sendfile import sendfile
 import json
 
 from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
-from .models import Questionnaire, QuestionFile, ResponseFile, Control
-
+from .models import Control, Questionnaire, QuestionFile, ResponseFile
 
 class WithListOfControlsMixin(object):
 
@@ -42,9 +43,25 @@ class Trash(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         question_file_list = ResponseFile.objects \
             .filter(question__theme__questionnaire=self.get_object()) \
-            .filter(is_deleted=True) \
-            .order_by('created')
-        context['question_file_list'] = question_file_list
+            .filter(is_deleted=True)
+
+        question_file_id_list = question_file_list.values_list('id', flat=True)
+
+        # todo get the stream of this questionnaire's deleted questions
+        stream = model_stream(ResponseFile)\
+            .filter(verb='trashed')\
+            .filter(target_object_id__in=list(question_file_id_list)) \
+            .order_by('timestamp')
+        context['stream'] = stream
+
+        out = []
+        for action in stream:
+            question = question_file_list.get(id=action.target_object_id)
+            question.deletion_date = action.timestamp
+            question.deletion_user = User.objects.get(id=action.actor_object_id)
+            out.append(question)
+        context['question_file_list'] = out
+
         return context
 
 

@@ -56,10 +56,10 @@
               <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
             </td>
             <td class="text-center">
-              <div></div>
+              <div>{{ file.deletion_date }}</div>
             </td>
             <td class="text-center">
-              <div></div>
+              <div>{{ file.deletion_user.first_name }} {{ file.deletion_user.last_name }}</div>
             </td>
           </tr>
         {% empty %}
