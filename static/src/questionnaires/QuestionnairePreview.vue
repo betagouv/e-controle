@@ -31,15 +31,14 @@
         <p>
           En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
         </p>
-        <div class="alert alert-icon alert-primary" role="alert">
-          <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-        <p>
-          Pensez à informer l'organisme interrogé que vous avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse&nbsp;:
-        </p>
-          <p style="word-wrap: break-word;">
-            https://e-controle-beta.ccomptes.fr
-          </p>
-        </div>
+      
+        <info-bar>
+Pensez à informer l'organisme interrogé que vous 
+avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
+<p> https://e-controle-beta.ccomptes.fr </P>
+
+<P> Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information le lendemain matin à 8h. 
+        </info-bar>
 
       </confirm-modal>
     </div>
@@ -50,6 +49,7 @@
   import Vue from "vue"
   import ConfirmModal from "../utils/ConfirmModal"
   import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
+  import InfoBar from "../utils/InfoBar"
 
   export default Vue.extend({
     data: function () {
@@ -85,6 +85,7 @@
     components: {
       ConfirmModal,
       QuestionnaireDetailForPreview
+      InfoBar
     }
   });
 </script>
