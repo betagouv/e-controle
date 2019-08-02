@@ -7,10 +7,10 @@
       <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
         <thead>
           <tr>
-            <th>Date de dépôt</th>
+            <th style="width: 16%;">Date de dépôt</th>
             <th>Nom du document</th>
-            <th class="text-center">Déposant</th>
-            <th v-if="isAudited"><div class="text-center">Mettre à la corbeille</div></th>
+            <th style="width: 25%;">Déposant</th>
+            <th style="width: 19%;" v-if="isAudited">Mettre à la corbeille</th>
           </tr>
         </thead>
         <tbody>
@@ -22,10 +22,10 @@
             <td>
               <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
             </td>
-            <td class="text-center">
+            <td>
               <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
             </td>
-            <td v-if="isAudited" class="text-center">
+            <td v-if="isAudited">
               <a href="javascript:void(0)"
                  data-toggle="modal"
                  :data-target="'#trash-confirm-modal-' + file.id"

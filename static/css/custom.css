@@ -119,25 +119,10 @@ table.response-file-list {
     width: 100%;
 }
 
-.response-file-list thead th:nth-child(1) {
-    width: 16%;
-}
-
-.response-file-list thead th:nth-child(2) {
-    width: 40%;
-}
-
-.response-file-list thead th:nth-child(3) {
-    width: 25%;
-}
-
-.response-file-list thead th:nth-child(4) {
-    width: 19%;
-}
-
 .response-file-list td, .response-file-list th {
     white-space: normal;
     word-wrap: break-word;
+    text-align: center
 }
 
 table.trash-list {
