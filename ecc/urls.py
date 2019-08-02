@@ -59,6 +59,10 @@ urlpatterns = [
     path('megacontrole/<int:pk>/',
          admin_views.Megacontrol.as_view(),
          name='megacontrol-done'),
+
+    path('api/fichier-reponse/corbeille/<int:pk>/',
+         control_api_views.ResponseFileTrash.as_view(),
+         name='response-file-trash'),
 ]
 
 urlpatterns += [

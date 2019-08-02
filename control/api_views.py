@@ -1,14 +1,16 @@
 from actstream import action
 from functools import partial
-from rest_framework import status, viewsets
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework import serializers
+
 import django.dispatch
 
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
-from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer
+from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
 
 # This signal is triggered after the questionnaire is saved via the API
@@ -87,6 +89,36 @@ class ResponseFileViewSet(viewsets.ModelViewSet):
         queryset = ResponseFile.objects.filter(
             question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
         return queryset
+
+
+class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
+    serializer_class = ResponseFileTrashSerializer
+
+    def get_queryset(self):
+        queryset = ResponseFile.objects.filter(
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        return queryset
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+
+        if instance.is_deleted:
+            if not serializer.validated_data['is_deleted']:
+                # un-trash : not implemented yet
+                raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
+
+        # Log deletion action (including re-deleting)
+        if serializer.validated_data['is_deleted']:
+            action_details = {
+                'sender': self.request.user,
+                'verb': 'trashed',
+                'target': instance,
+            }
+            action.send(**action_details)
+        super(ResponseFileTrash, self).perform_update(serializer)
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
