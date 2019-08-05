@@ -116,6 +116,14 @@ def test_can_access_control_create_api_if_inspector_user():
     assert call_control_create_api(user, make_create_payload()).status_code == 201
 
 
+def test_cannot_create_control_with_special_characters_in_reference_code():
+    control = factories.ControlFactory()
+    user = make_inspector_user(control)
+    data = make_create_payload()
+    data['reference_code'] = 'this/is/not/good!'
+    assert call_control_create_api(user, data).status_code == 400
+
+
 def test_no_access_to_control_create_api_if_not_inspector():
     control = factories.ControlFactory()
     user = make_audited_user(control)
