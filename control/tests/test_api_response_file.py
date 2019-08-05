@@ -4,7 +4,6 @@ from rest_framework.test import APIClient
 
 from control.models import ResponseFile
 from tests import factories, utils
-from user_profiles.models import UserProfile
 
 
 pytestmark = mark.django_db
@@ -25,25 +24,11 @@ def trash_response_file(user, id, payload):
     return response
 
 
-def make_audited_user(control):
-    user = factories.UserFactory()
-    user.profile.controls.add(control)
-    user.profile.save()
-    return user
-
-
-def make_inspector_user(control):
-    user_profile = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    user_profile.controls.add(control)
-    user_profile.save()
-    return user_profile.user
-
-
 ########## get
 
 def test_can_get_response_file_if_control_is_associated_with_the_user():
     response_file = factories.ResponseFileFactory()
-    user = make_audited_user(response_file.question.theme.questionnaire.control)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
 
     response = get_response_file(user, response_file.id)
 
@@ -53,7 +38,7 @@ def test_can_get_response_file_if_control_is_associated_with_the_user():
 def test_cannot_get_response_file_if_control_is_not_associated_with_the_user():
     response_file = factories.ResponseFileFactory()
     control = factories.ControlFactory()
-    user = make_audited_user(control)
+    user = utils.make_audited_user(control)
 
     response = get_response_file(user, response_file.id)
 
@@ -91,13 +76,13 @@ def run_test_response_file_api_is_readonly(user, response_file):
 
 def test_response_file_api_is_readonly_for_audited():
     response_file = factories.ResponseFileFactory()
-    user = make_audited_user(response_file.question.theme.questionnaire.control)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     run_test_response_file_api_is_readonly(user, response_file)
 
 
 def test_response_file_api_is_readonly_for_inspector():
     response_file = factories.ResponseFileFactory()
-    user = make_inspector_user(response_file.question.theme.questionnaire.control)
+    user = utils.make_inspector_user(response_file.question.theme.questionnaire.control)
     run_test_response_file_api_is_readonly(user, response_file)
 
 
@@ -113,7 +98,7 @@ def test_cannot_trash_response_file_if_user_not_logged_in():
 def test_cannot_trash_response_file_if_control_is_not_associated_with_the_user():
     response_file = factories.ResponseFileFactory()
     control = factories.ControlFactory()
-    user = make_audited_user(control)
+    user = utils.make_audited_user(control)
     payload = { "is_deleted": "true" }
 
     response = trash_response_file(user, response_file.id, payload)
@@ -123,7 +108,7 @@ def test_cannot_trash_response_file_if_control_is_not_associated_with_the_user()
 
 def test_can_trash_response_file_if_control_is_associated_with_the_user():
     response_file = factories.ResponseFileFactory()
-    user = make_audited_user(response_file.question.theme.questionnaire.control)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }
     count_before = ResponseFile.objects.count
     assert not ResponseFile.objects.get(id=response_file.id).is_deleted
@@ -138,7 +123,7 @@ def test_can_trash_response_file_if_control_is_associated_with_the_user():
 
 def can_trash_a_trashed_file():
     response_file = factories.ResponseFileFactory(is_deleted=True)
-    user = make_audited_user(response_file.question.theme.questionnaire.control)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }
 
     response = trash_response_file(user, response_file.id, payload)

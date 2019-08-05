@@ -3,6 +3,7 @@ import sys
 
 from django.conf import settings
 from django.urls import clear_url_caches
+from user_profiles.models import UserProfile
 
 from . import factories
 
@@ -29,3 +30,17 @@ def reload_urlconf():
     urlconf = settings.ROOT_URLCONF
     if urlconf in sys.modules:
         importlib.reload(sys.modules[urlconf])
+
+
+def make_audited_user(control):
+    user = factories.UserFactory()
+    user.profile.controls.add(control)
+    user.profile.save()
+    return user
+
+
+def make_inspector_user(control):
+    user_profile = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    user_profile.controls.add(control)
+    user_profile.save()
+    return user_profile.user

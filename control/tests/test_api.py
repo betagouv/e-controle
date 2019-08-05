@@ -4,24 +4,9 @@ from rest_framework.test import APIClient
 
 from control.models import Control
 from tests import factories, utils
-from user_profiles.models import UserProfile
 
 pytestmark = mark.django_db
 client = APIClient()
-
-
-def make_audited_user(control):
-    user = factories.UserFactory()
-    user.profile.controls.add(control)
-    user.profile.save()
-    return user
-
-
-def make_inspector_user(control):
-    user_profile = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    user_profile.controls.add(control)
-    user_profile.save()
-    return user_profile.user
 
 
 #### Question API ####
@@ -35,14 +20,14 @@ def call_question_api(user, id):
 
 def test_can_access_question_api_if_control_is_associated_with_the_user():
     question = factories.QuestionFactory()
-    user = make_audited_user(question.theme.questionnaire.control)
+    user = utils.make_audited_user(question.theme.questionnaire.control)
     assert call_question_api(user, question.id).status_code == 200
 
 
 def test_no_access_to_question_api_if_control_is_not_associated_with_the_user():
     question_in = factories.QuestionFactory()
     question_out = factories.QuestionFactory()
-    user = make_audited_user(question_in.theme.questionnaire.control)
+    user = utils.make_audited_user(question_in.theme.questionnaire.control)
     assert call_question_api(user, question_out.id).status_code != 200
 
 
@@ -76,14 +61,14 @@ def call_control_get_api(user, id):
 
 def test_can_access_control_get_api_if_control_is_associated_with_the_user():
     control = factories.ControlFactory()
-    user = make_audited_user(control)
+    user = utils.make_audited_user(control)
     assert call_control_get_api(user, control.id).status_code == 200
 
 
 def test_no_access_to_control_get_api_if_control_is_not_associated_with_the_user():
     control_in = factories.ControlFactory()
     control_out = factories.ControlFactory()
-    user = make_audited_user(control_in)
+    user = utils.make_audited_user(control_in)
     assert call_control_get_api(user, control_out.id).status_code != 200
 
 
@@ -111,13 +96,13 @@ def make_payload():
 
 def test_can_access_control_create_api_if_inspector_user():
     control = factories.ControlFactory()
-    user = make_inspector_user(control)
+    user = utils.make_inspector_user(control)
     assert call_control_create_api(user, make_payload()).status_code == 201
 
 
 def test_no_access_to_control_create_api_if_not_inspector():
     control = factories.ControlFactory()
-    user = make_audited_user(control)
+    user = utils.make_audited_user(control)
     assert call_control_create_api(user, make_payload()).status_code == 403
 
 
@@ -130,7 +115,7 @@ def test_no_access_to_control_create_api_for_anonymous():
 
 def test_creates_control_and_adds_to_current_user():
     control = factories.ControlFactory()
-    user = make_inspector_user(control)
+    user = utils.make_inspector_user(control)
     payload = make_payload()
     response = call_control_create_api(user, payload)
     response_control = response.data
