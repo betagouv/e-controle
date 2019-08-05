@@ -114,7 +114,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
         if serializer.validated_data['is_deleted']:
             action_details = {
                 'sender': self.request.user,
-                'verb': 'trashed',
+                'verb': 'trashed response-file',
                 'target': instance,
             }
             action.send(**action_details)

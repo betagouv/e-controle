@@ -129,7 +129,7 @@ def test_trashing_logs_an_action():
 
     action = Action.objects.last()
     assert action.actor_object_id == str(user.id)
-    assert action.verb == 'trashed'
+    assert action.verb == 'trashed response-file'
     assert action.target_object_id == str(response_file.id)
 
 
