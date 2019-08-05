@@ -31,13 +31,15 @@
         <p>
           En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
         </p>
-      
-        <info-bar>
-Pensez à informer l'organisme interrogé que vous 
-avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
-<p> https://e-controle-beta.ccomptes.fr </P>
 
-<P> Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information le lendemain matin à 8h. 
+        <info-bar>
+          Pensez à informer l'organisme interrogé que vous
+          avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
+          <p> https://e-controle-beta.ccomptes.fr </p>
+        </info-bar>
+
+        <info-bar>
+            Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information le lendemain.
         </info-bar>
 
       </confirm-modal>
@@ -84,7 +86,7 @@ avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
     },
     components: {
       ConfirmModal,
-      QuestionnaireDetailForPreview
+      QuestionnaireDetailForPreview,
       InfoBar
     }
   });
