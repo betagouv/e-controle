@@ -21,6 +21,7 @@ admin.site.site_header = 'e-contrôle Administration'
 router = routers.DefaultRouter()
 router.register(r'annexe', control_api_views.QuestionFileViewSet, basename='annexe')
 router.register(r'control', control_api_views.ControlViewSet, basename='control')
+router.register(r'fichier-reponse', control_api_views.ResponseFileViewSet, basename='response-file')
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
 router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basename='questionnaire')
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
@@ -28,6 +29,7 @@ router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='u
 
 urlpatterns = [
     path('', ecc_views.login, name='login'),
+    path('cgu/', ecc_views.cgu, name='cgu'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('login/', magicauth_views.magic_link, name='magicauth-login'),
@@ -50,6 +52,7 @@ urlpatterns = [
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
+    path('questionnaire/corbeille/<int:pk>/', control_views.Trash.as_view(), name='trash'),
 
     path('megacontrole-confirmer/<int:pk>/',
          admin_views.MegacontrolConfirm.as_view(),

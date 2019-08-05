@@ -6,139 +6,21 @@
 {% endblock page_title %}
 
 {% block extra_static_header %}
-    {{ block.super }}
+  {{ block.super }}
 
-    {% if debug %}
+  {% if debug %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
-    {% else %}
+  {% else %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.min.css' %}">
-    {% endif %}
+  {% endif %}
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <div class="card">
-    <div class="card-body">
-      {{ questionnaire.description|linebreaks }}
-
-      {% if questionnaire.sent_date %}
-        <p>
-          <i class="dropdown-icon fe fe-send"></i>
-          Date de transmission du questionnaire :
-          {{ questionnaire.sent_date|date:"l d F Y" }}
-        </p>
-      {% endif %}
-
-      {% if questionnaire.end_date %}
-        <p>
-          <i class="fe fe-clock"></i>
-          Date de réponse souhaitée :
-          {{ questionnaire.end_date|date:"l d F Y" }}
-        </p>
-      {% endif %}
-
-        <p class="text-right">
-          <a href="{{ questionnaire.file_url }}" target="_blank">
-            <button type="submit" class="btn btn-primary" title="Exporter ce questionnaire">
-              <i class="fe fe-file-text mr-2"></i>
-              Exporter ce questionnaire
-            </button>
-          </a>
-        </p>
-
-    </div>
+  <div id="questionnaire-detail-app">
+    <questionnaire-detail-page :questionnaire="{{ questionnaire_json }}"></questionnaire-detail-page>
   </div>
-
-  <div class="row row-cards">
-    <div class="col-lg-4"> <!--// opening: side_theme_list  //-->
-      <div class="row sticky">
-        <div class="col-md-6 col-lg-12">
-          <div class="card">
-            <div class="card-header bg-blue text-white">
-              <h4 class="card-title">Thèmes</h4>
-            </div>
-            <table class="table card-table">
-              <tbody>
-              {% for theme in questionnaire.themes.all %}
-                <tr data-id="{{ forloop.counter }}" class="theme-row">
-                  <td><a href="#theme{{ theme.numbering }}">{{ theme.numbering }}. {{ theme.title }}</a></td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div> <!--// closing: side_theme_list  //-->
-    <div class="col-lg-8" id="questionnaire-detail-app"> <!--// opening: main_list_of_questions  //-->
-      {% for theme in questionnaire.themes.all %}
-        <div class="card" id="theme{{ theme.numbering }}"> <!--// opening: theme_area_containing_questions  //-->
-          <div class="card-status card-status-top bg-blue"></div>
-          <div class="card-header">
-            <h3 class="card-title">{{ theme.numbering }}. {{ theme.title }}</h3>
-          </div>
-          {% for question in theme.questions.all %}
-            {% with response_files=question.response_files.all question_files=question.question_files.all %}
-              <div class="card card-collapsed  border-0 m-0 p-0 pb-0 pt-2 {% cycle '' 'zebra' %}"
-                   id="question{{ theme.numbering }}.{{ question.numbering }}">
-
-                <question question_description="{{ question.description }}"
-                             theme_numbering="{{ theme.numbering }}"
-                             question_numbering="{{ question.numbering }}"
-                             question_id="{{ question.id }}"
-                             annexe_count="{{ question.question_files.count }}"></question>
-
-                 <div class="card-body">  <!--// opening: question_detail_area  //-->
-                  <answer question_id="{{ question.id }}"></answer>
-
-                                        {% if question_files %}
-                        <div class="form-group">
-                            <div class="form-label">Fichier{{ question_files.count|pluralize }} annexe{{ question_files.count|pluralize }} à la question:</div>
-                            <ul>
-                              {% for file in question_files %}
-                              <li><a href="{{ file.url }}">{{ file.basename }}</a></li>
-                              {% endfor %}
-                            </ul>
-                        </div>
-                        {% endif %}
-
-                        {% if user.profile.is_audited %}
-                        <div class="form-group">
-                            <div class="form-label">Déposer vos réponses</div>
-                            <div class="alert alert-icon alert-primary" role="alert">
-                               <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-                                 Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
-                             </div>
-                            <form class="dropzone" action="{% url 'response-upload' %}" method="post" enctype="multipart/form-data" id="dropzone-area">
-                              {% csrf_token %}
-                              <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
-                              <input type="hidden" id="idQuestionId" name="question_id" value="{{ question.id }}" />
-                              <div class="fallback">
-                                <input name="file" type="file" multiple />
-                              </div>
-                            </form>
-                            <div class="text-right">
-                              <i class="dropdown-icon fe fe-help-circle"></i><a href="{% url 'faq' %}">Des questions sur le dépôt de fichiers ?</a>
-                            </div>
-                        </div>
-                        {% endif %}
-              </div>  <!--// closing: question_detail_area  //-->
-
-              <div class="text-center bg-blue cursor-pointer text-white"
-                   style="cursor: pointer"
-                   data-toggle="card-collapse">
-                <i class="fe fe-chevron-up"></i>
-              </div>
-
-
-              </div> <!--// closing: main_question_area_inside_a_theme  //-->
-            {% endwith %}
-          {% endfor %}
-        {% resetcycle %}
-        </div> <!--// closing: theme_area_containing_questions  //-->
-      {% endfor %}
-  </div> <!--// closing: main_list_of_questions  //-->
 {% endblock page_content %}
 
 {% block js_bundle %}

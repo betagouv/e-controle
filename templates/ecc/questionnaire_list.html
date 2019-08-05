@@ -17,13 +17,8 @@
       {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
           <color-bar id="{{ control.id }}"></color-bar>
-          <div class="card-header flex-column align-items-start">
-            {% if control.depositing_organization %}
-              <div class="page-title">Organisme interrogé : {{ control.depositing_organization }}</div>
-              <div class="card-title">Procédure : {{ control.title }}</div>
-            {% else %}
-              <div class="page-title">{{ control.title }}</div>
-            {% endif %}
+          <div class="card-header">
+            <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
           </div>
           <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
             <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
@@ -70,7 +65,7 @@
                                      title="Modifier le brouillon de questionnaire"
                                   >
                                     <i class="fe fe-edit"></i>
-                                    Modifier
+                                    Modifier le questionnaire
                                   </a>
                                 {% else %}
                                   <a href="{{ questionnaire.url }}"
@@ -112,6 +107,16 @@
             {% endif %}
 
           </div>  <!--// closing: questionnaire_description_card_body  //-->
+        </div>
+      {% empty %}
+        <div class="card">
+          <div class="card-body">
+            {% if user.profile.is_inspector %}
+              Vous n'avez aucun espace de dépôt ouvert.
+            {% else %}
+              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
 

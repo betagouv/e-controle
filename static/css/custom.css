@@ -15,10 +15,16 @@
     background: #f8f9fa;
 }
 
-.flex-row-container {
+.flex-row {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* questionnaires Vue components */
@@ -94,4 +100,10 @@
 .active .wizard-step-thread {
     background-color: #45aaf2;
     color: #fff;
+}
+
+.truncate {
+    white-space: normal;
+    word-wrap: break-word;
+    width: 250px;
 }

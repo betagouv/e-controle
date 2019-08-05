@@ -23,14 +23,20 @@ class ControlSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'depositing_organization', 'reference_code')
 
 
+class ControlUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization')
+
+
 class ResponseFileSerializer(serializers.ModelSerializer):
     author = UserSerializer()
-    creation_date = DateTimeFieldWihTZ(source='created', format='%A %d %B %Y')
+    creation_date = DateTimeFieldWihTZ(source='created', format='%a %d %B %Y')
     creation_time = DateTimeFieldWihTZ(source='created', format='%X')
 
     class Meta:
         model = ResponseFile
-        fields = ('id', 'url', 'basename', 'creation_date', 'creation_time', 'author')
+        fields = ('id', 'url', 'basename', 'created', 'creation_date', 'creation_time', 'author', 'is_deleted', 'question')
 
 
 class QuestionFileSerializer(serializers.ModelSerializer):

@@ -51,6 +51,7 @@ class Control(models.Model):
         return {
             'id': self.id,
             'title': self.title,
+            'depositing_organization': self.depositing_organization,
         }
 
     @property
@@ -217,6 +218,10 @@ class ResponseFile(TimeStampedModel):
     file = models.FileField(verbose_name="fichier", upload_to=response_file_path)
     author = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, related_name='response_files', on_delete=models.PROTECT)
+    is_deleted = models.BooleanField(
+        verbose_name="Supprimé", default=False,
+        help_text="Ce fichier est=il dans la corbeille?")
+
 
     class Meta:
         verbose_name = 'Réponse: Fichier Attaché'

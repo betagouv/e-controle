@@ -2,12 +2,14 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, CreateView, RedirectView, TemplateView
+from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
 from sendfile import sendfile
+import json
 
+from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
 from .models import Questionnaire, QuestionFile, ResponseFile, Control
 
@@ -25,6 +27,24 @@ class WithListOfControlsMixin(object):
 
 class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
     template_name = "ecc/questionnaire_list.html"
+
+
+class Trash(LoginRequiredMixin, DetailView):
+    model = Questionnaire
+    template_name = "ecc/trash.html"
+
+    def get_queryset(self):
+        queryset = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all())
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question_file_list = ResponseFile.objects \
+            .filter(question__theme__questionnaire=self.get_object()) \
+            .filter(is_deleted=True)
+        context['question_file_list'] = question_file_list
+        return context
 
 
 class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
@@ -149,3 +169,9 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['questionnaire_json'] = \
+            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
+        return context
