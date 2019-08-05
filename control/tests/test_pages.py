@@ -115,3 +115,19 @@ def test_no_access_questionnaire_edit_page_if_not_inspector_user(client):
                                          is_control_associated_with_user=True,
                                          profile_type=UserProfile.AUDITED)
     assert 400 <= response.status_code < 500
+
+
+def test_no_access_trash_page_if_control_is_not_associated_with_the_user(client):
+    response = access_questionnaire_page(client,
+                                         page_name='trash',
+                                         is_control_associated_with_user=False,
+                                         profile_type=UserProfile.AUDITED)
+    assert 400 <= response.status_code < 500
+
+
+def test_can_access_trash_page_if_control_is_associated_with_the_user(client):
+    response = access_questionnaire_page(client,
+                                         page_name='trash',
+                                         is_control_associated_with_user=True,
+                                         profile_type=UserProfile.AUDITED)
+    assert response.status_code == 200
