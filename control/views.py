@@ -41,25 +41,24 @@ class Trash(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        question_file_list = ResponseFile.objects \
+        response_files = ResponseFile.objects \
             .filter(question__theme__questionnaire=self.get_object()) \
             .filter(is_deleted=True)
 
-        question_file_id_list = question_file_list.values_list('id', flat=True)
+        response_file_ids = response_files.values_list('id', flat=True)
 
         stream = model_stream(ResponseFile)\
-            .filter(verb='trashed')\
-            .filter(target_object_id__in=list(question_file_id_list)) \
+            .filter(verb='trashed response-file')\
+            .filter(target_object_id__in=list(response_file_ids)) \
             .order_by('timestamp')
-        context['stream'] = stream
 
-        out = []
+        response_file_list = []
         for action in stream:
-            question = question_file_list.get(id=action.target_object_id)
-            question.deletion_date = action.timestamp
-            question.deletion_user = User.objects.get(id=action.actor_object_id)
-            out.append(question)
-        context['question_file_list'] = out
+            response_file = response_files.get(id=action.target_object_id)
+            response_file.deletion_date = action.timestamp
+            response_file.deletion_user = User.objects.get(id=action.actor_object_id)
+            response_file_list.append(response_file)
+        context['response_file_list'] = response_file_list
 
         return context
 

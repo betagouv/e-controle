@@ -44,22 +44,22 @@
         </tr>
       </thead>
       <tbody>
-        {% for file in question_file_list %}
+        {% for response_file in response_file_list %}
           <tr>
             <td>
-              <div>{{ file.deletion_date }}</div>
+              <div>{{ response_file.deletion_date }}</div>
             </td>
             <td>
-              <div><a target="_blank" href="{{ file.url }}">{{ file.basename }}</a></div>
+              <div><a target="_blank" href="{{ response_file.url }}">{{ response_file.basename }}</a></div>
             </td>
             <td>
-              <div>{{ file.deletion_user.first_name }} {{ file.deletion_user.last_name }}</div>
+              <div>{{ response_file.deletion_user.first_name }} {{ response_file.deletion_user.last_name }}</div>
             </td>
             <td>
-              <div>{{ file.created }}</div>
+              <div>{{ response_file.created }}</div>
             </td>
             <td>
-              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
+              <div>{{ response_file.author.first_name }} {{ response_file.author.last_name }}</div>
             </td>
           </tr>
         {% empty %}
