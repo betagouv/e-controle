@@ -1,3 +1,4 @@
+from actstream.models import Action
 from django.shortcuts import reverse
 from pytest import mark
 from rest_framework.test import APIClient
@@ -104,18 +105,35 @@ def test_can_trash_response_file_if_control_is_associated_with_the_user():
     response_file = factories.ResponseFileFactory()
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }
-    count_before = ResponseFile.objects.count
+    count_before = ResponseFile.objects.count()
     assert not ResponseFile.objects.get(id=response_file.id).is_deleted
 
     response = trash_response_file(user, response_file.id, payload)
 
     assert response.status_code == 200
-    count_after = ResponseFile.objects.count
+    count_after = ResponseFile.objects.count()
     assert count_before == count_after
     assert ResponseFile.objects.get(id=response_file.id).is_deleted
 
 
-def test_can_trash_a_trashed_file():
+def test_trashing_logs_an_action():
+    response_file = factories.ResponseFileFactory()
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+    action_count_before = Action.objects.count()
+
+    trash_response_file(user, response_file.id, payload)
+
+    action_count_after = Action.objects.count()
+    assert action_count_after == action_count_before + 1
+
+    action = Action.objects.last()
+    assert action.actor_object_id == str(user.id)
+    assert action.verb == 'trashed'
+    assert action.target_object_id == str(response_file.id)
+
+
+def test_can_retrash_a_trashed_file():
     response_file = factories.ResponseFileFactory(is_deleted=True)
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }
@@ -124,3 +142,15 @@ def test_can_trash_a_trashed_file():
 
     assert response.status_code == 200
     assert ResponseFile.objects.get(id=response_file.id).is_deleted
+
+
+def test_retrashing_logs_an_action():
+    response_file = factories.ResponseFileFactory(is_deleted=True)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+    action_count_before = Action.objects.count()
+
+    trash_response_file(user, response_file.id, payload)
+
+    action_count_after = Action.objects.count()
+    assert action_count_after == action_count_before + 1
