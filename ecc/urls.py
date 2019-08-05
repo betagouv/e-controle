@@ -67,6 +67,11 @@ urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
 ]
 
+urlpatterns += [
+    path('session_security/', include('session_security.urls')),
+]
+
+
 if settings.DEBUG:
     from rest_framework.documentation import include_docs_urls
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -135,3 +135,8 @@
 </script>
 {% endif %}
 {% endblock analytics %}
+
+{% block extra_js %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    {% include 'session_security/all.html' %}
+{% endblock extra_js %}
