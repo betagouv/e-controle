@@ -11,10 +11,7 @@ client = APIClient()
 
 
 def get_response_file(user, id):
-    utils.login(client, user=user)
-    url = reverse('api:response-file-detail', args=[id])
-    response = client.get(url)
-    return response
+    return utils.get_resource(client, user, 'response-file', id)
 
 
 def trash_response_file(user, id, payload):
@@ -47,8 +44,7 @@ def test_cannot_get_response_file_if_control_is_not_associated_with_the_user():
 
 def test_cannot_get_response_file_if_user_not_logged_in():
     response_file = factories.ResponseFileFactory()
-    url = reverse('api:response-file-detail', args=[response_file.id])
-    response = client.get(url)
+    response = utils.get_resource_without_login(client, 'response-file', response_file.id)
     assert response.status_code == 403
 
 
@@ -59,13 +55,11 @@ def run_test_response_file_api_is_readonly(user, response_file):
     utils.login(client, user=user)
 
     # no create
-    url = reverse('api:response-file-list')
-    response = client.post(url, payload, format='json')
+    response = utils.create_resource_without_login(client, 'response-file', payload)
     assert response.status_code == 405  # method not allowed
 
     # no update
-    url = reverse('api:response-file-detail', args=[payload['id']])
-    response = client.put(url, payload, format='json')
+    response = utils.update_resource_without_login(client, 'response-file', payload)
     assert response.status_code == 405  # method not allowed
 
     # no patch
@@ -121,7 +115,7 @@ def test_can_trash_response_file_if_control_is_associated_with_the_user():
     assert ResponseFile.objects.get(id=response_file.id).is_deleted
 
 
-def can_trash_a_trashed_file():
+def test_can_trash_a_trashed_file():
     response_file = factories.ResponseFileFactory(is_deleted=True)
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }

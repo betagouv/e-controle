@@ -10,32 +10,20 @@ pytestmark = mark.django_db
 client = APIClient()
 
 
-def call_questionnaire_detail_api(user, id):
-    utils.login(client, user=user)
-    url = reverse('api:questionnaire-detail', args=[id])
-    response = client.get(url)
-    return response
+def get_questionnaire(user, id):
+    return utils.get_resource(client, user, 'questionnaire', id)
 
 
-def call_questionnaire_create_api(user, payload):
-    utils.login(client, user=user)
-    url = reverse('api:questionnaire-list')
-    response = client.post(url, payload, format='json')
-    return response
+def create_questionnaire(user, payload):
+    return utils.create_resource(client, user, 'questionnaire', payload)
 
 
-def call_questionnaire_update_api(user, payload):
-    utils.login(client, user=user)
-    url = reverse('api:questionnaire-detail', args=[payload['id']])
-    response = client.put(url, payload, format='json')
-    return response
+def update_questionnaire(user, payload):
+    return utils.update_resource(client, user, 'questionnaire', payload)
 
 
-def call_questionnaire_delete_api(user, id):
-    utils.login(client, user=user)
-    url = reverse('api:questionnaire-detail', args=[id])
-    response = client.delete(url)
-    return response
+def delete_questionnaire(user, id):
+    return utils.delete_resource(client, user, 'questionnaire', id)
 
 
 def make_create_payload(control_id):
@@ -89,12 +77,12 @@ def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     audited_user = utils.make_audited_user(questionnaire.control)
 
     # get
-    assert call_questionnaire_detail_api(audited_user, questionnaire.id).status_code == 200
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 200
 
     # create
     inspector_user = utils.make_inspector_user(questionnaire.control)
     payload = make_create_payload(questionnaire.control.id)
-    assert call_questionnaire_create_api(inspector_user, payload).status_code == 201
+    assert create_questionnaire(inspector_user, payload).status_code == 201
 
 
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
@@ -104,12 +92,12 @@ def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_us
     user = utils.make_inspector_user(questionnaire_in.control)
 
     # get
-    assert call_questionnaire_detail_api(user, questionnaire_out.id).status_code != 200
+    assert get_questionnaire(user, questionnaire_out.id).status_code != 200
 
     # create
     payload = make_create_payload(questionnaire_out.control.id)
     clear_saved_data()
-    assert call_questionnaire_create_api(user, payload).status_code != 201
+    assert create_questionnaire(user, payload).status_code != 201
     assert_no_data_is_saved()
 
 
@@ -117,26 +105,22 @@ def test_no_access_to_questionnaire_api_for_anonymous():
     questionnaire = factories.QuestionnaireFactory()
 
     # get
-    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
-    response = client.get(url)
+    response = utils.get_resource_without_login(client, 'questionnaire', questionnaire.id)
     assert response.status_code == 403
 
     # update
     payload = make_update_payload(questionnaire)
-    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
-    response = client.put(url, payload, format='json')
+    response = utils.update_resource_without_login(client, 'questionnaire', payload)
     assert response.status_code == 403
 
     # delete
-    url = reverse('api:questionnaire-detail', args=[questionnaire.id])
-    response = client.delete(url)
+    response = utils.delete_resource_without_login(client, 'questionnaire', questionnaire.id)
     assert response.status_code == 403
 
     # create
     clear_saved_data()
     payload = make_create_payload(questionnaire.control.id)
-    url = reverse('api:questionnaire-list')
-    response = client.post(url, payload, format='json')
+    response = utils.create_resource_without_login(client, 'questionnaire', payload)
     assert response.status_code == 403
     assert_no_data_is_saved()
 
@@ -147,15 +131,15 @@ def test_no_modifying_questionnaire_if_not_inspector():
 
     # update
     payload = make_update_payload(questionnaire)
-    assert call_questionnaire_update_api(audited_user, payload).status_code == 403
+    assert update_questionnaire(audited_user, payload).status_code == 403
 
     # delete
-    assert call_questionnaire_delete_api(audited_user, questionnaire.id).status_code == 403
+    assert delete_questionnaire(audited_user, questionnaire.id).status_code == 403
 
     # create
     clear_saved_data()
     payload = make_create_payload(questionnaire.control.id)
-    assert call_questionnaire_create_api(audited_user, payload).status_code == 403
+    assert create_questionnaire(audited_user, payload).status_code == 403
     assert_no_data_is_saved()
 
 
@@ -163,7 +147,7 @@ def test_access_to_draft_if_not_inspector():
     questionnaire = factories.QuestionnaireFactory(is_draft=True)
     audited_user = utils.make_audited_user(questionnaire.control)
 
-    assert call_questionnaire_detail_api(audited_user, questionnaire.id).status_code != 200
+    assert get_questionnaire(audited_user, questionnaire.id).status_code != 200
 
 
 def test_questionnaire_create__success():
@@ -174,7 +158,7 @@ def test_questionnaire_create__success():
     # Before test, no saved data
     assert_no_data_is_saved()
 
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert 200 <= response.status_code < 300
 
     # Response.data is filled in
@@ -212,18 +196,18 @@ def test_questionnaire_create_fails_without_control_id():
 
     # No control field : malformed request
     payload.pop('control')
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert response.status_code == 400
 
     # "control" : "null" : malformed request
     payload['control'] = None
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert response.status_code == 400
     assert_no_data_is_saved()
 
     # "control" : "" : malformed request
     payload['control'] = ""
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert response.status_code == 400
     assert_no_data_is_saved()
 
@@ -234,7 +218,7 @@ def test_questionnaire_create_fails_with_malformed_theme():
     payload = make_create_payload(control.id)
 
     payload['themes'][0].pop('title')
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert response.status_code == 400
     assert_no_data_is_saved()
 
@@ -245,7 +229,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     payload = make_create_payload(control.id)
 
     payload['themes'][0]['questions'][0].pop('description')
-    response = call_questionnaire_create_api(user, payload)
+    response = create_questionnaire(user, payload)
     assert response.status_code == 400
     assert_no_data_is_saved()
 
@@ -262,7 +246,7 @@ def test_questionnaire_update__questionnaire_update():
     assert Questionnaire.objects.all().count() == 1
     assert payload['description'] != questionnaire.description
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # Data is saved
@@ -285,7 +269,7 @@ def test_questionnaire_update__theme_update():
     assert Theme.objects.all().count() == 1
     assert payload['themes'][0]['title'] != theme.title
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -314,7 +298,7 @@ def run_test_questionnaire_update__theme_create(added_theme):
     assert Questionnaire.objects.all().count() == 1
     assert Theme.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -363,7 +347,7 @@ def test_questionnaire_update__question_update():
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # Data is saved
@@ -396,7 +380,7 @@ def run_test_questionnaire_update__question_create(added_question):
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -441,7 +425,7 @@ def test_questionnaire_delete():
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_delete_api(user, questionnaire.id)
+    response = delete_questionnaire(user, questionnaire.id)
     assert 200 <= response.status_code < 300
 
     # Cascade delete : child objects are deleted
@@ -464,7 +448,7 @@ def test_questionnaire_update__question_delete():
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -491,7 +475,7 @@ def test_questionnaire_update__theme_delete():
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -518,7 +502,7 @@ def run_test_questionnaire_update__question_recreated(modify_payload_func):
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved
@@ -570,7 +554,7 @@ def run_test_questionnaire_update__theme_recreated(modify_payload_func):
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    response = call_questionnaire_update_api(user, payload)
+    response = update_questionnaire(user, payload)
     assert response.status_code == 200
 
     # data is saved

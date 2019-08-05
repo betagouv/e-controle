@@ -11,30 +11,26 @@ client = APIClient()
 
 #### Question API ####
 
-def call_question_api(user, id):
-    utils.login(client, user=user)
-    url = reverse('api:question-detail', args=[id])
-    response = client.get(url)
-    return response
+def get_question(user, id):
+    return utils.get_resource(client, user, 'question', id)
 
 
 def test_can_access_question_api_if_control_is_associated_with_the_user():
     question = factories.QuestionFactory()
     user = utils.make_audited_user(question.theme.questionnaire.control)
-    assert call_question_api(user, question.id).status_code == 200
+    assert get_question(user, question.id).status_code == 200
 
 
 def test_no_access_to_question_api_if_control_is_not_associated_with_the_user():
     question_in = factories.QuestionFactory()
     question_out = factories.QuestionFactory()
     user = utils.make_audited_user(question_in.theme.questionnaire.control)
-    assert call_question_api(user, question_out.id).status_code != 200
+    assert get_question(user, question_out.id).status_code != 200
 
 
 def test_no_access_to_question_api_for_anonymous():
     question = factories.QuestionFactory()
-    url = reverse('api:question-detail', args=[question.id])
-    response = client.get(url)
+    response = utils.get_resource_without_login(client, 'question', question.id)
     assert response.status_code == 403
 
 
@@ -45,46 +41,39 @@ def test_response_file_listed_in_question_endpoint():
     user.profile.controls.add(question.theme.questionnaire.control)
     user.profile.save()
 
-    response = call_question_api(user, question.id)
+    response = get_question(user, question.id)
     assert response_file.basename in str(response.content)
 
 
 #### Control API ####
 
 ### Get
-def call_control_get_api(user, id):
-    utils.login(client, user=user)
-    url = reverse('api:control-detail', args=[id])
-    response = client.get(url)
-    return response
+def get_control(user, id):
+    return utils.get_resource(client, user, 'control', id)
 
 
 def test_can_access_control_get_api_if_control_is_associated_with_the_user():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
-    assert call_control_get_api(user, control.id).status_code == 200
+    assert get_control(user, control.id).status_code == 200
 
 
 def test_no_access_to_control_get_api_if_control_is_not_associated_with_the_user():
     control_in = factories.ControlFactory()
     control_out = factories.ControlFactory()
     user = utils.make_audited_user(control_in)
-    assert call_control_get_api(user, control_out.id).status_code != 200
+    assert get_control(user, control_out.id).status_code != 200
 
 
 def test_no_access_to_control_get_api_for_anonymous():
     control = factories.ControlFactory()
-    url = reverse('api:control-detail', args=[control.id])
-    response = client.get(url)
+    response = utils.get_resource_without_login(client, 'control', control.id)
     assert response.status_code == 403
 
 
 ### Create
-def call_control_create_api(user, payload):
-    utils.login(client, user=user)
-    url = reverse('api:control-list')
-    response = client.post(url, payload, format='json')
-    return response
+def create_control(user, payload):
+    return utils.create_resource(client, user, 'control', payload)
 
 
 def make_payload():
@@ -97,19 +86,18 @@ def make_payload():
 def test_can_access_control_create_api_if_inspector_user():
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
-    assert call_control_create_api(user, make_payload()).status_code == 201
+    assert create_control(user, make_payload()).status_code == 201
 
 
 def test_no_access_to_control_create_api_if_not_inspector():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
-    assert call_control_create_api(user, make_payload()).status_code == 403
+    assert create_control(user, make_payload()).status_code == 403
 
 
 def test_no_access_to_control_create_api_for_anonymous():
-    control = factories.ControlFactory()
-    url = reverse('api:control-list')
-    response = client.post(url, make_payload(), format='json')
+    payload = make_payload()
+    response = utils.create_resource_without_login(client, 'control', payload)
     assert response.status_code == 403
 
 
@@ -117,7 +105,7 @@ def test_creates_control_and_adds_to_current_user():
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
     payload = make_payload()
-    response = call_control_create_api(user, payload)
+    response = create_control(user, payload)
     response_control = response.data
 
     # Response data
