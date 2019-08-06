@@ -32,16 +32,9 @@
         {% endblock content %}
         {% block js_bundle %}{% endblock js_bundle %}
         {% block js_last %}
-        <script src="{% static "js/require.min.js" %}"></script>
-        <script>
-            requirejs.config({
-                baseUrl: '.'
-            });
-            // find the static_url
-            var static_url = "{% get_static_prefix %}";
-        </script>
-        <script src="{% static "js/dashboard.js" %}"></script>
-        <script src="{% static "plugins/input-mask/plugin.js" %}"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+          <script src="{% static "tabler/core.js" %}"></script>
         {% endblock js_last %}
         {% block analytics %}{% endblock analytics %}
         {% block extra_js %}{% endblock extra_js %}
