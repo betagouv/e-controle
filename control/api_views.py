@@ -7,9 +7,10 @@ from rest_framework import serializers
 
 import django.dispatch
 
-from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
-from .serializers import ControlSerializer, QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from .serializers import ControlSerializer, ControlUpdateSerializer
+from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
 
@@ -18,8 +19,12 @@ questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"]
 
 
 class ControlViewSet(viewsets.ModelViewSet):
-    serializer_class = ControlSerializer
     permission_classes = (ChangeControlPermission,)
+
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return ControlUpdateSerializer
+        return ControlSerializer
 
     def get_queryset(self):
         return self.request.user.profile.controls.all()

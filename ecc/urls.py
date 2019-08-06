@@ -29,6 +29,7 @@ router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='u
 
 urlpatterns = [
     path('', ecc_views.login, name='login'),
+    path('cgu/', ecc_views.cgu, name='cgu'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     path('login/', magicauth_views.magic_link, name='magicauth-login'),

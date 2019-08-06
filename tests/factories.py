@@ -3,6 +3,7 @@ import factory
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.text import slugify
 
 from pytest_factoryboy import register
 from faker import Factory as FakerFactory
@@ -49,7 +50,7 @@ class MagicTokenFactory(factory.DjangoModelFactory):
 @register
 class ControlFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
-    reference_code = factory.LazyFunction(faker.md5)
+    reference_code = factory.LazyAttribute(lambda c: slugify(c.title))
 
     class Meta:
         model = 'control.Control'

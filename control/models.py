@@ -2,6 +2,7 @@ import os
 import re
 
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 
@@ -25,6 +26,11 @@ class WithNumberingMixin(object):
 
 
 class Control(models.Model):
+    # These error messages are used in the frontend (ConsoleCreate.vue),
+    # if you change them you might break the frontend.
+    INVALID_ERROR_MESSAGE = 'INVALID'
+    UNIQUE_ERROR_MESSAGE = 'UNIQUE'
+
     title = models.CharField(
         "procédure",
         help_text="Procédure pour laquelle est ouvert cet espace de dépôt",
@@ -39,9 +45,14 @@ class Control(models.Model):
         verbose_name="code de référence",
         max_length=255,
         help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses',
+        validators=[
+            RegexValidator(
+                regex='^[\.\s\w-]+$',
+                message=INVALID_ERROR_MESSAGE,
+            ),
+        ],
         unique=True,
-        # This error message is used in the frontend (ConsoleCreate.vue), if you change it you might break the frontend.
-        error_messages={'unique': "UNIQUE"})
+        error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
     class Meta:
         verbose_name = "Controle"
@@ -51,6 +62,7 @@ class Control(models.Model):
         return {
             'id': self.id,
             'title': self.title,
+            'depositing_organization': self.depositing_organization,
         }
 
     @property

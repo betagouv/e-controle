@@ -72,6 +72,8 @@
               <span class="input-group-text">{{ reference_code_prefix }}</span>
             </span>
               <input type="text" class="form-control" v-model="reference_code_suffix" required
+                     pattern="^[\.\s\w-]+$"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux tels que ! , @ # $ / \"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -154,6 +156,11 @@
             if (error.response.data['reference_code'][0] === 'UNIQUE') {
               this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
                   '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+            }
+            if (error.response.data['reference_code'][0] === 'INVALID') {
+              this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                  '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                  ' Veuillez en choisir un autre.'
             }
             this.errors = error.response.data
             this.hasErrors = true
