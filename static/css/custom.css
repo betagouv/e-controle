@@ -16,7 +16,7 @@
     flex-direction: column;
 }
 
-/* questionnaires Vue components */
+/* QuestionnaireBodyCreate.vue */
 .form-control-h3 {
     font-size: 1.125rem;
     font-weight: 400;
@@ -26,15 +26,18 @@
     margin-bottom: 0px;
 }
 
+/* QuestionnairePreview.vue */
 .preview {
     background: rgba(70, 127, 207, 0.04) url(../img/apercu.png);
     padding: 1.5rem;
 }
 
+/* various */
 .with-line-breaks {
     white-space: pre-wrap;
 }
 
+/* questionnaire_list.html */
 .draft {
     background: rgba(70, 127, 207, 0.04)
 }
