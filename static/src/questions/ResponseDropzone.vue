@@ -26,6 +26,7 @@
   import Dropzone from 'dropzone'
   import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
+  import { clearCache } from '../utils/utils'
 
   import axios from 'axios'
 
@@ -76,6 +77,7 @@
     },
     methods: {
       dropzoneSuccessCallback: function() {
+        clearCache()
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })

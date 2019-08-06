@@ -56,6 +56,7 @@
   import Vue from "vue";
 
   import axios from 'axios'
+  import { clearCache } from '../utils/utils'
   import ConfirmModal from '../utils/ConfirmModal'
   import ErrorBar from '../utils/ErrorBar'
   import EventBus from '../events'
@@ -127,6 +128,7 @@
           }
         ).then(response =>{
           console.debug('success deleting response file', response.data)
+          clearCache()
           const removedFile = this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
           this.message = `Le fichier "${removedFile.basename}" a bien été envoyé à la corbeille.
