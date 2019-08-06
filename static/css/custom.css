@@ -102,18 +102,7 @@
     color: #fff;
 }
 
-.truncate {
-    white-space: normal;
-    word-wrap: break-word;
-    width: 250px;
-}
-
-.truncate-small {
-    white-space: normal;
-    word-wrap: break-word;
-    width: 70px;
-}
-
+/* ResponseFileList.vue */
 table.response-file-list {
     table-layout: fixed;
     width: 100%;
@@ -125,6 +114,7 @@ table.response-file-list {
     text-align: center
 }
 
+/* trash.html */
 table.trash-list {
     table-layout: fixed;
     width: 100%;
