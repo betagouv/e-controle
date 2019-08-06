@@ -115,6 +115,11 @@
         this.files.splice(index, 1)
         return file
       },
+      clearCache: function() {
+        // Change the url (by adding a random querystring value) to force reload on next visit, because the
+        // questionnaire data has changed. (it doesn't actually change the browser cache for the current url)
+        history.pushState({}, "", "?reload=" + Math.random())
+      },
       sendToTrash: function(fileId) {
         let formData = new FormData()
         formData.append('is_deleted', true)
@@ -127,6 +132,7 @@
           }
         ).then(response =>{
           console.debug('success deleting response file', response.data)
+          this.clearCache()
           const removedFile = this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
           this.message = `Le fichier "${removedFile.basename}" a bien été envoyé à la corbeille.
