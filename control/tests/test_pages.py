@@ -8,21 +8,13 @@ from user_profiles.models import UserProfile
 pytestmark = mark.django_db
 
 
-def make_user(profile_type, control=None):
-    user_profile = factories.UserProfileFactory(profile_type=profile_type)
-    if control is not None:
-        user_profile.controls.add(control)
-    user_profile.save()
-    return user_profile.user
-
-
 def access_questionnaire_page(client, page_name, is_control_associated_with_user, profile_type, is_draft=False):
     questionnaire = factories.QuestionnaireFactory(is_draft=is_draft)
     control = questionnaire.control
     if is_control_associated_with_user:
-        user = make_user(profile_type, control)
+        user = utils.make_user(profile_type, control)
     else:
-        user = make_user(profile_type, None)
+        user = utils.make_user(profile_type, None)
 
     utils.login(client, user=user)
     url = reverse(page_name, args=[questionnaire.id])
@@ -33,9 +25,9 @@ def access_questionnaire_page(client, page_name, is_control_associated_with_user
 def access_control_page(client, page_name, is_control_associated_with_user, profile_type):
     control = factories.ControlFactory()
     if is_control_associated_with_user:
-        user = make_user(profile_type, control)
+        user = utils.make_user(profile_type, control)
     else:
-        user = make_user(profile_type, None)
+        user = utils.make_user(profile_type, None)
 
     utils.login(client, user=user)
     url = reverse(page_name, args=[control.id])
@@ -123,3 +115,19 @@ def test_no_access_questionnaire_edit_page_if_not_inspector_user(client):
                                          is_control_associated_with_user=True,
                                          profile_type=UserProfile.AUDITED)
     assert 400 <= response.status_code < 500
+
+
+def test_no_access_trash_page_if_control_is_not_associated_with_the_user(client):
+    response = access_questionnaire_page(client,
+                                         page_name='trash',
+                                         is_control_associated_with_user=False,
+                                         profile_type=UserProfile.AUDITED)
+    assert 400 <= response.status_code < 500
+
+
+def test_can_access_trash_page_if_control_is_associated_with_the_user(client):
+    response = access_questionnaire_page(client,
+                                         page_name='trash',
+                                         is_control_associated_with_user=True,
+                                         profile_type=UserProfile.AUDITED)
+    assert response.status_code == 200

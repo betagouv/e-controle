@@ -1,18 +1,19 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
+from actstream.models import model_stream
 from sendfile import sendfile
 import json
 
 from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
-from .models import Questionnaire, QuestionFile, ResponseFile, Control
-
+from .models import Control, Questionnaire, QuestionFile, ResponseFile
 
 class WithListOfControlsMixin(object):
 
@@ -40,10 +41,25 @@ class Trash(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        question_file_list = ResponseFile.objects \
+        response_files = ResponseFile.objects \
             .filter(question__theme__questionnaire=self.get_object()) \
             .filter(is_deleted=True)
-        context['question_file_list'] = question_file_list
+
+        response_file_ids = response_files.values_list('id', flat=True)
+
+        stream = model_stream(ResponseFile)\
+            .filter(verb='trashed response-file')\
+            .filter(target_object_id__in=list(response_file_ids)) \
+            .order_by('timestamp')
+
+        response_file_list = []
+        for action in stream:
+            response_file = response_files.get(id=action.target_object_id)
+            response_file.deletion_date = action.timestamp
+            response_file.deletion_user = User.objects.get(id=action.actor_object_id)
+            response_file_list.append(response_file)
+        context['response_file_list'] = response_file_list
+
         return context
 
 

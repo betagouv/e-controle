@@ -13,9 +13,7 @@ class SendQuestionFileRunner:
         question_file = factories.QuestionFileFactory()
         self.filename = question_file.basename
 
-        user = factories.UserFactory()
-        user.profile.controls.add(question_file.question.theme.questionnaire.control)
-        user.profile.save()
+        user = utils.make_audited_user(question_file.question.theme.questionnaire.control)
 
         utils.login(client, user=user)
         url = reverse('send-question-file', args=[question_file.id])
@@ -36,11 +34,9 @@ def test_download_question_file_has_right_filename(client):
 
 def test_download_question_file_fails_if_the_control_is_not_associated_with_the_user(client):
     question_file = factories.QuestionFileFactory()
-    user = factories.UserFactory()
     unauthorized_control = factories.ControlFactory()
     assert unauthorized_control != question_file.question.theme.questionnaire.control
-    user.profile.controls.add(unauthorized_control)
-    user.profile.save()
+    user = utils.make_audited_user(unauthorized_control)
     utils.login(client, user=user)
     url = reverse('send-question-file', args=[question_file.id])
     response = client.get(url)

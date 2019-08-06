@@ -1,51 +1,53 @@
 <template>
-  <div class="table-responsive" v-if="files && files.length">
-    <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+  <div>
     <success-bar v-if="message" @dismissed="clearMessage"><div v-html="message"></div></success-bar>
     <error-bar v-if="errorMessage" @dismissed="clearErrorMessage"><div v-html="errorMessage"></div></error-bar>
-    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
-      <thead>
-        <tr>
-          <th>Date de dépôt</th>
-          <th>Nom du document</th>
-          <th>Déposant</th>
-          <!-- Removed until Trash page is finished th v-if="isAudited"></th-->
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="file in sortedFiles" :key="file.id">
-          <td>
-            <div>{{  file.creation_date }}</div>
-            <div class="small text-muted">{{  file.creation_time }}</div>
-          </td>
-          <td>
-            <div class="truncate"><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
-          </td>
-          <td class="text-center">
-            <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
-          </td>
-          <!-- Removed until Trash page is finished td v-if="isAudited" class="text-center" >
-            <a href="javascript:void(0)"
-               data-toggle="modal"
-               :data-target="'#trash-confirm-modal-' + file.id"
-            >
-              <div class="fe fe-trash-2"></div>
-            </a>
-          </td -->
-          <confirm-modal
-                         :id="'trash-confirm-modal-' + file.id"
-                         title="Corbeille"
-                         confirm-button="Oui, envoyer à la corbeille"
-                         cancel-button="Non, annuler"
-                         @confirm="sendToTrash(file.id)"
-          >
-            <p>
-              Vous allez envoyer “{{ file.basename }}” à la corbeille.
-            </p>
-          </confirm-modal>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive" v-if="files && files.length">
+      <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
+      <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
+        <thead>
+          <tr>
+            <th style="width: 16%;">Date de dépôt</th>
+            <th>Nom du document</th>
+            <th style="width: 25%;">Déposant</th>
+            <th style="width: 19%;" v-if="isAudited">Mettre à la corbeille</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="file in sortedFiles" :key="file.id">
+            <td>
+              <div>{{  file.creation_date }}</div>
+              <div class="small text-muted">{{  file.creation_time }}</div>
+            </td>
+            <td>
+              <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+            </td>
+            <td>
+              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
+            </td>
+            <td v-if="isAudited">
+              <a href="javascript:void(0)"
+                 data-toggle="modal"
+                 :data-target="'#trash-confirm-modal-' + file.id"
+                 class="fe fe-trash-2 btn btn-outline-primary"
+              >
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <confirm-modal v-for="file in sortedFiles" :key="file.id"
+                     :id="'trash-confirm-modal-' + file.id"
+                     title="Corbeille"
+                     confirm-button="Oui, envoyer à la corbeille"
+                     cancel-button="Non, annuler"
+                     @confirm="sendToTrash(file.id)"
+      >
+        <p>
+          Vous allez envoyer “{{ file.basename }}” à la corbeille.
+        </p>
+      </confirm-modal>
+    </div>
   </div>
 </template>
 
@@ -63,7 +65,7 @@
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
   const event_name = 'response-files-updated-'
-  const response_file_api_url = '/api/fichier-reponse/'
+  const response_file_trash_url = '/api/fichier-reponse/corbeille/'
   const trash_url = '/questionnaire/corbeille/'
 
   export default Vue.extend({
@@ -109,12 +111,14 @@
       },
       removeFileFromList: function(fileId) {
         const index = this.files.findIndex(file => file.id === fileId)
+        const file = this.files[index]
         this.files.splice(index, 1)
+        return file
       },
       sendToTrash: function(fileId) {
         let formData = new FormData()
         formData.append('is_deleted', true)
-        this.axios.patch(response_file_api_url + fileId + '/',
+        this.axios.put(response_file_trash_url + fileId + '/',
           formData,
           {
             headers: {
@@ -123,14 +127,14 @@
           }
         ).then(response =>{
           console.debug('success deleting response file', response.data)
-          this.removeFileFromList(response.data.id)
+          const removedFile = this.removeFileFromList(response.data.id)
           this.sendUpdateEvent()
-          this.message = `Le fichier "${response.data.basename}" a bien été envoyé à la corbeille.
-              Vous pouvez <a href="${trash_url}${this.questionnaireId}">aller à la corbeille</a> pour le voir.`
+          this.message = `Le fichier "${removedFile.basename}" a bien été envoyé à la corbeille.
+              <a href="${trash_url}${this.questionnaireId}">Cliquez ici</a> pour le voir dans la corbeille.`
         })
         .catch(error => {
           console.error('Error when posting response file', error);
-          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille.`
+          this.errorMessage = `Le fichier n'a pu être envoyé à la corbeille. Erreur : ${error}`
         })
       },
       clearErrorMessage: function() {

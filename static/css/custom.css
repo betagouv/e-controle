@@ -102,8 +102,26 @@
     color: #fff;
 }
 
-.truncate {
+/* ResponseFileList.vue */
+table.response-file-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.response-file-list td, .response-file-list th {
     white-space: normal;
     word-wrap: break-word;
-    width: 250px;
+    text-align: center
+}
+
+/* trash.html */
+table.trash-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.trash-list td, .trash-list th {
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
 }
