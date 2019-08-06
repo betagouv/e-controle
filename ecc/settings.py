@@ -70,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -234,3 +235,6 @@ WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)
 ALLOW_DEMO_LOGIN = env('ALLOW_DEMO_LOGIN', default=False)
+
+SESSION_EXPIRE_SECONDS = 24*60*60
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
