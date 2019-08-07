@@ -5,7 +5,7 @@ from django.conf import settings as django_settings
 # MAGICAUTH_FROM_EMAIL : e.g. 'contact@mysite.com'
 # EMAIL_SENT_REDIRECT_URL : e.g. 'email-sent' (this is a url name)
 # MAGICAUTH_LOGGED_IN_REDIRECT_URL : e.g. 'home' (this is a url name)
-# MAGICAUTH_LOGIN_REDIRECT_URL : e.g. 'login' (this is a url name)
+# MAGICAUTH_LOGIN_URL : e.g. 'login' (this is a url name)
 # MAGICAUTH_LOGOUT_URL
 
 # Email settings
@@ -24,7 +24,7 @@ EMAIL_SENT_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_REDIREC
 # Once user is logged in, redirect to this url (probably your landing page).
 LOGGED_IN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL')
 # If user is not logged in, redirect to this url to get logged in.
-LOGIN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_REDIRECT_URL')
+LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL')
 LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL')
 
 # Other

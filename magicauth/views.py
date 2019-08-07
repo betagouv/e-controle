@@ -24,7 +24,7 @@ class LoginView(generic.FormView):
         context = super(LoginView, self).get_context_data(**kwargs)
         context['LOGGED_IN_REDIRECT_URL'] = magicauth_settings.LOGGED_IN_REDIRECT_URL
         context['LOGOUT_URL'] = magicauth_settings.LOGOUT_URL
-        context['LOGIN_REDIRECT_URL'] = magicauth_settings.LOGIN_REDIRECT_URL
+        context['LOGIN_URL'] = magicauth_settings.LOGIN_URL
         return context
 
     def form_valid(self, form):
@@ -40,7 +40,7 @@ class EmailSentView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(EmailSentView, self).get_context_data(**kwargs)
-        context['LOGIN_REDIRECT_URL'] = magicauth_settings.LOGIN_REDIRECT_URL
+        context['LOGIN_URL'] = magicauth_settings.LOGIN_URL
         return context
 
 
@@ -71,7 +71,7 @@ class ValidateTokenView(generic.RedirectView):
                 self.request,
                 "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
-            return redirect(magicauth_settings.LOGIN_REDIRECT_URL)
+            return redirect(magicauth_settings.LOGIN_URL)
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
