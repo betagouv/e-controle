@@ -8,6 +8,9 @@ from django.conf import settings as django_settings
 # Note : for the default templates to be picked up, you need to enable the app_directories template Loader, by setting
 # TEMPLATES app_dirs to True.
 # https://docs.djangoproject.com/en/2.2/ref/templates/api/#django.template.loaders.app_directories.Loader
+#
+# Note 2 : magicauth assumes your logout url name is 'logout'. If it's not, change MAGICAUTH_LOGOUT_URL_NAME in your
+# settings.
 
 # Email settings
 EMAIL_SUBJECT = getattr(django_settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Lien de connexion')
@@ -19,16 +22,17 @@ FROM_EMAIL = getattr(django_settings, 'MAGICAUTH_FROM_EMAIL')
 LOGIN_VIEW_TEMPLATE = getattr(django_settings, 'MAGICAUTH_LOGIN_VIEW_TEMPLATE', 'magicauth/login.html')
 EMAIL_SENT_VIEW_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_VIEW_TEMPLATE', 'magicauth/email_sent.html')
 
-# URLs
+# URLs for magicauth views
 # Once user has entered email successfully and email has been sent, show this page.
 EMAIL_SENT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_URL', 'email-envoyé/')
 LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL', 'login/')
-LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL', 'logout')
 # The emailed links point to this url. The view will look for the token in the "key" variable.
 VALIDATE_TOKEN_URL = getattr(django_settings, 'MAGICAUTH_VALIDATE_TOKEN_URL', 'code/<str:key>/')
 
+# URL names for hooking up magicauth to your site
 # Once user is logged in, redirect to this url (probably your landing page).
 LOGGED_IN_REDIRECT_URL_NAME = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME')
+LOGOUT_URL_NAME = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL_NAME', 'logout')
 
 # Other
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
