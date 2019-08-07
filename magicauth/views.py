@@ -37,6 +37,11 @@ class EmailSentView(generic.TemplateView):
     """
     template_name = magicauth_settings.EMAIL_SENT_VIEW_TEMPLATE
 
+    def get_context_data(self, **kwargs):
+        context = super(EmailSentView, self).get_context_data(**kwargs)
+        context['LOGIN_REDIRECT_URL'] = magicauth_settings.LOGIN_REDIRECT_URL
+        return context
+
 
 class ValidateTokenView(generic.RedirectView):
     """
