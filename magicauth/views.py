@@ -46,7 +46,7 @@ class ValidateTokenView(generic.RedirectView):
     url = reverse_lazy(magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME)
 
     def get_valid_token(self, key):
-        duration = magicauth_settings.TOKEN_DURATION
+        duration = magicauth_settings.TOKEN_DURATION_SECONDS
         token = MagicToken.objects.filter(key=key).first()
         if not token:
             return None

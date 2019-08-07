@@ -35,7 +35,8 @@ LOGGED_IN_REDIRECT_URL_NAME = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDI
 LOGOUT_URL_NAME = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL_NAME', 'logout')
 
 # Other
-TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
+# How long a token stays valid. When using an expired token, user will be prompted to get a new one.
+TOKEN_DURATION_SECONDS = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION_SECONDS', 5 * 60)
 # Function to call when the email entered in the form is not found in the database.
 # The default just raises an error whose message gets displayed on the login page.
 EMAIL_UNKNOWN_CALLBACK = getattr(django_settings, 'MAGICAUTH_EMAIL_UNKNOWN_CALLBACK', 'magicauth.utils.raise_error')
