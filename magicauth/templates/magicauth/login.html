@@ -7,7 +7,7 @@
       <div class="my-3 my-md-5">
       <div class="row row-cards">
         <div class="col col-login col-6 mx-auto">
-          <form class="card" action="{% url LOGIN_URL %}" method="post">
+          <form class="card" action="{% url 'magicauth-login' %}" method="post">
             {% csrf_token %}
 
             <div class="card-body p-4">

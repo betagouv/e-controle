@@ -17,14 +17,13 @@ class LoginView(generic.FormView):
     The login page. The user enters their email in the form to get a link by email.
     """
     form_class = EmailForm
-    success_url = reverse_lazy(magicauth_settings.EMAIL_SENT_URL)
+    success_url = reverse_lazy('magicauth-email-sent')
     template_name = magicauth_settings.LOGIN_VIEW_TEMPLATE
 
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs)
         context['LOGGED_IN_REDIRECT_URL_NAME'] = magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME
         context['LOGOUT_URL'] = magicauth_settings.LOGOUT_URL
-        context['LOGIN_URL'] = magicauth_settings.LOGIN_URL
         return context
 
     def form_valid(self, form):
@@ -37,11 +36,6 @@ class EmailSentView(generic.TemplateView):
     View shown to confirm the email has been sent.
     """
     template_name = magicauth_settings.EMAIL_SENT_VIEW_TEMPLATE
-
-    def get_context_data(self, **kwargs):
-        context = super(EmailSentView, self).get_context_data(**kwargs)
-        context['LOGIN_URL'] = magicauth_settings.LOGIN_URL
-        return context
 
 
 class ValidateTokenView(generic.RedirectView):
@@ -71,7 +65,7 @@ class ValidateTokenView(generic.RedirectView):
                 self.request,
                 "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
-            return redirect(magicauth_settings.LOGIN_URL)
+            return redirect('magicauth-login')
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)

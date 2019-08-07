@@ -21,8 +21,8 @@ EMAIL_SENT_VIEW_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_VIEW_T
 
 # URLs
 # Once user has entered email successfully and email has been sent, show this page.
-EMAIL_SENT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_URL', 'magicauth-email-sent')
-LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL', 'magicauth-login')
+EMAIL_SENT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_URL', 'email-envoyé/')
+LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL', 'login/')
 LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL', 'logout')
 # The emailed links point to this url.
 VALIDATE_TOKEN_URL = getattr(django_settings, 'MAGICAUTH_VALIDATE_TOKEN_URL', 'magicauth-validate-token')
