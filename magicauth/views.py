@@ -22,7 +22,7 @@ class LoginView(generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs)
-        context['LOGGED_IN_REDIRECT_URL'] = magicauth_settings.LOGGED_IN_REDIRECT_URL
+        context['LOGGED_IN_REDIRECT_URL_NAME'] = magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME
         context['LOGOUT_URL'] = magicauth_settings.LOGOUT_URL
         context['LOGIN_URL'] = magicauth_settings.LOGIN_URL
         return context
@@ -49,7 +49,7 @@ class ValidateTokenView(generic.RedirectView):
     The link sent by email goes to this view.
     It validates the token passed in querystring, and either logs in or shows a form to make a new token.
     """
-    url = reverse_lazy(magicauth_settings.LOGGED_IN_REDIRECT_URL)
+    url = reverse_lazy(magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME)
 
     def get_valid_token(self, key):
         duration = magicauth_settings.TOKEN_DURATION
