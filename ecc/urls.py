@@ -28,7 +28,7 @@ router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
 
 urlpatterns = [
-    path('', ecc_views.login, name='login'),
+    path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', ecc_views.cgu, name='cgu'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),

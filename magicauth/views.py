@@ -10,6 +10,7 @@ from django.views import generic
 
 from .forms import EmailForm
 from .models import MagicToken
+from . import settings as magicauth_settings
 
 
 class LoginView(generic.FormView):
@@ -18,7 +19,7 @@ class LoginView(generic.FormView):
     """
     form_class = EmailForm
     success_url = reverse_lazy('magicauth-email-sent')
-    template_name = "ecc/login.html"
+    template_name = getattr(magicauth_settings, 'LOGIN_TEMPLATE')
 
     def form_valid(self, form):
         form.send_email(self.request)
