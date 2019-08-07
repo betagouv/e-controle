@@ -4,13 +4,14 @@
     "node": "10.x"
   },
   "scripts": {
-    "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail",
+    "build-all": "npm run build-questionnaire-list && npm run build-questionnaire-create && npm run build-questionnaire-detail && npm run build-utils",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
     "build-questionnaire-list": "parcel build static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
     "watch-questionnaire-list": "parcel watch static/src/questionnaire-list.js --out-dir ./static/dist/ --out-file questionnaire-list-bundle.js",
+    "watch-utils": "parcel watch static/src/utils.js --out-dir ./static/dist/ --out-file utils-bundle.js",
     "postinstall": "npm run build-all",
     "test": "jest"
   },
@@ -18,6 +19,7 @@
     "@babel/polyfill": "^7.4.4",
     "axios": "^0.19.0",
     "dropzone": "^5.5.1",
+    "idle-vue": "^2.0.5",
     "moment": "^2.24.0",
     "report-validity": "^1.0.0",
     "store": "^2.0.12",
