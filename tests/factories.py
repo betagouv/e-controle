@@ -40,14 +40,6 @@ class UserProfileFactory(factory.DjangoModelFactory):
 
 
 @register
-class MagicTokenFactory(factory.DjangoModelFactory):
-    user = factory.SubFactory(UserFactory)
-
-    class Meta:
-        model = 'magicauth.MagicToken'
-
-
-@register
 class ControlFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
     reference_code = factory.LazyAttribute(lambda c: slugify(c.title))
