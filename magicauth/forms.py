@@ -37,6 +37,7 @@ class EmailForm(forms.Form):
             'token': token,
             'user': user,
             'site': request.site,
+            'VALIDATE_TOKEN_URL': magicauth_settings.VALIDATE_TOKEN_URL,
         }
         text_message = loader.render_to_string(text_template, context)
         html_message = loader.render_to_string(html_template, context)
