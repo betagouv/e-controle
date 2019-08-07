@@ -7,3 +7,4 @@ EMAIL_HTML_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_HTML_TEMPLATE', 
 EMAIL_TEXT_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_TEXT_TEMPLATE', 'magicauth/email.txt')
 FROM_EMAIL = getattr(django_settings, 'MAGICAUTH_FROM_EMAIL')
 LOGIN_TEMPLATE = getattr(django_settings, 'MAGICAUTH_LOGIN_TEMPLATE', 'magicauth/login.html')
+TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)

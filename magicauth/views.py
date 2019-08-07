@@ -41,7 +41,7 @@ class ValidateTokenView(generic.RedirectView):
     url = reverse_lazy('questionnaire-list')
 
     def get_valid_token(self, key):
-        duration = getattr(settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
+        duration = getattr(magicauth_settings, 'TOKEN_DURATION')
         token = MagicToken.objects.filter(key=key).first()
         if not token:
             return None
