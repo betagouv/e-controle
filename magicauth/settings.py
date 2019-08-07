@@ -7,6 +7,10 @@ from django.conf import settings as django_settings
 # MAGICAUTH_LOGGED_IN_REDIRECT_URL : e.g. 'home' (this is a url name)
 # MAGICAUTH_LOGIN_URL : e.g. 'login' (this is a url name)
 # MAGICAUTH_LOGOUT_URL
+#
+# Note : for the default templates to be picked up, you need to enable the app_directories template Loader, by setting
+# TEMPLATES app_dirs to True.
+# https://docs.djangoproject.com/en/2.2/ref/templates/api/#django.template.loaders.app_directories.Loader
 
 # Email settings
 EMAIL_SUBJECT = getattr(django_settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Lien de connexion')
