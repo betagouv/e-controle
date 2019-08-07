@@ -18,7 +18,7 @@ class LoginView(generic.FormView):
     """
     form_class = EmailForm
     success_url = reverse_lazy('magicauth-email-sent')
-    template_name = magicauth_settings.LOGIN_TEMPLATE
+    template_name = magicauth_settings.LOGIN_VIEW_TEMPLATE
 
     def form_valid(self, form):
         form.send_email(self.request)
@@ -29,7 +29,7 @@ class EmailSentView(generic.TemplateView):
     """
     View shown to confirm the email has been sent.
     """
-    template_name = magicauth_settings.EMAIL_SENT_TEMPLATE
+    template_name = magicauth_settings.EMAIL_SENT_VIEW_TEMPLATE
 
 
 class ValidateTokenView(generic.RedirectView):
