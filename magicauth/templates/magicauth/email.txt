@@ -1,6 +1,6 @@
 Bonjour {{ user.first_name }} {{ user.last_name }},
 
-Pour accéder à {{ site.domain }}, vous avez juste à cliquer sur ce lien de connexion:  https://{{ site.domain }}{% url VALIDATE_TOKEN_URL token.key %}
+Pour accéder à {{ site.domain }}, vous avez juste à cliquer sur ce lien de connexion:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
 
 Bonne journée,
 

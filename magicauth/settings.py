@@ -24,8 +24,8 @@ EMAIL_SENT_VIEW_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_VIEW_T
 EMAIL_SENT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_URL', 'email-envoyé/')
 LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL', 'login/')
 LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL', 'logout')
-# The emailed links point to this url.
-VALIDATE_TOKEN_URL = getattr(django_settings, 'MAGICAUTH_VALIDATE_TOKEN_URL', 'magicauth-validate-token')
+# The emailed links point to this url. The view will look for the token in the "key" variable.
+VALIDATE_TOKEN_URL = getattr(django_settings, 'MAGICAUTH_VALIDATE_TOKEN_URL', 'code/<str:key>/')
 
 # Once user is logged in, redirect to this url (probably your landing page).
 LOGGED_IN_REDIRECT_URL_NAME = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME')
