@@ -11,13 +11,13 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary"
+          <button v-if="confirmButton" type="button" class="btn btn-primary"
                   data-dismiss="modal"
                   @click="confirmClicked"
           >
             {{ confirmButton }}
           </button>
-          <button type="button" class="btn btn-secondary"
+          <button v-if="cancelButton" type="button" class="btn btn-secondary"
                   data-dismiss="modal"
                   @click="cancelClicked"
           >
