@@ -16,8 +16,8 @@
               Vous êtes déjà connecté
               </div>
               <div class="text-center">
-                <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
-                <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
+                <a href="{% url LOGGED_IN_REDIRECT_URL %}" class="btn btn-success">Accédez à l'accueil</a>
+                <a href="{% url LOGOUT_URL %}" class="btn btn-warning">Déconnectez-vous</a>
               </div>
               {% else %}
               {% if messages %}

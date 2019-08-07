@@ -145,6 +145,7 @@ MAGICAUTH_LOGGED_IN_REDIRECT_URL = 'questionnaire-list'
 MAGICAUTH_LOGIN_REDIRECT_URL = 'login'
 MAGICAUTH_EMAIL_SUBJECT = 'Connexion e.controle'
 MAGICAUTH_EMAIL_SENT_REDIRECT_URL = 'magicauth-email-sent'
+MAGICAUTH_LOGOUT_URL = 'logout'
 
 LOGIN_URL = 'login'
 

@@ -6,6 +6,7 @@ from django.conf import settings as django_settings
 # EMAIL_SENT_REDIRECT_URL : e.g. 'email-sent' (this is a url name)
 # MAGICAUTH_LOGGED_IN_REDIRECT_URL : e.g. 'home' (this is a url name)
 # MAGICAUTH_LOGIN_REDIRECT_URL : e.g. 'login' (this is a url name)
+# MAGICAUTH_LOGOUT_URL
 
 # Email settings
 EMAIL_SUBJECT = getattr(django_settings, 'MAGICAUTH_EMAIL_SUBJECT', 'Lien de connexion')
@@ -24,6 +25,7 @@ EMAIL_SENT_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_REDIREC
 LOGGED_IN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL')
 # If user is not logged in, redirect to this url to get logged in.
 LOGIN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_REDIRECT_URL')
+LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL')
 
 # Other
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
