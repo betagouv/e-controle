@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
@@ -52,7 +51,7 @@ class ValidateTokenView(generic.RedirectView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            return redirect(magicauth_settings.LOGIN_REDIRECT_URL)
         token_key = kwargs.get('key')
         token = self.get_valid_token(token_key)
         if not token:
