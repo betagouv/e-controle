@@ -24,6 +24,7 @@ class LoginView(generic.FormView):
         context = super(LoginView, self).get_context_data(**kwargs)
         context['LOGGED_IN_REDIRECT_URL'] = magicauth_settings.LOGGED_IN_REDIRECT_URL
         context['LOGOUT_URL'] = magicauth_settings.LOGOUT_URL
+        context['LOGIN_REDIRECT_URL'] = magicauth_settings.LOGIN_REDIRECT_URL
         return context
 
     def form_valid(self, form):
