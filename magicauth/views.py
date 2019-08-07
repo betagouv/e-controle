@@ -17,7 +17,7 @@ class LoginView(generic.FormView):
     The login page. The user enters their email in the form to get a link by email.
     """
     form_class = EmailForm
-    success_url = reverse_lazy(magicauth_settings.EMAIL_SENT_REDIRECT_URL)
+    success_url = reverse_lazy(magicauth_settings.EMAIL_SENT_URL)
     template_name = magicauth_settings.LOGIN_VIEW_TEMPLATE
 
     def get_context_data(self, **kwargs):
