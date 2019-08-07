@@ -1,5 +1,5 @@
 <template>
-  <div v-if="files && files.length" class="border-0">
+  <div v-if="files && files.length" class="question-box-child">
     <div v-if="files.length > 1" class="form-label">Fichiers annexes à la question:</div>
     <div v-else class="form-label">Fichier annexe à la question:</div>
     <ul>
