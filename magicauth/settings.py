@@ -3,10 +3,7 @@ from django.conf import settings as django_settings
 # To add magicauth to your site, you need to add these values to your site settings (the rest have defaults, you are
 # free to change them if you want):
 # MAGICAUTH_FROM_EMAIL : e.g. 'contact@mysite.com'
-# EMAIL_SENT_REDIRECT_URL : e.g. 'email-sent' (this is a url name)
 # MAGICAUTH_LOGGED_IN_REDIRECT_URL : e.g. 'home' (this is a url name)
-# MAGICAUTH_LOGIN_URL : e.g. 'login' (this is a url name)
-# MAGICAUTH_LOGOUT_URL
 #
 # Note : for the default templates to be picked up, you need to enable the app_directories template Loader, by setting
 # TEMPLATES app_dirs to True.
@@ -24,12 +21,13 @@ EMAIL_SENT_VIEW_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_VIEW_T
 
 # Redirects
 # Once user has entered email successfully, redirect to this page.
-EMAIL_SENT_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_REDIRECT_URL')
+EMAIL_SENT_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_REDIRECT_URL', 'magicauth-email-sent')
 # Once user is logged in, redirect to this url (probably your landing page).
 LOGGED_IN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL')
 # If user is not logged in, redirect to this url to get logged in.
-LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL')
-LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL')
+LOGIN_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_URL', 'magicauth-login')
+LOGOUT_URL = getattr(django_settings, 'MAGICAUTH_LOGOUT_URL', 'logout')
+VALIDATE_TOKEN_URL = getattr(django_settings, 'MAGICAUTH_VALIDATE_TOKEN_URL', 'magicauth-validate-token')
 
 # Other
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
