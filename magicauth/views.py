@@ -12,7 +12,10 @@ from .forms import EmailForm
 from .models import MagicToken
 
 
-class MagicLinkView(generic.FormView):
+class LoginView(generic.FormView):
+    """
+    The login page. The user enters their email in the form to get a link by email.
+    """
     form_class = EmailForm
     success_url = reverse_lazy('magicauth-email-sent')
     template_name = "ecc/login.html"
@@ -22,7 +25,18 @@ class MagicLinkView(generic.FormView):
         return super().form_valid(form)
 
 
+class EmailSentView(generic.TemplateView):
+    """
+    View shown to confirm the email has been sent.
+    """
+    template_name = 'magicauth/email_sent.html'
+
+
 class ValidateTokenView(generic.RedirectView):
+    """
+    The link sent by email goes to this view.
+    It validates the token passed in querystring, and either logs in or shows a form to make a new token.
+    """
     url = reverse_lazy('questionnaire-list')
 
     def get_valid_token(self, key):
@@ -51,6 +65,3 @@ class ValidateTokenView(generic.RedirectView):
         return super().get(*args, **kwargs)
 
 
-magic_link = MagicLinkView.as_view()
-email_sent = generic.TemplateView.as_view(template_name='magicauth/email_sent.html')
-validate_token = ValidateTokenView.as_view()

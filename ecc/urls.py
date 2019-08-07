@@ -32,9 +32,10 @@ urlpatterns = [
     path('cgu/', ecc_views.cgu, name='cgu'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-    path('login/', magicauth_views.magic_link, name='magicauth-login'),
-    path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
-    path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
+
+    path('login/', magicauth_views.LoginView.as_view(), name='magicauth-login'),
+    path('email-envoyé/', magicauth_views.EmailSentView.as_view(), name='magicauth-email-sent'),
+    path('code/<str:key>/', magicauth_views.ValidateTokenView.as_view(), name='magicauth-validate-token'),
 
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
