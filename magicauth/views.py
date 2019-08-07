@@ -29,7 +29,7 @@ class EmailSentView(generic.TemplateView):
     """
     View shown to confirm the email has been sent.
     """
-    template_name = 'magicauth/email_sent.html'
+    template_name = magicauth_settings.EMAIL_SENT_TEMPLATE
 
 
 class ValidateTokenView(generic.RedirectView):
