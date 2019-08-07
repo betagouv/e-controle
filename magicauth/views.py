@@ -18,7 +18,7 @@ class LoginView(generic.FormView):
     """
     form_class = EmailForm
     success_url = reverse_lazy('magicauth-email-sent')
-    template_name = getattr(magicauth_settings, 'LOGIN_TEMPLATE')
+    template_name = magicauth_settings.LOGIN_TEMPLATE
 
     def form_valid(self, form):
         form.send_email(self.request)
@@ -40,7 +40,7 @@ class ValidateTokenView(generic.RedirectView):
     url = reverse_lazy('questionnaire-list')
 
     def get_valid_token(self, key):
-        duration = getattr(magicauth_settings, 'TOKEN_DURATION')
+        duration = magicauth_settings.TOKEN_DURATION
         token = MagicToken.objects.filter(key=key).first()
         if not token:
             return None
