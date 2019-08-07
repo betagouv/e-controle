@@ -1,7 +1,7 @@
 {% extends "base_email.html" %}
 {% block email_content %}
 <p>Bonjour {{ user.first_name }} {{ user.last_name }},</p>
-<p>Pour accéder à votre espace e-contrôle, vous avez juste à cliquer sur ce bouton :</p>
+<p>Pour accéder à {{ site.domain }}, vous avez juste à cliquer sur ce bouton :</p>
 <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
   <tbody>
     <tr>
@@ -17,7 +17,6 @@
     </tr>
   </tbody>
 </table>
-<p>Si vous rencontrez des difficultés pour vous connecter, répondez directement à cet email.</p>
-<p>Merci beaucoup,</p>
-<p>L'équipe d'e-contrôle</p>
+<p>Bonne journée,</p>
+<p>L'équipe de {{ site.domain }}</p>
 {% endblock email_content %}
