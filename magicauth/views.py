@@ -37,7 +37,7 @@ class ValidateTokenView(generic.RedirectView):
     The link sent by email goes to this view.
     It validates the token passed in querystring, and either logs in or shows a form to make a new token.
     """
-    url = reverse_lazy('questionnaire-list')
+    url = reverse_lazy(magicauth_settings.LOGGED_IN_REDIRECT_URL)
 
     def get_valid_token(self, key):
         duration = magicauth_settings.TOKEN_DURATION
