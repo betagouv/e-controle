@@ -8,7 +8,7 @@ from . import settings as magicauth_settings
 from .models import MagicToken
 
 
-no_user_call_back = import_string(magicauth_settings.NO_USER_CALL_BACK)
+email_unknown_callback = import_string(magicauth_settings.EMAIL_UNKNOWN_CALLBACK)
 
 
 class EmailForm(forms.Form):
@@ -18,7 +18,7 @@ class EmailForm(forms.Form):
         user_email = self.cleaned_data['email']
         user_email = user_email.lower()
         if not User.objects.filter(username__iexact=user_email).exists():
-            no_user_call_back(user_email)
+            email_unknown_callback(user_email)
         return user_email
 
     def create_token(self, user):

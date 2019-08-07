@@ -24,4 +24,5 @@ LOGIN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_REDIRECT_URL')
 
 # Other
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
-NO_USER_CALL_BACK = getattr(django_settings, 'MAGICAUTH_NO_USER_CALL_BACK', 'magicauth.utils.raise_error')
+# Function to call when the email entered in the form is not found in the database.
+EMAIL_UNKNOWN_CALLBACK = getattr(django_settings, 'MAGICAUTH_EMAIL_UNKNOWN_CALLBACK', 'magicauth.utils.raise_error')
