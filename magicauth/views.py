@@ -59,7 +59,7 @@ class ValidateTokenView(generic.RedirectView):
                 self.request,
                 "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
-            return redirect('login')
+            return redirect(magicauth_settings.LOGIN_REDIRECT_URL)
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)

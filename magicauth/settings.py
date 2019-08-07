@@ -12,4 +12,7 @@ EMAIL_SENT_TEMPLATE = getattr(django_settings, 'MAGICAUTH_EMAIL_SENT_TEMPLATE', 
 
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
 
+# Once user is logged in, redirect to this url (probably your landing page).
 LOGGED_IN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGGED_IN_REDIRECT_URL')
+# If user is not logged in, redirect to this url to get logged in.
+LOGIN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_REDIRECT_URL')
