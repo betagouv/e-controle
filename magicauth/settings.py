@@ -25,4 +25,7 @@ LOGIN_REDIRECT_URL = getattr(django_settings, 'MAGICAUTH_LOGIN_REDIRECT_URL')
 # Other
 TOKEN_DURATION = getattr(django_settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
 # Function to call when the email entered in the form is not found in the database.
+# The default just raises an error whose message gets displayed on the login page.
 EMAIL_UNKNOWN_CALLBACK = getattr(django_settings, 'MAGICAUTH_EMAIL_UNKNOWN_CALLBACK', 'magicauth.utils.raise_error')
+# If using the default EMAIL_UNKNOWN_CALLBACK, this message will be displayed when an unknown email is entered.
+EMAIL_UNKNOWN_MESSAGE = getattr(django_settings, 'MAGICAUTH_EMAIL_UNKNOWN_MESSAGE', 'Aucun utilisateur trouvé.')
