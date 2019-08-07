@@ -7,13 +7,6 @@
 
 {% block extra_static_header %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
-
-    {% if debug %}
-    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.css' %}">
-    {% else %}
-    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/v5.8.1/css/all.min.css' %}">
-    {% endif %}
-
 {% endblock extra_static_header %}
 
 {% block content %}
