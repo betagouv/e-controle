@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'filer',
     'ordered_model',
-    'django_tabler',
     'django_extensions',
     'actstream',
     'rest_framework',
