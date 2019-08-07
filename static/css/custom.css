@@ -117,3 +117,14 @@ table.trash-list {
     word-wrap: break-word;
     text-align: center;
 }
+
+/* Elements in QuestionBox collapsed part */
+.question-box-child {
+    /* Same as card-body, but with no padding-top */
+    flex: 1 1 auto;
+    margin: 0;
+    padding-right: 1.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}

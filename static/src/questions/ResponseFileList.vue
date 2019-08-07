@@ -2,7 +2,7 @@
   <div>
     <success-bar v-if="message" @dismissed="clearMessage"><div v-html="message"></div></success-bar>
     <error-bar v-if="errorMessage" @dismissed="clearErrorMessage"><div v-html="errorMessage"></div></error-bar>
-    <div class="table-responsive" v-if="files && files.length">
+    <div class="table-responsive question-box-child" v-if="files && files.length">
       <div class="form-label">Fichier{{ answer_count===1 ? '': 's' }} déposé{{ answer_count===1 ? '': 's' }}:</div>
       <table class="response-file-list table table-hover table-outline table-vcenter text-nowrap card-table">
         <thead>
