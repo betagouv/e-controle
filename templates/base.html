@@ -17,9 +17,9 @@
 {% endblock extra_static_header %}
 
 {% block page_utils %}
-<div id="utils-vm">
+<div id="session-management-vm">
   {% if user.is_authenticated %}
-  <idle-session :logout-url="{% url 'logout' %}"></idle-session>
+  <session-timeout :logout-url="{% url 'logout' %}"></session-timeout>
   {% endif %}
 </div>
 {% endblock page_utils %}
