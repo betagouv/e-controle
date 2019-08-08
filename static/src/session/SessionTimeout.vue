@@ -1,9 +1,12 @@
 <template>
   <div>
     <confirm-modal id="IdleSessionConfirmModal"
-                   title="Votre session va bientôt expirer...">
+                   title="Votre session va bientôt expirer..."
+                   confirm-button="Cliquez ici pour garder ma connexion"
+                   @confirm="keepAlive()"
+                   @close="keepAlive()">
       <p>
-         Vous serez bientôt déconnecté si n'y a pas d'activité sur cette page.
+         Sans action de votre part, cette page sera déconnectée.
       </p>
     </confirm-modal>
   </div>
@@ -36,6 +39,10 @@
       },
       hideModal() {
         $('#IdleSessionConfirmModal').modal('hide')
+      },
+      keepAlive() {
+        clearTimeout(timeout)
+        this.hideModal()
       }
     },
     onIdle() {
@@ -45,13 +52,6 @@
         console.debug('Idle session: end of grace period. Logout on this URL: ' + this.logoutURL)
         window.location.href = this.logoutUrl
       }, 30*1000); // 30 seconds
-    },
-    onActive() {
-      console.debug('Detected user activity.')
-      clearTimeout(timeout)
-      this.messageStr = 'Hello'
-      this.isIdle = false
-      this.hideModal()
     }
   })
 
