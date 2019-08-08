@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from magicauth.models import MagicToken
 
-from tests import factories
+from . import factories
 
 pytestmark = mark.django_db
 

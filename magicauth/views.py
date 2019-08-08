@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect
@@ -10,23 +9,44 @@ from django.views import generic
 
 from .forms import EmailForm
 from .models import MagicToken
+from . import settings as magicauth_settings
 
 
-class MagicLinkView(generic.FormView):
+class LoginView(generic.FormView):
+    """
+    The login page. The user enters their email in the form to get a link by email.
+    """
     form_class = EmailForm
     success_url = reverse_lazy('magicauth-email-sent')
-    template_name = "ecc/login.html"
+    template_name = magicauth_settings.LOGIN_VIEW_TEMPLATE
+
+    def get_context_data(self, **kwargs):
+        context = super(LoginView, self).get_context_data(**kwargs)
+        context['LOGGED_IN_REDIRECT_URL_NAME'] = magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME
+        context['LOGOUT_URL_NAME'] = magicauth_settings.LOGOUT_URL_NAME
+        return context
 
     def form_valid(self, form):
         form.send_email(self.request)
         return super().form_valid(form)
 
 
+class EmailSentView(generic.TemplateView):
+    """
+    View shown to confirm the email has been sent.
+    """
+    template_name = magicauth_settings.EMAIL_SENT_VIEW_TEMPLATE
+
+
 class ValidateTokenView(generic.RedirectView):
-    url = reverse_lazy('questionnaire-list')
+    """
+    The link sent by email goes to this view.
+    It validates the token passed in querystring, and either logs in or shows a form to make a new token.
+    """
+    url = reverse_lazy(magicauth_settings.LOGGED_IN_REDIRECT_URL_NAME)
 
     def get_valid_token(self, key):
-        duration = getattr(settings, 'MAGICAUTH_TOKEN_DURATION', 5 * 60)
+        duration = magicauth_settings.TOKEN_DURATION_SECONDS
         token = MagicToken.objects.filter(key=key).first()
         if not token:
             return None
@@ -37,7 +57,7 @@ class ValidateTokenView(generic.RedirectView):
 
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            return super().get(*args, **kwargs)
         token_key = kwargs.get('key')
         token = self.get_valid_token(token_key)
         if not token:
@@ -45,12 +65,9 @@ class ValidateTokenView(generic.RedirectView):
                 self.request,
                 "Ce lien de connexion ne fonctionne plus. Pour en recevoir un nouveau, nous vous invitons à renseigner votre email ci-dessous puis à cliquer sur valider."
             )
-            return redirect('login')
+            return redirect('magicauth-login')
         login(self.request, token.user)
         MagicToken.objects.filter(user=token.user).delete()  # Remove them all for this user
         return super().get(*args, **kwargs)
 
 
-magic_link = MagicLinkView.as_view()
-email_sent = generic.TemplateView.as_view(template_name='magicauth/email_sent.html')
-validate_token = ValidateTokenView.as_view()

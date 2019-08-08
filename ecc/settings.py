@@ -139,11 +139,15 @@ EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
 MAGICAUTH_FROM_EMAIL = DEFAULT_FROM_EMAIL
+MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME = 'questionnaire-list'
+MAGICAUTH_EMAIL_SUBJECT = 'Connexion e.controle'
+MAGICAUTH_EMAIL_HTML_TEMPLATE = 'login/email.html'
+MAGICAUTH_EMAIL_TEXT_TEMPLATE = 'login/email.txt'
+MAGICAUTH_LOGIN_VIEW_TEMPLATE = 'login/login.html'
+MAGICAUTH_EMAIL_SENT_VIEW_TEMPLATE = 'login/email_sent.html'
 
-MAGICAUTH_TOKEN_DURATION = 15 * 60
-
-LOGIN_REDIRECT_URL = 'questionnaire-list'
 LOGIN_URL = 'login'
 
 # Internationalization
@@ -228,7 +232,7 @@ LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
 TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
-MAGICAUTH_NO_USER_CALL_BACK = 'adauth.auth.active_directory_auth'
+MAGICAUTH_EMAIL_UNKNOWN_CALLBACK = 'adauth.auth.active_directory_auth'
 WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
