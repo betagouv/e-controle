@@ -15,6 +15,7 @@ from demo import views as demo_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from user_profiles import api_views as user_profiles_api_views
+from session import api_views as session_api_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
@@ -27,6 +28,8 @@ router.register(r'question', control_api_views.QuestionViewSet, basename='questi
 router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basename='questionnaire')
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
+router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='session')
+
 
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'user_profiles',
     'utils',
     'adauth',
+    'session',
 ]
 
 
