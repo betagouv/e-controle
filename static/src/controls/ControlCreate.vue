@@ -154,14 +154,16 @@
           })
           .catch((error) => {
             console.error(error)
-            if (error.response.data['reference_code'][0] === 'UNIQUE') {
-              this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                  '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
-            }
-            if (error.response.data['reference_code'][0] === 'INVALID') {
-              this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                  '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
-                  ' Veuillez en choisir un autre.'
+            if (error.response.data['reference_code']) {
+              if (error.response.data['reference_code'][0] === 'UNIQUE') {
+                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                    '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+              }
+              if (error.response.data['reference_code'][0] === 'INVALID') {
+                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                    '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                    ' Veuillez en choisir un autre.'
+              }
             }
             this.errors = error.response.data
             this.hasErrors = true
