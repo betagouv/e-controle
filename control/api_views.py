@@ -6,6 +6,8 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import serializers
 
 import django.dispatch
+from django.core.files import File
+import os
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
@@ -98,6 +100,7 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     serializer_class = ResponseFileTrashSerializer
+    trashed_file_prefix = 'CORBEILLE_'
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
@@ -115,6 +118,17 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
                 # un-trash : not implemented yet
                 raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
 
+        '''
+        instance.file.name = instance.file.name + ResponseFileTrash.trashed_file_prefix
+        instance.save()
+        import ipdb
+        ipdb.set_trace()
+        '''
+        deleted_file = File(instance.file, name=ResponseFileTrash.trashed_file_prefix + instance.basename)
+        '''
+        os.rename(instance.file.path, instance.file.path + ResponseFileTrash.trashed_file_prefix)
+        '''
+
         # Log deletion action (including re-deleting)
         if serializer.validated_data['is_deleted']:
             action_details = {
@@ -123,7 +137,8 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
                 'target': instance,
             }
             action.send(**action_details)
-        super(ResponseFileTrash, self).perform_update(serializer)
+
+        serializer.save(file=deleted_file)
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
