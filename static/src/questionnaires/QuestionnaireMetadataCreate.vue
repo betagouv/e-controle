@@ -14,13 +14,14 @@
             Exemple :
             <strong>"Présentation générale"</strong>
             ou
-            <strong>"Suite à la réunion du 7 Mars 2019"</strong>
+            <strong>"Suite à la réunion du 7 Mars 2019"</strong>. 255 caractères maximum.
           </span>
           <input type="text"
                  aria-labelledby="questionnaireTitle"
                  aria-describedby="questionnaireTitleHelp"
                  class="form-control"
                  v-model="metadata.title"
+                 maxlength="255"
                  required>
         </div>
         <div class="form-group">
