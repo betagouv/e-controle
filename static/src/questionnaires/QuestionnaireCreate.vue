@@ -230,6 +230,9 @@
               console.debug(response)
               this._updateQuestionnaire(response.data)
               this.emitQuestionnaireUpdated()
+
+              const timeString = moment(new Date()).format('HH:mm:ss')
+              this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
             }).catch(error => {
               console.error(error)
               this.displayErrors(error.response.data)
@@ -247,10 +250,6 @@
       saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
-            .then(() => {
-                const timeString = moment(new Date()).format('HH:mm:ss')
-                this.message = "Votre dernière sauvergarde a eu lieu à " + timeString + "."
-            })
       },
       saveNonDraft() {
         this.questionnaire.is_draft = false
