@@ -6,7 +6,7 @@
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
-      L'envoi de ce formulaire n'a pas fonctionné. Erreur : {{JSON.stringify(errors)}}
+      {{ errorMessage }}
     </div>
     <div class="row justify-content-around mb-6">
       <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
@@ -131,7 +131,6 @@
               if (response.data.is_draft !== undefined && !response.data.is_draft) {
                 const errorMessage = 'Le questionnaire ' + response.data.id +
                     ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
-                console.error(errorMessage)
                 this.displayErrors(errorMessage)
                 return
               }
@@ -140,9 +139,8 @@
               this.emitQuestionnaireUpdated()
               this.moveToState(STATES.START)
             }).catch(error => {
-          console.error(error)
-          this.displayErrors(error.response.data)
-        })
+              this.displayErrors('Erreur lors du chargement du brouillon.', error.response.data)
+            })
       },
       emitQuestionnaireLoaded: function() {
         this.$emit('questionnaire-loaded', this.questionnaire)
@@ -195,13 +193,20 @@
         }
         console.error('Trying to go back from state', this.state);
       },
-      displayErrors: function(errors) {
+      displayErrors: function(errorMessage, errors) {
         this.hasErrors = true
         this.errors = errors
+        if (errors) {
+          this.errorMessage = errorMessage + " Erreurs : " + JSON.stringify(errors)
+        } else {
+          this.errorMessage = errorMessage
+        }
+        console.error(errorMessage)
       },
       clearErrors() {
-        this.errors = []
         this.hasErrors = false
+        this.errors = []
+        this.errorMessage = ""
       },
       clearMessages() {
         this.message = ""
@@ -235,7 +240,7 @@
               this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
             }).catch(error => {
               console.error(error)
-              this.displayErrors(error.response.data)
+              this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
             })
       },
       saveDraftFromMetadata(data) {
