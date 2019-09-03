@@ -16,8 +16,6 @@
   import Vue from "vue"
   import ConfirmModal from "../utils/ConfirmModal"
 
-  import EventBus from '../events'
-
   var timeout
 
   export default Vue.extend({
@@ -37,25 +35,28 @@
       keepAlive() {
         clearTimeout(timeout)
         this.hideModal()
+        this.startSessionTimer()
       },
-      TriggerIdle() {
-        this.showModal()
-        console.debug('Detected idle session.')
+      startSessionTimer() {
+        var expireSeconds = 60
+        console.debug('Start or restart session timer')
         timeout = setTimeout(() => {
-          console.debug('Idle session: end of grace period. Logout on this URL: ' + this.logoutURL)
+          console.debug('Idle session started')
+          this.startGracePeriod()
+        }, expireSeconds*1000); // JS timeout is specified in milliseconds.
+      },
+      startGracePeriod() {
+        this.showModal()
+        console.debug('Start grace period for idle session')
+        timeout = setTimeout(() => {
+          console.debug('End of grace period for idle session. Logout on this URL: ' + this.logoutURL)
           window.location.href = this.logoutUrl
         }, 30*1000); // 30 seconds
       }
     },
     mounted() {
-      console.debug("Mounted...")
-      timeout = setTimeout(() => {
-        console.debug('Idle session: started: ' + this.logoutURL)
-        EventBus.$emit('session-timeout', {})
-      }, 30*1000); // 30 seconds
-      EventBus.$on('session-timeout', () => {
-        this.TriggerIdle()
-      })
+      console.debug("Mounted session timout")
+      this.startSessionTimer()
     }
   })
 </script>
