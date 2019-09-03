@@ -117,6 +117,7 @@
         return file
       },
       sendToTrash: function(fileId) {
+        this.clearErrorMessage()
         let formData = new FormData()
         formData.append('is_deleted', true)
         this.axios.put(response_file_trash_url + fileId + '/',
