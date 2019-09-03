@@ -113,7 +113,7 @@
 {% block session_management %}
 <div id="session-management-vm">
   {% if user.is_authenticated %}
-  <session-timeout :logout-url="{% url 'logout' %}"></session-timeout>
+  <session-timeout :logout-url="{% url 'logout' %}" :expire-seconds="{{ settings.SESSION_EXPIRE_SECONDS }}"></session-timeout>
   {% endif %}
 </div>
 <script src="{% static 'dist/session-management-bundle.js' %}"></script>

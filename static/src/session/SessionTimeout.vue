@@ -13,8 +13,12 @@
 </template>
 
 <script>
-  import Vue from "vue"
+  import axios from "axios"
   import ConfirmModal from "../utils/ConfirmModal"
+  import Vue from "vue"
+  import VueAxios from "vue-axios"
+
+  Vue.use(VueAxios, axios)
 
   var timeout
 
@@ -23,8 +27,18 @@
       ConfirmModal
     },
     props: [
-      'logoutUrl'
+      'logoutUrl',
+      'expireSeconds'
     ],
+    computed: {
+      expireTimeout() {
+        // The frontend expire timeout is 10% less that the backend timout.
+        // Also, JS timeout is specified in milliseconds.
+        let expire = this.expireSeconds - this.expireSeconds * 0.1
+        expire = expire*1000
+        return expire
+      }
+    },
     methods: {
       showModal() {
         $('#IdleSessionConfirmModal').modal('show')
@@ -36,14 +50,19 @@
         clearTimeout(timeout)
         this.hideModal()
         this.startSessionTimer()
+        this.keepServerAlive()
+      },
+      keepServerAlive() {
+        Vue.axios.get('/api/session/keep-alive').then((response) => {
+          console.debug('Keep server alive')
+        })
       },
       startSessionTimer() {
-        var expireSeconds = 60
-        console.debug('Start or restart session timer')
+        console.debug('Start or restart session timer: ' + this.expireTimeout)
         timeout = setTimeout(() => {
           console.debug('Idle session started')
           this.startGracePeriod()
-        }, expireSeconds*1000); // JS timeout is specified in milliseconds.
+        }, this.expireTimeout);
       },
       startGracePeriod() {
         this.showModal()
