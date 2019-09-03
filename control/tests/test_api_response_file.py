@@ -133,6 +133,21 @@ def test_trashing_logs_an_action():
     assert action.target_object_id == str(response_file.id)
 
 
+def test_trashing_moves_the_file_on_disk():
+    response_file = factories.ResponseFileFactory()
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+
+    path_before = response_file.file.path
+    assert 'CORBEILLE' not in path_before
+
+    trash_response_file(user, response_file.id, payload)
+
+    path_after = ResponseFile.objects.get(id=response_file.id).file.path
+    assert path_after != path_before
+    assert 'CORBEILLE' in path_after
+
+
 def test_can_retrash_a_trashed_file():
     response_file = factories.ResponseFileFactory(is_deleted=True)
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
