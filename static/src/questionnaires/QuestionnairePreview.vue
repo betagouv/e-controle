@@ -39,7 +39,7 @@
         </info-bar>
 
         <info-bar>
-            Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information le lendemain.
+            Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
         </info-bar>
 
       </confirm-modal>
