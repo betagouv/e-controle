@@ -113,16 +113,18 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     def perform_update(self, serializer):
         instance = self.get_object()
 
+        if not serializer.validated_data['is_deleted']:
+            # un-trash : not implemented yet
+            raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
+
         if instance.is_deleted:
-            if not serializer.validated_data['is_deleted']:
-                # un-trash : not implemented yet
-                raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
+            raise serializers.ValidationError('Vous ne pouvez mettre à la corbeille un fichier qui y est déja.')
 
         # Save a new file, that gets uploaded to the deleted files path.
         deleted_file = File(instance.file, name=instance.basename)
         serializer.save(file=deleted_file)
 
-        # Log deletion action (including re-deleting)
+        # Log deletion action
         if serializer.validated_data['is_deleted']:
             action_details = {
                 'sender': self.request.user,
