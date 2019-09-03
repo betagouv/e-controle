@@ -30,7 +30,7 @@ class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateVie
     template_name = "ecc/questionnaire_list.html"
 
 
-class Trash(LoginRequiredMixin, DetailView):
+class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     model = Questionnaire
     template_name = "ecc/trash.html"
 
