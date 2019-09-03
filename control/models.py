@@ -246,6 +246,8 @@ class ResponseFile(TimeStampedModel):
         """
         Remove the suffix found in filename 'Q01-T02-01-'.
         """
+        if self.is_deleted:
+            return re.sub(r'CORBEILLE-Q\d+-T\d+-\d+-', '', basename)
         return re.sub(r'Q\d+-T\d+-\d+-', '', basename)
 
     @property

@@ -118,16 +118,8 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
                 # un-trash : not implemented yet
                 raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
 
-        '''
-        instance.file.name = instance.file.name + ResponseFileTrash.trashed_file_prefix
-        instance.save()
-        import ipdb
-        ipdb.set_trace()
-        '''
-        deleted_file = File(instance.file, name=ResponseFileTrash.trashed_file_prefix + instance.basename)
-        '''
-        os.rename(instance.file.path, instance.file.path + ResponseFileTrash.trashed_file_prefix)
-        '''
+        deleted_file = File(instance.file, name=instance.basename)
+        serializer.save(file=deleted_file)
 
         # Log deletion action (including re-deleting)
         if serializer.validated_data['is_deleted']:
@@ -137,8 +129,6 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
                 'target': instance,
             }
             action.send(**action_details)
-
-        serializer.save(file=deleted_file)
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
