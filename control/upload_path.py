@@ -39,6 +39,12 @@ class PathBuilder(object):
         path = f'{self.theme_path}/{response_filename}'
         return path
 
+    def get_deleted_response_file_path(self):
+        prefix = f'CORBEILLE-Q{self.questionaire_num:02}-T{self.theme_num:02}-{self.question_num:02}'
+        response_filename = f'{prefix}-{self.filename}'
+        path = f'{self.theme_path}/{response_filename}'
+        return path
+
 
 def question_file_path(instance, filename):
     path = PathBuilder(file_object=instance, filename=filename)
@@ -47,4 +53,6 @@ def question_file_path(instance, filename):
 
 def response_file_path(instance, filename):
     path = PathBuilder(file_object=instance, filename=filename)
+    if instance.is_deleted:
+        return path.get_deleted_response_file_path()
     return path.get_response_file_path()

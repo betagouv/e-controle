@@ -6,6 +6,8 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework import serializers
 
 import django.dispatch
+from django.core.files import File
+import os
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
@@ -98,6 +100,7 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     serializer_class = ResponseFileTrashSerializer
+    trashed_file_prefix = 'CORBEILLE_'
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
@@ -110,12 +113,18 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     def perform_update(self, serializer):
         instance = self.get_object()
 
-        if instance.is_deleted:
-            if not serializer.validated_data['is_deleted']:
-                # un-trash : not implemented yet
-                raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
+        if not serializer.validated_data['is_deleted']:
+            # un-trash : not implemented yet
+            raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
 
-        # Log deletion action (including re-deleting)
+        if instance.is_deleted:
+            raise serializers.ValidationError('Vous ne pouvez mettre à la corbeille un fichier qui y est déja.')
+
+        # Save a new file, that gets uploaded to the deleted files path.
+        deleted_file = File(instance.file, name=instance.basename)
+        serializer.save(file=deleted_file)
+
+        # Log deletion action
         if serializer.validated_data['is_deleted']:
             action_details = {
                 'sender': self.request.user,
@@ -123,7 +132,9 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
                 'target': instance,
             }
             action.send(**action_details)
-        super(ResponseFileTrash, self).perform_update(serializer)
+
+        # Delete file left at old path
+        instance.file.delete(False)
 
 
 class ThemeViewSet(viewsets.ModelViewSet):
