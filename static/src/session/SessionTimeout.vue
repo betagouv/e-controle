@@ -2,11 +2,11 @@
   <div>
     <confirm-modal id="IdleSessionConfirmModal"
                    title="Votre session va bientôt expirer..."
-                   confirm-button="Cliquez ici pour garder ma connexion"
+                   confirm-button="Garder ma session active"
                    @confirm="keepAlive()"
                    @close="keepAlive()">
       <p>
-         Sans action de votre part, cette page sera déconnectée.
+         Sans action de votre part, votre session va expirer.
       </p>
     </confirm-modal>
   </div>
@@ -31,24 +31,20 @@
       'expireSeconds'
     ],
     computed: {
-      expireTimeout() {
+      frontendExpireMs() {
         // The frontend expire timeout is 10% less that the backend timout.
         // Also, JS timeout is specified in milliseconds.
-        let expire = this.expireSeconds - this.expireSeconds * 0.1
-        expire = expire*1000
-        return expire
+        let expireMs = this.expireSeconds - this.expireSeconds * 0.1
+        expireMs = expireMs*1000
+        return expireMs
       }
     },
     methods: {
       showModal() {
         $('#IdleSessionConfirmModal').modal('show')
       },
-      hideModal() {
-        $('#IdleSessionConfirmModal').modal('hide')
-      },
       keepAlive() {
         clearTimeout(timeout)
-        this.hideModal()
         this.startSessionTimer()
         this.keepServerAlive()
       },
@@ -58,11 +54,11 @@
         })
       },
       startSessionTimer() {
-        console.debug('Start or restart session timer: ' + this.expireTimeout)
+        console.debug('Start or restart session timer: ' + this.frontendExpireMs)
         timeout = setTimeout(() => {
           console.debug('Idle session started')
           this.startGracePeriod()
-        }, this.expireTimeout);
+        }, this.frontendExpireMs);
       },
       startGracePeriod() {
         this.showModal()
@@ -74,7 +70,7 @@
       }
     },
     mounted() {
-      console.debug("Mounted session timout")
+      console.debug("Mounted session timeout")
       this.startSessionTimer()
     }
   })
