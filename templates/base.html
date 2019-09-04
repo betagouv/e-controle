@@ -110,6 +110,14 @@
 </div> <!--// closing: page  //-->
 
 {% endblock content %}
+{% block session_management %}
+<div id="session-management-vm">
+  {% if user.is_authenticated %}
+  <session-timeout :logout-url="{% url 'logout' %}" :expire-seconds="{{ settings.SESSION_EXPIRE_SECONDS }}"></session-timeout>
+  {% endif %}
+</div>
+<script src="{% static 'dist/session-management-bundle.js' %}"></script>
+{% endblock session_management %}
 
 {% block analytics %}
 {% if settings.PIWIK_SITE_ID and settings.PIWIK_TRACKER_BASE_URL %}
