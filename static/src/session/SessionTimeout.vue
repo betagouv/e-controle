@@ -21,6 +21,7 @@
   Vue.use(VueAxios, axios)
 
   var timeout
+  var gracePeriodMs = 30*1000 // In milliseconds. How long the warning modal stays opened.
 
   export default Vue.extend({
     components: {
@@ -34,9 +35,9 @@
       frontendExpireMs() {
         // The frontend expire timeout is 10% less that the backend timout.
         // Also, JS timeout is specified in milliseconds.
-        let expireMs = this.expireSeconds - this.expireSeconds * 0.1
-        expireMs = expireMs*1000
-        return expireMs
+        let frontendExpire = this.expireSeconds - this.expireSeconds*0.1
+        frontendExpire = frontendExpire*1000
+        return frontendExpire
       }
     },
     methods: {
@@ -66,11 +67,11 @@
         timeout = setTimeout(() => {
           console.debug('End of grace period for idle session. Logout on this URL: ' + this.logoutURL)
           window.location.href = this.logoutUrl
-        }, 30*1000); // 30 seconds
+        }, gracePeriodMs);
       }
     },
     mounted() {
-      console.debug("Mounted session timeout")
+      console.debug("Mounted session timeout component")
       this.startSessionTimer()
     }
   })
