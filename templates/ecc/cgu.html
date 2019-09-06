@@ -10,31 +10,22 @@ Conditions générales d'utilisation
 
 {% block page_content %}
 
-<div class="card">
-  <div class="alert alert-primary mb-0">
-    <h4>En utilisant l’application e.contrôle, vous vous engagez sur les points suivants, notamment : </h4>
-    <p>
-      <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
-      L’utilisateur est tenu de <strong>respecter le secret de l'instruction</strong>
-      et ne peut en aucun cas communiquer des renseignements ou des documents extraits des
-      procédures de contrôle, en cours ou passés.
-    </p>
-    <p>
-      <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
-      L’utilisateur ne pourra
-      <strong> ni modifier ni supprimer définitivement un document déposé </strong>
-      conformément au principe d’intangibilité des documents échangés.
-
-    <h4>Données personnelles </h4>
-    <p>
-      L’application e.contrôle respecte la réglementation concernant les données personnelles.
-      <strong>Les données recueillies serviront à l’activité de contrôle des juridictions
-      financières et seront couvertes à ce titre par le secret de l’instruction.</strong>
-  </div>
+<div class="alert alert-primary mb-0">
+  <p>
+    En utilisant l’application e.contrôle, vous vous engagez à respecter les conditions générales d'utilisation,
+    notamment :
+  </p>
+  <h4>
+    Vous êtes tenu.e de <strong>respecter le secret de l'instruction</strong>
+    et ne devez en aucun cas communiquer des renseignements ou des documents extraits des
+    procédures de contrôle, en cours ou passées.
+  </h4>
 </div>
 
-<div class="row row-cards text-justify">
-  <div class="col-lg-12">
+
+<div class="text-justify mt-6">
+    {% block subtitle %}
+    {% endblock subtitle %}
     <div class="card">
       <div class="card-status"></div>
       <div class="card-header">
@@ -134,7 +125,7 @@ Conditions générales d'utilisation
         <p>Seuls les fichiers en rapport avec les procédures des juridictions financières doivent
           être chargés dans l’application e.contrôle. Ces fichiers doivent uniquement avoir un
           contenu statique et être non protégés. La taille maximale de chaque fichier est fixée à
-          256 Mo. Les utilisateurs doivent privilégier les formats PDF, DOCX, DOC, ODT (documents texte), XLSX, XLS, ODS (documents tableur), CSV, JPEG (Joint Photographic Expert Group), ZIP, JPG et
+          256 Mo. Les utilisateurs doivent privilégier les formats PDF, DOCX, DOC, ODT (documents texte), XLSX, XLS, ODS (documents tableur), CSV, ZIP, JPG,
           PNG et JPG (documents image).
         </p>
         <p>
@@ -225,7 +216,6 @@ Conditions générales d'utilisation
       </div>
     </div>
 
-  </div>
 </div>
 
 {% endblock page_content %}

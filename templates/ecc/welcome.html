@@ -1,25 +1,20 @@
-{% extends "base.html" %}
+{% extends "ecc/cgu.html" %}
 {% load static %}
 
-{% block extra_static_header %}
-{{ block.super }}
-{% endblock extra_static_header %}
-
 {% block nav_items %}
+  <!-- No nav items -->
 {% endblock nav_items %}
 
-{% block page_content %}
-  <div class="page-header flex-column align-items-start">
-    <div class="page-title">
-      Bienvenue sur e.controle
-    </div>
+{% block page_title %}
+  Bienvenue sur e.controle
+{% endblock page_title %}
+
+{% block subtitle %}
+  <div class="card-title">
+    Conditions générales d'utilisation
   </div>
-
-  <div>
-
-  </div>
-
-{% endblock page_content %}
+{% endblock subtitle %}
 
 {% block js_bundle %}
+  <!-- No js bundle -->
 {% endblock js_bundle %}
