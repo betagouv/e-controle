@@ -18,10 +18,17 @@
 {% block page_content %}
   {{ block.super }}
 
-  <form class="p-5">
+  <form class="p-5" method="post"> {% csrf_token %}
+    {% if messages %}
+      <div class="text-center" role="alert">
+        {% for message in messages %}
+          <p {% if message.tags %}class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
     <div class="form-group">
       <label class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked="">
+        <input type="checkbox" class="custom-control-input" name="agree" id="id_agree" required>
         <span class="custom-control-label">J'ai lu et j'accepte les conditions générales d'utilisation. Je m'engage à respecter le secret de l'instruction.</span>
       </label>
     </div>
