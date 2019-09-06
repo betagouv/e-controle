@@ -15,6 +15,7 @@ from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
 
+
 class WithListOfControlsMixin(object):
 
     def get_context_data(self, **kwargs):
@@ -24,6 +25,10 @@ class WithListOfControlsMixin(object):
         control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('id')
         context['controls'] = control_list
         return context
+
+
+class Welcome(LoginRequiredMixin, TemplateView):
+    template_name = "ecc/welcome.html"
 
 
 class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):

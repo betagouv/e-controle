@@ -37,6 +37,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
+    path('bienvenue/', control_views.Welcome.as_view(), name='welcome'),
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
     path('questionnaire/controle-<int:pk>/creer',
