@@ -6,7 +6,7 @@
 {% endblock nav_items %}
 
 {% block page_title %}
-  Bienvenue sur e.controle
+  Bienvenue sur e.contrôle
 {% endblock page_title %}
 
 {% block subtitle %}
@@ -14,6 +14,24 @@
     Conditions générales d'utilisation
   </div>
 {% endblock subtitle %}
+
+{% block page_content %}
+  {{ block.super }}
+
+  <form class="p-5">
+    <div class="form-group">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="example-checkbox1" value="option1" checked="">
+        <span class="custom-control-label">J'ai lu et j'accepte les conditions générales d'utilisation. Je m'engage à respecter le secret de l'instruction.</span>
+      </label>
+    </div>
+    <div class="flex-row justify-content-center m-3">
+      <button type="submit" class="btn btn-primary">Aller à e-contrôle</button>
+    </div>
+  </form>
+
+{% endblock page_content %}
+
 
 {% block js_bundle %}
   <!-- No js bundle -->
