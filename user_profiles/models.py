@@ -23,6 +23,10 @@ class UserProfile(models.Model):
     send_files_report = models.BooleanField(
         verbose_name="Envoie Rapport de Fichiers", default=False,
         help_text="Envoyer par email le rapport des fichiers uplodés ?")
+    agreed_to_tos = models.BooleanField(default=False,
+                                        verbose_name="accepté CGU",
+                                        help_text="L'utilisateur a-t-il.elle accepté les Conditions Générales"
+                                                  " d'Utilisation?")
 
     objects = UserProfileQuerySet.as_manager()
 

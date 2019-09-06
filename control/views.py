@@ -37,6 +37,8 @@ class Welcome(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
+        self.request.user.profile.agreed_to_tos = True
+        self.request.user.profile.save()
         return super().form_valid(form)
 
 
