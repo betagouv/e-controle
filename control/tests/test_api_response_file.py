@@ -148,6 +148,18 @@ def test_trashing_moves_the_file_on_disk():
     assert 'CORBEILLE' in path_after
 
 
+def test_trashing_keeps_the_same_basename():
+    response_file = factories.ResponseFileFactory()
+    basename_before = response_file.basename
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+
+    trash_response_file(user, response_file.id, payload)
+
+    basename_after = ResponseFile.objects.get(id=response_file.id).basename
+    assert basename_after == basename_before
+
+
 def test_cannot_retrash_a_trashed_file():
     response_file = factories.ResponseFileFactory(is_deleted=True)
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)

@@ -100,7 +100,6 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     serializer_class = ResponseFileTrashSerializer
-    trashed_file_prefix = 'CORBEILLE_'
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(

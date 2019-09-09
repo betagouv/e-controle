@@ -1,5 +1,4 @@
 import os
-import re
 
 from django.conf import settings
 from django.core.validators import RegexValidator
@@ -11,7 +10,7 @@ from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
 from .docx import DocxMixin
-from .upload_path import questionnaire_file_path, question_file_path, response_file_path
+from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
 
 
 class WithNumberingMixin(object):
@@ -233,7 +232,6 @@ class ResponseFile(TimeStampedModel):
         verbose_name="Supprimé", default=False,
         help_text="Ce fichier est=il dans la corbeille?")
 
-
     class Meta:
         verbose_name = 'Réponse: Fichier Attaché'
         verbose_name_plural = 'Réponse: Fichiers Attachés'
@@ -242,21 +240,15 @@ class ResponseFile(TimeStampedModel):
     def url(self):
         return reverse('send-response-file', args=[self.id])
 
-    def strip_prefix(self, basename):
-        """
-        Remove the suffix found in filename 'Q01-T02-01-'.
-        """
-        if self.is_deleted:
-            return re.sub(r'CORBEILLE-Q\d+-T\d+-\d+-', '', basename)
-        return re.sub(r'Q\d+-T\d+-\d+-', '', basename)
-
     @property
     def basename(self):
         """
         Name of file, without path and without name prefix.
         """
-        basename = os.path.basename(self.file.name)
-        return self.strip_prefix(basename)
+        prefixer = Prefixer(self)
+        if self.is_deleted:
+            return prefixer.strip_deleted_file_prefix()
+        return prefixer.strip_file_prefix()
 
     def __str__(self):
         return self.file.name
