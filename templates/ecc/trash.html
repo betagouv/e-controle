@@ -25,6 +25,7 @@
     <table class="trash-list table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
+          <th>Question</th>
           <th>Date de mise à la corbeille</th>
           <th>Nom du document</th>
           <th>Utilisateur qui a mis à la corbeille</th>
@@ -35,6 +36,9 @@
       <tbody>
         {% for response_file in response_file_list %}
           <tr>
+            <td>
+              <div>{{ response_file.question_number }}</div>
+            </td>
             <td>
               <div>{{ response_file.deletion_date }}</div>
             </td>

@@ -57,7 +57,10 @@ class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
             response_file = response_files.get(id=action.target_object_id)
             response_file.deletion_date = action.timestamp
             response_file.deletion_user = User.objects.get(id=action.actor_object_id)
+            response_file.question_number = str(response_file.question.theme.numbering) + \
+                                            '.' + str(response_file.question.numbering)
             response_file_list.append(response_file)
+        response_file_list.sort(key=lambda x: x.question_number)
         context['response_file_list'] = response_file_list
 
         return context
