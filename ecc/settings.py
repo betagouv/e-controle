@@ -185,6 +185,18 @@ STATICFILES_DIRS = [
 # Want forever-cacheable files and compression support?
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+FILE_STORAGES_AVAILABLE = {
+    'file-system': 'django.core.files.storage.FileSystemStorage',
+    's3': 'storages.backends.s3boto3.S3Boto3Storage'
+}
+FILE_STORAGE = env('FILE_STORAGE', default='file-system')
+DEFAULT_FILE_STORAGE = FILE_STORAGES_AVAILABLE[FILE_STORAGE]
+
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='e-controle')
+AWS_DEFAULT_ACL = None
+
 MEDIA_URL = '/media/'
 DEFAULT_MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = env('MEDIA_ROOT', default=DEFAULT_MEDIA_ROOT)
