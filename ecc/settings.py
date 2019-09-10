@@ -189,7 +189,7 @@ MEDIA_URL = '/media/'
 DEFAULT_MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = env('MEDIA_ROOT', default=DEFAULT_MEDIA_ROOT)
 
-SENDFILE_BACKEND = env('SENDFILE_BACKEND', default='sendfile.backends.development')
+SENDFILE_BACKEND = env('SENDFILE_BACKEND', default='sendfile.backends.simple')
 
 PIWIK_TRACKER_BASE_URL = env('PIWIK_TRACKER_BASE_URL', default=None)
 PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
