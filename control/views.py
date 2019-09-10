@@ -126,6 +126,14 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         response = JsonResponse(data)
         return response
 
+    def form_invalid(self, form):
+        data = {
+            'status': 'error',
+            'error': "Ce fichier n'a pas pu être transmis."
+        }
+        response = JsonResponse(data, status=400)
+        return response
+
 
 class SendFileMixin(SingleObjectMixin):
     """
