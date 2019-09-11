@@ -28,8 +28,15 @@
     {% endif %}
     <div class="form-group">
       <label class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" name="agree" id="id_agree" required>
-        <span class="custom-control-label">J'ai lu et j'accepte les conditions générales d'utilisation. Je m'engage à respecter le secret de l'instruction.</span>
+        <input type="checkbox"
+               class="custom-control-input"
+               name="agree"
+               id="id_agree"
+               {% if user.profile.agreed_to_tos %}checked{% endif %}
+               required>
+        <span class="custom-control-label">
+          J'ai lu et j'accepte les conditions générales d'utilisation. Je m'engage à respecter le secret de l'instruction.
+        </span>
       </label>
     </div>
     <div class="flex-row justify-content-center m-3">
