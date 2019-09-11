@@ -2,61 +2,125 @@
 {% load static %}
 {% block content %}
 <div class="page">
-  <div class="main-page">
+  <div class="main-page white">
     <div class="container">
-      <div class="my-3 my-md-5">
-      <div class="row row-cards">
-        <div class="col col-login col-6 mx-auto">
-          <form class="card" action="{% url 'magicauth-login' %}" method="post">
-            {% csrf_token %}
-
-            <div class="text-center mb-6">
-              <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" />
+      <div class="flex-row">
+        <div class="width-50-percent">
+          <img src="{% static 'img/photo_cour_des_comptes.jpg' %}" alt="Photo de la Cour des comptes" />
+        </div>
+        <div class="width-50-percent flex-column align-items-center">
+          <div class="width-50-percent flex-grow-1 flex-column justify-content-center text-center">
+            <div class="mb-8">
+              <div class="mb-5">
+                <img src="{% static 'img/logo_white_back.png' %}" alt="logo e.contrôle" />
+              </div>
+              <h3 class="mb-5">
+                La plateforme d'échange de documents durant les contrôles
+              </h3>
+              <a href="#page-2" class="btn btn-secondary btn-block">
+                En savoir plus sur e.contrôle
+              </a>
             </div>
-            <div class="card-body p-4">
-              <div class="card-center text-center card-title">Consulter et déposer les réponses aux questionnaires</div>
+            <div class="mt-8">
+              <form action="{% url 'magicauth-login' %}" method="post">
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                  <div class="alert alert-info text-center" role="alert">
+                    Vous êtes déjà connecté
+                  </div>
+                  <div class="text-center">
+                    <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
+                    <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
+                  </div>
+                {% else %}
+                  {% if messages %}
+                    <div class="text-center" role="alert">
+                      {% for message in messages %}
+                        <p {% if message.tags %}class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
 
-              {% if user.is_authenticated %}
-              <div class="alert alert-info text-center" role="alert">
-              Vous êtes déjà connecté
+                  <div class="form-group">
+                    <label class="form-label"><h4>Connectez-vous à e.contrôle</h4></label>
+                    <input type="email" name="email" class="form-control {% if form.errors %}state-invalid {% endif %}" id="id_email" aria-describedby="emailHelp" placeholder="Votre email professionnel" required />
+                      {% for error in form.email.errors %}
+                        <div class="alet alert-danger text-center">
+                          {{ error }}
+                        </div>
+                      {% endfor %}
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                {% endif %}
+              </form>
+              <div class="text-center text-muted small mt-5">
+                Vous rencontrez des difficultés pour vous connecter?
+                <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
               </div>
-              <div class="text-center">
-                <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
-                <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
-              </div>
-              {% else %}
-              {% if messages %}
-              <div class="text-center" role="alert">
-                {% for message in messages %}
-                <p {% if message.tags %}class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
-                {% endfor %}
-              </div>
-               {% endif %}
-
-              <div class="form-group">
-                <label class="text-uppercase form-label">Se connecter</label>
-                <input type="email" name="email" class="form-control {% if form.errors %}state-invalid {% endif %}" id="id_email" aria-describedby="emailHelp" placeholder="Votre email professionnel" required />
-                {% for error in form.email.errors %}
-                <div class="alet alert-danger text-center">{{ error }}</div>
-                {% endfor %}
-              </div>
-              <div class="form-footer">
-                <button type="submit" class="btn btn-primary btn-block">Valider</button>
-              </div>
-              {% endif %}
             </div>
-          </form>
-          <div class="text-center text-muted">
-            Vous rencontrez des difficultés pour vous connecter?
-            <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
           </div>
-          <div class="text-center">
-            <img src="{% static 'img/logo-cc.jpg' %}" alt="logo-cc" />
+        </div>
+      </div>
+      <div class="flex-column align-items-center mt-8">
+        <h1 id="page-2">À quoi sert e-contrôle ?</h1>
+        <div class="flex-row">
+          <div class="flex-column width-50-percent mr-5">
+            <div class="flex-column align-items-center mb-5">
+              <div class="width-50-percent">
+                <img src="{% static 'img/controleur_square.png' %}" class="round" alt="Contrôleur au travail" />
+              </div>
+              <h2>
+                Équipe de contrôle
+              </h2>
+            </div>
+            <ol class="text-large-paragraph">
+              <li>
+                <strong>Créez des espaces de dépôt</strong> étanches, pour chaque organisme interrogé
+              </li>
+              <li>
+                <strong>Créez vos questionnaires</strong> pour chaque espace de dépôt
+              </li>
+              <li>
+                <strong>Ouvrez les accès</strong> aux membres de votre équipe et aux agents désignés des organismes interrogés
+              </li>
+              <li>
+                <strong>Soyez alertés</strong> dès le lendemain matin 8h si des réponses sont déposées la veille
+              </li>
+              <li>
+                <strong>Visualisez les réponses</strong> directement sur la plateforme sous chaque question
+              </li>
+              <li>
+                <strong>Explorez les réponses</strong> automatiquement classées dans votre explorateur de fichiers
+              </li>
+            </ol>
+          </div>
+          <div class="flex-column width-50-percent ml-5">
+            <div class="flex-column align-items-center mb-5">
+              <div class="width-50-percent">
+                <img src="{% static 'img/controlee_square.png' %}" class="round" alt="Membre de l'organisme interrogé au travail" />
+              </div>
+              <h2>
+                Organisme interrogé
+              </h2>
+            </div>
+            <ol class="text-large-paragraph">
+              <li>
+                <strong>Connectez-vous</strong> grâce à votre email professionnel, de façon sécurisée et sans mots de passe à retenir
+              </li>
+              <li>
+                <strong>Découvrez le ou les questionnaires</strong> qui vous sont adressés
+              </li>
+              <li>
+                <strong>Déposez vos réponses</strong> sous chaque question
+              </li>
+              <li>
+                <strong>Visualisez vos réponses</strong> sur la plateforme
+              </li>
+            </ol>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 {% endblock content %}
