@@ -238,7 +238,10 @@ class ResponseFile(TimeStampedModel):
 
     @property
     def url(self):
-        return reverse('send-response-file', args=[self.id])
+        if settings.ALLOW_UNSECURE_FILE_ACCESS:
+            return self.file.url
+        else:
+            return reverse('send-response-file', args=[self.id])
 
     @property
     def basename(self):
