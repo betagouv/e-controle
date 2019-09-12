@@ -9,18 +9,18 @@
           <img src="{% static 'img/photo_cour_des_comptes.jpg' %}" alt="Photo de la Cour des comptes" />
         </div>
         <div class="col-md d-flex flex-column justify-content-center align-items-center">
-          <div class="mb-8 d-flex flex-column justify-content-center align-items-center">
+          <div class="mb-8 mb-md-5 mb-lg-7 mb-xl-8 d-flex flex-column justify-content-center align-items-center">
             <div class="mb-5">
               <img src="{% static 'img/logo_white_back.png' %}" alt="logo e.contrôle" />
             </div>
-            <h3 class="mb-5 text-center">
+            <h3 class="mb-lg-5 text-center">
               La plateforme d'échange de documents durant les contrôles
             </h3>
             <a href="#page-2" class="btn btn-secondary">
               En savoir plus sur e.contrôle
             </a>
           </div>
-          <div class="mt-8 d-flex flex-column justify-content-center align-items-center">
+          <div class="mt-8 mt-md-5 mt-lg-7 mt-xl-8 d-flex flex-column justify-content-center align-items-center">
             <form action="{% url 'magicauth-login' %}" method="post">
               {% csrf_token %}
               {% if user.is_authenticated %}
@@ -59,7 +59,7 @@
                 <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
               {% endif %}
             </form>
-            <div class="text-center text-muted small mt-5">
+            <div class="text-center text-muted small mt-2 mt-lg-5">
               Vous rencontrez des difficultés pour vous connecter?
               <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
             </div>
