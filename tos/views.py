@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 
 from .forms import WelcomeForm
 
 
 class Welcome(LoginRequiredMixin, FormView):
-    template_name = "ecc/welcome.html"
+    template_name = "tos/welcome.html"
     form_class = WelcomeForm
     success_url = reverse_lazy('questionnaire-list')
 
@@ -16,3 +16,6 @@ class Welcome(LoginRequiredMixin, FormView):
         self.request.user.profile.agreed_to_tos = True
         self.request.user.profile.save()
         return super().form_valid(form)
+
+
+cgu = TemplateView.as_view(template_name='tos/cgu.html')
