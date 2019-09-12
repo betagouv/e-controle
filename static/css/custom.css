@@ -138,8 +138,12 @@ table.trash-list {
 }
 
 /* Login page */
-.width-50-percent {
-    width: 50%;
+.max-width-250 {
+    max-width: 250px;
+}
+
+.max-width-25em {
+    max-width: 25em;
 }
 
 .round {
