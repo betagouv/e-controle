@@ -2,9 +2,8 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import DetailView, CreateView, FormView, TemplateView
+from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -13,7 +12,6 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
-from .forms import WelcomeForm
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
 from .serializers import QuestionnaireSerializer
 
@@ -27,19 +25,6 @@ class WithListOfControlsMixin(object):
         control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('id')
         context['controls'] = control_list
         return context
-
-
-class Welcome(LoginRequiredMixin, FormView):
-    template_name = "ecc/welcome.html"
-    form_class = WelcomeForm
-    success_url = reverse_lazy('questionnaire-list')
-
-    def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
-        self.request.user.profile.agreed_to_tos = True
-        self.request.user.profile.save()
-        return super().form_valid(form)
 
 
 class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
