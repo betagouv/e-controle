@@ -10,6 +10,7 @@ import ColorBar from "./utils/ColorBar"
 import ControlCreate from "./controls/ControlCreate"
 import ControlTitle from "./controls/ControlTitle"
 import HelpTooltip from "./utils/HelpTooltip"
+import PublishQuestionnaireModal from "./questionnaires/PublishQuestionnaireModal"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
 import Users from './users/Users'
@@ -27,6 +28,7 @@ new Vue({
     ControlCreate,
     ControlTitle,
     HelpTooltip,
+    PublishQuestionnaireModal,
     RemoveUserModal,
     UpdateUserModal,
     WebdavTip

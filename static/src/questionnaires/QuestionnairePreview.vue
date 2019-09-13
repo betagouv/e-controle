@@ -18,7 +18,7 @@
         </button>
         <button type="submit"
                 data-toggle="modal"
-                data-target="#saveQuestionnaireConfirmModal"
+                data-target="#publishQuestionnaireModal"
                 class="btn btn-success ml-auto"
                 title="Publier le questionnaire à l'organisme interrogé">
           <i class="fa fa-rocket"></i>
@@ -26,37 +26,18 @@
         </button>
       </div>
 
-      <confirm-modal id="saveQuestionnaireConfirmModal"
-                     title="Confirmer la publication"
-                     confirm-button="Oui, j'ai compris"
-                     cancel-button="Retour"
-                     @confirm="done()"
-      >
-        <p>
-          <strong>
-          En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
-          </strong>
-        </p>
+      <publish-questionnaire-modal id="publishQuestionnaireModal">
+      </publish-questionnaire-modal>
 
-        <p>
-          Pensez à informer l'organisme interrogé que vous
-          avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse : https://e-controle-beta.ccomptes.fr
-        </p>
-
-        <p>
-            Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
-        </p>
-
-      </confirm-modal>
     </div>
   </div>
 </template>
 
 <script>
   import Vue from "vue"
-  import ConfirmModal from "../utils/ConfirmModal"
-  import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
   import InfoBar from "../utils/InfoBar"
+  import PublishQuestionnaireModal from "./PublishQuestionnaireModal"
+  import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
 
   export default Vue.extend({
     data: function () {
@@ -90,9 +71,9 @@
       },
     },
     components: {
-      ConfirmModal,
+      InfoBar,
+      PublishQuestionnaireModal,
       QuestionnaireDetailForPreview,
-      InfoBar
     }
   });
 </script>
