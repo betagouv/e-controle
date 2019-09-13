@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <publish-questionnaire-modal id="publishQuestionnaireModal">
+      <publish-questionnaire-modal id="publishQuestionnaireModal" @confirm="done">
       </publish-questionnaire-modal>
 
     </div>

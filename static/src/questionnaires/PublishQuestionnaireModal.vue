@@ -3,7 +3,7 @@
                  title="Confirmer la publication"
                  confirm-button="Oui, j'ai compris"
                  cancel-button="Retour"
-                 @confirm="done()"
+                 @confirm="$emit('confirm')"
   >
     <p>
       <strong>
