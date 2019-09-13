@@ -49,7 +49,10 @@
           </datepicker>
         </div>
         <div class="text-right">
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
+            <i class="fe fe-save"></i>
+            Enregistrer le brouillon
+          </button>
           <button type="submit" class="btn btn-secondary">Suivant ></button>
         </div>
       </form>
