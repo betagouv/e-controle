@@ -42,7 +42,7 @@
     </div>
     <a :href="home_url"
        class="btn btn-secondary"
-       style="position:relative; bottom: 143px; left: 2em;">
+       style="position:relative; bottom: 151px; left: 2em;">
       < Revenir à l'accueil
     </a>
 

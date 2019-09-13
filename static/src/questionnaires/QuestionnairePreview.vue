@@ -4,7 +4,7 @@
       <div class="card-title">Etape 3 : Aperçu avant publication</div>
     </div>
     <div class="card-body pb-6">
-      <div class="preview">
+      <div class="preview mb-4">
         <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
         </questionnaire-detail-for-preview>
       </div>
