@@ -33,18 +33,19 @@
                      @confirm="done()"
       >
         <p>
+          <strong>
           En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
+          </strong>
         </p>
 
-        <info-bar>
+        <p>
           Pensez à informer l'organisme interrogé que vous
-          avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
-          <p> https://e-controle-beta.ccomptes.fr </p>
-        </info-bar>
+          avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse : https://e-controle-beta.ccomptes.fr
+        </p>
 
-        <info-bar>
+        <p>
             Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
-        </info-bar>
+        </p>
 
       </confirm-modal>
     </div>
