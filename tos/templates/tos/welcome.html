@@ -27,9 +27,8 @@
       </div>
     {% endif %}
     <div class="form-group">
-      <label class="custom-control custom-checkbox">
+      <label>
         <input type="checkbox"
-               class="custom-control-input"
                name="agree"
                id="id_agree"
                {% if user.profile.agreed_to_tos %}checked{% endif %}
