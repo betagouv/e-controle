@@ -70,7 +70,7 @@
                                     </a>
                                     <a href=""
                                        data-toggle="modal"
-                                       data-target="#publishQuestionnaireModal"
+                                       :data-target="'#publishQuestionnaireModal' + questionnaire.id"
                                        class="btn btn-primary"
                                        title="Publier le brouillon"
                                     >
@@ -91,6 +91,9 @@
                             </td>
                           </tr>
                         {% endif %}
+                          <publish-questionnaire-modal :id="'publishQuestionnaireModal' + questionnaire.id"
+                                                       @confirm="publish(questionnaire.id)">
+                          </publish-questionnaire-modal>
                       {% endfor %}
                     </tbody>
                   </table>
@@ -136,8 +139,6 @@
     <update-user-modal></update-user-modal>
 
     <remove-user-modal></remove-user-modal>
-
-    <publish-questionnaire-modal id="publishQuestionnaireModal"></publish-questionnaire-modal>
 
   </div>
 {% endblock page_content %}
