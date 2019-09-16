@@ -16,6 +16,7 @@
 {% endblock subtitle %}
 
 {% block page_content %}
+  <div class="card-title"> Avant de démarrer, veuillez accepter les Conditions Générales d’Utilisation. </div>
   {{ block.super }}
 
   <form class="p-5" method="post"> {% csrf_token %}
