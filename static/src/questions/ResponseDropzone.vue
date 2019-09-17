@@ -5,6 +5,11 @@
       <info-bar>
         Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
       </info-bar>
+      <error-bar v-if="hasErrors">
+        <div>
+          Le fichier déposé n'a pas pu être transmis.
+        </div>
+      </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
         <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
         <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
@@ -22,11 +27,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+  import { clearCache } from '../utils/utils'
   import Dropzone from 'dropzone'
+  import ErrorBar from "../utils/ErrorBar"
   import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
-  import { clearCache } from '../utils/utils'
+  import Vue from 'vue'
 
   import axios from 'axios'
 
@@ -47,10 +53,12 @@
         faqUrl: '/faq/',
         uploadUrl: '/upload/',
         csrftoken: '',
+        hasErrors: false
       }
     },
     components: {
       InfoBar,
+      ErrorBar
     },
     mounted: function(){
       // Weird function copied from w3schools
@@ -72,17 +80,27 @@
       this.csrftoken = readCookie('csrftoken')
 
       Dropzone.options['dropzoneArea' + this.questionId] = {
-        success: this.dropzoneSuccessCallback.bind(this)
+        success: this.dropzoneSuccessCallback.bind(this),
+        error: this.dropzoneErrorCallback.bind(this)
       }
     },
     methods: {
+      clearErrors() {
+        this.hasErrors = false
+      },
       dropzoneSuccessCallback: function() {
         clearCache()
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
       },
+      dropzoneErrorCallback: function() {
+        clearCache()
+        this.hasErrors = true
+        console.debug("Error when uploading response file")
+      },
       fetchQuestionData: function () {
+        this.clearErrors()
         return axios.get(url + this.questionId).then(response =>{
           return response.data.response_files
         });

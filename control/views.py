@@ -129,7 +129,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         data = {
             'status': 'error',
-            'error': "Ce fichier n'a pas pu être transmis."
+            'error': "Le fichier déposé n'a pas pu être transmis."
         }
         response = JsonResponse(data, status=400)
         return response
