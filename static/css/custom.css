@@ -142,10 +142,6 @@ table.trash-list {
     max-width: 250px;
 }
 
-.max-width-25em {
-    max-width: 25em;
-}
-
 .round {
     border-radius: 50%;
 }
