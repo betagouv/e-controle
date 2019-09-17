@@ -79,9 +79,18 @@
 
       this.csrftoken = readCookie('csrftoken')
 
+      const errorCallback = this.dropzoneErrorCallback.bind(this)
+      const successCallback = this.dropzoneSuccessCallback.bind(this)
+
       Dropzone.options['dropzoneArea' + this.questionId] = {
-        success: this.dropzoneSuccessCallback.bind(this),
-        error: this.dropzoneErrorCallback.bind(this)
+        init: function() {
+          this.on('success', file => {
+            successCallback()
+            // Remove thumbnail for successful upload (we already have a file list for confirmation)
+            this.removeFile(file)
+          })
+          this.on('error', errorCallback)
+        }
       }
     },
     methods: {
@@ -94,10 +103,12 @@
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
       },
-      dropzoneErrorCallback: function() {
+      dropzoneErrorCallback: function(error, errorMessage) {
         clearCache()
         this.hasErrors = true
-        console.debug("Error when uploading response file")
+        console.debug("Error when uploading response file", errorMessage.error)
+        // Todo : afficher les erreurs serveur (errorMessage.error) pour differencier les cas
+        //  (fichier vide, fichier trop gros, autre)
       },
       fetchQuestionData: function () {
         this.clearErrors()
