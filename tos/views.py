@@ -18,4 +18,4 @@ class Welcome(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-cgu = TemplateView.as_view(template_name='tos/cgu.html')
+tos = TemplateView.as_view(template_name='tos/tos.html')
