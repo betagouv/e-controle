@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
+from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -11,9 +11,10 @@ from actstream.models import model_stream
 from sendfile import sendfile
 import json
 
-from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
+from .serializers import QuestionnaireSerializer
+
 
 class WithListOfControlsMixin(object):
 

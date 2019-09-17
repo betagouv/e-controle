@@ -15,12 +15,13 @@
   <div class="page-main"> <!--// opening: main_page  //-->
     {% block page_top_row %}
     <div class="header py-4"> <!--// opening: top_header  //-->
-      <div class="container d-flex"> <!--// opening: top_header_container  //-->
+      <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
           <a class="header-brand" href="{% url 'questionnaire-list' %}">
             <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
           </a>
 
-          <div class="d-flex order-lg-2 ml-auto"> <!--// opening: header_items  //-->
+          {% block nav_items %}
+          <div class="flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
 
             <div class="nav-item">
                 <a class="nav-link" href="{% url 'questionnaire-list' %}">
@@ -52,23 +53,23 @@
                   <i class="dropdown-icon fe fe-help-circle"></i> FAQ
                 </a>
             </div>
+          </div>   <!--// closing: nav_items  //-->
+          {% endblock nav_items %}
 
-            <div class="dropdown"> <!--// opening: main_profile_dropdown  //-->
-              <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-                <span class="ml-2 d-none d-lg-block">
-                  <span class="text-default">{{ user.get_full_name }}</span>
-                  <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
-                </span>
+          <div class="dropdown"> <!--// opening: main_profile_dropdown  //-->
+            <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+              <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+              <span class="ml-2 d-none d-lg-block">
+                <span class="text-default">{{ user.get_full_name }}</span>
+                <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+              <a class="dropdown-item" href="{% url 'logout' %}">
+                <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
               </a>
-              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
-                </a>
-              </div>
-            </div> <!--// closing: main_profile_dropdown  //-->
-
-          </div>   <!--// closing: header_items  //-->
+            </div>
+          </div> <!--// closing: main_profile_dropdown  //-->
       </div>   <!--// opening: top_header_container  //-->
     </div>  <!--// closing: top_header  //-->
     {% endblock page_top_row %}
@@ -97,7 +98,7 @@
     <div class="container">
       <div class="row align-items-center flex-row-reverse">
         <div class="col-12 col-lg-auto mt-3 mt-lg-0 text-right">
-            <a href="{% url 'cgu' %}">Conditions générales d'utilisation</a>
+            <a href="{% url 'tos' %}">Conditions générales d'utilisation</a>
           <img src="{% static 'img/logo-cc.jpg' %}" class="img col-3" alt="logo-cc"/>
           e-contrôle <a href='https://github.com/betagouv/e-controle/blob/develop/docs/releases/1.3.md'>v1.3</a> Beta. Cour des comptes.
         </div>
