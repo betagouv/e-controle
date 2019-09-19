@@ -7,10 +7,7 @@
       </info-bar>
       <error-bar v-if="hasErrors">
         <div>
-          Le fichier déposé n'a pas pu être transmis.
-        </div>
-        <div>
-          Référence de l'erreur : {{ errorMessage }}
+          Une erreur s'est produite lors de la transmision d'un fichier.
         </div>
       </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
@@ -92,7 +89,8 @@
           this.on('success', successCallback),
           this.on('error', errorCallback),
           this.on('addedfile', addedFileCallback)
-        }
+        },
+        dictFileTooBig: "La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo."
       }
     },
     methods: {

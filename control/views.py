@@ -128,8 +128,8 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 
     def format_form_errors(self, form):
         error_message = ""
-        for message in form.errors.values():
-            error_message += f"{message.as_text()}"
+        for field in form.errors:
+            error_message += form.errors[field]
         return error_message
 
     def form_invalid(self, form):
