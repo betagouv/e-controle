@@ -48,12 +48,6 @@
                                   {{ questionnaire.end_date|date:"l d F Y" }}
                                 </div>
                               {% endif %}
-                              {% if questionnaire.author_id %}
-                                <div class="mt-1">
-                                  <i class="fe fe-edit"></i>
-                                  Auteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
-                                </div>
-                              {% endif %}
                             </td>
                             <td class="w-1">
                               {% if user.profile.is_audited %}
@@ -66,13 +60,21 @@
                                 </a>
                               {% elif user.profile.is_inspector %}
                                 {% if questionnaire.is_draft %}
-                                  <a href="{% url 'questionnaire-edit' questionnaire.id %}"
-                                     class="btn btn-primary"
-                                     title="Modifier le brouillon de questionnaire"
-                                  >
-                                    <i class="fe fe-edit"></i>
-                                    Modifier le questionnaire
-                                  </a>
+                                  {% if user.id == questionnaire.author_id %}
+                                    <a href="{% url 'questionnaire-edit' questionnaire.id %}"
+                                       class="btn btn-primary"
+                                       title="Modifier le brouillon de questionnaire"
+                                    >
+                                      <i class="fe fe-edit"></i>
+                                      Modifier le questionnaire
+                                    </a>
+                                  {% endif %}
+                                  {% if questionnaire.author_id %}
+                                    <div class="mt-1">
+                                      <i class="fe fe-edit"></i>
+                                      Rédacteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
+                                    </div>
+                                  {% endif %}
                                 {% else %}
                                   <a href="{{ questionnaire.url }}"
                                      class="btn btn-primary"
