@@ -9,6 +9,9 @@
         <div>
           Le fichier déposé n'a pas pu être transmis.
         </div>
+        <div>
+          Référence de l'erreur : {{ errorMessage }}
+        </div>
       </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
         <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
@@ -53,6 +56,7 @@
         faqUrl: '/faq/',
         uploadUrl: '/upload/',
         csrftoken: '',
+        errorMessage: "",
         hasErrors: false
       }
     },
@@ -81,20 +85,19 @@
 
       const errorCallback = this.dropzoneErrorCallback.bind(this)
       const successCallback = this.dropzoneSuccessCallback.bind(this)
+      const addedFileCallback = this.clearErrors.bind(this)
 
       Dropzone.options['dropzoneArea' + this.questionId] = {
         init: function() {
-          this.on('success', file => {
-            successCallback()
-            // Remove thumbnail for successful upload (we already have a file list for confirmation)
-            this.removeFile(file)
-          })
-          this.on('error', errorCallback)
+          this.on('success', successCallback),
+          this.on('error', errorCallback),
+          this.on('addedfile', addedFileCallback)
         }
       }
     },
     methods: {
       clearErrors() {
+        this.errors = ""
         this.hasErrors = false
       },
       dropzoneSuccessCallback: function() {
@@ -103,15 +106,13 @@
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
       },
-      dropzoneErrorCallback: function(error, errorMessage) {
+      dropzoneErrorCallback: function(file, errorMessage) {
         clearCache()
         this.hasErrors = true
-        console.debug("Error when uploading response file", errorMessage.error)
-        // Todo : afficher les erreurs serveur (errorMessage.error) pour differencier les cas
-        //  (fichier vide, fichier trop gros, autre)
+        this.errorMessage =  errorMessage
+        console.debug("Error when uploading response file.", file, errorMessage)
       },
       fetchQuestionData: function () {
-        this.clearErrors()
         return axios.get(url + this.questionId).then(response =>{
           return response.data.response_files
         });
