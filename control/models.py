@@ -119,10 +119,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     @property
     def author_id(self):
         stream = model_stream(Questionnaire)
-        return stream.filter(action_object_object_id=self.id)\
+        creation_action = stream.filter(action_object_object_id=self.id)\
             .filter(verb='created questionnaire')\
-            .first()\
-            .actor_object_id
+            .first()
+        if creation_action is None:
+            return None
+        return creation_action.actor_object_id
 
     @property
     def file(self):

@@ -36,6 +36,9 @@ class ChangeQuestionnairePermission(ChangePermissionForInspector):
         if request.method in permissions.SAFE_METHODS:
             return True
 
+        if questionnaire.author_id is None:
+            return True
+
         if questionnaire.author_id == request.user.id:
             return True
         return False
