@@ -48,6 +48,12 @@
                                   {{ questionnaire.end_date|date:"l d F Y" }}
                                 </div>
                               {% endif %}
+                              {% if questionnaire.author_id %}
+                                <div>
+                                  <i class="fe fe-edit"></i>
+                                  Auteur : {{ questionnaire.author_id }}
+                                </div>
+                              {% endif %}
                             </td>
                             <td class="w-1">
                               {% if user.profile.is_audited %}
