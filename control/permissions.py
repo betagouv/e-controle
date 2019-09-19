@@ -27,6 +27,9 @@ class ChangeQuestionnairePermission(ChangePermissionForInspector):
         if not super(ChangeQuestionnairePermission, self).has_permission(request, view):
             return False
 
+        if request.parser_context.get('kwargs') is None or request.parser_context['kwargs'].get('pk') is None:
+            return True
+
         questionnaire_id = request.parser_context['kwargs']['pk']
         questionnaire = Questionnaire.objects.get(id=questionnaire_id)
 
