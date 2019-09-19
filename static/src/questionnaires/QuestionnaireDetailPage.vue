@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="{ preview: questionnaire.is_draft }">
     <questionnaire-metadata :questionnaire="questionnaire" with-trash="true">
     </questionnaire-metadata>
 

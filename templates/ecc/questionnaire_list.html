@@ -34,7 +34,6 @@
                               <h5>
                                 {% if questionnaire.is_draft %}
                                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
-                                  <span>[Brouillon]</span>
                                 {% endif %}
                                 <span>{{ questionnaire.title_display }}</span>
                               </h5>
@@ -66,7 +65,15 @@
                                        title="Modifier le brouillon de questionnaire"
                                     >
                                       <i class="fe fe-edit"></i>
-                                      Modifier le questionnaire
+                                      Modifier le brouillon
+                                    </a>
+                                  {% else %}
+                                    <a href="{{ questionnaire.url }}"
+                                       class="btn btn-primary"
+                                       title="Voir le brouillon"
+                                    >
+                                      <i class="fe fe-eye"></i>
+                                      Voir le brouillon
                                     </a>
                                   {% endif %}
                                   {% if questionnaire.author_id %}

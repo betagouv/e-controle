@@ -157,7 +157,8 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
 
     @property
     def title_display(self):
-        return f"Questionnaire n°{self.numbering} - {self.title}"
+        prefix = "[Brouillon]" if self.is_draft else ""
+        return f"{prefix} Questionnaire n°{self.numbering} - {self.title}"
 
     @property
     def end_date_display(self):
