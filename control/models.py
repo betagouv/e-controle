@@ -2,6 +2,7 @@ import os
 
 from actstream.models import model_stream
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -125,6 +126,10 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         if creation_action is None:
             return None
         return creation_action.actor_object_id
+
+    @property
+    def author(self):
+        return User.objects.get(id=self.author_id)
 
     @property
     def file(self):

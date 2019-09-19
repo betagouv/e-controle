@@ -49,9 +49,9 @@
                                 </div>
                               {% endif %}
                               {% if questionnaire.author_id %}
-                                <div>
+                                <div class="mt-1">
                                   <i class="fe fe-edit"></i>
-                                  Auteur : {{ questionnaire.author_id }}
+                                  Auteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
                                 </div>
                               {% endif %}
                             </td>
