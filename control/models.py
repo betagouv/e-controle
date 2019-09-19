@@ -1,5 +1,6 @@
 import os
 
+from actstream.models import model_stream
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
@@ -114,6 +115,14 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         ordering = ('control', 'order')
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
+
+    @property
+    def author_id(self):
+        stream = model_stream(Questionnaire)
+        return stream.filter(action_object_object_id=self.id)\
+            .filter(verb='created questionnaire')\
+            .first()\
+            .actor_object_id
 
     @property
     def file(self):
