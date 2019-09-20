@@ -130,6 +130,20 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         response = JsonResponse(data)
         return response
 
+    def format_form_errors(self, form):
+        error_message = ""
+        for field in form.errors:
+            error_message += form.errors[field]
+        return error_message
+
+    def form_invalid(self, form):
+        data = {
+            'status': 'error',
+            'error': self.format_form_errors(form),
+        }
+        response = JsonResponse(data, status=400)
+        return response
+
 
 class SendFileMixin(SingleObjectMixin):
     """
