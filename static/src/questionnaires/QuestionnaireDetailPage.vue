@@ -1,34 +1,39 @@
 <template>
-  <div :class="{ preview: questionnaire.is_draft }">
-    <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
-    </questionnaire-metadata>
+  <div>
+    <info-bar>
+      Pour modifier ce brouillon, contactez son rédacteur, {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}.
+    </info-bar>
+    <div :class="{ preview: questionnaire.is_draft }">
+      <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
+      </questionnaire-metadata>
 
-    <div id="body" class="row row-cards">
-      <theme-list-sidebar :themes="questionnaire.themes">
-      </theme-list-sidebar>
+      <div id="body" class="row row-cards">
+        <theme-list-sidebar :themes="questionnaire.themes">
+        </theme-list-sidebar>
 
-      <div class="col-lg-8">
-        <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
-                   :theme="theme"
-                   :theme-numbering="themeIndex + 1">
+        <div class="col-lg-8">
+          <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
+                     :theme="theme"
+                     :theme-numbering="themeIndex + 1">
 
-          <question-box v-for="(question, qIndex) in theme.questions"
-                        :with-collapse="true"
-                        :theme-numbering="themeIndex + 1"
-                        :question-numbering="qIndex + 1"
-                        :question="question">
+            <question-box v-for="(question, qIndex) in theme.questions"
+                          :with-collapse="true"
+                          :theme-numbering="themeIndex + 1"
+                          :question-numbering="qIndex + 1"
+                          :question="question">
 
-            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-            <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
-            <response-dropzone :is-audited="user.is_audited"
-                               :question-id="question.id">
-            </response-dropzone>
+              <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+              <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
+              <response-dropzone :is-audited="user.is_audited"
+                                 :question-id="question.id">
+              </response-dropzone>
 
-          </question-box>
+            </question-box>
 
-        </theme-box>
+          </theme-box>
+        </div>
+
       </div>
-
     </div>
   </div>
 
@@ -38,6 +43,7 @@
   import Vue from "vue";
 
   import axios from 'axios'
+  import InfoBar from '../utils/InfoBar'
   import QuestionBox from '../questions/QuestionBox'
   import QuestionFileList from '../questions/QuestionFileList'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
@@ -68,6 +74,7 @@
       },
     },
     components: {
+      InfoBar,
       QuestionBox,
       QuestionFileList,
       QuestionnaireMetadata,
