@@ -1,6 +1,6 @@
 <template>
   <div :class="{ preview: questionnaire.is_draft }">
-    <questionnaire-metadata :questionnaire="questionnaire" with-trash="true">
+    <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">
