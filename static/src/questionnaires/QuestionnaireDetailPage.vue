@@ -1,8 +1,9 @@
 <template>
   <div>
-    <info-bar>
-      {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }} a créé ce brouillon. Il/elle en est
-      rédacteur et est le/la seule à pouvoir le modifier. Suggérez-lui vos modifications.
+    <info-bar v-if="questionnaire.is_draft">
+      <span v-if="questionnaire.author">{{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}</span>
+      <span v-else>[INCONNU]</span>
+      a créé ce brouillon. Il/elle en est rédacteur et est le/la seule à pouvoir le modifier. Suggérez-lui vos modifications.
     </info-bar>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
