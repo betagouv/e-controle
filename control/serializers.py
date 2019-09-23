@@ -71,10 +71,11 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 class QuestionnaireSerializer(serializers.ModelSerializer):
     themes = ThemeSerializer(many=True, read_only=True)
+    author = UserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft')
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'author')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
 

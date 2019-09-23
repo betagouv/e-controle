@@ -34,7 +34,6 @@
                               <h5>
                                 {% if questionnaire.is_draft %}
                                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
-                                  <span>[Brouillon]</span>
                                 {% endif %}
                                 <span>{{ questionnaire.title_display }}</span>
                               </h5>
@@ -60,13 +59,30 @@
                                 </a>
                               {% elif user.profile.is_inspector %}
                                 {% if questionnaire.is_draft %}
-                                  <a href="{% url 'questionnaire-edit' questionnaire.id %}"
-                                     class="btn btn-primary"
-                                     title="Modifier le brouillon de questionnaire"
-                                  >
-                                    <i class="fe fe-edit"></i>
-                                    Modifier le questionnaire
-                                  </a>
+                                  {% if user.id == questionnaire.author_id %}
+                                    <a href="{% url 'questionnaire-edit' questionnaire.id %}"
+                                       class="btn btn-primary"
+                                       title="Modifier le brouillon de questionnaire"
+                                    >
+                                      <i class="fe fe-edit"></i>
+                                      Modifier le brouillon
+                                    </a>
+                                  {% else %}
+                                    <a href="{{ questionnaire.url }}"
+                                       class="btn btn-primary"
+                                       title="Voir le brouillon"
+                                    >
+                                      <i class="fe fe-eye"></i>
+                                      Voir le brouillon
+                                    </a>
+                                  {% endif %}
+                                  {% if questionnaire.author_id %}
+                                    <div class="mt-1 text-nowrap">
+                                      <i class="fe fe-edit"></i>
+                                      Rédacteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
+                                      <help-tooltip text="Le rédacteur du brouillon est la personne qui l'a créé, et qui peut le modifier."></help-tooltip>
+                                    </div>
+                                  {% endif %}
                                 {% else %}
                                   <a href="{{ questionnaire.url }}"
                                      class="btn btn-primary"

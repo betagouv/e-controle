@@ -4,10 +4,8 @@
       <div class="card-title">Etape 3 : Aperçu avant publication</div>
     </div>
     <div class="card-body pb-6">
-      <div class="preview">
-        <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
-        </questionnaire-detail-for-preview>
-      </div>
+      <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
+      </questionnaire-detail-for-preview>
       <div class="text-right">
         <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
           < Retour

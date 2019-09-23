@@ -143,7 +143,7 @@ def test_no_modifying_questionnaire_if_not_inspector():
     assert_no_data_is_saved()
 
 
-def test_access_to_draft_if_not_inspector():
+def test_no_access_to_draft_if_not_inspector():
     questionnaire = factories.QuestionnaireFactory(is_draft=True)
     audited_user = utils.make_audited_user(questionnaire.control)
 
@@ -232,6 +232,43 @@ def test_questionnaire_create_fails_with_malformed_question():
     response = create_questionnaire(user, payload)
     assert response.status_code == 400
     assert_no_data_is_saved()
+
+
+# Create questionnaire draft through api, to set the author properly.
+def create_questionnaire_through_api(user, control):
+    payload = make_create_payload(control.id)
+    payload['is_draft'] = True
+    response = create_questionnaire(user, payload)
+    assert 200 <= response.status_code < 300
+    return response.data
+
+
+def test_questionnaire_draft_update__author_can_update():
+    increment_ids()
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    questionnaire = create_questionnaire_through_api(user, control)
+
+    payload = questionnaire
+    payload['description'] = 'this is a great questionnaire.'
+
+    response = update_questionnaire(user, payload)
+    assert response.status_code == 200
+
+
+def test_questionnaire_draft_update__non_author_cannot_update():
+    increment_ids()
+    # Create questionnaire draft through api, to set the author properly.
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    questionnaire = create_questionnaire_through_api(user, control)
+
+    non_author = utils.make_inspector_user(control)
+    payload = questionnaire
+    payload['description'] = 'this is a great questionnaire.'
+
+    response = update_questionnaire(non_author, payload)
+    assert 400 <= response.status_code < 500
 
 
 def test_questionnaire_update__questionnaire_update():

@@ -1,6 +1,8 @@
 import os
 
+from actstream.models import model_stream
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
@@ -116,6 +118,20 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name_plural = "Questionnaires"
 
     @property
+    def author_id(self):
+        stream = model_stream(Questionnaire)
+        creation_action = stream.filter(action_object_object_id=self.id)\
+            .filter(verb='created questionnaire')\
+            .first()
+        if creation_action is None:
+            return None
+        return creation_action.actor_object_id
+
+    @property
+    def author(self):
+        return User.objects.get(id=self.author_id)
+
+    @property
     def file(self):
         """
         If there is a manually uplodaed file it will take precedence.
@@ -141,7 +157,8 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
 
     @property
     def title_display(self):
-        return f"Questionnaire n°{self.numbering} - {self.title}"
+        prefix = "[Brouillon]" if self.is_draft else ""
+        return f"{prefix} Questionnaire n°{self.numbering} - {self.title}"
 
     @property
     def end_date_display(self):
