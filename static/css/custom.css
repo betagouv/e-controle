@@ -136,3 +136,20 @@ table.trash-list {
     height: 25em;
     padding: 1.5rem;
 }
+
+/* Login page */
+.max-width-250 {
+    max-width: 250px;
+}
+
+.round {
+    border-radius: 50%;
+}
+
+.text-large-paragraph {
+    font-size: 1.25em;
+}
+
+.white {
+    background-color: white;
+}
