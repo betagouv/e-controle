@@ -1,7 +1,8 @@
 <template>
   <div>
     <info-bar>
-      Pour modifier ce brouillon, contactez son rédacteur, {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}.
+      {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }} a créé ce brouillon. Il/elle en est
+      rédacteur et est le/la seule à pouvoir le modifier. Suggérez-lui vos modifications.
     </info-bar>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">

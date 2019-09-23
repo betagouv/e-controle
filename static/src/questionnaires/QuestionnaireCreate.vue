@@ -2,14 +2,14 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Rédaction du questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
+        Rédaction du Questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
       {{ errorMessage }}
     </div>
     <info-bar>
-      Vous êtes l'auteur de ce brouillon de questionnaire. Vos collègues pourront le voir, mais pas le modifier.
+      Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
     </info-bar>
     <div class="row justify-content-around mb-6">
       <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
