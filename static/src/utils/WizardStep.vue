@@ -1,7 +1,10 @@
 <template>
   <div class="wizard-step">
     <div class="wizard-step-thread"></div>
-    <div class="wizard-step-number card-title">{{ number }}</div>
+    <div class="wizard-step-bubble card-title">
+      <span class="number">{{ number }}</span>
+      <i class="done-icon fe fe-check"></i>
+    </div>
     <slot></slot>
   </div>
 </template>

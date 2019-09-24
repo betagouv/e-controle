@@ -64,7 +64,16 @@
     align-items: center;
 }
 
-.wizard-step-number {
+.wizard-step-thread {
+    background-color: #dbdde0;
+    height: 0.3em;
+    width: 100%;
+    position: relative;
+    top: 1.2em;
+    z-index: -1
+}
+
+.wizard-step-bubble {
     background-color: #dbdde0;
     color: #495057;
     border-radius: 50%;
@@ -75,24 +84,41 @@
     margin-bottom: 0.2rem;
 }
 
-.active .wizard-step-number {
-    background-color: #45aaf2;
-    color: #fff;
+.wizard-step-bubble .done-icon {
+    display: none;
+    margin-top: 0.2rem
 }
 
-.wizard-step-thread {
-    background-color: #dbdde0;
-    height: 0.3em;
-    width: 100%;
-    position: relative;
-    top: 1.2em;
-    z-index: -1
-}
 
 .active .wizard-step-thread {
     background-color: #45aaf2;
     color: #fff;
 }
+
+.active .wizard-step-bubble {
+    background-color: #45aaf2;
+    color: #fff;
+}
+
+
+.done .wizard-step-thread {
+    background-color: #5eba00;
+    color: #fff;
+}
+
+.done .wizard-step-bubble {
+    background-color: #5eba00;
+    color: #fff;
+}
+
+.done .wizard-step-bubble .number {
+    display: none;
+}
+
+.done .wizard-step-bubble .done-icon {
+    display: block;
+}
+
 
 /* ResponseFileList.vue */
 table.response-file-list {
@@ -159,6 +185,7 @@ table.trash-list {
     object-fit: scale-down; /* FF */
 }
 
+/* Tags for Brouillon */
 .tag {
     transform: translate(0rem,-1px);
 }
@@ -166,4 +193,3 @@ table.trash-list {
 .big-tag {
     font-size: 1rem;
 }
-
