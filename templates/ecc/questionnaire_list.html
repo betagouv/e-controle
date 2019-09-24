@@ -29,7 +29,7 @@
                     <tbody>
                       {% for questionnaire in questionnaires %}
                         {% if user.profile.is_inspector or not questionnaire.is_draft %}
-                          <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
+                          <tr>
                             <td>
                               <h5>
                                 {% if questionnaire.is_draft %}
