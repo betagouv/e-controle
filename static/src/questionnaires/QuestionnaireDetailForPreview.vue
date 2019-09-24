@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="preview">
     <questionnaire-metadata :questionnaire="questionnaire">
     </questionnaire-metadata>
 
