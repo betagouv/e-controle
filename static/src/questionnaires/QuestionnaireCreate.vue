@@ -2,12 +2,15 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Rédaction du questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
+        Rédaction du Questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger">
       {{ errorMessage }}
     </div>
+    <info-bar>
+      Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
+    </info-bar>
     <div class="row justify-content-around mb-6">
       <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
       <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
@@ -54,6 +57,7 @@
   import moment from "moment"
   import Vue from "vue"
   import EventBus from '../events'
+  import InfoBar from "../utils/InfoBar"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
@@ -92,6 +96,7 @@
       }
     },
     components: {
+      InfoBar,
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
       QuestionnairePreview,
