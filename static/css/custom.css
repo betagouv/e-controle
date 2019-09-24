@@ -158,3 +158,12 @@ table.trash-list {
     flex: 0 0 auto;  /* IE */
     object-fit: scale-down; /* FF */
 }
+
+.tag {
+    transform: translate(0rem,-1px);
+}
+
+.big-tag {
+    font-size: 1rem;
+}
+
