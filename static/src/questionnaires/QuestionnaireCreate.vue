@@ -12,8 +12,8 @@
       Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
     </info-bar>
     <div class="row justify-content-around mb-6">
-      <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
-      <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
+      <wizard-step number="1" :class="{ 'active': state==='start', done: state==='creating_body' || state==='preview' }">Renseigner l'introduction</wizard-step>
+      <wizard-step number="2" :class="{ 'active': state==='creating_body', done: state==='preview' }">Ajouter des questions</wizard-step>
       <wizard-step number="3" :class="{ 'active': state==='preview' }">Aperçu avant publication</wizard-step>
     </div>
     <questionnaire-metadata-create
