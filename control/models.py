@@ -1,7 +1,7 @@
 import os
-import re
 
 from django.conf import settings
+from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
 
@@ -10,7 +10,7 @@ from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 
 from .docx import DocxMixin
-from .upload_path import questionnaire_file_path, question_file_path, response_file_path
+from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
 
 
 class WithNumberingMixin(object):
@@ -25,6 +25,11 @@ class WithNumberingMixin(object):
 
 
 class Control(models.Model):
+    # These error messages are used in the frontend (ConsoleCreate.vue),
+    # if you change them you might break the frontend.
+    INVALID_ERROR_MESSAGE = 'INVALID'
+    UNIQUE_ERROR_MESSAGE = 'UNIQUE'
+
     title = models.CharField(
         "procédure",
         help_text="Procédure pour laquelle est ouvert cet espace de dépôt",
@@ -39,9 +44,14 @@ class Control(models.Model):
         verbose_name="code de référence",
         max_length=255,
         help_text='Ce code est utilisé notamment pour le dossier de stockage des réponses',
+        validators=[
+            RegexValidator(
+                regex='^[\.\s\w-]+$',
+                message=INVALID_ERROR_MESSAGE,
+            ),
+        ],
         unique=True,
-        # This error message is used in the frontend (ConsoleCreate.vue), if you change it you might break the frontend.
-        error_messages={'unique': "UNIQUE"})
+        error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
     class Meta:
         verbose_name = "Controle"
@@ -222,7 +232,6 @@ class ResponseFile(TimeStampedModel):
         verbose_name="Supprimé", default=False,
         help_text="Ce fichier est=il dans la corbeille?")
 
-
     class Meta:
         verbose_name = 'Réponse: Fichier Attaché'
         verbose_name_plural = 'Réponse: Fichiers Attachés'
@@ -231,19 +240,15 @@ class ResponseFile(TimeStampedModel):
     def url(self):
         return reverse('send-response-file', args=[self.id])
 
-    def strip_prefix(self, basename):
-        """
-        Remove the suffix found in filename 'Q01-T02-01-'.
-        """
-        return re.sub(r'Q\d+-T\d+-\d+-', '', basename)
-
     @property
     def basename(self):
         """
         Name of file, without path and without name prefix.
         """
-        basename = os.path.basename(self.file.name)
-        return self.strip_prefix(basename)
+        prefixer = Prefixer(self)
+        if self.is_deleted:
+            return prefixer.strip_deleted_file_prefix()
+        return prefixer.strip_file_prefix()
 
     def __str__(self):
         return self.file.name

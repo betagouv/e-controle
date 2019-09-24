@@ -7,7 +7,7 @@
                 :question="question">
       </question>
     </div>
-    <div class="card-body" :class="collapseValue" :id="'question-body-' + question.id">
+    <div :class="collapseValue" :id="'question-body-' + question.id">
       <slot></slot>
     </div>
 

@@ -13,56 +13,62 @@
           <div class="card-status card-status-top bg-blue">
           </div>
 
-          <div class="card-header">
-            <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
-              <h3 class="card-title">{{themeIndex + 1}}.</h3>
-            </label>
-            <input class="form-control form-control-h3"
-                   placeholder="Ecrivez un thème ici"
-                   type="text"
-                   v-bind:id="'theme' + (themeIndex + 1)"
-                   v-model="body[themeIndex].title"
-                   oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
-                   oninput="this.setCustomValidity('')"
-                   required>
-            <span>
-              <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
-                             title="Confirmer la suppression de ce thème"
-                             confirm-button="Oui, supprimer"
-                             cancel-button="Non, retour"
-                             @confirm="deleteTheme(themeIndex)"
-              >
-                <p>
-                  <span v-if="body[themeIndex].questions.length === 1">
-                    La question associée à ce thème sera également supprimée.
-                  </span>
-                  <span v-else>
-                    Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
-                  </span>
-                </p>
-              </confirm-modal>
-
-              <a v-if="body[themeIndex].questions.length === 0"
-                 href="javascript:void(0)"
-                 @click.prevent="deleteTheme(themeIndex)"
-                 class="btn btn-link"
-                 title="Supprimer le thème"
-              >
-                <i class="fe fe-trash-2"></i>
-              </a>
-              <a v-else
-                 href="javascript:void(0)"
-                 class="btn btn-link"
-                 data-toggle="modal"
-                 :data-target="'#deleteThemeConfirmModal' + themeIndex"
-              >
-                <i class="fe fe-trash-2"></i>
-              </a>
-            </span>
+          <div class="border-bottom">
+            <div class="card-header border-0 pb-0">
+              <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
+                <h3 class="card-title">{{themeIndex + 1}}.</h3>
+              </label>
+              <input class="form-control form-control-h3"
+                     placeholder="Ecrivez un thème ici"
+                     type="text"
+                     maxlength="255"
+                     v-bind:id="'theme' + (themeIndex + 1)"
+                     v-model="body[themeIndex].title"
+                     oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
+                     oninput="this.setCustomValidity('')"
+                     :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
+                     required>
+              <span>
+                <a v-if="body[themeIndex].questions.length === 0"
+                   href="javascript:void(0)"
+                   @click.prevent="deleteTheme(themeIndex)"
+                   class="btn btn-link"
+                   title="Supprimer le thème"
+                >
+                  <i class="fe fe-trash-2"></i>
+                </a>
+                <a v-else
+                   href="javascript:void(0)"
+                   class="btn btn-link"
+                   data-toggle="modal"
+                   :data-target="'#deleteThemeConfirmModal' + themeIndex"
+                >
+                  <i class="fe fe-trash-2"></i>
+                </a>
+              </span>
+            </div>
+            <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
+              Exemple : "Ressources Humaines". 255 caractères maximum.
+            </div>
+            <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
+                           title="Confirmer la suppression de ce thème"
+                           confirm-button="Oui, supprimer"
+                           cancel-button="Non, retour"
+                           @confirm="deleteTheme(themeIndex)"
+            >
+              <p>
+                <span v-if="body[themeIndex].questions.length === 1">
+                  La question associée à ce thème sera également supprimée.
+                </span>
+                <span v-else>
+                  Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
+                </span>
+              </p>
+            </confirm-modal>
           </div>
 
           <div v-for="(question, qIndex) in body[themeIndex].questions"
-               class="card m-0 pt-2"> <!-- Card for each question -->
+               class="card border-0 m-0 pt-2"> <!-- Card for each question -->
             <div class="card-header border-0">
               <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
                 <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">

@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'filer',
     'ordered_model',
-    'django_tabler',
     'django_extensions',
     'actstream',
     'rest_framework',
@@ -63,6 +62,7 @@ INSTALLED_APPS = [
     'user_profiles',
     'utils',
     'adauth',
+    'session',
 ]
 
 
@@ -70,6 +70,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -139,11 +140,15 @@ EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
 MAGICAUTH_FROM_EMAIL = DEFAULT_FROM_EMAIL
+MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME = 'questionnaire-list'
+MAGICAUTH_EMAIL_SUBJECT = 'Connexion e.controle'
+MAGICAUTH_EMAIL_HTML_TEMPLATE = 'login/email.html'
+MAGICAUTH_EMAIL_TEXT_TEMPLATE = 'login/email.txt'
+MAGICAUTH_LOGIN_VIEW_TEMPLATE = 'login/login.html'
+MAGICAUTH_EMAIL_SENT_VIEW_TEMPLATE = 'login/email_sent.html'
 
-MAGICAUTH_TOKEN_DURATION = 15 * 60
-
-LOGIN_REDIRECT_URL = 'questionnaire-list'
 LOGIN_URL = 'login'
 
 # Internationalization
@@ -190,9 +195,10 @@ PIWIK_TRACKER_BASE_URL = env('PIWIK_TRACKER_BASE_URL', default=None)
 PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 
 SETTINGS_EXPORT = [
-    'PIWIK_TRACKER_BASE_URL',
     'PIWIK_SITE_ID',
-    'WEBDAV_URL'
+    'PIWIK_TRACKER_BASE_URL',
+    'SESSION_EXPIRE_SECONDS',
+    'WEBDAV_URL',
 ]
 
 REST_FRAMEWORK = {
@@ -228,9 +234,12 @@ LDAP_DOMAIN = env('LDAP_DOMAIN', default=None)
 LDAP_PASSWORD = env('LDAP_PASSWORD', default=None)
 LDAP_DC = env('LDAP_DC', default=None)
 TITLE_TO_COME_IN = env('TITLE_TO_COME_IN', default='').split(',')
-MAGICAUTH_NO_USER_CALL_BACK = 'adauth.auth.active_directory_auth'
+MAGICAUTH_EMAIL_UNKNOWN_CALLBACK = 'adauth.auth.active_directory_auth'
 WEBDAV_URL = env('WEBDAV_URL', default='https://e-controle-webdav.ccomptes.fr')
 
 DEMO_INSPECTOR_USERNAME = env('DEMO_INSPECTOR_USERNAME', default=None)
 DEMO_AUDITED_USERNAME = env('DEMO_AUDITED_USERNAME', default=None)
 ALLOW_DEMO_LOGIN = env('ALLOW_DEMO_LOGIN', default=False)
+
+SESSION_EXPIRE_SECONDS = env('SESSION_EXPIRE_SECONDS', default=24*60*60)
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True

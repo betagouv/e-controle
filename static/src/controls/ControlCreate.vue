@@ -46,17 +46,17 @@
           <div class="form-group mb-6">
             <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
-              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football
+              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="title" required aria-describedby="title-help">
+            <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
           </div>
 
           <div class="form-group mb-6">
             <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
             <div id="organization-help" class="text-muted">
-              Exemple : Ministère des Sports
+              Exemple : Ministère des Sports. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="organization" required aria-describedby="organization-help">
+            <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
           </div>
 
           <div class="form-group mb-6">
@@ -72,6 +72,9 @@
               <span class="input-group-text">{{ reference_code_prefix }}</span>
             </span>
               <input type="text" class="form-control" v-model="reference_code_suffix" required
+                     pattern="^[\.\s\w-]+$"
+                     maxlength="255"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux tels que ! , @ # $ / \"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -151,9 +154,16 @@
           })
           .catch((error) => {
             console.error(error)
-            if (error.response.data['reference_code'][0] === 'UNIQUE') {
-              this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                  '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+            if (error.response.data['reference_code']) {
+              if (error.response.data['reference_code'][0] === 'UNIQUE') {
+                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                    '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+              }
+              if (error.response.data['reference_code'][0] === 'INVALID') {
+                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
+                    '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                    ' Veuillez en choisir un autre.'
+              }
             }
             this.errors = error.response.data
             this.hasErrors = true

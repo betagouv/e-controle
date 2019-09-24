@@ -20,8 +20,13 @@
 
         <link rel="icon" href="{% static "img/favicon.ico" %}" type="image/x-icon"/>
         <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
-        <link href="{% static "css/dashboard.css" %}" rel="stylesheet" />
-        <link href="{% static "fonts/font_awesome/font-awesome.min.css" %}" rel="stylesheet" />
+
+        <link href="{% static "tabler/dashboard.css" %}" rel="stylesheet" />
+        {% if debug %}
+          <link rel="stylesheet" type="text/css" href="{% static 'fonts/fontawesome/v5.8.1/css/all.css' %}">
+        {% else %}
+          <link rel="stylesheet" type="text/css" href="{% static 'fonts/fontawesome/v5.8.1/css/all.min.css' %}">
+        {% endif %}
         <link href="{% static "fonts/google/source_sans_pro/source_sans_pro.css" %}" rel="stylesheet" />
 
         {% block extra_static_header %}{% endblock extra_static_header %}
@@ -30,18 +35,16 @@
     <body class="">
         {% block content %}
         {% endblock content %}
+        {% block js_in_script_tags %}
+          <!-- We user Tabler. Tabler needs bootstrap. Bootstrap needs jquery and popper.-->
+          <script src="{% static "tabler/jquery-3.2.1.slim.min.js" %}"></script>
+          <script src="{% static "tabler/popper-1.12.9.min.js" %}"></script>
+          <script src="{% static "tabler/bootstrap-4.0.0.min.js" %}"></script>
+          <script src="{% static "tabler/core.js" %}"></script>
+        {% endblock js_in_script_tags %}
         {% block js_bundle %}{% endblock js_bundle %}
+        {% block session_management %}{% endblock session_management %}
         {% block js_last %}
-        <script src="{% static "js/require.min.js" %}"></script>
-        <script>
-            requirejs.config({
-                baseUrl: '.'
-            });
-            // find the static_url
-            var static_url = "{% get_static_prefix %}";
-        </script>
-        <script src="{% static "js/dashboard.js" %}"></script>
-        <script src="{% static "plugins/input-mask/plugin.js" %}"></script>
         {% endblock js_last %}
         {% block analytics %}{% endblock analytics %}
         {% block extra_js %}{% endblock extra_js %}

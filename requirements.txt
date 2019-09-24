@@ -1,4 +1,4 @@
-Django==2.2.3
+Django==2.2.5
 ipdb==0.12
 pytest-django==3.5.1
 pytest-cov==2.7.1
@@ -10,7 +10,6 @@ django-model-utils==3.2.0
 django-filer==1.5.0
 django-ordered-model==3.3.0
 django-environ==0.4.5
-django-tabler==0.0.32
 pytest==4.6.4
 pytest-cov==2.7.1
 pytest-django==3.5.1
@@ -32,4 +31,5 @@ django-cleanup==4.0.0
 django-ckeditor==5.7.1
 docxtpl==0.6.3
 ldap3==2.6
-git+https://github.com/justquick/django-activity-stream.git
+django-session-timeout==0.0.4
+django-activity-stream==0.8.0

@@ -1,15 +1,19 @@
 from actstream import action
 from functools import partial
-from rest_framework import status, viewsets
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework import serializers
+
 import django.dispatch
+from django.core.files import File
+import os
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
-from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
+from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
 
 # This signal is triggered after the questionnaire is saved via the API
@@ -80,7 +84,7 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class ResponseFileViewSet(viewsets.ModelViewSet):
+class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ResponseFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
@@ -92,6 +96,44 @@ class ResponseFileViewSet(viewsets.ModelViewSet):
         queryset = ResponseFile.objects.filter(
             question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
         return queryset
+
+
+class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
+    serializer_class = ResponseFileTrashSerializer
+
+    def get_queryset(self):
+        queryset = ResponseFile.objects.filter(
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+        return queryset
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        instance = self.get_object()
+
+        if not serializer.validated_data['is_deleted']:
+            # un-trash : not implemented yet
+            raise serializers.ValidationError('Vous ne pouvez sortir un fichier réponse de la corbeille.')
+
+        if instance.is_deleted:
+            raise serializers.ValidationError('Vous ne pouvez mettre à la corbeille un fichier qui y est déja.')
+
+        # Save a new file, that gets uploaded to the deleted files path.
+        deleted_file = File(instance.file, name=instance.basename)
+        serializer.save(file=deleted_file)
+
+        # Log deletion action
+        if serializer.validated_data['is_deleted']:
+            action_details = {
+                'sender': self.request.user,
+                'verb': 'trashed response-file',
+                'target': instance,
+            }
+            action.send(**action_details)
+
+        # Delete file left at old path
+        instance.file.delete(False)
 
 
 class ThemeViewSet(viewsets.ModelViewSet):

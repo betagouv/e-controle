@@ -123,6 +123,29 @@ Note : Pour créer un nouveau dump :
 
 Ensuite, ajouter dezipper les fichiers de `media_<date>.zip` dans un dossier `media` à la racine de ce projet.
 
+## Login et envoi d'emails
+
+Les utlisateurs admin peuvent se logger sans envoi d'email à http://localhost:8080/admin.
+(Si vous avez utilisé le dump ci-dessus, essayez inspector@demo.com / demoe12345)
+
+Les utilisateurs non-admin n'ont pas de mot de passe, ils recoivent un email contenant un lien de connexion. Votre serveur doit donc être configuré pour envoyer des mails.
+
+### Serveur d'email en local
+Python contient un petit serveur SMTP, qui printe les mail dans la console au lieu de les envoyer. C'est le plus simple pour developper.
+Ajoutez les settings suivants dans `.env` :
+```
+export EMAIL_HOST='localhost'
+export EMAIL_PORT=1025
+export EMAIL_HOST_USER=''
+export EMAIL_HOST_PASSWORD=''
+export EMAIL_USE_TLS=False
+export DEFAULT_FROM_EMAIL='testing@example.com'
+```
+Et lancez le serveur :
+`python -m smtpd -n -c DebuggingServer localhost:1025`
+
+(Merci à https://gist.github.com/andreagrandi/7027319)
+
 ## Des commandes utiles
 
     docker-compose run django dev

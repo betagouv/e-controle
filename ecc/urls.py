@@ -13,7 +13,9 @@ from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
 from magicauth import views as magicauth_views
+from magicauth.urls import urlpatterns as magicauth_urls
 from user_profiles import api_views as user_profiles_api_views
+from session import api_views as session_api_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
@@ -26,15 +28,14 @@ router.register(r'question', control_api_views.QuestionViewSet, basename='questi
 router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basename='questionnaire')
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
+router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='session')
+
 
 urlpatterns = [
-    path('', ecc_views.login, name='login'),
+    path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', ecc_views.cgu, name='cgu'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
-    path('login/', magicauth_views.magic_link, name='magicauth-login'),
-    path('email-envoyé/', magicauth_views.email_sent, name='magicauth-email-sent'),
-    path('code/<str:key>/', magicauth_views.validate_token, name='magicauth-validate-token'),
 
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
@@ -60,7 +61,13 @@ urlpatterns = [
     path('megacontrole/<int:pk>/',
          admin_views.Megacontrol.as_view(),
          name='megacontrol-done'),
+
+    path('api/fichier-reponse/corbeille/<int:pk>/',
+         control_api_views.ResponseFileTrash.as_view(),
+         name='response-file-trash'),
 ]
+
+urlpatterns.extend(magicauth_urls)
 
 urlpatterns += [
     path('api/', include((router.urls, 'api'))),

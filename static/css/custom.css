@@ -1,9 +1,3 @@
-.stamp-xl {
-  min-width: 3rem;
-  height: 3rem;
-  line-height: 3rem;
-}
-
 /* IE specific fix */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .card--ie-773px {
@@ -11,23 +5,18 @@
   }
 }
 
-.zebra  {
-    background: #f8f9fa;
-}
-
+/* Flex : shadows the classes in tabler.io, but adds the display:flex for them to work. */
 .flex-row {
     display: flex;
     flex-direction: row;
-    align-items: center;
 }
 
 .flex-column {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
 }
 
-/* questionnaires Vue components */
+/* QuestionnaireBodyCreate.vue */
 .form-control-h3 {
     font-size: 1.125rem;
     font-weight: 400;
@@ -37,15 +26,18 @@
     margin-bottom: 0px;
 }
 
+/* QuestionnairePreview.vue */
 .preview {
     background: rgba(70, 127, 207, 0.04) url(../img/apercu.png);
     padding: 1.5rem;
 }
 
+/* various */
 .with-line-breaks {
     white-space: pre-wrap;
 }
 
+/* questionnaire_list.html */
 .draft {
     background: rgba(70, 127, 207, 0.04)
 }
@@ -64,7 +56,7 @@
     border: 1px solid #467fcf;
 }
 
-
+/* Wizard pour questionnaire create */
 .wizard-step {
     flex-grow: 1;
     display: flex;
@@ -102,8 +94,37 @@
     color: #fff;
 }
 
-.truncate {
+/* ResponseFileList.vue */
+table.response-file-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.response-file-list td, .response-file-list th {
     white-space: normal;
     word-wrap: break-word;
-    width: 250px;
+    text-align: center
+}
+
+/* trash.html */
+table.trash-list {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.trash-list td, .trash-list th {
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+/* Elements in QuestionBox collapsed part */
+.question-box-child {
+    /* Same as card-body, but with no padding-top */
+    flex: 1 1 auto;
+    margin: 0;
+    padding-right: 1.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
 }

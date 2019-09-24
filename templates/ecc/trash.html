@@ -6,18 +6,7 @@
 {% endblock extra_static_header %}
 
 {% block page_content %}
-  <div class="page-header flex-column">
-    <div>
-      <a href="{% url 'questionnaire-list' %}#control-{{ questionnaire.control.id }}">
-        <div>
-          {{ questionnaire.control.title }}
-        </div>
-        <div>
-          Organisme : {{ questionnaire.control.depositing_organization }}
-        </div>
-      </a>
-    </div>
-
+  <div class="page-header flex-column align-items-start">
     <div class="page-title">
       Corbeille du
       <a href="{% url 'questionnaire-detail' questionnaire.id %}">
@@ -33,33 +22,37 @@
       Les fichiers mis à la corbeille sont toujours visibles par l'équipe de contrôle. Ils peuvent toujours être utilisés pour le contrôle.
     </div>
 
-    <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+    <table class="trash-list table table-hover table-outline table-vcenter text-nowrap card-table">
       <thead>
         <tr>
-          <th>Nom du document</th>
-          <th>Date de dépôt</th>
-          <th class="text-center">Utilisateur qui a déposé</th>
+          <th>Question</th>
           <th>Date de mise à la corbeille</th>
-          <th class="text-center">Utilisateur qui a mis à la corbeille</th>
+          <th>Nom du document</th>
+          <th>Utilisateur qui a mis à la corbeille</th>
+          <th>Date de dépôt</th>
+          <th>Utilisateur qui a déposé</th>
         </tr>
       </thead>
       <tbody>
-        {% for file in question_file_list %}
+        {% for response_file in response_file_list %}
           <tr>
             <td>
-              <div class="truncate"><a target="_blank" href="{{ file.url }}">{{ file.basename }}</a></div>
+              <div>{{ response_file.question_number }}</div>
             </td>
             <td>
-              <div>{{  file.created }}</div>
+              <div>{{ response_file.deletion_date }}</div>
             </td>
-            <td class="text-center">
-              <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
+            <td>
+              <div><a target="_blank" href="{{ response_file.url }}">{{ response_file.basename }}</a></div>
             </td>
-            <td class="text-center">
-              <div></div>
+            <td>
+              <div>{{ response_file.deletion_user.first_name }} {{ response_file.deletion_user.last_name }}</div>
             </td>
-            <td class="text-center">
-              <div></div>
+            <td>
+              <div>{{ response_file.created }}</div>
+            </td>
+            <td>
+              <div>{{ response_file.author.first_name }} {{ response_file.author.last_name }}</div>
             </td>
           </tr>
         {% empty %}
