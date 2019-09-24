@@ -1,47 +1,69 @@
 <template>
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">Etape 3 : Aperçu avant publication</div>
+  <div>
+
+    <div class="row justify-content-around mb-6">
+      <wizard-step number="1"
+                   class="done">
+        Renseigner l'introduction
+      </wizard-step>
+      <a href="javascript:void(0);" @click.prevent="back()">
+        <wizard-step number="2"
+                     class="done"
+                     @click.prevent="move('back')">
+          Ajouter des questions
+        </wizard-step>
+      </a>
+      <wizard-step number="3"
+                   class="active">
+        Aperçu avant publication
+      </wizard-step>
     </div>
-    <div class="card-body pb-6">
-      <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
-      </questionnaire-detail-for-preview>
-      <div class="text-right">
-        <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
-          < Retour
-        </button>
-        <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
-        <button type="submit"
-                data-toggle="modal"
-                data-target="#saveQuestionnaireConfirmModal"
-                class="btn btn-primary ml-auto"
-                title="Publier le questionnaire à l'organisme interrogé">
-          Publier
-        </button>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Etape 3 : Aperçu avant publication</div>
       </div>
+      <div class="card-body pb-6">
+        <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
+        </questionnaire-detail-for-preview>
+        <div class="text-right">
+          <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
+            < Retour
+          </button>
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit"
+                  data-toggle="modal"
+                  data-target="#saveQuestionnaireConfirmModal"
+                  class="btn btn-primary ml-auto"
+                  title="Publier le questionnaire à l'organisme interrogé">
+            Publier
+          </button>
+        </div>
 
-      <confirm-modal id="saveQuestionnaireConfirmModal"
-                     title="Confirmer la publication"
-                     confirm-button="Oui, j'ai compris"
-                     cancel-button="Retour"
-                     @confirm="done()"
-      >
-        <p>
-          En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
-        </p>
+        <confirm-modal id="saveQuestionnaireConfirmModal"
+                       title="Confirmer la publication"
+                       confirm-button="Oui, j'ai compris"
+                       cancel-button="Retour"
+                       @confirm="done()"
+        >
+          <p>
+            En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
+          </p>
 
-        <info-bar>
-          Pensez à informer l'organisme interrogé que vous
-          avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
-          <p> https://e-controle-beta.ccomptes.fr </p>
-        </info-bar>
+          <info-bar>
+            Pensez à informer l'organisme interrogé que vous
+            avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
+            <p> https://e-controle-beta.ccomptes.fr </p>
+          </info-bar>
 
-        <info-bar>
-            Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
-        </info-bar>
+          <info-bar>
+              Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
+          </info-bar>
 
-      </confirm-modal>
+        </confirm-modal>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -50,6 +72,7 @@
   import ConfirmModal from "../utils/ConfirmModal"
   import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
   import InfoBar from "../utils/InfoBar"
+  import WizardStep from "../utils/WizardStep"
 
   export default Vue.extend({
     data: function () {
@@ -85,7 +108,8 @@
     components: {
       ConfirmModal,
       QuestionnaireDetailForPreview,
-      InfoBar
+      InfoBar,
+      WizardStep,
     }
   });
 </script>
