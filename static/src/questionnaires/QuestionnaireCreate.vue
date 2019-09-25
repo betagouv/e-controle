@@ -51,7 +51,9 @@
     </a>
 
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
-      Questionnaire en cours de publication ...
+      <div class="m-9">
+        Questionnaire en cours de publication ...
+      </div>
     </empty-modal>
     <empty-modal id="savedModal"
                  ref="savedModal"
