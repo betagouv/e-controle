@@ -78,6 +78,12 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
             queryset = queryset.filter(is_draft=False)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['questionnaire_json'] = \
+            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
+        return context
+
 
 class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     template_name = "ecc/questionnaire_create.html"
@@ -198,21 +204,3 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
-
-
-class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
-    template_name = "ecc/questionnaire_detail.html"
-    context_object_name = 'questionnaire'
-
-    def get_queryset(self):
-        queryset = Questionnaire.objects.filter(
-            control__in=self.request.user.profile.controls.all())
-        if not self.request.user.profile.is_inspector:
-            queryset = queryset.filter(is_draft=False)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['questionnaire_json'] = \
-            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
-        return context
