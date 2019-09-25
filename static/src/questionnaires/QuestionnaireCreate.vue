@@ -53,13 +53,20 @@
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
       Questionnaire en cours de publication ...
     </empty-modal>
-    <confirm-modal id="savedModal"
-                   ref="savedModal"
-                   no-close="true"
-                   confirmButton="Revenir à l'accueil"
-                   @confirm="goHome()">
-      Bravo, votre questionnaire est publié!
-    </confirm-modal>
+    <empty-modal id="savedModal"
+                 ref="savedModal"
+                 no-close="true">
+      <div class="modal-body">
+        Bravo, votre questionnaire est publié!
+      </div>
+      <div class="modal-footer border-top-0">
+        <button type="button" class="btn btn-primary"
+                @click="goHome"
+        >
+          < Revenir à l'accueil
+        </button>
+      </div>
+    </empty-modal>
   </div>
 </template>
 
