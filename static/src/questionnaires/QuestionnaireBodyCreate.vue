@@ -201,6 +201,9 @@
     },
     methods: {
       back: function () {
+        if (!this.validateForm()) {
+          return
+        }
         this.$emit('back');
       },
       createBody: function () {
