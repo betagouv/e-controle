@@ -13,6 +13,7 @@ class EccConfig(AppConfig):
 
         from actstream import registry
         registry.register(apps.get_model('control.ResponseFile'))
+        registry.register(apps.get_model('control.QuestionFile'))
         registry.register(apps.get_model('control.Control'))
         registry.register(apps.get_model('control.Question'))
         registry.register(apps.get_model('control.Questionnaire'))

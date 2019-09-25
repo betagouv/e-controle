@@ -183,16 +183,30 @@ class SendFileMixin(SingleObjectMixin):
     - (optional) get_query_set() to restrict the accessible files.
     """
     model = None
+    file_type = None
 
     # used in a View, this function overrides the View's GET request handler.
     def get(self, request, *args, **kwargs):
         # get the object fetched by SingleObjectMixin
         obj = self.get_object()
+        self.add_access_log_entry(accessed_object=obj)
         return sendfile(request, obj.file.path, attachment=True, attachment_filename=obj.basename)
+
+    def add_access_log_entry(self, accessed_object):
+        verb = f'accessed {self.file_type}'
+        if self.file_type == 'response-file' and accessed_object.is_deleted:
+            verb = 'accessed trashed-response-file'
+        action_details = {
+            'sender': self.request.user,
+            'verb': verb,
+            'target': accessed_object,
+        }
+        action.send(**action_details)
 
 
 class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
+    file_type = 'questionnaire-file'
 
     def get(self, request, *args, **kwargs):
         """
@@ -210,6 +224,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
     model = QuestionFile
+    file_type = 'question-file'
 
     def get_queryset(self):
         # The user should only have access to files that belong to the control
@@ -221,3 +236,4 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
+    file_type = 'response-file'
