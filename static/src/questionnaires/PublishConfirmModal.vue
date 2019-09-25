@@ -35,19 +35,19 @@
       </div>
 
       <div class="modal-footer border-top-0">
-        <button type="submit"
-                class="btn btn-primary"
-                title="Publier le questionnaire"
-        >
-          <i class="fa fa-rocket mr-1"></i>
-          Publier le questionnaire
-        </button>
         <button type="button"
                 class="btn btn-secondary"
                 data-dismiss="modal"
                 title="J'ai encore des modifications à faire"
         >
           J'ai encore des modifications à faire
+        </button>
+        <button type="submit"
+                class="btn btn-primary"
+                title="Publier le questionnaire"
+        >
+          <i class="fa fa-rocket mr-1"></i>
+          Publier le questionnaire
         </button>
       </div>
 
