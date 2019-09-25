@@ -17,7 +17,10 @@
           <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
             < Retour
           </button>
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">Enregistrer le brouillon</button>
+          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
+            <i class="fe fe-save"></i>
+            Enregistrer le brouillon
+          </button>
           <button type="submit"
                   data-toggle="modal"
                   data-target="#saveQuestionnaireConfirmModal"
