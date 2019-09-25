@@ -41,11 +41,11 @@ def make_user(profile_type, control=None):
     return user_profile.user
 
 
-def make_audited_user(control):
+def make_audited_user(control=None):
     return make_user(UserProfile.AUDITED, control)
 
 
-def make_inspector_user(control):
+def make_inspector_user(control=None):
     return make_user(UserProfile.INSPECTOR, control)
 
 

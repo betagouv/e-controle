@@ -7,7 +7,6 @@ from django.urls import path, include
 
 from rest_framework import routers
 
-from . import views as ecc_views
 from control import admin as admin_views
 from control import api_views as control_api_views
 from control import views as control_views
@@ -16,6 +15,7 @@ from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from user_profiles import api_views as user_profiles_api_views
 from session import api_views as session_api_views
+from tos import views as tos_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
@@ -33,10 +33,11 @@ router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='s
 
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),
-    path('cgu/', ecc_views.cgu, name='cgu'),
+    path('cgu/', tos_views.tos, name='tos'),
     path('admin/', admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
+    path('bienvenue/', tos_views.Welcome.as_view(), name='welcome'),
     path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
     path('questionnaire/controle-<int:pk>/creer',

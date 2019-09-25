@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views import View
-from django.views.generic import DetailView, CreateView, ListView, RedirectView, TemplateView
+from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
 
 from actstream import action
@@ -11,9 +11,10 @@ from actstream.models import model_stream
 from sendfile import sendfile
 import json
 
-from control.serializers import QuestionnaireSerializer
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
+from .serializers import QuestionnaireSerializer
+
 
 class WithListOfControlsMixin(object):
 
@@ -134,6 +135,20 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         action.send(**action_details)
         data = {'status': 'success'}
         response = JsonResponse(data)
+        return response
+
+    def format_form_errors(self, form):
+        error_message = ""
+        for field in form.errors:
+            error_message += form.errors[field]
+        return error_message
+
+    def form_invalid(self, form):
+        data = {
+            'status': 'error',
+            'error': self.format_form_errors(form),
+        }
+        response = JsonResponse(data, status=400)
         return response
 
 

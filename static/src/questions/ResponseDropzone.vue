@@ -5,6 +5,11 @@
       <info-bar>
         Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
       </info-bar>
+      <error-bar v-if="hasErrors">
+        <div>
+          Une erreur s'est produite lors de la transmision d'un fichier.
+        </div>
+      </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
         <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
         <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
@@ -22,11 +27,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+  import { clearCache } from '../utils/utils'
   import Dropzone from 'dropzone'
+  import ErrorBar from "../utils/ErrorBar"
   import EventBus from '../events'
   import InfoBar from '../utils/InfoBar'
-  import { clearCache } from '../utils/utils'
+  import Vue from 'vue'
 
   import axios from 'axios'
 
@@ -47,10 +53,13 @@
         faqUrl: '/faq/',
         uploadUrl: '/upload/',
         csrftoken: '',
+        errorMessage: "",
+        hasErrors: false
       }
     },
     components: {
       InfoBar,
+      ErrorBar
     },
     mounted: function(){
       // Weird function copied from w3schools
@@ -71,16 +80,35 @@
 
       this.csrftoken = readCookie('csrftoken')
 
+      const errorCallback = this.dropzoneErrorCallback.bind(this)
+      const successCallback = this.dropzoneSuccessCallback.bind(this)
+      const addedFileCallback = this.clearErrors.bind(this)
+
       Dropzone.options['dropzoneArea' + this.questionId] = {
-        success: this.dropzoneSuccessCallback.bind(this)
+        init: function() {
+          this.on('success', successCallback),
+          this.on('error', errorCallback),
+          this.on('addedfile', addedFileCallback)
+        },
+        dictFileTooBig: "La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo."
       }
     },
     methods: {
+      clearErrors() {
+        this.errors = ""
+        this.hasErrors = false
+      },
       dropzoneSuccessCallback: function() {
         clearCache()
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
+      },
+      dropzoneErrorCallback: function(file, errorMessage) {
+        clearCache()
+        this.hasErrors = true
+        this.errorMessage =  errorMessage
+        console.debug("Error when uploading response file.", file, errorMessage)
       },
       fetchQuestionData: function () {
         return axios.get(url + this.questionId).then(response =>{
