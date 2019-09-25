@@ -31,31 +31,26 @@ class ControlViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.request.user.profile.controls.all()
 
-    def create(self, request, *args, **kwargs):
-        response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
-
-        # Add the control to the current user
-        self.request.user.profile.controls.add(control)
-
+    def add_log_entry(self, control, verb):
         action_details = {
             'sender': self.request.user,
-            'verb': 'created control',
+            'verb': verb,
             'action_object': control,
         }
         action.send(**action_details)
 
+    def create(self, request, *args, **kwargs):
+        response = super(ControlViewSet, self).create(request, *args, **kwargs)
+        control = Control.objects.get(id=response.data['id'])
+        # The current user is automatically added to the created control
+        self.request.user.profile.controls.add(control)
+        self.add_log_entry(control=control, verb='created control')
         return response
 
     def update(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).update(request, *args, **kwargs)
         control = Control.objects.get(id=response.data['id'])
-        action_details = {
-            'sender': self.request.user,
-            'verb': 'updated control',
-            'action_object': control,
-        }
-        action.send(**action_details)
+        self.add_log_entry(control=control, verb='updated control')
         return response
 
 
