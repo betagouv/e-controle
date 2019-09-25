@@ -184,6 +184,8 @@
       back: function() {
         console.debug('back');
         if (this.state === STATES.CREATING_BODY) {
+          this.saveDraft()
+          this.emitQuestionnaireUpdated();
           this.moveToState(STATES.START);
           return;
         }
