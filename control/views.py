@@ -137,6 +137,15 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
     model = ResponseFile
     fields = ('file',)
 
+    def add_upload_action_log(self):
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded',
+            'action_object': self.object,
+            'target': self.object.question,
+        }
+        action.send(**action_details)
+
     def form_valid(self, form):
         try:
             question_id = form.data['question_id']
@@ -146,13 +155,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object.question_id = question_id
         self.object.author = self.request.user
         self.object.save()
-        action_details = {
-            'sender': self.request.user,
-            'verb': 'uploaded',
-            'action_object': self.object,
-            'target': self.object.question,
-        }
-        action.send(**action_details)
+        self.add_upload_action_log()
         data = {'status': 'success'}
         response = JsonResponse(data)
         return response
