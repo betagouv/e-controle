@@ -2,7 +2,7 @@
   <div class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header border-bottom-0">
           <h5 class="modal-title">{{ title }}</h5>
           <button type="button"
                   class="close"
@@ -14,7 +14,7 @@
         <div class="modal-body">
           <slot></slot>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer border-top-0">
           <button v-if="confirmButton" type="button" class="btn btn-primary"
                   data-dismiss="modal"
                   @click="confirmClicked"

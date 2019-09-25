@@ -31,27 +31,10 @@
           </button>
         </div>
 
-        <confirm-modal id="saveQuestionnaireConfirmModal"
-                       title="Confirmer la publication"
-                       confirm-button="Oui, j'ai compris"
-                       cancel-button="Retour"
-                       @confirm="done()"
+        <publish-confirm-modal id="saveQuestionnaireConfirmModal"
+                               @confirm="done()"
         >
-          <p>
-            En publiant ce questionnaire, il sera visible par l'organisme interrogé et vous ne pourrez plus le modifier.
-          </p>
-
-          <info-bar>
-            Pensez à informer l'organisme interrogé que vous
-            avez publié ce nouveau questionnaire et qu'il est disponible à cette adresse :
-            <p> https://e-controle-beta.ccomptes.fr </p>
-          </info-bar>
-
-          <info-bar>
-              Si des réponses sont déposées par l'organisme interrogé, l'équipe de contrôle recevra un email d'information dès le lendemain à huit heures.
-          </info-bar>
-
-        </confirm-modal>
+        </publish-confirm-modal>
       </div>
     </div>
 
@@ -60,7 +43,7 @@
 
 <script>
   import Vue from "vue"
-  import ConfirmModal from "../utils/ConfirmModal"
+  import PublishConfirmModal from './PublishConfirmModal'
   import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
   import InfoBar from "../utils/InfoBar"
   import Wizard from "../utils/Wizard"
@@ -97,7 +80,7 @@
       },
     },
     components: {
-      ConfirmModal,
+      PublishConfirmModal,
       QuestionnaireDetailForPreview,
       InfoBar,
       Wizard,

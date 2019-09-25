@@ -1,3 +1,4 @@
+/* General */
 /* IE specific fix */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .card--ie-773px {
@@ -14,6 +15,11 @@
 .flex-column {
     display: flex;
     flex-direction: column;
+}
+
+/* Fixes to tabler*/
+.btn-primary.disabled, .btn-primary:disabled, .btn.disabled, .btn:disabled {
+    cursor: not-allowed;
 }
 
 /* QuestionnaireBodyCreate.vue */
