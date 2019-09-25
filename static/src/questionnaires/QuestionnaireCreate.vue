@@ -304,7 +304,8 @@
               $(this.$refs.savedModal.$el).modal('show')
             })
       },
-      goHome() {
+      goHome(event) {
+        $(event.target).addClass('btn-loading')
         window.location.href = home_url
       },
     }
