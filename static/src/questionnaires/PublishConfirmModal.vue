@@ -1,6 +1,6 @@
 <template>
   <empty-modal>
-    <form @submit="done">
+    <form @submit.prevent="done">
 
       <div class="modal-header border-bottom-0">
         <h5 class="modal-title">Vous y êtes presque! En cochant ces mentions, vous êtes informés que :</h5>
@@ -37,8 +37,6 @@
       <div class="modal-footer border-top-0">
         <button type="submit"
                 class="btn btn-primary"
-                :disabled="!allChecked"
-                data-dismiss="modal"
                 title="Publier le questionnaire"
         >
           <i class="fa fa-rocket mr-1"></i>
@@ -72,13 +70,8 @@
         checkbox2 : false,
       }
     },
-    computed: {
-      allChecked: function() {
-        return this.checkbox1 && this.checkbox2
-      },
-    },
     methods: {
-      done: function() {
+      done: function(event) {
         this.$emit('confirm')
       },
     },
