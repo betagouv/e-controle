@@ -1,24 +1,14 @@
 <template>
   <div class="row justify-content-around mb-6">
-  <wizard-step number="1"
-               :class="{ 'active': active==='1', 'done': active==='2' || active==='3' }"
-               :clickable="active==='2'"
-               @clickedStep="clicked(1)">
-    Renseigner l'introduction
-  </wizard-step>
-  <wizard-step number="2"
-               :class="{ 'active': active==='2', 'done': active==='3' }"
-               :clickable="active==='1' || active==='3'"
-               @clickedStep="clicked(2)">
-    Ajouter des questions
-  </wizard-step>
-  <wizard-step number="3" :class="{ 'active': active==='3' }"
-               :clickable="active==='2'"
-               @clickedStep="clicked(3)">
-    Aperçu avant publication
-  </wizard-step>
-</div>
-
+    <wizard-step v-for="(stepTitle, i) in stepTitles"
+                 :number="i+1"
+                 :class="{ 'active': activeI === i , 'done': activeI > i }"
+                 :clickable="activeI  === (i-1) || activeI === (i+1)"
+                 @clickedStep="clicked(i+1)"
+    >
+      {{ stepTitle }}
+    </wizard-step>
+  </div>
 </template>
 
 <script>
@@ -26,18 +16,22 @@
   import WizardStep from './WizardStep'
 
   export default Vue.extend({
-    props: [ 'active' ],
+    props: [ 'active-step-number', 'step-titles' ],
     components: {
       WizardStep,
     },
+    computed: {
+      activeI: function() {
+        return this.activeStepNumber - 1
+      },
+    },
     methods: {
       clicked: function(clickedStepNumber) {
-        console.debug('clicked', clickedStepNumber)
-        if (clickedStepNumber - this.active === 1) {
+        if (clickedStepNumber - this.activeStepNumber === 1) {
           this.$emit('next')
           return
         }
-        if (clickedStepNumber - this.active === -1) {
+        if (clickedStepNumber - this.activeStepNumber === -1) {
           this.$emit('previous')
           return
         }

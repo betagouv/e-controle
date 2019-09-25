@@ -1,7 +1,9 @@
 <template>
   <div>
 
-    <wizard active="1" @next="createMetadata">
+    <wizard :active-step-number="1"
+            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
+            @next="createMetadata">
     </wizard>
 
     <div class="card">

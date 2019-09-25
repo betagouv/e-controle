@@ -1,7 +1,9 @@
 <template>
   <div>
 
-    <wizard active="3" @previous="back()">
+    <wizard :active-step-number="3"
+            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
+            @previous="back()">
     </wizard>
 
     <div class="card">
