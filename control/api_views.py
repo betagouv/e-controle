@@ -47,6 +47,17 @@ class ControlViewSet(viewsets.ModelViewSet):
 
         return response
 
+    def update(self, request, *args, **kwargs):
+        response = super(ControlViewSet, self).update(request, *args, **kwargs)
+        control = Control.objects.get(id=response.data['id'])
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'updated control',
+            'action_object': control,
+        }
+        action.send(**action_details)
+        return response
+
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = QuestionSerializer
