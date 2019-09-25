@@ -71,6 +71,11 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
 
+    def get(self, request, *args, **kwargs):
+        # Before accessing the questionnaire, we log who's accessing it.
+        self.add_access_log_entry()
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
             control__in=self.request.user.profile.controls.all())
@@ -83,6 +88,15 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         context['questionnaire_json'] = \
             json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
         return context
+
+    def add_access_log_entry(self):
+        questionnaire = self.get_object()
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'accessed questionnaire',
+            'target': questionnaire,
+        }
+        action.send(**action_details)
 
 
 class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
