@@ -18,14 +18,15 @@
             < Retour
           </button>
           <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-            <i class="fe fe-save"></i>
+            <i class="fe fe-save mr-1"></i>
             Enregistrer le brouillon
           </button>
           <button type="submit"
                   data-toggle="modal"
                   data-target="#saveQuestionnaireConfirmModal"
-                  class="btn btn-primary ml-auto"
+                  class="btn btn-primary ml-5"
                   title="Publier le questionnaire à l'organisme interrogé">
+            <i class="fa fa-rocket mr-1"></i>
             Publier
           </button>
         </div>
