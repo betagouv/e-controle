@@ -1,8 +1,9 @@
 <template>
-  <empty-modal>
+  <empty-modal :no-close="noClose">
     <div class="modal-header border-bottom-0">
       <h5 class="modal-title">{{ title }}</h5>
-      <button type="button"
+      <button v-if="!noClose"
+              type="button"
               class="close"
               data-dismiss="modal"
               aria-label="Close"
@@ -37,7 +38,8 @@
     props: [
         'cancel-button',
         'confirm-button',
-        'title'
+        'no-close',
+        'title',
     ],
     components: {
       EmptyModal,
