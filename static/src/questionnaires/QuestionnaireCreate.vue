@@ -313,7 +313,7 @@
       },
       goHome(event) {
         $(event.target).addClass('btn-loading')
-        window.location.href = home_url
+        window.location.href = home_url + '#control-' + this.questionnaire.control
       },
     }
   });
