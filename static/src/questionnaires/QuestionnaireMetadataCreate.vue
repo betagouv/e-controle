@@ -11,7 +11,7 @@
         <div class="card-title">Etape 1 : Renseigner l'introduction</div>
       </div>
       <div class="card-body pb-6">
-        <form @submit.prevent="createMetadata">
+        <form @submit.prevent="createMetadata" ref="form">
           <div class="form-group">
             <label class="form-label" id="questionnaireTitle">
               Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
@@ -116,14 +116,20 @@ services pour toute information complémentaire qu’appellerait ce questionnair
       });
     },
     methods: {
-      createMetadata: function (event) {
+      validateForm: function() {
+        let form = this.$refs.form
+        return reportValidity(form)
+      },
+      createMetadata: function () {
         console.debug('metadata created', this.metadata)
+        if (!this.validateForm()) {
+          return
+        }
         this.$emit('metadata-created', this.metadata)
       },
       saveDraft(event) {
         console.debug('save draft', event)
-        let isValid = reportValidity(event.target.form)
-        if (!isValid) {
+        if (!this.validateForm()) {
           return
         }
         this.$emit('save-draft', this.metadata)

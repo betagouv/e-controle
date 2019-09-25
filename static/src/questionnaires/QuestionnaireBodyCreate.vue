@@ -16,7 +16,7 @@
           A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
           des questions et des annexes à vos questions.
         </info-bar>
-        <form @submit.prevent="createBody">
+        <form @submit.prevent="createBody" ref="form">
           <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
@@ -204,6 +204,9 @@
         this.$emit('back');
       },
       createBody: function () {
+        if (!this.validateForm()) {
+          return
+        }
         console.debug('QuestionnaireBodyCreate createBody', this.body)
         this.$emit('body-created', this.body)
       },
@@ -223,12 +226,15 @@
       },
       saveDraft(event) {
         console.debug('save draft', event)
-        let isValid = reportValidity(event.target.form)
-        if (!isValid) {
+        if (!this.validateForm()) {
           return
         }
         this.$emit('save-draft', this.body)
-      }
+      },
+      validateForm: function() {
+        let form = this.$refs.form
+        return reportValidity(form)
+      },
     }
   });
 </script>
