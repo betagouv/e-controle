@@ -7,6 +7,10 @@
         <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
+    <button @click="saveNonDraft"
+            class="btn btn-primary">
+      des trucs
+    </button>
     <div v-if="hasErrors" class="alert alert-danger">
       {{ errorMessage }}
     </div>
@@ -46,18 +50,30 @@
       < Revenir à l'accueil
     </a>
 
+    <empty-modal id="savingModal" ref="savingModal" no-close="true">
+      Questionnaire en cours de publication ...
+    </empty-modal>
+    <confirm-modal id="savedModal"
+                   ref="savedModal"
+                   no-close="true"
+                   confirmButton="Revenir à l'accueil"
+                   @confirm="goHome()">
+      Bravo, votre questionnaire est publié!
+    </confirm-modal>
   </div>
 </template>
 
 <script>
   import axios from "axios"
-  import moment from "moment"
-  import Vue from "vue"
+  import ConfirmModal from '../utils/ConfirmModal'
+  import EmptyModal from '../utils/EmptyModal'
   import EventBus from '../events'
   import InfoBar from "../utils/InfoBar"
+  import moment from "moment"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
+  import Vue from "vue"
 
   // State machine
   const STATES = {
@@ -92,6 +108,8 @@
       }
     },
     components: {
+      ConfirmModal,
+      EmptyModal,
       InfoBar,
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
@@ -258,13 +276,27 @@
         this.questionnaire.is_draft = true
         this._doSave()
       },
+      fakeSave() {
+        // Create a promise that rejects in <ms> milliseconds
+        return new Promise((resolve, reject) => {
+          let id = setTimeout(() => {
+            clearTimeout(id);
+            resolve()
+          }, 3000)
+        })
+      },
       saveNonDraft() {
+        $(this.$refs.savingModal.$el).modal('show')
         this.questionnaire.is_draft = false
         this._doSave()
             .then(() => {
-              window.location.href = home_url
+              $(this.$refs.savingModal.$el).modal('hide')
+              $(this.$refs.savedModal.$el).modal('show')
             })
-      }
+      },
+      goHome() {
+        window.location.href = home_url
+      },
     }
   });
 </script>
