@@ -56,10 +56,15 @@
     <empty-modal id="savedModal"
                  ref="savedModal"
                  no-close="true">
-      <div class="modal-body">
-        Bravo, votre questionnaire est publié!
+      <div class="modal-header border-bottom-0 justify-content-center">
+        <i class="fe fe-check-circle fg-success big-icon"></i>
       </div>
-      <div class="modal-footer border-top-0">
+      <div class="modal-body d-flex justify-content-center">
+        <div>
+          Bravo, votre questionnaire est publié!
+        </div>
+      </div>
+      <div class="modal-footer border-top-0 d-flex justify-content-center">
         <button type="button" class="btn btn-primary"
                 @click="goHome"
         >

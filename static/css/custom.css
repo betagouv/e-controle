@@ -22,6 +22,15 @@
     cursor: not-allowed;
 }
 
+.fg-success {
+    color: #5EBB00;
+}
+
+/* QuestionnaireCreate.vue */
+.big-icon {
+    font-size: 4rem;
+}
+
 /* QuestionnaireBodyCreate.vue */
 .form-control-h3 {
     font-size: 1.125rem;
