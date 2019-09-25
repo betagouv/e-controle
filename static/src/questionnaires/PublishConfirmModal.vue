@@ -73,6 +73,9 @@
     methods: {
       done: function(event) {
         this.$emit('confirm')
+        // We hide the modal programmatically rather than using data-dismiss on the button, because it dismisses before
+        // the form validation step.
+        $(this.$el).modal('hide')
       },
     },
   })
