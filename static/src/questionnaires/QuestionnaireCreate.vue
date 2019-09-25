@@ -87,6 +87,7 @@
   const get_questionnaire_url = "/api/questionnaire/"
   const save_questionnaire_url = "/api/questionnaire/"
   const home_url = "/accueil/"
+  const PUBLISH_TIME_MILLIS = 3000
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
@@ -276,19 +277,21 @@
         this.questionnaire.is_draft = true
         this._doSave()
       },
-      fakeSave() {
-        // Create a promise that rejects in <ms> milliseconds
-        return new Promise((resolve, reject) => {
+      _doSaveAndWait() {
+        // Save for at least PUBLISH_TIME_MILLIS. This is for the user to see the wait modal and be satisfied that\
+        // the saving really happened.
+        let wait = new Promise((resolve, reject) => {
           let id = setTimeout(() => {
             clearTimeout(id);
             resolve()
-          }, 3000)
+          }, PUBLISH_TIME_MILLIS)
         })
+        return Promise.all([wait, this._doSave()])
       },
       saveNonDraft() {
         $(this.$refs.savingModal.$el).modal('show')
         this.questionnaire.is_draft = false
-        this._doSave()
+        this._doSaveAndWait()
             .then(() => {
               $(this.$refs.savingModal.$el).modal('hide')
               $(this.$refs.savedModal.$el).modal('show')
