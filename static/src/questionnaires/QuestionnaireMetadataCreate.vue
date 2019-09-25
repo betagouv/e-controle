@@ -1,20 +1,8 @@
 <template>
   <div>
 
-    <div class="row justify-content-around mb-6">
-      <wizard-step number="1"
-                   class="active">
-        Renseigner l'introduction
-      </wizard-step>
-      <a href="javascript:void(0);" @click.prevent="createMetadata()">
-        <wizard-step number="2">
-          Ajouter des questions
-        </wizard-step>
-      </a>
-      <wizard-step number="3">
-        Aperçu avant publication
-      </wizard-step>
-    </div>
+    <wizard active="1" @next="createMetadata">
+    </wizard>
 
     <div class="card">
       <div class="card-header">
@@ -79,7 +67,7 @@
 <script>
   import Vue from "vue";
   import Datepicker from 'vuejs-datepicker';
-  import WizardStep from "../utils/WizardStep"
+  import Wizard from "../utils/Wizard"
   import fr from "../utils/vuejs-datepicker-locale-fr"
   import reportValidity from 'report-validity';
 
@@ -136,7 +124,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
     },
     components: {
       Datepicker,
-      WizardStep,
+      Wizard,
     }
   });
 </script>

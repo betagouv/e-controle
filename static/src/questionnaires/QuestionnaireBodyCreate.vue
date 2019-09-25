@@ -1,23 +1,8 @@
 <template>
   <div>
 
-    <div class="row justify-content-around mb-6">
-      <a href="javascript:void(0);" @click.prevent="back()">
-        <wizard-step number="1"
-                     class="done">
-          Renseigner l'introduction
-        </wizard-step>
-      </a>
-      <wizard-step number="2"
-                   class="active">
-        Ajouter des questions
-      </wizard-step>
-      <a href="javascript:void(0);" @click.prevent="createBody()">
-        <wizard-step number="3">
-          Aperçu avant publication
-        </wizard-step>
-      </a>
-    </div>
+    <wizard active="2" @next="createBody" @previous="back()">
+    </wizard>
 
     <div class="card">
       <div class="card-header">
@@ -161,7 +146,7 @@
   import InfoBar from '../utils/InfoBar'
   import QuestionFileList from "../questions/QuestionFileList"
   import QuestionFileUpload from "../questions/QuestionFileUpload"
-  import WizardStep from "../utils/WizardStep"
+  import Wizard from "../utils/Wizard"
 
   import reportValidity from 'report-validity';
 
@@ -185,7 +170,7 @@
       InfoBar,
       QuestionFileList,
       QuestionFileUpload,
-      WizardStep,
+      Wizard,
     },
     mounted() {
       let loadBody = function (data) {

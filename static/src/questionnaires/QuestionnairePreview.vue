@@ -1,23 +1,8 @@
 <template>
   <div>
 
-    <div class="row justify-content-around mb-6">
-      <wizard-step number="1"
-                   class="done">
-        Renseigner l'introduction
-      </wizard-step>
-      <a href="javascript:void(0);" @click.prevent="back()">
-        <wizard-step number="2"
-                     class="done"
-                     @click.prevent="move('back')">
-          Ajouter des questions
-        </wizard-step>
-      </a>
-      <wizard-step number="3"
-                   class="active">
-        Aperçu avant publication
-      </wizard-step>
-    </div>
+    <wizard active="3" @previous="back()">
+    </wizard>
 
     <div class="card">
       <div class="card-header">
@@ -72,7 +57,7 @@
   import ConfirmModal from "../utils/ConfirmModal"
   import QuestionnaireDetailForPreview from "./QuestionnaireDetailForPreview"
   import InfoBar from "../utils/InfoBar"
-  import WizardStep from "../utils/WizardStep"
+  import Wizard from "../utils/Wizard"
 
   export default Vue.extend({
     data: function () {
@@ -109,7 +94,7 @@
       ConfirmModal,
       QuestionnaireDetailForPreview,
       InfoBar,
-      WizardStep,
+      Wizard,
     }
   });
 </script>
