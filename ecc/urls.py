@@ -71,6 +71,10 @@ urlpatterns = [
 urlpatterns.extend(magicauth_urls)
 
 urlpatterns += [
+    path(r'admin/reporting/', include('report_builder.urls'))
+]
+
+urlpatterns += [
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls')),
 ]
