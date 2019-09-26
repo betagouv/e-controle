@@ -62,13 +62,9 @@
           Bravo, votre questionnaire est publié!
         </h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body text-center">
         <p>
-          Avez-vous prévenu l'organisme interrogé? Ils peuvent voir le nouveau questionnaire à l'adresse
-          https://e-controle-beta.ccomptes.fr
-        </p>
-        <p>
-          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email.
+          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de notification dès le lendemain 8 heure.
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
