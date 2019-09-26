@@ -140,7 +140,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
     def add_upload_action_log(self):
         action_details = {
             'sender': self.request.user,
-            'verb': 'uploaded',
+            'verb': 'uploaded response-file',
             'action_object': self.object,
             'target': self.object.question,
         }
