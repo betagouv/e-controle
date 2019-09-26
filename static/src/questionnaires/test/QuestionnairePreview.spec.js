@@ -1,5 +1,6 @@
 import { mount, shallowMount } from "@vue/test-utils";
 
+import PublishConfirmModal from '../PublishConfirmModal'
 import QuestionnairePreview from '../QuestionnairePreview.vue'
 import Wizard from '../../utils/Wizard'
 
@@ -29,4 +30,17 @@ describe('QuestionnairePreview.vue', () => {
     assertHasEmmitted(wrapper, 'back', 1)
   })
 
+  test('emits "publish-questionnaire" when PublishConfirmModal emits "confirm"', () => {
+    // Stub out a Wizard. (Other child components are really instantiated)
+    const wrapper = mount(QuestionnairePreview, {
+      stubs: {
+        PublishConfirmModal: true
+      }
+    })
+
+    const wizard = wrapper.find(PublishConfirmModal).vm
+    wizard.$emit('confirm')
+
+    assertHasEmmitted(wrapper, 'publish-questionnaire', 1)
+  })
 })
