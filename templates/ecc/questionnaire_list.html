@@ -33,7 +33,7 @@
                             <td>
                               <h5>
                                 {% if questionnaire.is_draft %}
-                                  <span class="tag tag-azure">Brouillon</span>
+                                  <span class="btn btn-pill btn-info btn-sm disabled">Brouillon</span>
                                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
                                 {% endif %}
                                 <span>{{ questionnaire.title_display }}</span>
