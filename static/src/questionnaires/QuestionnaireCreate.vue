@@ -189,18 +189,16 @@
         console.debug('QuestionnaireCreate got body', body);
         this._updateBody(body);
         this.saveDraft()
-        this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
-      },
-      _updateBody(body) {
-        this.questionnaire.themes = body;
       },
       onMetadataCreated: function(metadata) {
         console.debug('got metadata', metadata);
         this._updateMetadata(metadata)
         this.saveDraft()
-        this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
+      },
+      _updateBody(body) {
+        this.questionnaire.themes = body;
       },
       _updateMetadata: function(metadata) {
         for (const [key, value] of Object.entries(metadata)) {
@@ -209,16 +207,18 @@
       },
       _updateQuestionnaire: function(questionnaire) {
         this.questionnaire.id = questionnaire.id
-        this.questionnaire.description = questionnaire.description
-        this.questionnaire.end_date = questionnaire.end_date
-        this.questionnaire.title = questionnaire.title
+        const metadata = {
+          description: questionnaire.description,
+          end_date: questionnaire.end_date,
+          title: questionnaire.title,
+        }
+        this._updateMetadata(metadata)
         this._updateBody(questionnaire.themes)
       },
       back: function() {
         console.debug('back');
         if (this.state === STATES.CREATING_BODY) {
           this.saveDraft()
-          this.emitQuestionnaireUpdated();
           this.moveToState(STATES.START);
           return;
         }
@@ -253,8 +253,6 @@
           } else {
             delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
           }
-
-          console.debug('Questionnaire to save : ', this.questionnaire)
         }
 
         this.clearErrors()
@@ -266,17 +264,19 @@
           saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
         }
         return saveMethod(this.questionnaire)
-            .then(response => {
-              console.debug(response)
-              this._updateQuestionnaire(response.data)
-              this.emitQuestionnaireUpdated()
+            .then(this._postSaveSuccess)
+            .catch(this._postSaveError)
+      },
+      _postSaveSuccess(response) {
+        this._updateQuestionnaire(response.data)
+        this.emitQuestionnaireUpdated()
 
-              const timeString = moment(new Date()).format('HH:mm:ss')
-              this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
-            }).catch(error => {
-              console.error(error)
-              this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
-            })
+        const timeString = moment(new Date()).format('HH:mm:ss')
+        this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
+      },
+      _postSaveError(error) {
+        console.error(error)
+        this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
       },
       saveDraftFromMetadata(data) {
         this._updateMetadata(data)
@@ -291,28 +291,31 @@
         this.questionnaire.is_draft = true
         this._doSave()
       },
-      _doSaveAndWait() {
-        // Save for at least PUBLISH_TIME_MILLIS. This is for the user to see the wait modal and be satisfied that\
-        // the saving really happened.
-        let wait = new Promise((resolve, reject) => {
+      wait(time_millis) {
+        return new Promise((resolve) => {
           let id = setTimeout(() => {
             clearTimeout(id);
             resolve()
-          }, PUBLISH_TIME_MILLIS)
+          }, time_millis)
         })
-        return Promise.all([wait, this._doSave()])
       },
       publish() {
         $(this.$refs.savingModal.$el).modal('show')
         this.questionnaire.is_draft = false
-        this._doSaveAndWait()
+
+        // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
+        // This is for the user to see the wait modal and be satisfied that the saving really happened.
+        return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
             .then(() => {
               $(this.$refs.savingModal.$el).modal('hide')
               $(this.$refs.savedModal.$el).modal('show')
             })
       },
       goHome(event) {
+        // Display a "loading" spinner on clicked button, while the user is redirected, so that they know their click
+        // has been registered.
         $(event.target).addClass('btn-loading')
+
         window.location.href = home_url + '#control-' + this.questionnaire.control
       },
     }
