@@ -32,6 +32,16 @@
             Le questionnaire deviendra visible par l'organisme interrogé
           </label>
         </div>
+         <div>
+          <input type="checkbox"
+                 name="save-questionnaire-checkbox-3"
+                 id="save-questionnaire-checkbox-3"
+                 v-model="checkbox3"
+                 required>
+          <label for="save-questionnaire-checkbox-3">
+            Vous devrez informer l'organisme interrogé
+          </label>
+        </div>
       </div>
 
       <div class="modal-footer border-top-0">
