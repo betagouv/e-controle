@@ -227,3 +227,19 @@ Quelques commandes bash utiles:
 
     npm run watch-questionnaire-create  # Pour construire le fichier bundle en mode watch
     npm run build-questionnaire-list  # Pour construire le fichier bundle
+
+## Tests
+
+### Backend tests
+TODO
+
+### Frontend tests
+Ils se situent dans `static/src/` avec le code, dans des dossiers `test`.
+
+Lancer les tests : `npm test`
+
+Tester un fichier en particulier : 
+
+`npm test <tout ou partie du nom de fichier>`. 
+
+Par exemple : `npm test Metadata` trouve le fichier `static/src/questionnaires/test/QuestionnaireMetadataCreate.spec.js`.
