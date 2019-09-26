@@ -84,7 +84,6 @@
 
 <script>
   import axios from "axios"
-  import ConfirmModal from '../utils/ConfirmModal'
   import EmptyModal from '../utils/EmptyModal'
   import EventBus from '../events'
   import InfoBar from "../utils/InfoBar"
@@ -128,7 +127,6 @@
       }
     },
     components: {
-      ConfirmModal,
       EmptyModal,
       InfoBar,
       QuestionnaireBodyCreate,
