@@ -54,13 +54,22 @@
     <empty-modal id="savedModal"
                  ref="savedModal"
                  no-close="true">
-      <div class="modal-header border-bottom-0 justify-content-center">
-        <i class="fe fe-check-circle fg-success big-icon"></i>
-      </div>
-      <div class="modal-body d-flex justify-content-center">
-        <div>
+      <div class="modal-header border-bottom-0 flex-column align-items-center">
+        <p>
+          <i class="fe fe-check-circle fg-success big-icon"></i>
+        </p>
+        <h4 class="text-center">
           Bravo, votre questionnaire est publié!
-        </div>
+        </h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Avez-vous prévenu l'organisme interrogé? Ils peuvent voir le nouveau questionnaire à l'adresse
+          https://e-controle-beta.ccomptes.fr
+        </p>
+        <p>
+          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email.
+        </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
         <button type="button" class="btn btn-primary"

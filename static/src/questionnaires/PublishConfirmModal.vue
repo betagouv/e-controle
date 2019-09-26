@@ -3,7 +3,7 @@
     <form @submit.prevent="done">
 
       <div class="modal-header border-bottom-0">
-        <h5 class="modal-title">Vous y êtes presque! En cochant ces mentions, vous êtes informés que :</h5>
+        <h4 class="modal-title">Vous y êtes presque! En cochant ces mentions, vous êtes informés que :</h4>
         <button type="button"
                 class="close"
                 data-dismiss="modal"
