@@ -254,14 +254,18 @@
             delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
           }
         }
+        const getCreateMethod = () => axios.post.bind(this, save_questionnaire_url)
+        const getUpdateMethod =
+            (questionnaireId) => axios.put.bind(this, save_questionnaire_url + questionnaireId + '/')
 
         this.clearErrors()
         cleanPreSave()
 
-        let saveMethod = axios.post.bind(this, save_questionnaire_url)
+        let saveMethod
         if (this.questionnaire.id !== undefined) {
-          console.debug('questionnaire', this.questionnaire)
-          saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
+          saveMethod = getUpdateMethod(this.questionnaire.id)
+        } else {
+          saveMethod = getCreateMethod()
         }
         return saveMethod(this.questionnaire)
             .then(this._postSaveSuccess)
@@ -283,7 +287,6 @@
         this.saveDraft()
       },
       saveDraftFromBody(data) {
-        console.debug('saveDraftFromBody', data)
         this._updateBody(data)
         this.saveDraft()
       },
