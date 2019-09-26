@@ -7,10 +7,6 @@
         <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
-    <button @click="publish()"
-            class="btn btn-primary">
-      des trucs
-    </button>
     <div v-if="hasErrors" class="alert alert-danger">
       {{ errorMessage }}
     </div>
