@@ -165,7 +165,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def __create_or_update(self, request, save_questionnaire_func, is_update):
         if is_update:
             pre_existing_qr = self.get_object()  # throws 404 if no qr
-            if request.data.get('is_draft') is False:
+            is_beeing_published = pre_existing_qr.is_draft is True and \
+                request.data.get('is_draft') is False
+            if is_beeing_published:
                 verb = 'published'
             else:
                 verb = 'updated'
