@@ -7,7 +7,7 @@
         <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
     </div>
-    <button @click="saveNonDraft"
+    <button @click="publish()"
             class="btn btn-primary">
       des trucs
     </button>
@@ -33,7 +33,7 @@
     </questionnaire-body-create>
     <questionnaire-preview
             ref="previewChild"
-            v-on:save-questionnaire="saveNonDraft"
+            v-on:publish-questionnaire="publish()"
             v-on:save-draft="saveDraft"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
@@ -302,7 +302,7 @@
         })
         return Promise.all([wait, this._doSave()])
       },
-      saveNonDraft() {
+      publish() {
         $(this.$refs.savingModal.$el).modal('show')
         this.questionnaire.is_draft = false
         this._doSaveAndWait()

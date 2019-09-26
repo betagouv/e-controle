@@ -23,7 +23,7 @@
           </button>
           <button type="submit"
                   data-toggle="modal"
-                  data-target="#saveQuestionnaireConfirmModal"
+                  data-target="#publishConfirmModal"
                   class="btn btn-primary ml-5"
                   title="Publier le questionnaire à l'organisme interrogé">
             <i class="fa fa-rocket mr-1"></i>
@@ -31,8 +31,8 @@
           </button>
         </div>
 
-        <publish-confirm-modal id="saveQuestionnaireConfirmModal"
-                               @confirm="done()"
+        <publish-confirm-modal id="publishConfirmModal"
+                               @confirm="publish()"
         >
         </publish-confirm-modal>
       </div>
@@ -71,8 +71,8 @@
       back: function () {
         this.$emit('back')
       },
-      done: function () {
-        this.$emit('save-questionnaire')
+      publish: function () {
+        this.$emit('publish-questionnaire')
       },
       saveDraft(event) {
         console.debug('save draft', event)
