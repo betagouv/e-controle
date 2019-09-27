@@ -225,3 +225,9 @@ table.trash-list {
 .big-tag {
     font-size: 1rem;
 }
+
+.round-tag {
+    border-radius: 10rem;
+    padding-left: 1em;
+    padding-right: 1em;
+}
