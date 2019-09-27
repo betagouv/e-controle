@@ -217,9 +217,10 @@
         this._updateMetadata(metadata)
         this._updateBody(questionnaire.themes)
       },
-      back: function() {
+      back: function(data) {
         console.debug('back');
         if (this.state === STATES.CREATING_BODY) {
+          this._updateBody(data);
           this.saveDraft()
           this.moveToState(STATES.START);
           return;

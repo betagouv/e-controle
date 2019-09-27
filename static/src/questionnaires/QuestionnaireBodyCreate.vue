@@ -204,7 +204,7 @@
         if (!this.validateForm()) {
           return
         }
-        this.$emit('back');
+        this.$emit('back', this.body);
       },
       createBody: function () {
         if (!this.validateForm()) {
