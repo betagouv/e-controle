@@ -9,6 +9,10 @@ const assertHasEmmitted = (obj, eventName, numTimes) => {
   expect(obj.emitted()[eventName].length).toEqual(numTimes)
 }
 
+const assertNothingEmitted = (obj) => {
+  expect(obj.emitted()).toEqual({})
+}
+
 describe('QuestionnairePreview.vue', () => {
   test('is a Vue instance', () => {
     // shallowMount stubs out all children
@@ -41,6 +45,15 @@ describe('QuestionnairePreview.vue', () => {
     modal.$emit('confirm')
 
     assertHasEmmitted(wrapper, 'publish-questionnaire', 1)
+  })
+
+  test('emits "save-draft" when save button is clicked', () => {
+    const wrapper = shallowMount(QuestionnairePreview)
+    assertNothingEmitted(wrapper)
+
+    wrapper.find('#saveDraftFromPreviewButton').trigger('click')
+
+    assertHasEmmitted(wrapper, 'save-draft', 1)
   })
 
 })
