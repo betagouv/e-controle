@@ -231,10 +231,14 @@ Quelques commandes bash utiles:
 ## Tests
 
 ### Backend tests
-TODO
+
+Lancer les tests :
+`pytest -s <dossier>`
+(le flag -s sert a laisser le debugger prendre le controle si besoin).
+
 
 ### Frontend tests
-Ils se situent dans `static/src/` avec le code, dans des dossiers `test`.
+Ils se situent dans `static/src/` avec le code, dans des dossiers `test`. Ce sont des tests Jest, pour trouver de la doc googler "test Vue with Jest" par exemple.
 
 Lancer les tests : `npm test`
 
@@ -243,3 +247,5 @@ Tester un fichier en particulier :
 `npm test <tout ou partie du nom de fichier>`. 
 
 Par exemple : `npm test Metadata` trouve le fichier `static/src/questionnaires/test/QuestionnaireMetadataCreate.spec.js`.
+
+Debugger un test : plusieurs debuggers sont possibles, dont Chrome Dev Tools et Webstorm/Pycharm. Voir https://jestjs.io/docs/en/troubleshooting
