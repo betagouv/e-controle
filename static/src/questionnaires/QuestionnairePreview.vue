@@ -17,7 +17,7 @@
           <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
             < Retour
           </button>
-          <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
+          <button id="saveDraftFromPreviewButton" type="submit" @click.prevent="saveDraft" class="btn btn-primary">
             <i class="fe fe-save mr-1"></i>
             Enregistrer le brouillon
           </button>
