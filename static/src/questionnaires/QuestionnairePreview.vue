@@ -21,7 +21,8 @@
             <i class="fe fe-save mr-1"></i>
             Enregistrer le brouillon
           </button>
-          <button type="submit"
+          <button id="publishButton"
+                  type="submit"
                   data-toggle="modal"
                   data-target="#publishConfirmModal"
                   class="btn btn-primary ml-5"

@@ -17,7 +17,7 @@ describe('QuestionnairePreview.vue', () => {
   })
 
   test('emits "back" when Wizard emits "previous"', () => {
-    // Stub out a Wizard. (Other child components are really instantiated)
+    // Stub out Wizard. (Other child components are really instantiated)
     const wrapper = mount(QuestionnairePreview, {
       stubs: {
         Wizard: true
@@ -31,16 +31,16 @@ describe('QuestionnairePreview.vue', () => {
   })
 
   test('emits "publish-questionnaire" when PublishConfirmModal emits "confirm"', () => {
-    // Stub out a Wizard. (Other child components are really instantiated)
     const wrapper = mount(QuestionnairePreview, {
       stubs: {
         PublishConfirmModal: true
       }
     })
 
-    const wizard = wrapper.find(PublishConfirmModal).vm
-    wizard.$emit('confirm')
+    const modal = wrapper.find(PublishConfirmModal).vm
+    modal.$emit('confirm')
 
     assertHasEmmitted(wrapper, 'publish-questionnaire', 1)
   })
+
 })
