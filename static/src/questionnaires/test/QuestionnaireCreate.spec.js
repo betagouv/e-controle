@@ -10,6 +10,12 @@ jest.mock('axios', () => ({
 }))
 
 describe('QuestionnaireCreate.vue', () => {
+
+  beforeEach(() => {
+    jest.resetModules();
+    jest.clearAllMocks();
+  });
+
   test('is a Vue instance', () => {
     const wrapper = shallowMount(
         QuestionnaireCreate,
@@ -37,6 +43,10 @@ describe('QuestionnaireCreate.vue', () => {
     expect(() => {
       shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: 1}})
     }).not.toThrow()
+
+    // Called axios to load questionnaire
+    expect(axios.get).toBeCalledWith('/api/questionnaire/1');
   })
+
 })
 
