@@ -16,7 +16,6 @@
           <input type="checkbox"
                  name="save-questionnaire-checkbox-1"
                  id="save-questionnaire-checkbox-1"
-                 v-model="checkbox1"
                  required>
           <label for="save-questionnaire-checkbox-1">
             Le questionnaire ne pourra plus être modifié
@@ -26,7 +25,6 @@
           <input type="checkbox"
                  name="save-questionnaire-checkbox-2"
                  id="save-questionnaire-checkbox-2"
-                 v-model="checkbox2"
                  required>
           <label for="save-questionnaire-checkbox-2">
             Le questionnaire deviendra visible par l'organisme interrogé
@@ -36,7 +34,6 @@
           <input type="checkbox"
                  name="save-questionnaire-checkbox-3"
                  id="save-questionnaire-checkbox-3"
-                 v-model="checkbox3"
                  required>
           <label for="save-questionnaire-checkbox-3">
             Vous devrez informer l'organisme interrogé
@@ -73,12 +70,6 @@
   export default Vue.extend({
     components: {
       EmptyModal
-    },
-    data: function() {
-      return {
-        checkbox1 : false,
-        checkbox2 : false,
-      }
     },
     methods: {
       done: function(event) {
