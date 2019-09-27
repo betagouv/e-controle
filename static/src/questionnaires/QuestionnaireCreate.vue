@@ -50,8 +50,12 @@
     </a>
 
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
-      <div class="m-9">
-        Questionnaire en cours de publication ...
+      <div class="d-flex flex-column align-items-center p-8">
+        <div class="m-4">
+          Questionnaire en cours de publication ...
+        </div>
+        <div class="loader m-4">
+        </div>
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
