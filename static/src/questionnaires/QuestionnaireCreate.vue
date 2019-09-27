@@ -2,7 +2,7 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag mr-2">Brouillon</span>
+        <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag mr-2">Brouillon</span>
         <span>Rédaction du Questionnaire n°{{ questionnaireNumbering }}</span>
         <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
       </div>
