@@ -287,7 +287,7 @@
       saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
-            .then(() => {
+            .then((response) => {
               this._updateQuestionnaire(response.data)
               this.emitQuestionnaireUpdated()
 
@@ -295,7 +295,7 @@
               this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
 
             })
-            .catch(() => {
+            .catch((error) => {
               console.error(error)
               this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
             })
