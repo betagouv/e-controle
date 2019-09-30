@@ -4,4 +4,4 @@ console.debug('Running jest setup')
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
-// todo bootstrap
+require('bootstrap')
