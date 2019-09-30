@@ -7,4 +7,7 @@ export default {
   assertNothingEmitted: function(obj) {
     expect(obj.emitted()).toEqual({})
   },
+  isModalShowing: function(wrapper, elementId) {
+    return wrapper.find(elementId).classes('show')
+  },
 }
