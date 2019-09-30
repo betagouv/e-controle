@@ -49,4 +49,14 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'save-draft', 1)
   })
 
+  test('shows modal with error when parent emits "publish-questionnaire-error"', () => {
+    const wrapper = shallowMount(QuestionnairePreview)
+    expect(wrapper.vm.$data.publishError).toBe(undefined)
+
+    const errorMessage = 'oh noes'
+    wrapper.vm.$parent.$emit('publish-questionnaire-error', { error: errorMessage })
+
+    expect(wrapper.vm.$data.publishError.error).toBe(errorMessage)
+  })
+
 })
