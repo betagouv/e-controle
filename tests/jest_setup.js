@@ -5,3 +5,8 @@ import $ from 'jquery';
 global.$ = global.jQuery = $;
 
 require('bootstrap')
+
+
+// Test util libs
+const assert = require('assert')
+global.assert = assert
