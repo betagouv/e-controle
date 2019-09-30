@@ -49,16 +49,23 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'save-draft', 1)
   })
 
-  test('shows modal with error when parent emits "publish-questionnaire-error"', () => {
+  test('shows modal when parent emits "publish-questionnaire-error"', () => {
     const wrapper = shallowMount(QuestionnairePreview)
-    assert(!wrapper.vm.$data.publishError)
     assert(!testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
 
     const errorMessage = 'oh noes'
     wrapper.vm.$parent.$emit('publish-questionnaire-error', { error: errorMessage })
 
-    assert.strictEqual(wrapper.vm.$data.publishError.error, errorMessage)
     assert(testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
   })
 
+  test('stores error when parent emits "publish-questionnaire-error"', () => {
+    const wrapper = shallowMount(QuestionnairePreview)
+    assert(!wrapper.vm.$data.publishError)
+
+    const errorMessage = 'oh noes'
+    wrapper.vm.$parent.$emit('publish-questionnaire-error', { error: errorMessage })
+
+    assert.strictEqual(wrapper.vm.$data.publishError.error, errorMessage)
+  })
 })
