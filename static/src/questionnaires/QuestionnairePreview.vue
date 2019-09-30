@@ -32,7 +32,9 @@
           </button>
         </div>
 
-        <publish-confirm-modal id="publishConfirmModal"
+        <publish-confirm-modal ref="publishConfirmModal"
+                               id="publishConfirmModal"
+                               :error="publishError"
                                @confirm="publish()"
         >
         </publish-confirm-modal>
@@ -53,6 +55,7 @@
     data: function () {
       return {
         questionnaire: {},
+        publishError: undefined,
       }
     },
     mounted() {
@@ -63,10 +66,21 @@
         }
       }.bind(this);
 
-      this.$parent.$on('questionnaire-updated', function (data) {
+      this.$parent.$on('questionnaire-updated', data => {
         console.debug('new questionnaire', data);
         updateQuestionnaire(data);
       });
+
+      this.$parent.$on('publish-questionnaire-error', error => {
+        console.debug('got publish-questionnaire-error', error);
+        $(this.$refs.publishConfirmModal.$el).modal('show')
+        this.publishError = error
+      });
+
+      $(this.$refs.publishConfirmModal.$el).on('hidden.bs.modal',  () => {
+        this.publishError = undefined
+      });
+
     },
     methods: {
       back: function () {
@@ -77,6 +91,7 @@
       },
       saveDraft(event) {
         console.debug('save draft', event)
+        this.publishError = undefined
         this.$emit('save-draft')
       },
     },
