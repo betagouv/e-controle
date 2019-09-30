@@ -16,7 +16,7 @@
 
       {% for control in controls reversed %}
         <div class="card" id="control-{{ control.id }}">
-          <color-bar id="{{ control.id }}"></color-bar>
+          <div class="card-status card-status-left bg-blue"></div>
           <div class="card-header">
             <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
           </div>
@@ -29,10 +29,11 @@
                     <tbody>
                       {% for questionnaire in questionnaires %}
                         {% if user.profile.is_inspector or not questionnaire.is_draft %}
-                          <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
+                          <tr>
                             <td>
                               <h5>
                                 {% if questionnaire.is_draft %}
+                                  <span class="tag tag-azure round-tag font-italic">Brouillon</span>
                                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
                                 {% endif %}
                                 <span>{{ questionnaire.title_display }}</span>
