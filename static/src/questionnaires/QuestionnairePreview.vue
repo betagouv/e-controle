@@ -23,8 +23,6 @@
           </button>
           <button id="publishButton"
                   type="submit"
-                  data-toggle="modal"
-                  data-target="#publishConfirmModal"
                   class="btn btn-primary ml-5"
                   title="Publier le questionnaire à l'organisme interrogé">
             <i class="fa fa-rocket mr-1"></i>
@@ -81,8 +79,12 @@
         this.publishError = undefined
       });
 
+      $('#publishButton').on('click', this.showModal.bind(this))
     },
     methods: {
+      showModal: function() {
+        $(this.$refs.publishConfirmModal.$el).modal('show')
+      },
       back: function () {
         this.$emit('back')
       },

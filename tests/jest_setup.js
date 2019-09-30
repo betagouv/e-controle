@@ -4,8 +4,10 @@ console.debug('Running jest setup')
 import $ from 'jquery';
 global.$ = global.jQuery = $;
 
-require('bootstrap')
+require('../static/tabler/popper-1.12.9.min')
+require('../static/tabler/bootstrap-4.0.0.min')
 
+require('../static/tabler/core.js')
 
 // Test util libs
 const assert = require('assert')

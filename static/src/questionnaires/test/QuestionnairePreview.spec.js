@@ -27,6 +27,41 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'back', 1)
   })
 
+  const wait = (time_millis) => {
+    return new Promise((resolve) => {
+      let id = setTimeout(() => {
+        clearTimeout(id);
+        resolve()
+      }, time_millis)
+    })
+  }
+
+  const waitNT = ctx => new Promise(resolve => ctx.$nextTick(resolve))
+  const waitRAF = () => new Promise(resolve => requestAnimationFrame(resolve))
+
+  // Publish questionnaire flow
+  test('shows PublishConfirmModal when button is clicked', async () => {
+    const wrapper = mount(
+        QuestionnairePreview,
+        {
+          stubs: {
+            transition: false
+          }
+        })
+    console.log(wrapper.find('#publishConfirmModal').html())
+    assert(!testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
+
+    wrapper.find('#publishButton').trigger('click')
+    await wait(4000)
+    await waitNT(wrapper.vm)
+    await waitRAF()
+    await waitNT(wrapper.vm)
+    await waitRAF()
+
+    console.log(wrapper.find('#publishConfirmModal').html())
+    assert(testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
+  })
+
   test('emits "publish-questionnaire" when PublishConfirmModal emits "confirm"', () => {
     const wrapper = mount(QuestionnairePreview, {
       stubs: {
@@ -40,6 +75,7 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'publish-questionnaire', 1)
   })
 
+  // Save draft flow
   test('emits "save-draft" when save button is clicked', () => {
     const wrapper = shallowMount(QuestionnairePreview)
     testUtils.assertNothingEmitted(wrapper)
@@ -49,6 +85,7 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'save-draft', 1)
   })
 
+  // Publish questionnaire error flow
   test('shows modal when parent emits "publish-questionnaire-error"', () => {
     const wrapper = shallowMount(QuestionnairePreview)
     assert(!testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
