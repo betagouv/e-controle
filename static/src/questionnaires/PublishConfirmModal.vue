@@ -2,9 +2,17 @@
   <empty-modal>
     <div class="modal-body">
       <error-bar noclose="true" v-if="error">
-        Le questionnaire n'a pas pu être publié. Vous pouvez réessayer.
-        Si l'erreur persiste, vous pouvez contacter e-controle@beta.gouv.fr.
-        Erreur : {{ error }}
+        <div>
+          Le questionnaire n'a pas pu être publié. Vous pouvez réessayer.
+        </div>
+        <div>
+          Si l'erreur persiste, vous pouvez contacter
+          <a :href="'mailto:e-controle@beta.gouv.fr?subject=Erreur lors de la publication : ' + error"
+             class="text-nowrap">
+            e-controle@beta.gouv.fr
+          </a>
+          , et indiquer l'erreur suivante : {{ error }}
+        </div>
       </error-bar>
       <form @submit.prevent="done">
 
