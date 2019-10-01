@@ -13,6 +13,27 @@ describe('QuestionnairePreview.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
+  test('updates its questionnaire when parent emits questionnaire-updated', () => {
+    const wrapper = shallowMount(QuestionnairePreview)
+    const questionnaire = {
+      id: 7,
+      title: 'Bibimbaps',
+      is_draft: true,
+      themes: [
+          {
+            id: 234,
+            questionnaire: 7,
+            title: 'good theme man',
+          },
+      ]
+    }
+    assert.deepEqual(wrapper.vm.questionnaire, {})
+
+    wrapper.vm.$parent.$emit('questionnaire-updated', questionnaire)
+
+    assert.deepEqual(wrapper.vm.questionnaire, questionnaire)
+  })
+
   test('emits "back" when Wizard emits "previous"', () => {
     // Stub out Wizard. (Other child components are really instantiated)
     const wrapper = mount(QuestionnairePreview, {
@@ -43,6 +64,7 @@ describe('QuestionnairePreview.vue', () => {
         PublishConfirmModal: true
       }
     })
+    testUtils.assertNothingEmitted(wrapper)
 
     const modal = wrapper.find(PublishConfirmModal).vm
     modal.$emit('confirm')
