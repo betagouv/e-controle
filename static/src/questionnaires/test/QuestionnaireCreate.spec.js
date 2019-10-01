@@ -24,6 +24,9 @@ describe('QuestionnaireCreate.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
+  ///////////
+  // Setup //
+  ///////////
   test('crashes without a controlId or questionnaireId', () => {
     expect(() => {
       shallowMount(QuestionnaireCreate)
@@ -48,6 +51,9 @@ describe('QuestionnaireCreate.vue', () => {
     expect(axios.get).toBeCalledWith('/api/questionnaire/' + questionnaireId);
   })
 
+  /////////////////////
+  // Publishing flow //
+  /////////////////////
   test('shows wait modal when child emits publish-questionnaire', () => {
     const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
     assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
