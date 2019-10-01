@@ -1,13 +1,10 @@
 import axios from 'axios'
 import { shallowMount } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
 import testUtils from '../../utils/testUtils'
 
-jest.mock('axios')/*, () => ({
-  post: jest.fn(() => Promise.resolve({ data: 'saved-questionnaire' })),
-  get: jest.fn(() => Promise.resolve({ data: 'saved-questionnaire' })),
-  defaults: {},
-}))*/
+jest.mock('axios')
 
 describe('QuestionnaireCreate.vue', () => {
 
@@ -70,23 +67,18 @@ describe('QuestionnaireCreate.vue', () => {
     expect(axios.post).toBeCalledWith('/api/questionnaire/', { control: controlId, is_draft: false});
   })
 
-  const wait = (time_millis) => {
-    return new Promise((resolve) => {
-      let id = setTimeout(() => {
-        clearTimeout(id);
-        resolve()
-      }, time_millis)
-    })
-  }
-
   test('shows success modal when publish happened successfully', async () => {
     const controlId = 1
     const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId}})
+
+    // Mock out wait function to resolve immediately without wait.
+    wrapper.vm.wait = () => Promise.resolve()
     axios.post.mockResolvedValue({})
 
     wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
 
-    await wait(4000)
+    // Resolve all promises
+    await flushPromises()
 
     assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
     assert(testUtils.isModalShowing(wrapper, '#savedModal'))
