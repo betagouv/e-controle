@@ -4,6 +4,9 @@ export default {
     expect(obj.emitted()).toHaveProperty(eventName)
     expect(obj.emitted()[eventName].length).toEqual(numTimes)
   },
+  assertNotEmitted: function(obj, eventName) {
+    expect(obj.emitted()).not.toHaveProperty(eventName)
+  },
   assertNothingEmitted: function(obj) {
     expect(obj.emitted()).toEqual({})
   },

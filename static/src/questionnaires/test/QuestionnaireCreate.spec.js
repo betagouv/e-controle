@@ -90,5 +90,27 @@ describe('QuestionnaireCreate.vue', () => {
     assert(testUtils.isModalShowing(wrapper, '#savedModal'))
   })
 
+  test('signals back to child when publish returned errors', async () => {
+    const controlId = 1
+    const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId}})
+    // Save returns error
+    const error = {error: 'I am not happpyyyy', details: [ 'stuff', 'more stuff' ]}
+    axios.post.mockRejectedValue(error)
+    testUtils.assertNotEmitted(wrapper, 'publish-questionnaire-error')
+
+    wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
+    // Resolve all promises
+    await flushPromises()
+
+    // Intermediate modal is gone
+    assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
+    // Success modal not displayed
+    assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
+
+    // Event sent for child
+    testUtils.assertHasEmmitted(wrapper,'publish-questionnaire-error', 1)
+    assert.deepEqual(wrapper.emitted()['publish-questionnaire-error'][0][0], error)
+  })
+
 })
 
