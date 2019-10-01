@@ -7,11 +7,16 @@
         </div>
         <div>
           Si l'erreur persiste, vous pouvez contacter
-          <a :href="'mailto:e-controle@beta.gouv.fr?subject=Erreur lors de la publication : ' + error"
-             class="text-nowrap">
+          <a :href="'mailto:e-controle@beta.gouv.fr?subject=Erreur lors de la publication : ' + JSON.stringify(error)"
+             class="text-nowrap"
+             target="_blank"
+          >
             e-controle@beta.gouv.fr
           </a>
-          , et indiquer l'erreur suivante : {{ error }}
+          , et indiquer l'erreur suivante :
+        </div>
+        <div>
+          {{ error }}
         </div>
       </error-bar>
       <form @submit.prevent="done">
