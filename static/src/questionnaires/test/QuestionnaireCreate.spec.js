@@ -51,10 +51,13 @@ describe('QuestionnaireCreate.vue', () => {
   test('shows wait modal when child emits publish-questionnaire', () => {
     const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
     assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
+    assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
 
     wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
 
     assert(testUtils.isModalShowing(wrapper, '#savingModal'))
+    // Final modal not showing yet
+    assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
   })
 
   test('calls save api when child emits publish-questionnaire', () => {
@@ -70,6 +73,8 @@ describe('QuestionnaireCreate.vue', () => {
   test('shows success modal when publish happened successfully', async () => {
     const controlId = 1
     const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId}})
+    assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
+    assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
 
     // Mock out wait function to resolve immediately without wait.
     wrapper.vm.wait = () => Promise.resolve()
@@ -80,6 +85,7 @@ describe('QuestionnaireCreate.vue', () => {
     // Resolve all promises
     await flushPromises()
 
+    // Intermediate modal is gone
     assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
     assert(testUtils.isModalShowing(wrapper, '#savedModal'))
   })
