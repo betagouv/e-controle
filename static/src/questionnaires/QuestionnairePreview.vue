@@ -22,9 +22,8 @@
             Enregistrer le brouillon
           </button>
           <button id="publishButton"
-                  type="submit"
-                  data-toggle="modal"
-                  data-target="#publishConfirmModal"
+                  ref="publishButton"
+                  @click="showPublishConfirmModal()"
                   class="btn btn-primary ml-5"
                   title="Publier le questionnaire à l'organisme interrogé">
             <i class="fa fa-rocket mr-1"></i>
@@ -73,7 +72,7 @@
 
       this.$parent.$on('publish-questionnaire-error', error => {
         console.debug('got publish-questionnaire-error', error);
-        $(this.$refs.publishConfirmModal.$el).modal('show')
+        this.showPublishConfirmModal()
         this.publishError = error
       });
 
@@ -83,6 +82,9 @@
 
     },
     methods: {
+      showPublishConfirmModal: function() {
+        $(this.$refs.publishConfirmModal.$el).modal('show')
+      },
       back: function () {
         this.$emit('back')
       },

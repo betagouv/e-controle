@@ -1,4 +1,4 @@
-import { mount, shallowMount } from "@vue/test-utils";
+import { mount, shallowMount, TransitionStub } from "@vue/test-utils";
 
 import PublishConfirmModal from '../PublishConfirmModal'
 import QuestionnairePreview from '../QuestionnairePreview.vue'
@@ -27,6 +27,16 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'back', 1)
   })
 
+  // Publish questionnaire flow
+  test('shows PublishConfirmModal when button is clicked', async () => {
+    const wrapper = shallowMount(QuestionnairePreview)
+    assert(!testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
+
+    wrapper.find('#publishButton').trigger('click')
+
+    assert(testUtils.isModalShowing(wrapper, '#publishConfirmModal'))
+  })
+
   test('emits "publish-questionnaire" when PublishConfirmModal emits "confirm"', () => {
     const wrapper = mount(QuestionnairePreview, {
       stubs: {
@@ -40,6 +50,7 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'publish-questionnaire', 1)
   })
 
+  // Save draft flow
   test('emits "save-draft" when save button is clicked', () => {
     const wrapper = shallowMount(QuestionnairePreview)
     testUtils.assertNothingEmitted(wrapper)
@@ -49,6 +60,7 @@ describe('QuestionnairePreview.vue', () => {
     testUtils.assertHasEmmitted(wrapper, 'save-draft', 1)
   })
 
+  // Publish questionnaire error flow
   test('shows modal when parent emits "publish-questionnaire-error"', () => {
     const wrapper = shallowMount(QuestionnairePreview)
     assert(!testUtils.isModalShowing(wrapper, '#publishConfirmModal'))

@@ -6,6 +6,7 @@ global.$ = global.jQuery = $;
 
 require('bootstrap')
 
+require('../static/tabler/core.js')
 
 // Test util libs
 const assert = require('assert')
