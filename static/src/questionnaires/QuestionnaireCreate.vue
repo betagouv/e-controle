@@ -275,19 +275,6 @@
           saveMethod = getCreateMethod()
         }
         return saveMethod(this.questionnaire)
-            .then(this._postSaveSuccess)
-            .catch(this._postSaveError)
-      },
-      _postSaveSuccess(response) {
-        this._updateQuestionnaire(response.data)
-        this.emitQuestionnaireUpdated()
-
-        const timeString = moment(new Date()).format('HH:mm:ss')
-        this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
-      },
-      _postSaveError(error) {
-        console.error(error)
-        this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
       },
       saveDraftFromMetadata(data) {
         this._updateMetadata(data)
@@ -300,6 +287,18 @@
       saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
+            .then((response) => {
+              this._updateQuestionnaire(response.data)
+              this.emitQuestionnaireUpdated()
+
+              const timeString = moment(new Date()).format('HH:mm:ss')
+              this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
+
+            })
+            .catch((error) => {
+              console.error(error)
+              this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
+            })
       },
       wait(time_millis) {
         return new Promise((resolve) => {
@@ -319,6 +318,12 @@
             .then(() => {
               $(this.$refs.savingModal.$el).modal('hide')
               $(this.$refs.savedModal.$el).modal('show')
+            })
+            .catch(error => {
+              console.error('Error publishing questionnaire : ', error)
+              $(this.$refs.savingModal.$el).modal('hide')
+              // Emettre un event pour QuestionnairePreview, pour reafficher le modal
+              this.$emit('publish-questionnaire-error', error)
             })
       },
       goHome(event) {

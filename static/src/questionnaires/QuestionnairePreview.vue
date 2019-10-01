@@ -22,9 +22,8 @@
             Enregistrer le brouillon
           </button>
           <button id="publishButton"
-                  type="submit"
-                  data-toggle="modal"
-                  data-target="#publishConfirmModal"
+                  ref="publishButton"
+                  @click="showPublishConfirmModal()"
                   class="btn btn-primary ml-5"
                   title="Publier le questionnaire à l'organisme interrogé">
             <i class="fa fa-rocket mr-1"></i>
@@ -32,7 +31,9 @@
           </button>
         </div>
 
-        <publish-confirm-modal id="publishConfirmModal"
+        <publish-confirm-modal ref="publishConfirmModal"
+                               id="publishConfirmModal"
+                               :error="publishError"
                                @confirm="publish()"
         >
         </publish-confirm-modal>
@@ -53,6 +54,7 @@
     data: function () {
       return {
         questionnaire: {},
+        publishError: undefined,
       }
     },
     mounted() {
@@ -63,12 +65,26 @@
         }
       }.bind(this);
 
-      this.$parent.$on('questionnaire-updated', function (data) {
+      this.$parent.$on('questionnaire-updated', data => {
         console.debug('new questionnaire', data);
         updateQuestionnaire(data);
       });
+
+      this.$parent.$on('publish-questionnaire-error', error => {
+        console.debug('got publish-questionnaire-error', error);
+        this.showPublishConfirmModal()
+        this.publishError = error
+      });
+
+      $(this.$refs.publishConfirmModal.$el).on('hidden.bs.modal',  () => {
+        this.publishError = undefined
+      });
+
     },
     methods: {
+      showPublishConfirmModal: function() {
+        $(this.$refs.publishConfirmModal.$el).modal('show')
+      },
       back: function () {
         this.$emit('back')
       },
@@ -77,6 +93,7 @@
       },
       saveDraft(event) {
         console.debug('save draft', event)
+        this.publishError = undefined
         this.$emit('save-draft')
       },
     },
