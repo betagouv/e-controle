@@ -4,7 +4,7 @@
       <p>
         Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
         à tous les membres de l’équipe de contrôle.
-        Pour les consulter, veuillez copier puis coller ce lien dans votre barre de navigation
+        Pour les consulter, veuillez copier puis coller ce lien dans la barre de navigation de votre explorateur de fichiers windows
         et épinglez-le dans vos accès rapide.
       </p>
 
