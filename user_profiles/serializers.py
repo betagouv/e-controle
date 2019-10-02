@@ -48,13 +48,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
             profile.send_files_report = should_receive_email_report
             profile.user.save()
             profile.save()
-            action_details['verb'] = 'update user'
+            action_details['verb'] = 'updated'
         else:
             user = User.objects.create(**user_data)
             profile_data['user'] = user
             profile_data['send_files_report'] = should_receive_email_report
             profile = UserProfile.objects.create(**profile_data)
-            action_details['verb'] = 'add user'
+            action_details['verb'] = 'added'
         action_details['action_object'] = profile
         controls_to_be_added = [c for c in controls_data if c not in profile.controls.all()]
         session_user = self.context['request'].user
@@ -63,7 +63,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     f"{session_user} n'est pas authorisé à modifier ce contrôle: {control}")
             profile.controls.add(control)
-            action_details['verb'] = 'add user'
+            action_details['verb'] = 'added'
             action_details['target'] = control
+        if profile.is_inspector:
+            action_details['verb'] += ' inspector user'
+        if profile.is_audited:
+            action_details['verb'] += ' audited user'
         action.send(**action_details)
         return profile
