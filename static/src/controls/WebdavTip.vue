@@ -22,9 +22,16 @@
         </transition>
       </div>
 
-      <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf">
-        Besoin d’aide ? Suivez les instructions en images.
-      </a>
+      <button id="videoModalButton"
+                   type="submit"
+                   data-toggle="modal"
+                   data-target="#fileExplorerVideoModal"
+                   class="btn btn-primary"
+                   title="Voir les instructions en vidéo">
+             <i class="fa fa-play-circle mr-1"></i>
+             Besoin d’aide ? Suivez les instructions en vidéo.
+     </button>
+
     </info-bar>
 
   </collapsible-section>

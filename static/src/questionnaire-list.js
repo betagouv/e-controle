@@ -9,6 +9,7 @@ import AddUserModal from "./users/AddUserModal"
 import ColorBar from "./utils/ColorBar"
 import ControlCreate from "./controls/ControlCreate"
 import ControlTitle from "./controls/ControlTitle"
+import FileExplorerVideoModal from "./controls/FileExplorerVideoModal"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
@@ -26,6 +27,7 @@ new Vue({
     ColorBar,
     ControlCreate,
     ControlTitle,
+    FileExplorerVideoModal,
     HelpTooltip,
     RemoveUserModal,
     UpdateUserModal,
