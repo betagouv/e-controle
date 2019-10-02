@@ -94,6 +94,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'ecc.context_processors.debug',
+                'ecc.context_processors.current_site',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
