@@ -115,15 +115,15 @@ describe('QuestionnaireCreate.vue', () => {
       assert(wrapper.find('#questionnaire-metadata-create').isVisible())
     })
 
-    test('passes questionnaire to first step of wizard', async () => {
+    test('passes questionnaire to child components', async () => {
       const questionnaire = { id: 4, is_draft: true };
       axios.get.mockResolvedValue({ data: questionnaire})
 
       const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+      testUtils.assertNotEmitted(wrapper, 'questionnaire-updated')
       await flushPromises()
 
-      assert(wrapper.find('#questionnaire-metadata-create').isVisible())
-
+      testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
     })
 
   })
