@@ -24,108 +24,106 @@ describe('QuestionnaireCreate.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
-  ///////////
-  // Setup //
-  ///////////
-  test('crashes without a controlId or questionnaireId', () => {
-    expect(() => {
-      shallowMount(QuestionnaireCreate)
-    }).toThrow()
-  })
-
-  test('runs with controlId (create new questionnaire)', () => {
-    expect(() => {
-      shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
-    }).not.toThrow()
-  })
-
-  describe('Setup : update existing questionnaire', () => {
-    test('sets up without crashing', () => {
-      const questionnaireId = 1;
-      axios.get.mockResolvedValue({ data: { id: questionnaireId }})
-
+  describe('Setup', () => {
+    test('crashes without a controlId or questionnaireId', () => {
       expect(() => {
-        shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaireId}})
+        shallowMount(QuestionnaireCreate)
+      }).toThrow()
+    })
+
+    test('runs with controlId (create new questionnaire)', () => {
+      expect(() => {
+        shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
       }).not.toThrow()
-
     })
 
-    test('gets questionnaire from server', () => {
-      const questionnaire = { id: 4, is_draft: true };
-      axios.get.mockResolvedValue({ data: questionnaire})
+    describe('update existing questionnaire', () => {
+      test('sets up without crashing', () => {
+        const questionnaireId = 1;
+        axios.get.mockResolvedValue({ data: { id: questionnaireId }})
 
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+        expect(() => {
+          shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaireId}})
+        }).not.toThrow()
 
-      expect(axios.get).toBeCalledWith('/api/questionnaire/' + questionnaire.id);
-    })
-
-    test('stores questionnaire in frontend', async () => {
-      const questionnaire = { id: 4, is_draft: true };
-      axios.get.mockResolvedValue({ data: questionnaire})
-
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
-      await flushPromises()
-
-      assert.deepEqual(wrapper.vm.questionnaire, questionnaire)
-    })
-
-    describe('displays error', () => {
-      test('if cannot get questionnaire from server', async () => {
-        const questionnaire = { id: 4, is_draft: false };
-        // Error has weird unexpected format
-        axios.get.mockRejectedValue({ stuff: 'things'})
-
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
-        assert(wrapper.vm.errorMessage === "")
-        assert(!wrapper.vm.hasErrors)
-        assert(!wrapper.find('#questionnaire-create-error').exists())
-
-        await flushPromises()
-
-        assert(wrapper.vm.errorMessage !== "")
-        assert(wrapper.vm.hasErrors)
-        assert(wrapper.find('#questionnaire-create-error').exists())
       })
 
-      test('if questionnaire is not a draft', async () => {
-        const questionnaire = { id: 4, is_draft: false };
+      test('gets questionnaire from server', () => {
+        const questionnaire = { id: 4, is_draft: true };
         axios.get.mockResolvedValue({ data: questionnaire})
 
         const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
-        assert(wrapper.vm.errorMessage === "")
-        assert(!wrapper.vm.hasErrors)
-        assert(!wrapper.find('#questionnaire-create-error').exists())
 
+        expect(axios.get).toBeCalledWith('/api/questionnaire/' + questionnaire.id);
+      })
+
+      test('stores questionnaire in frontend', async () => {
+        const questionnaire = { id: 4, is_draft: true };
+        axios.get.mockResolvedValue({ data: questionnaire})
+
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
         await flushPromises()
 
-        assert(wrapper.vm.errorMessage !== "")
-        assert(wrapper.vm.hasErrors)
-        assert(wrapper.find('#questionnaire-create-error').exists())
+        assert.deepEqual(wrapper.vm.questionnaire, questionnaire)
+      })
+
+      describe('displays error', () => {
+        test('if cannot get questionnaire from server', async () => {
+          const questionnaire = { id: 4, is_draft: false };
+          // Error has weird unexpected format
+          axios.get.mockRejectedValue({ stuff: 'things'})
+
+          const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+          assert(wrapper.vm.errorMessage === "")
+          assert(!wrapper.vm.hasErrors)
+          assert(!wrapper.find('#questionnaire-create-error').exists())
+
+          await flushPromises()
+
+          assert(wrapper.vm.errorMessage !== "")
+          assert(wrapper.vm.hasErrors)
+          assert(wrapper.find('#questionnaire-create-error').exists())
+        })
+
+        test('if questionnaire is not a draft', async () => {
+          const questionnaire = { id: 4, is_draft: false };
+          axios.get.mockResolvedValue({ data: questionnaire})
+
+          const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+          assert(wrapper.vm.errorMessage === "")
+          assert(!wrapper.vm.hasErrors)
+          assert(!wrapper.find('#questionnaire-create-error').exists())
+
+          await flushPromises()
+
+          assert(wrapper.vm.errorMessage !== "")
+          assert(wrapper.vm.hasErrors)
+          assert(wrapper.find('#questionnaire-create-error').exists())
+        })
+      })
+
+      test('moves to first step of wizard', async () => {
+        const questionnaire = { id: 4, is_draft: true };
+        axios.get.mockResolvedValue({ data: questionnaire})
+
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+        await flushPromises()
+
+        assert(wrapper.find('#questionnaire-metadata-create').isVisible())
+      })
+
+      test('passes questionnaire to child components', async () => {
+        const questionnaire = { id: 4, is_draft: true };
+        axios.get.mockResolvedValue({ data: questionnaire})
+
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+        testUtils.assertNotEmitted(wrapper, 'questionnaire-updated')
+        await flushPromises()
+
+        testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
       })
     })
-
-    test('moves to first step of wizard', async () => {
-      const questionnaire = { id: 4, is_draft: true };
-      axios.get.mockResolvedValue({ data: questionnaire})
-
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
-      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
-      await flushPromises()
-
-      assert(wrapper.find('#questionnaire-metadata-create').isVisible())
-    })
-
-    test('passes questionnaire to child components', async () => {
-      const questionnaire = { id: 4, is_draft: true };
-      axios.get.mockResolvedValue({ data: questionnaire})
-
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
-      testUtils.assertNotEmitted(wrapper, 'questionnaire-updated')
-      await flushPromises()
-
-      testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
-    })
-
   })
 
   describe('Publishing flow', () => {
