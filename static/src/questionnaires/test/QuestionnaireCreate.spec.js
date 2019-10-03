@@ -48,8 +48,10 @@ describe('QuestionnaireCreate.vue', () => {
       })
 
       test('passes questionnaire to child components', async () => {
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
+        const controlId = 6
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId}})
         testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
+        testUtils.assertLastEmit(wrapper, 'questionnaire-updated', { control: controlId })
       })
 
     })
@@ -138,6 +140,7 @@ describe('QuestionnaireCreate.vue', () => {
         await flushPromises()
 
         testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
+        testUtils.assertLastEmit(wrapper, 'questionnaire-updated', questionnaire)
       })
     })
   })
