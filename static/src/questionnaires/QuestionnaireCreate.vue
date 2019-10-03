@@ -160,8 +160,7 @@
       _loadQuestionnaireCreate: function() {
         this.questionnaire.control = this.controlId
         this.emitQuestionnaireUpdated()
-        console.debug('questionnaire', this.questionnaire)
-        console.log('questionnaire', this.questionnaire)
+        console.debug('loaded new questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
       },
       _loadQuestionnaireUpdate: function() {

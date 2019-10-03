@@ -31,10 +31,27 @@ describe('QuestionnaireCreate.vue', () => {
       }).toThrow()
     })
 
-    test('runs with controlId (create new questionnaire)', () => {
-      expect(() => {
-        shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
-      }).not.toThrow()
+    describe('create new questionnaire', () => {
+      test('sets up without crashing', () => {
+        expect(() => {
+          shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
+        }).not.toThrow()
+      })
+
+      test('moves to first step of wizard', async () => {
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
+
+        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+        await flushPromises()
+
+        assert(wrapper.find('#questionnaire-metadata-create').isVisible())
+      })
+
+      test('passes questionnaire to child components', async () => {
+        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1}})
+        testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
+      })
+
     })
 
     describe('update existing questionnaire', () => {
@@ -45,7 +62,6 @@ describe('QuestionnaireCreate.vue', () => {
         expect(() => {
           shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaireId}})
         }).not.toThrow()
-
       })
 
       test('gets questionnaire from server', () => {
