@@ -116,6 +116,14 @@ describe('QuestionnaireCreate.vue', () => {
     })
 
     test('passes questionnaire to first step of wizard', async () => {
+      const questionnaire = { id: 4, is_draft: true };
+      axios.get.mockResolvedValue({ data: questionnaire})
+
+      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id}})
+      await flushPromises()
+
+      assert(wrapper.find('#questionnaire-metadata-create').isVisible())
+
     })
 
   })

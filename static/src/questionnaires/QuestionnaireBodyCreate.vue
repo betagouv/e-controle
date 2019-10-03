@@ -190,10 +190,6 @@
         })
       }.bind(this)
 
-      this.$parent.$on('questionnaire-loaded', function(data) {
-        loadBody(data);
-        EventBus.$emit('question-files-changed');
-      })
       this.$parent.$on('questionnaire-updated', function(data) {
         loadBody(data);
         EventBus.$emit('question-files-changed');

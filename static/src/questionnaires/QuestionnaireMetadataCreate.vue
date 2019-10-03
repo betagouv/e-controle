@@ -110,7 +110,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
         }
       }.bind(this);
 
-      this.$parent.$on('questionnaire-loaded', function(data) {
+      this.$parent.$on('questionnaire-updated', function(data) {
         console.debug('new metadata', data);
         loadMetadata(data);
       });

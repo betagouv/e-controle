@@ -176,16 +176,12 @@
                 return
               }
               this.questionnaire = response.data
-              this.emitQuestionnaireLoaded()
               this.emitQuestionnaireUpdated()
               this.moveToState(STATES.START)
             }).catch(error => {
               const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
               this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
             })
-      },
-      emitQuestionnaireLoaded: function() {
-        this.$emit('questionnaire-loaded', this.questionnaire)
       },
       emitQuestionnaireUpdated: function() {
         this.$emit('questionnaire-updated', this.questionnaire)
