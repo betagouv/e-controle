@@ -316,6 +316,7 @@
         // This is for the user to see the wait modal and be satisfied that the saving really happened.
         return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
             .then(() => {
+              console.debug('Done publishing questionnaire.')
               $(this.$refs.savingModal.$el).modal('hide')
               $(this.$refs.savedModal.$el).modal('show')
             })
