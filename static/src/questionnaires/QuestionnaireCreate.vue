@@ -10,13 +10,14 @@
         <span v-if="questionnaire.title"> - {{ questionnaire.title }}</span>
       </div>
     </div>
-    <div v-if="hasErrors" class="alert alert-danger">
+    <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
       {{ errorMessage }}
     </div>
     <info-bar>
       Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
     </info-bar>
     <questionnaire-metadata-create
+            id="questionnaire-metadata-create"
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
             v-on:metadata-created="onMetadataCreated"
@@ -120,6 +121,7 @@
     },
     data() {
       return {
+        errorMessage: "",
         errors: [],
         hasErrors: false,
         STATES: STATES,
@@ -158,8 +160,7 @@
       _loadQuestionnaireCreate: function() {
         this.questionnaire.control = this.controlId
         this.emitQuestionnaireUpdated()
-        console.debug('questionnaire', this.questionnaire)
-        console.log('questionnaire', this.questionnaire)
+        console.debug('loaded new questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
       },
       _loadQuestionnaireUpdate: function() {
@@ -174,15 +175,12 @@
                 return
               }
               this.questionnaire = response.data
-              this.emitQuestionnaireLoaded()
               this.emitQuestionnaireUpdated()
               this.moveToState(STATES.START)
             }).catch(error => {
-              this.displayErrors('Erreur lors du chargement du brouillon.', error.response.data)
+              const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
+              this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
             })
-      },
-      emitQuestionnaireLoaded: function() {
-        this.$emit('questionnaire-loaded', this.questionnaire)
       },
       emitQuestionnaireUpdated: function() {
         this.$emit('questionnaire-updated', this.questionnaire)
