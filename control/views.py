@@ -71,12 +71,32 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
     template_name = "ecc/questionnaire_detail.html"
     context_object_name = 'questionnaire'
 
+    def get(self, request, *args, **kwargs):
+        # Before accessing the questionnaire, we log who's accessing it.
+        self.add_access_log_entry()
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
             control__in=self.request.user.profile.controls.all())
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['questionnaire_json'] = \
+            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
+        return context
+
+    def add_access_log_entry(self):
+        questionnaire = self.get_object()
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'accessed questionnaire',
+            'target': questionnaire,
+        }
+        action.send(**action_details)
 
 
 class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
@@ -117,6 +137,15 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
     model = ResponseFile
     fields = ('file',)
 
+    def add_upload_action_log(self):
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded response-file',
+            'action_object': self.object,
+            'target': self.object.question,
+        }
+        action.send(**action_details)
+
     def form_valid(self, form):
         try:
             question_id = form.data['question_id']
@@ -126,13 +155,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object.question_id = question_id
         self.object.author = self.request.user
         self.object.save()
-        action_details = {
-            'sender': self.request.user,
-            'verb': 'uploaded',
-            'action_object': self.object,
-            'target': self.object.question,
-        }
-        action.send(**action_details)
+        self.add_upload_action_log()
         data = {'status': 'success'}
         response = JsonResponse(data)
         return response
@@ -160,16 +183,30 @@ class SendFileMixin(SingleObjectMixin):
     - (optional) get_query_set() to restrict the accessible files.
     """
     model = None
+    file_type = None
 
     # used in a View, this function overrides the View's GET request handler.
     def get(self, request, *args, **kwargs):
         # get the object fetched by SingleObjectMixin
         obj = self.get_object()
+        self.add_access_log_entry(accessed_object=obj)
         return sendfile(request, obj.file.path, attachment=True, attachment_filename=obj.basename)
+
+    def add_access_log_entry(self, accessed_object):
+        verb = f'accessed {self.file_type}'
+        if self.file_type == 'response-file' and accessed_object.is_deleted:
+            verb = 'accessed trashed-response-file'
+        action_details = {
+            'sender': self.request.user,
+            'verb': verb,
+            'target': accessed_object,
+        }
+        action.send(**action_details)
 
 
 class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
     model = Questionnaire
+    file_type = 'questionnaire-file'
 
     def get(self, request, *args, **kwargs):
         """
@@ -187,6 +224,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
     model = QuestionFile
+    file_type = 'question-file'
 
     def get_queryset(self):
         # The user should only have access to files that belong to the control
@@ -198,21 +236,4 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
-
-
-class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
-    template_name = "ecc/questionnaire_detail.html"
-    context_object_name = 'questionnaire'
-
-    def get_queryset(self):
-        queryset = Questionnaire.objects.filter(
-            control__in=self.request.user.profile.controls.all())
-        if not self.request.user.profile.is_inspector:
-            queryset = queryset.filter(is_draft=False)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['questionnaire_json'] = \
-            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
-        return context
+    file_type = 'response-file'

@@ -31,20 +31,26 @@ class ControlViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.request.user.profile.controls.all()
 
-    def create(self, request, *args, **kwargs):
-        response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
-
-        # Add the control to the current user
-        self.request.user.profile.controls.add(control)
-
+    def add_log_entry(self, control, verb):
         action_details = {
             'sender': self.request.user,
-            'verb': 'created control',
+            'verb': verb,
             'action_object': control,
         }
         action.send(**action_details)
 
+    def create(self, request, *args, **kwargs):
+        response = super(ControlViewSet, self).create(request, *args, **kwargs)
+        control = Control.objects.get(id=response.data['id'])
+        # The current user is automatically added to the created control
+        self.request.user.profile.controls.add(control)
+        self.add_log_entry(control=control, verb='created control')
+        return response
+
+    def update(self, request, *args, **kwargs):
+        response = super(ControlViewSet, self).update(request, *args, **kwargs)
+        control = Control.objects.get(id=response.data['id'])
+        self.add_log_entry(control=control, verb='updated control')
         return response
 
 
@@ -159,7 +165,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
     def __create_or_update(self, request, save_questionnaire_func, is_update):
         if is_update:
             pre_existing_qr = self.get_object()  # throws 404 if no qr
-            verb = 'updated'
+            is_beeing_published = pre_existing_qr.is_draft is True and \
+                request.data.get('is_draft') is False
+            if is_beeing_published:
+                verb = 'published'
+            else:
+                verb = 'updated'
         else:
             pre_existing_qr = None
             verb = 'created'
