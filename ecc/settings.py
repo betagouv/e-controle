@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'ckeditor',
     'django_filters',
+    'django_admin',
 
     'control',
     'demo',
