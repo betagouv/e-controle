@@ -93,7 +93,6 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'ecc.context_processors.debug',
                 'ecc.context_processors.current_site',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -202,6 +201,7 @@ SETTINGS_EXPORT = [
     'PIWIK_TRACKER_BASE_URL',
     'SESSION_EXPIRE_SECONDS',
     'WEBDAV_URL',
+    'DEBUG',
 ]
 
 REST_FRAMEWORK = {
