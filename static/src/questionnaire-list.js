@@ -13,6 +13,7 @@ import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
 import Users from './users/Users'
+import VideoModal from "./utils/VideoModal"
 import WebdavTip from './controls/WebdavTip'
 
 Vue.use(Vuex);
@@ -29,6 +30,7 @@ new Vue({
     HelpTooltip,
     RemoveUserModal,
     UpdateUserModal,
+    VideoModal,
     WebdavTip
   },
   methods: {
