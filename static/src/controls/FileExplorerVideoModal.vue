@@ -10,12 +10,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <center>
               <video width="960" height="540" controls>
                 <source :src="videoUrl" :type='videoType'>
                   La vidéo ne fonctionne pas avec votre navigateur.
               </video>
-            </center>
           </div>
         </div>
       </div>
