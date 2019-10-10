@@ -9,24 +9,9 @@
 
 {% block page_content %}
   <div class="row row-cards" id="questionnaire-list-vm">
-    <div id="sidebar" class="col-3">
-      <ul>
-        {% for control in controls reversed %}
-          <li>
-            {% if control.depositing_organization is not None %}
-              <div>
-                <div>Organisme interrogé : {{ control.depositing_organization }}</div>
-                <div>Procédure : {{ control.title }}</div>
-              </div>
-            {% else %}
-              <div>
-                <div>{{ control.title }}</div>
-              </div>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+
+    <control-list-sidebar :controls="{{ controls_json }}">
+    </control-list-sidebar>
 
     <div id="controls" class="col-9">
       {% if user.profile.is_inspector %}
