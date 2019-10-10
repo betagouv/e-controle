@@ -8,7 +8,7 @@
           </div>
           <table class="table card-table">
             <tbody>
-            <tr v-for="(theme, themeIndex) in themes" class="theme-row">
+            <tr v-for="(theme, themeIndex) in themes">
               <td>
                 <a v-bind:href="'#theme' + (themeIndex + 1)">
                   {{ themeIndex + 1 }}. {{ theme.title }}
