@@ -1,35 +1,25 @@
 <template>
-  <div id="sidebar" class="col-lg-4">
-    <div class="row sticky">
-      <div class="col-md-6 col-lg-12">
-        <div class="card">
-          <div class="card-header bg-blue text-white">
-            <h4 class="card-title">Thèmes</h4>
-          </div>
-          <table class="table card-table">
-            <tbody>
-            <tr v-for="(theme, themeIndex) in themes">
-              <td>
-                <a v-bind:href="'#theme' + (themeIndex + 1)">
-                  {{ themeIndex + 1 }}. {{ theme.title }}
-                </a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <sidebar title="Thèmes">
+    <sidebar-item v-for="(theme, themeIndex) in themes"
+                  :link="'#theme' + (themeIndex + 1)"
+                  :text="(themeIndex + 1) + '. ' + theme.title"
+    >
+    </sidebar-item>
+  </sidebar>
 </template>
 
 <script>
+  import Sidebar from '../utils/Sidebar'
+  import SidebarItem from '../utils/SidebarItem'
   import Vue from 'vue'
 
   export default Vue.extend({
     props: [
       'themes',
     ],
+    components: {
+      Sidebar,
+      SidebarItem,
+    },
   })
 </script>
