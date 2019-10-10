@@ -184,6 +184,9 @@
         // Empty old themes
         this.body = []
         // Replace with new themes
+        if (!data.themes) {
+          return
+        }
         data.themes.forEach(theme => {
           console.debug('theme', theme)
           this.body.push(theme)
