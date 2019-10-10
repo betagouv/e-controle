@@ -79,7 +79,7 @@
   import reportValidity from 'report-validity';
 
 
-  let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
+  export let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
 sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
 parvenir au fur et à mesure votre réponse. \
@@ -93,7 +93,7 @@ services pour toute information complémentaire qu’appellerait ce questionnair
     data() {
       return {
         metadata: {
-            'description': DESCRIPTION_DEFAULT,
+            'description': '',
             'end_date': '',
             'title': ''
         },

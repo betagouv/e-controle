@@ -94,6 +94,7 @@
   import moment from "moment"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
+  import { DESCRIPTION_DEFAULT } from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
   import Vue from "vue"
 
@@ -159,6 +160,7 @@
     methods: {
       _loadQuestionnaireCreate: function() {
         this.questionnaire.control = this.controlId
+        this.questionnaire.description = DESCRIPTION_DEFAULT
         this.emitQuestionnaireUpdated()
         console.debug('loaded new questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
