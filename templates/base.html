@@ -30,25 +30,6 @@
                 </div>
 
                 <div class="nav-item">
-                  <a href="#" class="nav-link" data-toggle="dropdown">
-                    <i class="dropdown-icon fe fe-check-square"></i> Mes questionnaires
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-arrow">
-                    {% for control in controls %}
-                      {% with questionnaires=control.published_questionnaires %}
-                        {% if questionnaires %}
-                          <span class='pl-2' style="cursor: text">{{ control.title }}</span>
-                          {% for questionnaire in questionnaires %}
-                            <a href="{{ questionnaire.url }}" class="dropdown-item ">{{ questionnaire.title_display }}</a>
-                          {% endfor %}
-                          {% if not forloop.last %}<div class="dropdown-divider"></div>{% endif %}
-                        {% endif %}
-                      {% endwith %}
-                    {% endfor %}
-                  </div>
-                </div>
-
-                <div class="nav-item">
                   <a class="nav-link" href="{% url 'faq'%}">
                     <i class="dropdown-icon fe fe-help-circle"></i> FAQ
                   </a>
