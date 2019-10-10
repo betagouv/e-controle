@@ -4,7 +4,7 @@
 {% block extra_static_header %}
   {{ block.super }}
 
-  {% if debug %}
+  {% if settings.DEBUG %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
   {% else %}
