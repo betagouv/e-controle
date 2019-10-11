@@ -1,10 +1,9 @@
 <template>
-    <div class="card-header">
-      <a v-bind:href="link">
-        {{ text }}
-      </a>
-    </div>
-
+  <div class="card-header">
+    <a v-bind:href="link">
+      {{ text }}
+    </a>
+  </div>
 </template>
 
 <script>

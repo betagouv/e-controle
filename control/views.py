@@ -13,7 +13,7 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
-from .serializers import ControlSerializer, QuestionnaireSerializer
+from .serializers import ControlDisplaySerializer, QuestionnaireSerializer
 
 
 class WithListOfControlsMixin(object):
@@ -35,7 +35,7 @@ class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateVie
         control_list = context['controls']
         controls_serialized = []
         for control in control_list:
-            control_serialized = ControlSerializer(instance=control).data
+            control_serialized = ControlDisplaySerializer(instance=control).data
             controls_serialized.append(control_serialized)
         context['controls_json'] = json.dumps(controls_serialized)
         return context
