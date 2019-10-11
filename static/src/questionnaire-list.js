@@ -6,7 +6,6 @@ import Vuex from 'vuex'
 
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
-import ColorBar from "./utils/ColorBar"
 import ControlCreate from "./controls/ControlCreate"
 import ControlListSidebar from './controls/ControlListSidebar'
 import ControlTitle from "./controls/ControlTitle"
@@ -24,7 +23,6 @@ new Vue({
   el: '#questionnaire-list-vm',
   components: {
     AddUserModal,
-    ColorBar,
     ControlCreate,
     ControlListSidebar,
     ControlTitle,

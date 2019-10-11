@@ -20,7 +20,8 @@
 
       {% for control in controls %}
         <div v-show="hash === '#control-{{ control.id }}'" class="card" id="control-{{ control.id }}">
-          <color-bar id="{{ control.id }}"></color-bar>
+          <div class="card-status card-status-left bg-blue">
+          </div>
           <div class="card-header">
             <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
           </div>
