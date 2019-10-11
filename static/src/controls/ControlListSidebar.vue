@@ -3,6 +3,7 @@
     <collapsible-sidebar-item v-for="control in controls"
                               :link="'#control-' + control.id"
                               :text="control.depositing_organization"
+                              :selected="(hash === '#control-' + control.id)"
     >
       <div v-for="questionnaire in control.questionnaires">
         {{ questionnaire.title }}
@@ -18,7 +19,7 @@
 
   export default Vue.extend({
     props: [
-      'controls',
+      'controls', 'hash',
     ],
     components: {
       Sidebar,

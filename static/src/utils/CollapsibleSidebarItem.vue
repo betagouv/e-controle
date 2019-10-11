@@ -3,7 +3,7 @@
     remove collapse for now
     <div class="card-header" data-toggle="card-collapse"-->
   <div class="card mb-0 border-0">
-    <div class="card-header">
+    <div class="card-header" :class="{ 'sidebar-item-selected': selected }">
       <a v-bind:href="link">
         {{ text }}
       </a>
@@ -26,6 +26,7 @@
     props: [
       'link',
       'text',
+      'selected',
     ],
   })
 </script>

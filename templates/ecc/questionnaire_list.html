@@ -10,7 +10,7 @@
 {% block page_content %}
   <div class="row row-cards" id="questionnaire-list-vm">
 
-    <control-list-sidebar :controls="{{ controls_json }}">
+    <control-list-sidebar :controls="{{ controls_json }}" :hash="hash">
     </control-list-sidebar>
 
     <div id="controls" class="col-lg-8">

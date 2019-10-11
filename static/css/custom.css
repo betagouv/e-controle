@@ -239,3 +239,10 @@ table.trash-list {
     max-width: 100%;
     margin: 2% auto;
 }
+
+.sidebar-item-selected {
+    z-index: 1;
+    color: #467fcf;
+    background: #edf2fa;
+    border: 1px solid #467fcf;
+}
