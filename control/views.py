@@ -22,7 +22,7 @@ class WithListOfControlsMixin(object):
         context = super().get_context_data(**kwargs)
         # Questionnaires are grouped by control:
         # we get the list of questionnaire from the list of controls
-        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('id')
+        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('-id')
         context['controls'] = control_list
         return context
 

@@ -18,7 +18,7 @@
         <control-create></control-create>
       {% endif %}
 
-      {% for control in controls reversed %}
+      {% for control in controls %}
         <div class="card" id="control-{{ control.id }}">
           <color-bar id="{{ control.id }}"></color-bar>
           <div class="card-header">
