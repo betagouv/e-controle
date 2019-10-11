@@ -1,11 +1,9 @@
 <template>
-  <tr>
-    <td>
+    <div class="card-header">
       <a v-bind:href="link">
         {{ text }}
       </a>
-    </td>
-  </tr>
+    </div>
 
 </template>
 
