@@ -55,7 +55,9 @@ new Vue({
     window.addEventListener(
         'hashchange',
         updateHash,
-        false);
+        false)
+
+    updateHash()
 
   },
 
