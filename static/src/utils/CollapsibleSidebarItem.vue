@@ -1,7 +1,9 @@
 <template>
-  <div class="card card-collapsed mb-0 border-0">
-
-    <div class="card-header" data-toggle="card-collapse">
+  <!--div class="card card-collapsed mb-0 border-0">
+    remove collapse for now
+    <div class="card-header" data-toggle="card-collapse"-->
+  <div class="card mb-0 border-0">
+    <div class="card-header">
       <a v-bind:href="link">
         {{ text }}
       </a>

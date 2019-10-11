@@ -40,5 +40,23 @@ new Vue({
   },
   created() {
     this.setSessionUser()
-  }
+  },
+  data: function() {
+    return {
+      hash: "",
+    }
+  },
+  mounted() {
+    const updateHash = () => {
+      console.log('The hash has changed!', window.location.hash)
+      this.hash = window.location.hash
+    }
+
+    window.addEventListener(
+        'hashchange',
+        updateHash,
+        false);
+
+  },
+
 });
