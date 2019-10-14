@@ -36,41 +36,9 @@ config.update({
   "property_manager": True,  # True: use property_manager.PropertyManager
   "lock_manager": True,  # True: use lock_manager.LockManager
 })
-
-
-# # root_path = gettempdir()
-# provider = FilesystemProvider('/tmp/')
-#
-# config = {
-#     "host": "0.0.0.0",
-#     "port": 8080,
-#     "provider_mapping": {
-#       "/": provider},
-#     # "simple_dc": {"user_mapping": {"*": {"user": {"password": "123"}}}},
-#     "simple_dc": {"user_mapping": {"*": 'true'},
-#     "verbose": 4,
-#     }
-
-from webdav.django_controller import DjangoDomainController
-
-provider = FilesystemProvider('/tmp/')
-
-config = DEFAULT_CONFIG.copy()
-config.update({
-  "provider_mapping": {"/": provider},
-  "http_authenticator": {
-    "domain_controller": DjangoDomainController,
-    "accept_basic": True, "accept_digest": False,
-    "default_to_digest": False,
-  },
-  "verbose": 4,
-  "enable_loggers": [],
-  "property_manager": True,  # True: use property_manager.PropertyManager
-  "lock_manager": True,  # True: use lock_manager.LockManager
-})
-
-
 app = WsgiDAVApp(config)
 
 def application(environ, start_response):
   return app(environ, start_response)
+
+call("wsgidav")
