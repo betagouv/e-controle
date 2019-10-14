@@ -15,8 +15,8 @@ User = get_user_model()
 
 
 def test_logged_in_user_can_list_users():
-    factories.UserProfileFactory()
-    user = factories.UserFactory()
+    user_profile = factories.UserProfileFactory()
+    user = user_profile.user
     utils.login(client, user=user)
     url = reverse('api:user-list')
     response = client.get(url)
@@ -127,8 +127,8 @@ def test_inspector_can_remove_user_from_control():
 
 
 def test_logged_in_user_can_get_current_user():
-    factories.UserProfileFactory()
-    user = factories.UserFactory()
+    user_profile = factories.UserProfileFactory()
+    user = user_profile.user
     utils.login(client, user=user)
     url = reverse('api:user-current')
     response = client.get(url)
