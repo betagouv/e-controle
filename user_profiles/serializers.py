@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.dispatch import Signal
 
-from actstream import action
 from rest_framework import serializers
 
 from control.models import Control
@@ -9,6 +9,10 @@ from .models import UserProfile
 
 
 User = get_user_model()
+
+# These signals are triggered after the user is created/updated via the API
+user_api_post_add = Signal(providing_args=['user_profile', 'control'])
+user_api_post_update = Signal(providing_args=['user_profile'])
 
 
 class RemoveControlSerializer(serializers.Serializer):
@@ -39,8 +43,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if control and control not in session_user.profile.controls.all():
             raise serializers.ValidationError(
                 f"{session_user} n'est pas authorisé à modifier ce contrôle: {control}")
-        action_details = {}
-        action_details['sender'] = self.context['request'].user
         should_receive_email_report = False
         if profile_data.get('profile_type') == UserProfile.INSPECTOR:
             should_receive_email_report = True
@@ -52,26 +54,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
             profile.send_files_report = should_receive_email_report
             profile.user.save()
             profile.save()
-            if control and control not in profile.controls.all():
-                # The incoming control is not already associated to this user,
-                # so we know that the user is being added to this control.
-                action_details['verb'] = 'added'
-            else:
-                action_details['verb'] = 'updated'
-
         else:
             user = User.objects.create(**user_data)
             profile_data['user'] = user
             profile_data['send_files_report'] = should_receive_email_report
             profile = UserProfile.objects.create(**profile_data)
-            action_details['verb'] = 'added'
-        action_details['action_object'] = profile
         if control:
             profile.controls.add(control)
-            action_details['target'] = control
-        if profile.is_inspector:
-            action_details['verb'] += ' inspector user'
-        if profile.is_audited:
-            action_details['verb'] += ' audited user'
-        action.send(**action_details)
+        if control:
+            user_api_post_add.send(
+                sender=UserProfile, session_user=session_user, user_profile=profile,
+                control=control)
+        else:
+            user_api_post_update.send(
+                sender=UserProfile, session_user=session_user, user_profile=profile)
         return profile
