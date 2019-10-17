@@ -1,35 +1,19 @@
 <template>
-  <div class="card">
-    <div class="card-status card-status-left bg-blue"></div>
-    <div id="add-control-button-bar" class="card-header">
-      <a href="javascript:void(0)"
-         class="btn btn-primary"
-         data-toggle="collapse"
-         data-target="#controlcreate"
-         @click="hideAddControlButton">
-        <i class="fe fe-plus"></i>
-        Ajouter un espace de dépôt
-      </a>
-    </div>
+  <div>
+    <a href="javascript:void(0)"
+       class="btn btn-primary"
+       data-toggle="modal"
+       data-target="#controlcreate">
+      <i class="fe fe-plus"></i>
+      Ajouter un espace de dépôt
+    </a>
 
 
-    <div id="controlcreate" class="collapse">
-      <div class="card-header">
-        <div class="card-title">
-          Créer un nouvel espace de dépôt
-        </div>
-
-        <div class="card-options">
-          <button type="button"
-                  class="close"
-                  data-toggle="collapse"
-                  data-target="#controlcreate"
-                  @click="cancel">
-          </button>
-        </div>
-      </div>
-
-      <div class="card-body">
+    <confirm-modal id="controlcreate"
+                   cancel-button="Annuler"
+                   confirm-button="Créer l'espace de dépôt"
+                   title="Créer un nouvel espace de dépôt">
+      <div>
         <error-bar v-if="hasErrors">
           <div v-if="errorMessage">
             {{ errorMessage }}
@@ -79,22 +63,9 @@
             </div>
           </div>
 
-          <div class="text-right">
-            <a href="javascript:void(0)"
-               data-toggle="collapse"
-               data-target="#controlcreate"
-               @click="cancel"
-               class="btn btn-secondary">
-              Annuler
-            </a>
-            <button type="submit"
-                    class="btn btn-primary">
-              Créer l'espace de dépôt
-            </button>
-          </div>
         </form>
       </div>
-    </div>
+    </confirm-modal>
   </div>
 </template>
 
@@ -150,7 +121,7 @@
           .then(response => {
             console.debug(response)
             // Force reload
-            window.location.href = home_url + "?reload=" + Math.random()
+            window.location.href = home_url + "?reload=" + Math.random() + '#control-' + response.data.id
           })
           .catch((error) => {
             console.error(error)
@@ -169,15 +140,8 @@
             this.hasErrors = true
           })
       },
-      hideAddControlButton: function() {
-        document.getElementById('add-control-button-bar').style.display = 'none';
-      },
       cancel: function() {
         this.clearErrors()
-        this.showAddControlButton()
-      },
-      showAddControlButton: function() {
-        document.getElementById('add-control-button-bar').style.display = 'flex';
       },
     }
   })

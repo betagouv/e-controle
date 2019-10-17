@@ -2,159 +2,164 @@
 {% load static %}
 {% load control_tags %}
 
-{% block page_title %}
-  Accueil - Mes espaces de dépôt
-{% endblock page_title %}
-
-
 {% block page_content %}
-  <div class="row row-cards" id="questionnaire-list-vm">
+  <div id="questionnaire-list-vm">
 
-    <control-list-sidebar :controls="{{ controls_json }}" :hash="hash">
-    </control-list-sidebar>
+    <div class="page-header">
+      <div class="page-title">
+        Accueil - Mes espaces de dépôt
+        {% if user.profile.is_inspector %}
+          <control-create></control-create>
+        {% endif %}
+      </div>
+    </div>
 
-    <div id="controls" class="col-lg-8">
-      {% if user.profile.is_inspector %}
-        <control-create></control-create>
-      {% endif %}
+    <div id="page-content" class="row row-cards">
 
-      {% for control in controls %}
-        <div v-show="hash === '#control-{{ control.id }}'" class="card" id="control-{{ control.id }}">
-          <div class="card-status card-status-left bg-blue">
-          </div>
-          <div class="card-header">
-            <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
-          </div>
-          <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
-            <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
-              {% get_user_questionnaires control as questionnaires %}
-              {% if questionnaires.count > 0 %}
-                <div class="card">
-                  <table class="table card-table table-vcenter">
-                    <tbody>
-                    {% for questionnaire in questionnaires %}
-                      {% if user.profile.is_inspector or not questionnaire.is_draft %}
-                        <tr>
-                          <td>
-                            <h5>
-                              {% if questionnaire.is_draft %}
-                                <span class="tag tag-azure round-tag font-italic">Brouillon</span>
-                                <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
+      <control-list-sidebar :controls="{{ controls_json }}" :hash="hash">
+      </control-list-sidebar>
+
+      <div id="controls" class="col-lg-8">
+
+        {% for control in controls %}
+          <div v-show="hash === '#control-{{ control.id }}'" class="card" id="control-{{ control.id }}">
+            <div class="card-status card-status-left bg-blue">
+            </div>
+            <div class="card-header">
+              <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
+            </div>
+            <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
+              <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
+                {% get_user_questionnaires control as questionnaires %}
+                {% if questionnaires.count > 0 %}
+                  <div class="card">
+                    <table class="table card-table table-vcenter">
+                      <tbody>
+                      {% for questionnaire in questionnaires %}
+                        {% if user.profile.is_inspector or not questionnaire.is_draft %}
+                          <tr>
+                            <td>
+                              <h5>
+                                {% if questionnaire.is_draft %}
+                                  <span class="tag tag-azure round-tag font-italic">Brouillon</span>
+                                  <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
+                                {% endif %}
+                                <span>{{ questionnaire.title_display }}</span>
+                              </h5>
+                              {% if questionnaire.sent_date %}
+                                <div><i class="fe fe-send"></i> Date de transmission du questionnaire :
+                                  {{ questionnaire.sent_date|date:"l d F Y" }}
+                                </div>
                               {% endif %}
-                              <span>{{ questionnaire.title_display }}</span>
-                            </h5>
-                            {% if questionnaire.sent_date %}
-                              <div><i class="fe fe-send"></i> Date de transmission du questionnaire :
-                                {{ questionnaire.sent_date|date:"l d F Y" }}
-                              </div>
-                            {% endif %}
-                            {% if questionnaire.end_date %}
-                              <div><i class="fe fe-clock"></i> Date de réponse souhaitée :
-                                {{ questionnaire.end_date|date:"l d F Y" }}
-                              </div>
-                            {% endif %}
-                          </td>
-                          <td class="w-1">
-                            {% if user.profile.is_audited %}
-                              <a href="{{ questionnaire.url }}"
-                                 class="btn btn-primary"
-                                 title="Déposer et consulter vos réponses"
-                              >
-                                <i class="fe fe-eye"></i>
-                                Répondre
-                              </a>
-                            {% elif user.profile.is_inspector %}
-                              {% if questionnaire.is_draft %}
-                                {% if user.id == questionnaire.author_id %}
-                                  <a href="{% url 'questionnaire-edit' questionnaire.id %}"
-                                     class="btn btn-primary"
-                                     title="Modifier le brouillon de questionnaire"
-                                  >
-                                    <i class="fe fe-edit"></i>
-                                    Modifier le brouillon
-                                  </a>
+                              {% if questionnaire.end_date %}
+                                <div><i class="fe fe-clock"></i> Date de réponse souhaitée :
+                                  {{ questionnaire.end_date|date:"l d F Y" }}
+                                </div>
+                              {% endif %}
+                            </td>
+                            <td class="w-1">
+                              {% if user.profile.is_audited %}
+                                <a href="{{ questionnaire.url }}"
+                                   class="btn btn-primary"
+                                   title="Déposer et consulter vos réponses"
+                                >
+                                  <i class="fe fe-eye"></i>
+                                  Répondre
+                                </a>
+                              {% elif user.profile.is_inspector %}
+                                {% if questionnaire.is_draft %}
+                                  {% if user.id == questionnaire.author_id %}
+                                    <a href="{% url 'questionnaire-edit' questionnaire.id %}"
+                                       class="btn btn-primary"
+                                       title="Modifier le brouillon de questionnaire"
+                                    >
+                                      <i class="fe fe-edit"></i>
+                                      Modifier le brouillon
+                                    </a>
+                                  {% else %}
+                                    <a href="{{ questionnaire.url }}"
+                                       class="btn btn-primary"
+                                       title="Voir le brouillon"
+                                    >
+                                      <i class="fe fe-eye"></i>
+                                      Voir le brouillon
+                                    </a>
+                                  {% endif %}
+                                  {% if questionnaire.author_id %}
+                                    <div class="mt-1 text-nowrap">
+                                      <i class="fe fe-edit"></i>
+                                      Rédacteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
+                                      <help-tooltip text="Le rédacteur du brouillon est la personne qui l'a créé, et qui peut le modifier."></help-tooltip>
+                                    </div>
+                                  {% endif %}
                                 {% else %}
                                   <a href="{{ questionnaire.url }}"
                                      class="btn btn-primary"
-                                     title="Voir le brouillon"
+                                     title="Consulter les réponses sur E-contrôle"
                                   >
                                     <i class="fe fe-eye"></i>
-                                    Voir le brouillon
+                                    Consulter
                                   </a>
                                 {% endif %}
-                                {% if questionnaire.author_id %}
-                                  <div class="mt-1 text-nowrap">
-                                    <i class="fe fe-edit"></i>
-                                    Rédacteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
-                                    <help-tooltip text="Le rédacteur du brouillon est la personne qui l'a créé, et qui peut le modifier."></help-tooltip>
-                                  </div>
-                                {% endif %}
-                              {% else %}
-                                <a href="{{ questionnaire.url }}"
-                                   class="btn btn-primary"
-                                   title="Consulter les réponses sur E-contrôle"
-                                >
-                                  <i class="fe fe-eye"></i>
-                                  Consulter
-                                </a>
                               {% endif %}
-                            {% endif %}
-                          </td>
-                        </tr>
-                      {% endif %}
-                    {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              {% else %}
-                <div class="alert alert-icon alert-secondary">
-                  <i class="fe fe-info mr-2" aria-hidden="true"></i>
-                  Il n'y a pas encore de questionnaire pour cet espace de dépôt.
-                </div>
-              {% endif %}
+                            </td>
+                          </tr>
+                        {% endif %}
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                {% else %}
+                  <div class="alert alert-icon alert-secondary">
+                    <i class="fe fe-info mr-2" aria-hidden="true"></i>
+                    Il n'y a pas encore de questionnaire pour cet espace de dépôt.
+                  </div>
+                {% endif %}
+                {% if user.profile.is_inspector %}
+                  <div class="mb-2">
+                    <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
+                      <i class="fe fe-plus"></i>
+                      Ajouter un questionnaire
+                    </a>
+                  </div>
+                {% endif %}
+              </div> <!--// closing: list of questionnaires for control  //-->
+
+              <user-section :control="{{ control.data }}" :key={{ control.id }}></user-section>
+
               {% if user.profile.is_inspector %}
-                <div class="mb-2">
-                  <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
-                    <i class="fe fe-plus"></i>
-                    Ajouter un questionnaire
-                  </a>
-                </div>
+                <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
               {% endif %}
-            </div> <!--// closing: list of questionnaires for control  //-->
 
-            <user-section :control="{{ control.data }}" :key={{ control.id }}></user-section>
-
-            {% if user.profile.is_inspector %}
-              <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
-            {% endif %}
-
-          </div>  <!--// closing: questionnaire_description_card_body  //-->
-        </div>
-      {% empty %}
-        <div class="card">
-          <div class="card-body">
-            {% if user.profile.is_inspector %}
-              Vous n'avez aucun espace de dépôt ouvert.
-            {% else %}
-              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
-            {% endif %}
+            </div>  <!--// closing: questionnaire_description_card_body  //-->
           </div>
-        </div>
-      {% endfor %}
+        {% empty %}
+          <div class="card">
+            <div class="card-body">
+              {% if user.profile.is_inspector %}
+                Vous n'avez aucun espace de dépôt ouvert.
+              {% else %}
+                Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <add-user-modal></add-user-modal>
+
+      <update-user-modal></update-user-modal>
+
+      <remove-user-modal></remove-user-modal>
+
+      <video-modal
+        id="fileExplorerVideoModal"
+        video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
+        video-type="video/mp4"
+      >
+      </video-modal>
+
     </div>
-
-    <add-user-modal></add-user-modal>
-
-    <update-user-modal></update-user-modal>
-
-    <remove-user-modal></remove-user-modal>
-
-    <video-modal
-      id="fileExplorerVideoModal"
-      video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
-      video-type="video/mp4"
-    >
-    </video-modal>
 
   </div>
 {% endblock page_content %}
