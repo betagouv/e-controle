@@ -6,6 +6,7 @@ from actstream import action
 
 from .serializers import user_api_post_add, user_api_post_update
 from .models import UserProfile
+from utils.email import send_email
 
 
 User = get_user_model()
@@ -48,3 +49,25 @@ def add_log_entry_for_user_update(session_user, user_profile, **kwargs):
     Add a log entry after user is updated to a control.
     """
     add_log_entry(verb='updated', session_user=session_user, user_profile=user_profile)
+
+
+@receiver(user_api_post_add, sender=UserProfile)
+def send_email_for_user_add(session_user, user_profile, control, **kwargs):
+    """
+    Send an email to notify that a user has been added.
+    """
+    email_subject = f'e.contrôle - Nouvel utilisateur - {control}'
+    inspector_team = ['todo@test.com']
+    context = {
+        'control': control,
+        'user': session_user,
+        'added_user': user_profile.user
+    }
+    send_email(
+        to=[session_user.email, ],
+        cc=inspector_team,
+        subject=email_subject,
+        html_template='user_profiles/email_add_user.html',
+        text_template='user_profiles/email_add_user.txt',
+        extra_context=context,
+    )

@@ -1,0 +1,23 @@
+Bonjour,
+
+Vous venez d’ajouter une nouvelle personne:
+
+- {{ added_user.first_name }} {{ added_user.last_name }}, {{ added_user.email }}{% if added_user.profile.organization %}, {{ added_user.profile.organization}}{% endif %}
+- Profil : {{ added_user.profile.get_profile_type_display }}
+- Espace de dépôt : {{ control }}
+
+* * *
+
+Pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
+
+* * *
+Bonjour a1 2a,
+Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt de en vous connectant sur https://{{ site.domain }}.
+Cordialement,
+* * *
+
+Si vous pensez ne pas être le bon destinataire de ce message, merci de nous informer en répondant directement à cet email.
+
+Merci beaucoup,
+
+L'équipe d'e-contrôle
