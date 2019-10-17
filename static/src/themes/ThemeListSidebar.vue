@@ -2,8 +2,8 @@
   <sidebar title="Thèmes">
     <sidebar-item v-for="(theme, themeIndex) in themes"
                   :link="'#theme' + (themeIndex + 1)"
-                  :text="(themeIndex + 1) + '. ' + theme.title"
     >
+      {{ (themeIndex + 1) + '. ' + theme.title }}
     </sidebar-item>
   </sidebar>
 </template>

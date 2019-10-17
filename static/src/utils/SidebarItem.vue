@@ -1,7 +1,7 @@
 <template>
   <div class="card-header" :class="{ 'sidebar-item-selected': selected }">
     <a v-bind:href="link">
-      {{ text }}
+      <slot></slot>
     </a>
   </div>
 </template>

@@ -2,9 +2,10 @@
   <sidebar title="Tous mes espaces">
     <sidebar-item v-for="item in items"
                   :link="item.link"
-                  :text="item.text"
                   :selected="item.selected"
     >
+      <div>{{ item.text1 }}</div>
+      <div>{{ item.text2 }}</div>
     </sidebar-item>
   </sidebar>
 </template>
@@ -28,7 +29,8 @@
         return this.controls.map(control => {
           return {
             link: '#control-' + control.id,
-            text: control.depositing_organization + ' / ' + control.title,
+            text1: control.depositing_organization,
+            text2: control.title,
             selected: this.hash === '#control-' + control.id ,
           }
         })
