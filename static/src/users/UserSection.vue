@@ -4,7 +4,7 @@
       <div class="card-body pb-0">
         <div class="row">
 
-          <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="col-12">
             <div class="card">
               <div class="card-header pr-0 pl-2">
                 <div class="col">
@@ -26,7 +26,7 @@
             </div>
           </div>
 
-          <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="col-12">
             <div class="card">
               <div class="card-header pr-0 pl-2">
                 <div class="col">
