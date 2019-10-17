@@ -4,7 +4,7 @@
                   :link="item.link"
                   :selected="item.selected"
     >
-      <div>{{ item.text1 }}</div>
+      <div class="card-title">{{ item.text1 }}</div>
       <div>{{ item.text2 }}</div>
     </sidebar-item>
   </sidebar>
