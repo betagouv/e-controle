@@ -56,16 +56,19 @@ def send_email_for_user_add(session_user, user_profile, control, **kwargs):
     """
     Send an email to notify that a user has been added.
     """
+    recipients = [session_user.email, ]
     email_subject = f'e.contrôle - Nouvel utilisateur - {control}'
-    inspector_team = ['todo@test.com']
+    inspectors = control.user_profiles.filter(profile_type=UserProfile.INSPECTOR)
+    inspectors = inspectors.exclude(user=session_user)
+    inspectors_emails = inspectors.values_list('user__email', flat=True)
     context = {
         'control': control,
         'user': session_user,
         'added_user': user_profile.user
     }
     send_email(
-        to=[session_user.email, ],
-        cc=inspector_team,
+        to=recipients,
+        cc=inspectors_emails,
         subject=email_subject,
         html_template='user_profiles/email_add_user.html',
         text_template='user_profiles/email_add_user.txt',
