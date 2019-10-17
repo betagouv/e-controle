@@ -5,9 +5,11 @@
 {% block page_content %}
   <div id="questionnaire-list-vm">
 
-    <div class="page-header">
-      <div class="page-title">
-        Accueil - Mes espaces de dépôt
+    <div class="mt-5 mb-5">
+      <div class="page-title flex-row justify-content-between">
+        <div>
+          Accueil - Mes espaces de dépôt
+        </div>
         {% if user.profile.is_inspector %}
           <control-create></control-create>
         {% endif %}
