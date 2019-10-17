@@ -1,9 +1,9 @@
 <template>
   <sidebar title="Tous mes espaces">
-    <sidebar-item v-for="control in controls"
-                  :link="'#control-' + control.id"
-                  :text="control.depositing_organization"
-                  :selected="(hash === '#control-' + control.id)"
+    <sidebar-item v-for="item in items"
+                  :link="item.link"
+                  :text="item.text"
+                  :selected="item.selected"
     >
     </sidebar-item>
   </sidebar>
@@ -21,6 +21,18 @@
     components: {
       Sidebar,
       SidebarItem,
+    },
+    computed: {
+      items : function() {
+        console.log('items map', this.controls)
+        return this.controls.map(control => {
+          return {
+            link: '#control-' + control.id,
+            text: control.depositing_organization + ' / ' + control.title,
+            selected: this.hash === '#control-' + control.id ,
+          }
+        })
+      },
     },
   })
 </script>
