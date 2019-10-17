@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -51,7 +52,6 @@ def add_log_entry_for_user_update(session_user, user_profile, **kwargs):
     add_log_entry(verb='updated', session_user=session_user, user_profile=user_profile)
 
 
-@receiver(user_api_post_add, sender=UserProfile)
 def send_email_for_user_add(session_user, user_profile, control, **kwargs):
     """
     Send an email to notify that a user has been added.
@@ -74,3 +74,7 @@ def send_email_for_user_add(session_user, user_profile, control, **kwargs):
         text_template='user_profiles/email_add_user.txt',
         extra_context=context,
     )
+
+
+if settings.SEND_EMAIL_WHEN_USER_ADDED:
+    user_api_post_add.connect(send_email_for_user_add, sender=UserProfile)
