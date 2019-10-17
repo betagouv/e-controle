@@ -1,5 +1,5 @@
 <template>
-  <div class="card-header">
+  <div class="card-header" :class="{ 'sidebar-item-selected': selected }">
     <a v-bind:href="link">
       {{ text }}
     </a>
@@ -12,6 +12,7 @@
   export default Vue.extend({
     props: [
       'link',
+      'selected',
       'text',
     ],
   })

@@ -1,20 +1,17 @@
 <template>
   <sidebar title="Tous mes espaces">
-    <collapsible-sidebar-item v-for="control in controls"
-                              :link="'#control-' + control.id"
-                              :text="control.depositing_organization"
-                              :selected="(hash === '#control-' + control.id)"
+    <sidebar-item v-for="control in controls"
+                  :link="'#control-' + control.id"
+                  :text="control.depositing_organization"
+                  :selected="(hash === '#control-' + control.id)"
     >
-      <div v-for="questionnaire in control.questionnaires">
-        {{ questionnaire.title }}
-      </div>
-    </collapsible-sidebar-item>
+    </sidebar-item>
   </sidebar>
 </template>
 
 <script>
   import Sidebar from '../utils/Sidebar'
-  import CollapsibleSidebarItem from '../utils/CollapsibleSidebarItem'
+  import SidebarItem from '../utils/SidebarItem'
   import Vue from 'vue'
 
   export default Vue.extend({
@@ -23,7 +20,7 @@
     ],
     components: {
       Sidebar,
-      CollapsibleSidebarItem,
+      SidebarItem,
     },
   })
 </script>
