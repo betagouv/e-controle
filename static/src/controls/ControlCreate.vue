@@ -84,8 +84,6 @@
         organization: "",
         reference_code_suffix: "",
         year: new Date().getFullYear(),
-        errorMessage: "",
-        hasErrors: false,
       }
     },
     computed: {
@@ -99,13 +97,7 @@
       InfoBar,
     },
     methods: {
-      clearErrors: function() {
-        this.errorMessage = ''
-        this.hasErrors = false
-      },
       createControl: function(processingDoneCallback) {
-        // todo validate form
-        this.clearErrors()
         const payload = {
           title: this.title,
           depositing_organization: this.organization,
@@ -120,38 +112,32 @@
           })
           .catch((error) => {
             console.error('Error creating control', error)
-
-            const makeErrorMessage = (error) => {
-              if (error.response && error.response.data && error.response.data['reference_code']) {
-                if (error.response.data['reference_code'][0] === 'UNIQUE') {
-                  return 'Le nom abrégé "' + payload.reference_code +
-                      '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
-                }
-                if (error.response.data['reference_code'][0] === 'INVALID') {
-                  return 'Le nom abrégé "' + payload.reference_code +
-                      '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
-                      ' Veuillez en choisir un autre.'
-                }
-              }
-
-              if (error.message && error.message === 'Network Error') {
-                return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
-              }
-
-              if (error.message) {
-                return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
-              }
-
-              return "L'espace de dépôt n'a pas pu être créé."
-            }
-
-            this.errorMessage = makeErrorMessage(error)
-            processingDoneCallback(this.errorMessage)
-            this.hasErrors = true
+            const errorMessage = this.makeErrorMessage(error)
+            processingDoneCallback(errorMessage)
           })
       },
-      cancel: function() {
-        this.clearErrors()
+      makeErrorMessage: function (error) {
+        if (error.response && error.response.data && error.response.data['reference_code']) {
+          if (error.response.data['reference_code'][0] === 'UNIQUE') {
+            return 'Le nom abrégé "' + payload.reference_code +
+                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+          }
+          if (error.response.data['reference_code'][0] === 'INVALID') {
+            return 'Le nom abrégé "' + payload.reference_code +
+                '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                ' Veuillez en choisir un autre.'
+          }
+        }
+
+        if (error.message && error.message === 'Network Error') {
+          return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
+        }
+
+        if (error.message) {
+          return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+        }
+
+        return "L'espace de dépôt n'a pas pu être créé."
       },
     }
   })
