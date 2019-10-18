@@ -67,10 +67,10 @@
         }
 
         const processingDoneCallback = (errorMessage, successMessage) => {
-          this.processing = false
           if (errorMessage) {
             console.log('error!', errorMessage)
             this.errorMessage = errorMessage
+            this.processing = false
             return
           }
           console.log('success!', successMessage)
