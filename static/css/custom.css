@@ -26,6 +26,11 @@
     color: #5EBB00;
 }
 
+/* Top bar */
+.nav-tabs .nav-link-thick-line {
+    border-bottom-width: 4px;
+}
+
 /* QuestionnaireCreate.vue */
 .big-icon {
     font-size: 4rem;

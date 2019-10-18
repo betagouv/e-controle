@@ -14,9 +14,9 @@
     <div id="app"></div>
     <div class="page-main"> <!--// opening: main_page  //-->
       {% block page_top_row %}
-        <div class="header py-4"> <!--// opening: top_header  //-->
+        <div class="header py-1"> <!--// opening: top_header  //-->
           <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
-            <a class="header-brand" href="{% url 'questionnaire-list' %}">
+            <a class="header-brand p-3" href="{% url 'questionnaire-list' %}">
               <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
             </a>
 
@@ -24,21 +24,23 @@
               <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
                 <div class="nav-item">
                   {% url 'questionnaire-list' as questionnaire_list_url %}
-                  <a class="nav-link {% if request.path == questionnaire_list_url %} active{% endif %}" href="{% url 'questionnaire-list' %}">
+                  <a class="nav-link nav-link-thick-line {% if request.path == questionnaire_list_url %}active{% endif %}"
+                     href="{% url 'questionnaire-list' %}">
                     <i class="fe fe-home"></i>Accueil
                   </a>
                 </div>
 
                 <div class="nav-item">
                   {% url 'faq' as faq_url %}
-                  <a class="nav-link {% if request.path == faq_url %} active{% endif %}" href="{% url 'faq'%}">
+                  <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
+                     href="{% url 'faq'%}">
                     <i class="fe fe-help-circle"></i> FAQ
                   </a>
                 </div>
               </div>   <!--// closing: nav_items  //-->
             {% endblock nav_items %}
 
-            <div class="dropdown"> <!--// opening: main_profile_dropdown  //-->
+            <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
               <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
                 <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
                 <span class="ml-2 d-none d-lg-block">
