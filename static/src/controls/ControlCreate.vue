@@ -9,24 +9,18 @@
     </a>
 
 
-    <confirm-modal id="controlcreate"
-                   cancel-button="Annuler"
-                   confirm-button="Créer l'espace de dépôt"
-                   title="Créer un nouvel espace de dépôt">
+    <confirm-modal-with-wait id="controlcreate"
+                             cancel-button="Annuler"
+                             confirm-button="Créer l'espace de dépôt"
+                             title="Créer un nouvel espace de dépôt"
+                             @confirm="createControl"
+    >
       <div>
-        <error-bar v-if="hasErrors">
-          <div v-if="errorMessage">
-            {{ errorMessage }}
-          </div>
-          <div v-else>
-            L'espace de dépôt n'a pas pu être créé. Erreur : {{JSON.stringify(errors)}}
-          </div>
-        </error-bar>
         <info-bar>
           Chaque espace de dépôt n'est visible que par les personnes que vous inviterez.
         </info-bar>
 
-        <form @submit.prevent="createControl">
+        <form>
           <div class="form-group mb-6">
             <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
@@ -65,7 +59,7 @@
 
         </form>
       </div>
-    </confirm-modal>
+    </confirm-modal-with-wait>
   </div>
 </template>
 
@@ -73,7 +67,7 @@
   import axios from 'axios'
   import Vue from "vue"
 
-  import ConfirmModal from "../utils/ConfirmModal"
+  import ConfirmModalWithWait from "../utils/ConfirmModalWithWait"
   import ErrorBar from "../utils/ErrorBar"
   import InfoBar from "../utils/InfoBar"
 
@@ -91,7 +85,6 @@
         reference_code_suffix: "",
         year: new Date().getFullYear(),
         errorMessage: "",
-        errors: "",
         hasErrors: false,
       }
     },
@@ -101,16 +94,17 @@
       }
     },
     components: {
-      ConfirmModal,
+      ConfirmModalWithWait,
       ErrorBar,
       InfoBar,
     },
     methods: {
       clearErrors: function() {
-        this.errors = ""
+        this.errorMessage = ''
         this.hasErrors = false
       },
-      createControl: function() {
+      createControl: function(processingDoneCallback) {
+        // todo validate form
         this.clearErrors()
         const payload = {
           title: this.title,
@@ -120,23 +114,39 @@
         axios.post(create_control_url, payload)
           .then(response => {
             console.debug(response)
+            processingDoneCallback(null, response)
             // Force reload
             window.location.href = home_url + "?reload=" + Math.random() + '#control-' + response.data.id
           })
           .catch((error) => {
-            console.error(error)
-            if (error.response.data['reference_code']) {
-              if (error.response.data['reference_code'][0] === 'UNIQUE') {
-                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                    '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+            console.error('Error creating control', error)
+
+            const makeErrorMessage = (error) => {
+              if (error.response && error.response.data && error.response.data['reference_code']) {
+                if (error.response.data['reference_code'][0] === 'UNIQUE') {
+                  return 'Le nom abrégé "' + payload.reference_code +
+                      '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+                }
+                if (error.response.data['reference_code'][0] === 'INVALID') {
+                  return 'Le nom abrégé "' + payload.reference_code +
+                      '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                      ' Veuillez en choisir un autre.'
+                }
               }
-              if (error.response.data['reference_code'][0] === 'INVALID') {
-                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                    '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
-                    ' Veuillez en choisir un autre.'
+
+              if (error.message && error.message === 'Network Error') {
+                return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
               }
+
+              if (error.message) {
+                return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+              }
+
+              return "L'espace de dépôt n'a pas pu être créé."
             }
-            this.errors = error.response.data
+
+            this.errorMessage = makeErrorMessage(error)
+            processingDoneCallback(this.errorMessage)
             this.hasErrors = true
           })
       },
