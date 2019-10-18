@@ -8,7 +8,7 @@
         </div>
       </error-bar>
       <form @submit.prevent="updateControl" class="mb-4">
-        <div class="card-title mb-4 mt-3">Modifier cet espace de dépôt</div>
+        <div class="card-title mb-4 mt-3">Modifier l'espace de dépôt</div>
         <fieldset class="form-fieldset">
           <div class="form-group">
             <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
@@ -36,8 +36,14 @@
   <template v-else>
     <div class="col">
       <div v-if="organization">
-        <div class="page-title">Organisme interrogé : {{ organization }}</div>
-        <div class="card-title">Procédure : {{ title }}</div>
+        <div class="mb-3">
+          <div class="text-muted font-italic">Organisme interrogé</div>
+          <div class="page-title">{{ organization }}</div>
+        </div>
+        <div class="mb-3">
+          <div class="text-muted font-italic">Procédure</div>
+          <div class="card-title">{{ title }}</div>
+        </div>
       </div>
       <div v-else>
         <div class="page-title mt-2">{{ title }}</div>
@@ -50,7 +56,7 @@
          @click="enterEditMode"
       >
         <i class="fe fe-edit"></i>
-        Modifier l'espace de dépôt
+        Modifier
       </a>
     </div>
   </template>
