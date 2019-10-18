@@ -19,6 +19,7 @@
     <div class="modal-footer border-top-0">
       <button v-if="confirmButton" type="button" class="btn btn-primary"
               @click="confirmClicked"
+              :class="{'btn-loading': processing}"
       >
         {{ confirmButton }}
       </button>
@@ -51,6 +52,7 @@
     data : function() {
       return {
         errorMessage: '',
+        processing: false,
       }
     },
     components: {
@@ -65,6 +67,7 @@
         }
 
         const processingDoneCallback = (errorMessage, successMessage) => {
+          this.processing = false
           if (errorMessage) {
             console.log('error!', errorMessage)
             this.errorMessage = errorMessage
@@ -73,6 +76,7 @@
           console.log('success!', successMessage)
         }
 
+        this.processing = true
         this.$emit('confirm', processingDoneCallback)
       },
       cancelClicked () {
