@@ -35,6 +35,7 @@
 <script>
   import EmptyModal from './EmptyModal'
   import ErrorBar from './ErrorBar'
+  import reportValidity from 'report-validity';
   import Vue from "vue"
 
   export default Vue.extend({
@@ -59,6 +60,10 @@
     methods: {
       confirmClicked () {
         this.errorMessage = ''
+        if (!this.validateForm()) {
+          return
+        }
+
         const processingDoneCallback = (errorMessage, successMessage) => {
           if (errorMessage) {
             console.log('error!', errorMessage)
@@ -78,6 +83,14 @@
         this.errorMessage = ''
         this.$emit('close')
       },
+      validateForm () {
+        const forms = this.$el.getElementsByTagName('form')
+        if (forms.length > 0) {
+          return reportValidity(forms[0])
+        }
+        return true
+      },
+
     }
   })
 
