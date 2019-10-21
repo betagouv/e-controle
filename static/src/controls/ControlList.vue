@@ -13,6 +13,7 @@
 
     <template v-else>
       <control-card v-for="control in controls"
+                    v-if="hash === '#control-' + control.id "
                     :key="control.id"
                     :control="control"
                     :user="user"
@@ -27,11 +28,10 @@
   import ControlCard from './ControlCard'
   import Vue from 'vue'
 
-  // todo display card according to hash
-
   export default Vue.extend({
     props: [
       'controls',
+      'hash',
       'user',
       'webdavurl',
     ],

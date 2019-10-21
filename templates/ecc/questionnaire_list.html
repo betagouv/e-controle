@@ -4,46 +4,12 @@
 
 {% block page_content %}
   <div id="questionnaire-list-vm">
-
-    <div class="mt-5 mb-5">
-      <div class="flex-row justify-content-between">
-        <div class="page-title">
-          Accueil - Mes espaces de dépôt
-        </div>
-        {% if user.profile.is_inspector %}
-          <control-create></control-create>
-        {% endif %}
-      </div>
-    </div>
-
-    <div id="page-content" class="row row-cards">
-
-      <control-list-sidebar :controls="{{ controls_json }}" :hash="hash">
-      </control-list-sidebar>
-
-      <div id="controls" class="col-lg-8">
-        <control-list :controls="{{ controls_json }}"
-                      :user="{{ user_json }}"
-                      webdavurl="{{ settings.WEBDAV_URL }}"
-        >
-        </control-list>
-      </div>
-
-      <add-user-modal></add-user-modal>
-
-      <update-user-modal></update-user-modal>
-
-      <remove-user-modal></remove-user-modal>
-
-      <video-modal
-        id="fileExplorerVideoModal"
-        video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
-        video-type="video/mp4"
-      >
-      </video-modal>
-
-    </div>
-
+    <control-list-page :controls="{{ controls_json }}"
+                       :user="{{ user_json }}"
+                       webdavurl="{{ settings.WEBDAV_URL }}"
+                       static-files-url="//{{ current_site.domain }}{% static '' %}"
+    >
+    </control-list-page>
   </div>
 {% endblock page_content %}
 
