@@ -113,10 +113,19 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
 
 
 # Serializers for displaying questionnaire_list.html
+class QuestionnaireListUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'id',)
+
+
 class QuestionnaireListQuestionnaireSerializer(serializers.ModelSerializer):
+    author = QuestionnaireListUserSerializer(read_only=True, required=False)
+
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title',)
+        fields = ('id', 'title', 'title_display', 'url', 'is_draft', 'sent_date', 'end_date', 'author_id', 'author')
 
 
 class QuestionnaireListControlSerializer(serializers.ModelSerializer):

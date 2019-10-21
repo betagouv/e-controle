@@ -7,14 +7,11 @@ import Vuex from 'vuex'
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
 import ControlCreate from "./controls/ControlCreate"
+import ControlList from './controls/ControlList'
 import ControlListSidebar from './controls/ControlListSidebar'
-import ControlTitle from "./controls/ControlTitle"
-import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
-import UserSection from './users/UserSection'
 import VideoModal from "./utils/VideoModal"
-import WebdavTip from './controls/WebdavTip'
 
 Vue.use(Vuex);
 
@@ -24,14 +21,11 @@ new Vue({
   components: {
     AddUserModal,
     ControlCreate,
+    ControlList,
     ControlListSidebar,
-    ControlTitle,
-    HelpTooltip,
     RemoveUserModal,
     UpdateUserModal,
-    UserSection,
     VideoModal,
-    WebdavTip
   },
   methods: {
     ...mapActions(['setSessionUser']),
