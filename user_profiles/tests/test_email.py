@@ -1,18 +1,23 @@
 from pytest import mark
 
 from django.contrib.auth import get_user_model
-from django.shortcuts import reverse
 from django.core import mail
+from django.shortcuts import reverse
 
 from rest_framework.test import APIClient
 
 from tests import factories, utils
 from user_profiles.models import UserProfile
+from user_profiles.serializers import user_api_post_add
+from user_profiles.signals import send_email_for_user_add
 
 pytestmark = mark.django_db
 client = APIClient()
 
 User = get_user_model()
+
+# In tests, we force the signals to be connected
+user_api_post_add.connect(send_email_for_user_add, sender=UserProfile)
 
 
 def test_an_email_is_sent_when_user_is_created():
