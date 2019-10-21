@@ -5,8 +5,9 @@ from django.dispatch import receiver
 
 from actstream import action
 
-from .serializers import user_api_post_add, user_api_post_update
+from .api_views import user_api_post_remove
 from .models import UserProfile
+from .serializers import user_api_post_add, user_api_post_update
 from utils.email import send_email
 
 
@@ -76,5 +77,32 @@ def send_email_for_user_add(session_user, user_profile, control, **kwargs):
     )
 
 
+def send_email_for_user_remove(session_user, user_profile, control, **kwargs):
+    """
+    Send an email to notify that a user has been removed.
+    """
+    recipients = [session_user.email, ]
+    email_subject = f'e.contrôle - Suppression utilisateur - {control}'
+    inspectors = control.user_profiles.filter(profile_type=UserProfile.INSPECTOR)
+    inspectors = inspectors.exclude(user=session_user)
+    inspectors_emails = inspectors.values_list('user__email', flat=True)
+    context = {
+        'control': control,
+        'user': session_user,
+        'changed_user': user_profile.user
+    }
+    send_email(
+        to=recipients,
+        cc=inspectors_emails,
+        subject=email_subject,
+        html_template='user_profiles/email_remove_user.html',
+        text_template='user_profiles/email_remove_user.txt',
+        extra_context=context,
+    )
+
+
 if settings.SEND_EMAIL_WHEN_USER_ADDED:
     user_api_post_add.connect(send_email_for_user_add, sender=UserProfile)
+
+if settings.SEND_EMAIL_WHEN_USER_REMOVED:
+    user_api_post_remove.connect(send_email_for_user_remove, sender=UserProfile)

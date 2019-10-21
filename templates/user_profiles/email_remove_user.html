@@ -1,0 +1,24 @@
+{% extends "base_email.html" %}
+{% block email_content %}
+<p>Bonjour,</p>
+<p>Vous venez de retirer une personne d'un espace de dépôt:</p>
+<ul>
+  <li>
+    {{ changed_user.first_name }} {{ changed_user.last_name }}, {{ changed_user.email }}{% if changed_user.profile.organization %}, {{ changed_user.profile.organization}}{% endif %}
+  </li>
+  <li>
+    Profil : {{ changed_user.profile.get_profile_type_display }}
+  </li>
+  <li>
+    Espace de dépôt : {{ control }}
+  </li>
+</ul>
+
+<hr/>
+
+<p>
+  Si vous pensez ne pas être le bon destinataire de ce message, merci de nous informer en répondant directement à cet email.
+</p>
+<p>Merci beaucoup,</p>
+<p>L'équipe d'e-contrôle</p>
+{% endblock email_content %}

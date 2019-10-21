@@ -1,4 +1,5 @@
 from actstream import action
+from django.dispatch import Signal
 from rest_framework import decorators
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
@@ -6,6 +7,10 @@ from rest_framework.response import Response
 from .models import UserProfile
 from .permissions import ChangeUserPermission
 from .serializers import UserProfileSerializer, RemoveControlSerializer
+
+
+# These signals are triggered after the user is deleted via the API
+user_api_post_remove = Signal(providing_args=['user_profile', 'control'])
 
 
 class UserProfileViewSet(
@@ -29,6 +34,9 @@ class UserProfileViewSet(
             control_id = serializer.data['control']
             control = profile.controls.get(pk=control_id)
             profile.controls.remove(control)
+            user_api_post_remove.send(
+                sender=UserProfile, session_user=self.request.user, user_profile=profile,
+                control=control)
             if profile.is_inspector:
                 verb = 'removed inspector user'
             if profile.is_audited:
