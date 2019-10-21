@@ -43,7 +43,7 @@ def test_inspector_can_create_user():
     assert response.status_code == 201
 
 
-def test_inspector_can_update_user_an_existing_user():
+def test_inspector_can_update_an_existing_user():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     existing_user = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
