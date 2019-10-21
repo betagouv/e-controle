@@ -12,7 +12,7 @@ Pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message
 
 * * *
 Bonjour a1 2a,
-Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt de en vous connectant sur https://{{ site.domain }}.
+Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
 Cordialement,
 * * *
 
