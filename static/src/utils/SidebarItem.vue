@@ -1,6 +1,6 @@
 <template>
   <div class="card-header" :class="{ 'sidebar-item-selected': selected }">
-    <a v-bind:href="link">
+    <a v-bind:href="link" class="flex-grow-1">
       <slot></slot>
     </a>
   </div>
