@@ -4,10 +4,10 @@
 <p>Vous venez de retirer une personne d'un espace de dépôt:</p>
 <ul>
   <li>
-    {{ changed_user.first_name }} {{ changed_user.last_name }}, {{ changed_user.email }}{% if changed_user.profile.organization %}, {{ changed_user.profile.organization}}{% endif %}
+    {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
   </li>
   <li>
-    Profil : {{ changed_user.profile.get_profile_type_display }}
+    Profil : {{ target_user.profile.get_profile_type_display }}
   </li>
   <li>
     Espace de dépôt : {{ control }}

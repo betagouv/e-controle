@@ -2,8 +2,8 @@ Bonjour {{ user.first_name }},
 
 Vous venez d’ajouter une nouvelle personne:
 
-- {{ added_user.first_name }} {{ added_user.last_name }}, {{ added_user.email }}{% if added_user.profile.organization %}, {{ added_user.profile.organization}}{% endif %}
-- Profil : {{ added_user.profile.get_profile_type_display }}
+- {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
+- Profil : {{ target_user.profile.get_profile_type_display }}
 - Espace de dépôt : {{ control }}
 
 * * *
@@ -11,7 +11,7 @@ Vous venez d’ajouter une nouvelle personne:
 {{ user.first_name }}, pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
 
 * * *
-Bonjour {{ added_user.first_name }} {{ added_user.last_name }},
+Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
 Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
 Cordialement,
 * * *

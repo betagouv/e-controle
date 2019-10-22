@@ -2,8 +2,8 @@ Bonjour {{ user.first_name }},
 
 Vous venez de retirer une personne d'un espace de dépôt:
 
-- {{ changed_user.first_name }} {{ changed_user.last_name }}, {{ changed_user.email }}{% if changed_user.profile.organization %}, {{ changed_user.profile.organization}}{% endif %}
-- Profil : {{ changed_user.profile.get_profile_type_display }}
+- {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
+- Profil : {{ target_user.profile.get_profile_type_display }}
 - Espace de dépôt : {{ control }}
 
 
