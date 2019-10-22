@@ -31,7 +31,7 @@
                           {{ questionnaire.end_date }}
                         </div>
                     </td>
-                    <td class="w-1">
+                    <td class="w-1 text-right">
                       <template v-if="!user.is_inspector">
                         <a :href="questionnaire.url"
                            class="btn btn-primary"
@@ -87,7 +87,7 @@
             Il n'y a pas encore de questionnaire pour cet espace de dépôt.
           </div>
         </div>
-        <div v-if="user.is_inspector" class="mb-2">
+        <div v-if="user.is_inspector" class="mb-2 flex-row justify-content-end">
           <a :href="'/questionnaire/controle-' + control.id + '/creer'" class="btn btn-primary">
             <i class="fe fe-plus"></i>
             Ajouter un questionnaire
