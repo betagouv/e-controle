@@ -66,7 +66,12 @@
     },
     mounted() {
       const updateHash = () => {
-        console.log('The hash has changed!', window.location.hash)
+        console.debug('The hash has changed!', window.location.hash)
+        if (window.location.hash === '' && this.controls.length > 0) {
+          // Change the hash to select the first control in the list, which will trigger the hashchange event again.
+          window.location.hash = '#control-' + this.controls[0].id
+          return
+        }
         this.hash = window.location.hash
       }
 

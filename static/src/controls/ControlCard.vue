@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :id="'control-' + control.id">
+  <div class="card">
     <div class="card-status card-status-left bg-blue">
     </div>
     <div class="card-header">
