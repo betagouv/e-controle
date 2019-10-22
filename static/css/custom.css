@@ -250,7 +250,7 @@ table.trash-list {
     z-index: 1;
     color: #467fcf;
     background: #edf2fa;
-    border: 1px solid #467fcf;
+    border-left: 3px solid #467fcf;
 }
 
 .sidebar-item-title {
