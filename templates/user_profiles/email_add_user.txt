@@ -1,6 +1,6 @@
-Bonjour {{ user.first_name }},
+Bonjour,
 
-Vous venez d’ajouter une nouvelle personne:
+ {{ user.first_name }} {{ user.last_name }} vient d’ajouter une nouvelle personne:
 
 - {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
 - Profil : {{ target_user.profile.get_profile_type_display }}
@@ -8,7 +8,7 @@ Vous venez d’ajouter une nouvelle personne:
 
 * * *
 
-{{ user.first_name }}, pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
+Pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
 
 * * *
 Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
