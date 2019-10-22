@@ -245,9 +245,24 @@ table.trash-list {
     margin: 2% auto;
 }
 
+/* Sidebar items for ControlList */
 .sidebar-item-selected {
     z-index: 1;
     color: #467fcf;
     background: #edf2fa;
     border: 1px solid #467fcf;
+}
+
+.sidebar-item-title {
+    /* same as card-title, with extra margin and bold weight */
+    font-size: 1.125rem;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-item-subtitle {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }

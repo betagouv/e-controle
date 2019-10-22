@@ -4,8 +4,8 @@
                   :link="item.link"
                   :selected="item.selected"
     >
-      <div class="page-title">{{ item.text1 }}</div>
-      <div>{{ item.text2 }}</div>
+      <div class="sidebar-item-title">{{ item.text1 }}</div>
+      <div class="sidebar-item-subtitle">{{ item.text2 }}</div>
     </sidebar-item>
   </sidebar>
 </template>
