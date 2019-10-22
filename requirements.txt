@@ -33,3 +33,5 @@ docxtpl==0.6.3
 ldap3==2.6
 django-session-timeout==0.0.4
 django-activity-stream==0.8.0
+django-magicauth==0.2
+django-admin==2.0.0

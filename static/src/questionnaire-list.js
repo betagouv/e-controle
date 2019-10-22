@@ -12,7 +12,8 @@ import ControlTitle from "./controls/ControlTitle"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
 import UpdateUserModal from "./users/UpdateUserModal"
-import Users from './users/Users'
+import UserSection from './users/UserSection'
+import VideoModal from "./utils/VideoModal"
 import WebdavTip from './controls/WebdavTip'
 
 Vue.use(Vuex);
@@ -21,7 +22,6 @@ new Vue({
   store,
   el: '#questionnaire-list-vm',
   components: {
-    'users-for-control': Users,
     AddUserModal,
     ColorBar,
     ControlCreate,
@@ -29,6 +29,8 @@ new Vue({
     HelpTooltip,
     RemoveUserModal,
     UpdateUserModal,
+    UserSection,
+    VideoModal,
     WebdavTip
   },
   methods: {

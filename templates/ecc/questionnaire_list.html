@@ -29,10 +29,11 @@
                     <tbody>
                       {% for questionnaire in questionnaires %}
                         {% if user.profile.is_inspector or not questionnaire.is_draft %}
-                          <tr {% if questionnaire.is_draft %} class="draft" {% endif %}>
+                          <tr>
                             <td>
                               <h5>
                                 {% if questionnaire.is_draft %}
+                                  <span class="tag tag-azure round-tag font-italic">Brouillon</span>
                                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
                                 {% endif %}
                                 <span>{{ questionnaire.title_display }}</span>
@@ -116,7 +117,7 @@
               {% endif %}
             </div> <!--// closing: list of questionnaires for control  //-->
 
-            <users-for-control :control="{{ control.data }}" :key={{ control.id }}></users-for-control>
+            <user-section :control="{{ control.data }}" :key={{ control.id }}></user-section>
 
             {% if user.profile.is_inspector %}
               <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
@@ -141,6 +142,13 @@
     <update-user-modal></update-user-modal>
 
     <remove-user-modal></remove-user-modal>
+
+    <video-modal
+      id="fileExplorerVideoModal"
+      video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
+      video-type="video/mp4"
+    >
+    </video-modal>
 
   </div>
 {% endblock page_content %}

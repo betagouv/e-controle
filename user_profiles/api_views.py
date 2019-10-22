@@ -27,9 +27,13 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
             control_id = serializer.data['control']
             control = profile.controls.get(pk=control_id)
             profile.controls.remove(control)
+            if profile.is_inspector:
+                verb = 'removed inspector user'
+            if profile.is_audited:
+                verb = 'removed audited user'
             action_details = {
                 'sender': self.request.user,
-                'verb': 'removed user',
+                'verb': verb,
                 'action_object': profile,
                 'target': control,
             }

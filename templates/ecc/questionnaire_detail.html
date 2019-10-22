@@ -1,14 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_title %}
-  {{ questionnaire.title_display }}
-{% endblock page_title %}
-
 {% block extra_static_header %}
   {{ block.super }}
 
-  {% if debug %}
+  {% if settings.DEBUG %}
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
   {% else %}

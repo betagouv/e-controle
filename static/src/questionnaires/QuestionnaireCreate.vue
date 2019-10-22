@@ -2,21 +2,22 @@
   <div>
     <div class="page-header">
       <div class="page-title">
-        Rédaction du Questionnaire n°{{ questionnaireNumbering }} <span v-if="questionnaire"> - {{ questionnaire.title }}</span>
+        <span v-if="questionnaire.is_draft || questionnaire.id === undefined"
+              class="tag tag-azure big-tag round-tag font-italic mr-2">
+          Brouillon
+        </span>
+        <span>Rédaction du Questionnaire n°{{ questionnaireNumbering }}</span>
+        <span v-if="questionnaire.title"> - {{ questionnaire.title }}</span>
       </div>
     </div>
-    <div v-if="hasErrors" class="alert alert-danger">
+    <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
       {{ errorMessage }}
     </div>
     <info-bar>
       Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
     </info-bar>
-    <div class="row justify-content-around mb-6">
-      <wizard-step number="1" :class="{ 'active': state==='start' }">Renseigner l'introduction</wizard-step>
-      <wizard-step number="2" :class="{ 'active': state==='creating_body' }">Ajouter des questions</wizard-step>
-      <wizard-step number="3" :class="{ 'active': state==='preview' }">Aperçu avant publication</wizard-step>
-    </div>
     <questionnaire-metadata-create
+            id="questionnaire-metadata-create"
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
             v-on:metadata-created="onMetadataCreated"
@@ -32,7 +33,7 @@
     </questionnaire-body-create>
     <questionnaire-preview
             ref="previewChild"
-            v-on:save-questionnaire="saveNonDraft"
+            v-on:publish-questionnaire="publish()"
             v-on:save-draft="saveDraft"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
@@ -45,23 +46,57 @@
     </div>
     <a :href="home_url"
        class="btn btn-secondary"
-       style="position:relative; bottom: 143px; left: 2em;">
+       style="position:relative; bottom: 151px; left: 2em;">
       < Revenir à l'accueil
     </a>
 
+    <empty-modal id="savingModal" ref="savingModal" no-close="true">
+      <div class="d-flex flex-column align-items-center p-8">
+        <div class="m-4">
+          Questionnaire en cours de publication ...
+        </div>
+        <div class="loader m-4">
+        </div>
+      </div>
+    </empty-modal>
+    <empty-modal id="savedModal"
+                 ref="savedModal"
+                 no-close="true">
+      <div class="modal-header border-bottom-0 flex-column align-items-center">
+        <p>
+          <i class="fe fe-check-circle fg-success big-icon"></i>
+        </p>
+        <h4 class="text-center">
+          Bravo, votre questionnaire est publié!
+        </h4>
+      </div>
+      <div class="modal-body text-center">
+        <p>
+          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de notification dès le lendemain 8 heure.
+        </p>
+      </div>
+      <div class="modal-footer border-top-0 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary"
+                @click="goHome"
+        >
+          < Revenir à l'accueil
+        </button>
+      </div>
+    </empty-modal>
   </div>
 </template>
 
 <script>
   import axios from "axios"
-  import moment from "moment"
-  import Vue from "vue"
+  import EmptyModal from '../utils/EmptyModal'
   import EventBus from '../events'
   import InfoBar from "../utils/InfoBar"
+  import moment from "moment"
   import QuestionnaireBodyCreate from "./QuestionnaireBodyCreate"
   import QuestionnaireMetadataCreate from "./QuestionnaireMetadataCreate"
+  import { DESCRIPTION_DEFAULT } from "./QuestionnaireMetadataCreate"
   import QuestionnairePreview from "./QuestionnairePreview"
-  import WizardStep from "../utils/WizardStep"
+  import Vue from "vue"
 
   // State machine
   const STATES = {
@@ -75,6 +110,7 @@
   const get_questionnaire_url = "/api/questionnaire/"
   const save_questionnaire_url = "/api/questionnaire/"
   const home_url = "/accueil/"
+  const PUBLISH_TIME_MILLIS = 3000
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
@@ -86,6 +122,7 @@
     },
     data() {
       return {
+        errorMessage: "",
         errors: [],
         hasErrors: false,
         STATES: STATES,
@@ -96,11 +133,11 @@
       }
     },
     components: {
+      EmptyModal,
       InfoBar,
       QuestionnaireBodyCreate,
       QuestionnaireMetadataCreate,
       QuestionnairePreview,
-      WizardStep,
     },
     mounted() {
       console.debug('questionnaireId', this.questionnaireId)
@@ -123,9 +160,9 @@
     methods: {
       _loadQuestionnaireCreate: function() {
         this.questionnaire.control = this.controlId
+        this.questionnaire.description = DESCRIPTION_DEFAULT
         this.emitQuestionnaireUpdated()
-        console.debug('questionnaire', this.questionnaire)
-        console.log('questionnaire', this.questionnaire)
+        console.debug('loaded new questionnaire', this.questionnaire)
         this.moveToState(STATES.START)
       },
       _loadQuestionnaireUpdate: function() {
@@ -140,15 +177,12 @@
                 return
               }
               this.questionnaire = response.data
-              this.emitQuestionnaireLoaded()
               this.emitQuestionnaireUpdated()
               this.moveToState(STATES.START)
             }).catch(error => {
-              this.displayErrors('Erreur lors du chargement du brouillon.', error.response.data)
+              const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
+              this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
             })
-      },
-      emitQuestionnaireLoaded: function() {
-        this.$emit('questionnaire-loaded', this.questionnaire)
       },
       emitQuestionnaireUpdated: function() {
         this.$emit('questionnaire-updated', this.questionnaire)
@@ -161,18 +195,16 @@
         console.debug('QuestionnaireCreate got body', body);
         this._updateBody(body);
         this.saveDraft()
-        this.emitQuestionnaireUpdated();
         this.moveToState(STATES.PREVIEW);
-      },
-      _updateBody(body) {
-        this.questionnaire.themes = body;
       },
       onMetadataCreated: function(metadata) {
         console.debug('got metadata', metadata);
         this._updateMetadata(metadata)
         this.saveDraft()
-        this.emitQuestionnaireUpdated();
         this.moveToState(STATES.CREATING_BODY);
+      },
+      _updateBody(body) {
+        this.questionnaire.themes = body;
       },
       _updateMetadata: function(metadata) {
         for (const [key, value] of Object.entries(metadata)) {
@@ -181,14 +213,19 @@
       },
       _updateQuestionnaire: function(questionnaire) {
         this.questionnaire.id = questionnaire.id
-        this.questionnaire.description = questionnaire.description
-        this.questionnaire.end_date = questionnaire.end_date
-        this.questionnaire.title = questionnaire.title
+        const metadata = {
+          description: questionnaire.description,
+          end_date: questionnaire.end_date,
+          title: questionnaire.title,
+        }
+        this._updateMetadata(metadata)
         this._updateBody(questionnaire.themes)
       },
-      back: function() {
+      back: function(data) {
         console.debug('back');
         if (this.state === STATES.CREATING_BODY) {
+          this._updateBody(data);
+          this.saveDraft()
           this.moveToState(STATES.START);
           return;
         }
@@ -223,51 +260,80 @@
           } else {
             delete this.questionnaire.end_date  // remove empty strings, it throws date format error.
           }
-
-          console.debug('Questionnaire to save : ', this.questionnaire)
         }
+        const getCreateMethod = () => axios.post.bind(this, save_questionnaire_url)
+        const getUpdateMethod =
+            (questionnaireId) => axios.put.bind(this, save_questionnaire_url + questionnaireId + '/')
 
         this.clearErrors()
         cleanPreSave()
 
-        let saveMethod = axios.post.bind(this, save_questionnaire_url)
+        let saveMethod
         if (this.questionnaire.id !== undefined) {
-          console.debug('questionnaire', this.questionnaire)
-          saveMethod = axios.put.bind(this, save_questionnaire_url + this.questionnaire.id + '/')
+          saveMethod = getUpdateMethod(this.questionnaire.id)
+        } else {
+          saveMethod = getCreateMethod()
         }
         return saveMethod(this.questionnaire)
-            .then(response => {
-              console.debug(response)
-              this._updateQuestionnaire(response.data)
-              this.emitQuestionnaireUpdated()
-
-              const timeString = moment(new Date()).format('HH:mm:ss')
-              this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
-            }).catch(error => {
-              console.error(error)
-              this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
-            })
       },
       saveDraftFromMetadata(data) {
         this._updateMetadata(data)
         this.saveDraft()
       },
       saveDraftFromBody(data) {
-        console.debug('saveDraftFromBody', data)
         this._updateBody(data)
         this.saveDraft()
       },
       saveDraft() {
         this.questionnaire.is_draft = true
         this._doSave()
-      },
-      saveNonDraft() {
-        this.questionnaire.is_draft = false
-        this._doSave()
-            .then(() => {
-              window.location.href = home_url
+            .then((response) => {
+              this._updateQuestionnaire(response.data)
+              this.emitQuestionnaireUpdated()
+
+              const timeString = moment(new Date()).format('HH:mm:ss')
+              this.message = "Votre dernière sauvegarde a eu lieu à " + timeString + "."
+
             })
-      }
+            .catch((error) => {
+              console.error(error)
+              this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
+            })
+      },
+      wait(time_millis) {
+        return new Promise((resolve) => {
+          let id = setTimeout(() => {
+            clearTimeout(id);
+            resolve()
+          }, time_millis)
+        })
+      },
+      publish() {
+        $(this.$refs.savingModal.$el).modal('show')
+        this.questionnaire.is_draft = false
+
+        // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
+        // This is for the user to see the wait modal and be satisfied that the saving really happened.
+        return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
+            .then(() => {
+              console.debug('Done publishing questionnaire.')
+              $(this.$refs.savingModal.$el).modal('hide')
+              $(this.$refs.savedModal.$el).modal('show')
+            })
+            .catch(error => {
+              console.error('Error publishing questionnaire : ', error)
+              $(this.$refs.savingModal.$el).modal('hide')
+              // Emettre un event pour QuestionnairePreview, pour reafficher le modal
+              this.$emit('publish-questionnaire-error', error)
+            })
+      },
+      goHome(event) {
+        // Display a "loading" spinner on clicked button, while the user is redirected, so that they know their click
+        // has been registered.
+        $(event.target).addClass('btn-loading')
+
+        window.location.href = home_url + '#control-' + this.questionnaire.control
+      },
     }
   });
 </script>

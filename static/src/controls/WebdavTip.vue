@@ -4,7 +4,7 @@
       <p>
         Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
         à tous les membres de l’équipe de contrôle.
-        Pour les consulter, veuillez copier puis coller ce lien dans votre barre de navigation
+        Pour les consulter, veuillez copier puis coller ce lien dans la barre de navigation de votre explorateur de fichiers windows
         et épinglez-le dans vos accès rapide.
       </p>
 
@@ -22,9 +22,30 @@
         </transition>
       </div>
 
-      <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf">
-        Besoin d’aide ? Suivez les instructions en images.
-      </a>
+      <div class="alert alert-icon alert-primary" role="alert">
+        <i class="fe fe-help-circle mr-2" aria-hidden="true"></i> Besoin d’aide ?
+        <p class="pt-4">
+          <button id="videoModalButton"
+                       type="submit"
+                       data-toggle="modal"
+                       data-target="#fileExplorerVideoModal"
+                       class="btn btn-primary"
+                       title="Voir les instructions en vidéo">
+                 <i class="fa fa-play-circle mr-1"></i>
+                 Suivez les instructions en vidéo
+         </button>
+        </p>
+        <p>
+          <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf"
+             class="btn btn-primary"
+             title="Suivez les instructions en images."
+          >
+            <i class="fe fe-image mr-1"></i>
+            Suivez les instructions en images
+          </a>
+        </p>
+
+      </div>
     </info-bar>
 
   </collapsible-section>

@@ -25,7 +25,7 @@ class QuestionnaireInline(OrderedTabularInline):
 class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('title', 'depositing_organization', 'reference_code')
     search_fields = (
-        'title', 'reference_code,' 'questionnaires__title', 'questionnaires__description')
+        'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
     inlines = (QuestionnaireInline, )
 
 
