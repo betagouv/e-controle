@@ -25,7 +25,6 @@
     },
     computed: {
       items : function() {
-        console.log('items map', this.controls)
         return this.controls.map(control => {
           return {
             link: '#control-' + control.id,
