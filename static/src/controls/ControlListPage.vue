@@ -65,9 +65,25 @@
       }
     },
     mounted() {
+      const isValidHash = (hash) => {
+        const reg = /^#control-[0-9]+$/
+        return reg.test(hash)
+      }
+
+      const hashPointsToExistingControl = (hash) => {
+        if (!isValidHash(hash)) {
+          return false
+        }
+        const controlId = parseInt(hash.replace('#control-', ''), 10)
+        if (isNaN(controlId)) {
+          return false
+        }
+        return this.controls.map(control => control.id).includes(controlId)
+      }
+
       const updateHash = () => {
-        console.debug('The hash has changed!', window.location.hash)
-        if (window.location.hash === '' && this.controls.length > 0) {
+        console.debug('hashchange', window.location.hash)
+        if (!hashPointsToExistingControl(window.location.hash) && this.controls.length > 0) {
           // Change the hash to select the first control in the list, which will trigger the hashchange event again.
           window.location.hash = '#control-' + this.controls[0].id
           return
