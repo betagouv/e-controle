@@ -1,5 +1,10 @@
 <template>
-  <div class="card border-0">
+  <div class="card form-fieldset">
+    <div class="card-title">
+      <i class="far fa-handshake mr-2"></i>
+      <span>Questionnaires</span>
+    </div>
+
     <div v-if="accessibleQuestionnaires.length === 0"
          class="alert alert-icon alert-secondary">
       <i class="fe fe-info mr-2" aria-hidden="true"></i>
