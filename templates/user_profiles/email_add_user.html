@@ -4,23 +4,25 @@
 <p> {{ user.first_name }} {{ user.last_name }} vient d’ajouter une nouvelle personne:</p>
 <ul>
   <li>
-    {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
+    - {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
   </li>
   <li>
-    Profil : {{ target_user.profile.get_profile_type_display }}
+    - Profil : {{ target_user.profile.get_profile_type_display }}
   </li>
   <li>
-    Espace de dépôt : {{ control }}
+    - Espace de dépôt : {{ control }}
   </li>
 </ul>
 
 <hr/>
 
 <p class="text-bold">
-  Pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
-</p>
+  Pensez à inviter la nouvelle personne à se connecter à e.contrôle.
+<br/>
+  Voici un message type:
+</P>
 
-<p class="text-quote">
+<p class="text-justify">
 Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
 <br/>
 Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
