@@ -48,9 +48,18 @@ def add_log_entry_for_user_add(session_user, user_profile, control, **kwargs):
 @receiver(user_api_post_update, sender=UserProfile)
 def add_log_entry_for_user_update(session_user, user_profile, **kwargs):
     """
-    Add a log entry after user is updated to a control.
+    Add a log entry after user is updated.
     """
     add_log_entry(verb='updated', session_user=session_user, user_profile=user_profile)
+
+
+@receiver(user_api_post_remove, sender=UserProfile)
+def add_log_entry_for_user_remove(session_user, user_profile, control, **kwargs):
+    """
+    Add a log entry after user is removed from a control.
+    """
+    add_log_entry(
+        verb='removed', session_user=session_user, user_profile=user_profile, control=control)
 
 
 def bake_and_send_email(

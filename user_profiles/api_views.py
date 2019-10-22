@@ -1,4 +1,3 @@
-from actstream import action
 from django.dispatch import Signal
 from rest_framework import decorators
 from rest_framework import viewsets, mixins, status
@@ -37,17 +36,6 @@ class UserProfileViewSet(
             user_api_post_remove.send(
                 sender=UserProfile, session_user=self.request.user, user_profile=profile,
                 control=control)
-            if profile.is_inspector:
-                verb = 'removed inspector user'
-            if profile.is_audited:
-                verb = 'removed audited user'
-            action_details = {
-                'sender': self.request.user,
-                'verb': verb,
-                'action_object': profile,
-                'target': control,
-            }
-            action.send(**action_details)
             return Response({'status': f"Removed control {control}"})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
