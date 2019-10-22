@@ -8,7 +8,7 @@
             <div class="card">
               <div class="card-header pr-0 pl-2">
                 <div class="col">
-                  <h3 class="card-title"><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h3>
+                  <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
                 <div class="col-auto">
                   <a v-if="sessionUser.is_inspector"

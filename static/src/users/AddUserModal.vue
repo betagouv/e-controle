@@ -11,7 +11,7 @@
           L'envoi de ce formulaire n'a pas fonctionné.
         </div>
         <div v-if="editingProfileType==='inspector'" class="text-center">
-            <h4><i class="fa fa-institution mr-2"></i><strong>Équipe de contrôle</strong></h4>
+            <h4><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h4>
         </div>
         <div v-if="editingProfileType==='audited'" class="text-center">
             <h4><i class="fe fe-user mr-2"></i><strong>Organisme interrogé</strong></h3>
