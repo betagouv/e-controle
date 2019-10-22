@@ -118,12 +118,13 @@
       },
       makeErrorMessage: function (error) {
         if (error.response && error.response.data && error.response.data['reference_code']) {
+          const requestedCode = JSON.parse(error.response.config.data).reference_code
           if (error.response.data['reference_code'][0] === 'UNIQUE') {
-            return 'Le nom abrégé "' + payload.reference_code +
+            return 'Le nom abrégé "' + requestedCode +
                 '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
           }
           if (error.response.data['reference_code'][0] === 'INVALID') {
-            return 'Le nom abrégé "' + payload.reference_code +
+            return 'Le nom abrégé "' + requestedCode +
                 '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
                 ' Veuillez en choisir un autre.'
           }
