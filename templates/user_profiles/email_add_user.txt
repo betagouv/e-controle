@@ -1,4 +1,4 @@
-Bonjour,
+Bonjour {{ user.first_name }},
 
 Vous venez d’ajouter une nouvelle personne:
 
@@ -8,7 +8,7 @@ Vous venez d’ajouter une nouvelle personne:
 
 * * *
 
-Pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
+{{ user.first_name }}, pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
 
 * * *
 Bonjour {{ added_user.first_name }} {{ added_user.last_name }},
@@ -20,4 +20,4 @@ Si vous pensez ne pas être le bon destinataire de ce message, merci de nous inf
 
 Merci beaucoup,
 
-L'équipe d'e-contrôle
+L'équipe e.contrôle

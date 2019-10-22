@@ -1,6 +1,6 @@
 {% extends "base_email.html" %}
 {% block email_content %}
-<p>Bonjour,</p>
+<p>Bonjour {{ user.first_name }},</p>
 <p>Vous venez d’ajouter une nouvelle personne:</p>
 <ul>
   <li>
@@ -17,7 +17,7 @@
 <hr/>
 
 <p class="text-bold">
-  Pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
+  {{ user.first_name }}, pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
 </p>
 
 <p class="text-quote">
@@ -34,5 +34,5 @@ Cordialement,
   Si vous pensez ne pas être le bon destinataire de ce message, merci de nous informer en répondant directement à cet email.
 </p>
 <p>Merci beaucoup,</p>
-<p>L'équipe d'e-contrôle</p>
+<p>L'équipe e.contrôle</p>
 {% endblock email_content %}

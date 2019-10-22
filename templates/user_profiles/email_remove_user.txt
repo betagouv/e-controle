@@ -1,6 +1,6 @@
-Bonjour,
+Bonjour {{ user.first_name }},
 
->Vous venez de retirer une personne d'un espace de dépôt:
+Vous venez de retirer une personne d'un espace de dépôt:
 
 - {{ changed_user.first_name }} {{ changed_user.last_name }}, {{ changed_user.email }}{% if changed_user.profile.organization %}, {{ changed_user.profile.organization}}{% endif %}
 - Profil : {{ changed_user.profile.get_profile_type_display }}
@@ -11,4 +11,4 @@ Si vous pensez ne pas être le bon destinataire de ce message, merci de nous inf
 
 Merci beaucoup,
 
-L'équipe d'e-contrôle
+L'équipe e.contrôle
