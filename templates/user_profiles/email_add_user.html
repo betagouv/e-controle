@@ -1,7 +1,7 @@
 {% extends "base_email.html" %}
 {% block email_content %}
-<p>Bonjour {{ user.first_name }},</p>
-<p>Vous venez d’ajouter une nouvelle personne:</p>
+<p>Bonjour,</p>
+<p> {{ user.first_name }} {{ user.last_name }} vient d’ajouter une nouvelle personne:</p>
 <ul>
   <li>
     {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
@@ -17,7 +17,7 @@
 <hr/>
 
 <p class="text-bold">
-  {{ user.first_name }}, pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
+  Pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
 </p>
 
 <p class="text-quote">
