@@ -8,7 +8,7 @@ Vous venez d’ajouter une nouvelle personne:
 
 * * *
 
-{{ user.first_name }}, pensez à l’inviter à se connecter à e.contrôle en lui adressant ce message:
+{{ user.first_name }}, pensez à inviter la nouvelle personne à se connecter à e.contrôle. Voici un message type:
 
 * * *
 Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
