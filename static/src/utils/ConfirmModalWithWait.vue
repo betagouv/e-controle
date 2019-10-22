@@ -73,17 +73,19 @@
             this.processing = false
             return
           }
-          console.log('success!', successMessage)
+          console.debug('ConfirmModalWithWait : processing done', successMessage)
         }
 
         this.processing = true
         this.$emit('confirm', processingDoneCallback)
       },
       cancelClicked () {
+        this.processing = false
         this.errorMessage = ''
         this.$emit('cancel')
       },
       closeModal () {
+        this.processing = false
         this.errorMessage = ''
         this.$emit('close')
       },
