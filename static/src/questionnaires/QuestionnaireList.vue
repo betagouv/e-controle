@@ -7,13 +7,13 @@
       </div>
     </div>
 
-    <div class="card-body">
+    <div class="table-responsive">
       <div v-if="accessibleQuestionnaires.length === 0"
-           class="alert alert-icon alert-secondary">
+           class="alert alert-icon alert-secondary m-2">
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
         Il n'y a pas encore de questionnaire pour cet espace de dépôt.
       </div>
-      <table class="table card card-table table-vcenter">
+      <table class="table card-table table-vcenter">
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires">
             <td>
@@ -83,12 +83,13 @@
           </tr>
         </tbody>
       </table>
-      <div v-if="user.is_inspector" class="mb-2 mt-2 flex-row justify-content-end">
-        <a :href="'/questionnaire/controle-' + control.id + '/creer'" class="btn btn-primary">
-          <i class="fe fe-plus"></i>
-          Ajouter un questionnaire
-        </a>
-      </div>
+    </div>
+
+    <div v-if="user.is_inspector" class="card-footer flex-row justify-content-end">
+      <a :href="'/questionnaire/controle-' + control.id + '/creer'" class="btn btn-primary">
+        <i class="fe fe-plus"></i>
+        Ajouter un questionnaire
+      </a>
     </div>
   </div>
 </template>
