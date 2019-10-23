@@ -1,5 +1,6 @@
 <template>
   <div class="card">
+    <div class="card-status card-status-top bg-blue"></div>
     <div class="card-header">
       <div class="card-title">
         <i class="fe fe-users mr-2"></i>

@@ -1,5 +1,6 @@
 <template>
   <div class="card">
+    <div class="card-status card-status-top bg-blue"></div>
     <template v-if="editMode">
       <div class="card-body">
         <error-bar v-if="hasErrors">
