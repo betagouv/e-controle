@@ -17,13 +17,14 @@
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires">
             <td>
-              <h5>
+              {{ questionnaire.numbering }}
+            </td>
+            <td>
                 <span v-if="questionnaire.is_draft">
                   <span class="tag tag-azure round-tag font-italic">Brouillon</span>
                   <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
                 </span>
-                <span>{{ questionnaire.title_display }}</span>
-              </h5>
+                <span>{{ questionnaire.title }}</span>
                 <div v-if="questionnaire.sent_date">
                   <i class="fe fe-send"></i>
                   Date de transmission du questionnaire :
