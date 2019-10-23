@@ -54,15 +54,15 @@
                      title="Modifier le brouillon de questionnaire"
                   >
                     <i class="fe fe-edit"></i>
-                    Modifier le brouillon
+                    Modifier
                   </a>
                   <a v-else
                      :href="questionnaire.url"
                      class="btn btn-primary"
-                     title="Voir le brouillon"
+                     title="Voir le brouillon de questionnaire"
                   >
                     <i class="fe fe-eye"></i>
-                    Voir le brouillon
+                    Voir
                   </a>
                   <div v-if="questionnaire.author_id" class="mt-1 text-nowrap">
                     <i class="fe fe-edit"></i>
