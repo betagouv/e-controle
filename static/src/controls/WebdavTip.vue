@@ -2,9 +2,13 @@
   <div class="card">
     <div class="card-status card-status-top bg-blue"></div>
     <div class="card-header">
+      <div class="card-title">
+        <i class="fe fe-folder mr-2"></i>
+        <span>Comment voir les réponses dans l’Explorateur Windows ?</span>
+      </div>
+    </div>
 
-      <collapsible-section buttonicon="fe-folder" buttontext="Comment voir les réponses dans l’Explorateur Windows ?">
-        <info-bar noclose="true">
+    <div class="card-body">
           <p>
             Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
             à tous les membres de l’équipe de contrôle.
@@ -50,9 +54,6 @@
             </p>
 
           </div>
-        </info-bar>
-
-      </collapsible-section>
     </div>
   </div>
 </template>
@@ -60,7 +61,6 @@
 <script>
   import Vue from 'vue'
   import Clipboard from 'v-clipboard'
-  import CollapsibleSection from '../utils/CollapsibleSection'
   import InfoBar from '../utils/InfoBar'
 
   Vue.use(Clipboard)
@@ -68,7 +68,6 @@
   export default Vue.extend({
     props: [ 'webdavurl' ],
     components: {
-      CollapsibleSection,
       InfoBar,
     },
     data: function (){
