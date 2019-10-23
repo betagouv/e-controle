@@ -1,7 +1,7 @@
 <template>
-  <div class="mb-4">
+  <div class="card">
     <template v-if="editMode">
-      <div>
+      <div class="card-body">
         <error-bar v-if="hasErrors">
             L'espace de dépôt n'a pas pu être modifié. Erreur : {{JSON.stringify(errors)}}
         </error-bar>
@@ -35,7 +35,7 @@
     </template>
 
     <template v-else>
-      <div class="flex-row justify-content-between align-items-center">
+      <div class="card-body flex-row justify-content-between align-items-center">
 
         <div v-if="organization">
           <div class="mb-3">
