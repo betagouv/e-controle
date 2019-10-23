@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header">
       <div class="card-title">
-        <i class="far fa-handshake mr-2"></i>
+        <i class="fe fe-list mr-2"></i>
         <span>Questionnaires</span>
       </div>
     </div>
