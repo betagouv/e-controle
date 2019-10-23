@@ -6,8 +6,8 @@ import Vuex from 'vuex'
 
 import { store } from "./store"
 import AddUserModal from "./users/AddUserModal"
-import ColorBar from "./utils/ColorBar"
 import ControlCreate from "./controls/ControlCreate"
+import ControlListSidebar from './controls/ControlListSidebar'
 import ControlTitle from "./controls/ControlTitle"
 import HelpTooltip from "./utils/HelpTooltip"
 import RemoveUserModal from "./users/RemoveUserModal"
@@ -23,8 +23,8 @@ new Vue({
   el: '#questionnaire-list-vm',
   components: {
     AddUserModal,
-    ColorBar,
     ControlCreate,
+    ControlListSidebar,
     ControlTitle,
     HelpTooltip,
     RemoveUserModal,
@@ -38,5 +38,25 @@ new Vue({
   },
   created() {
     this.setSessionUser()
-  }
+  },
+  data: function() {
+    return {
+      hash: "",
+    }
+  },
+  mounted() {
+    const updateHash = () => {
+      console.log('The hash has changed!', window.location.hash)
+      this.hash = window.location.hash
+    }
+
+    window.addEventListener(
+        'hashchange',
+        updateHash,
+        false)
+
+    updateHash()
+
+  },
+
 });

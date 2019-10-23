@@ -9,8 +9,8 @@
       </p>
 
       <div class="flex-row mb-4">
-        <span>{{ webdavurl}}</span>
-        <button class="btn btn-sm btn-secondary ml-4"
+        <span class="mr-4">{{ webdavurl}}</span>
+        <button class="btn btn-sm btn-secondary pr-4"
                 v-clipboard="webdavurl"
                 v-clipboard:success="clipboardSuccessHandler"
                 style="position: relative;">

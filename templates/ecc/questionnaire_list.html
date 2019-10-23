@@ -2,31 +2,41 @@
 {% load static %}
 {% load control_tags %}
 
-{% block page_title %}
-  Accueil - Mes espaces de dépôt
-{% endblock page_title %}
-
-
 {% block page_content %}
-  <div class="row row-cards" id="questionnaire-list-vm">
+  <div id="questionnaire-list-vm">
 
-      {% if user.profile.is_inspector %}
-        <control-create></control-create>
-      {% endif %}
+    <div class="mt-5 mb-5">
+      <div class="flex-row justify-content-between">
+        <div class="page-title">
+          Accueil - Mes espaces de dépôt
+        </div>
+        {% if user.profile.is_inspector %}
+          <control-create></control-create>
+        {% endif %}
+      </div>
+    </div>
 
-      {% for control in controls reversed %}
-        <div class="card" id="control-{{ control.id }}">
-          <color-bar id="{{ control.id }}"></color-bar>
-          <div class="card-header">
-            <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
-          </div>
-          <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
-            <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
-              {% get_user_questionnaires control as questionnaires %}
-              {% if questionnaires.count > 0 %}
-                <div class="card">
-                  <table class="table card-table table-vcenter">
-                    <tbody>
+    <div id="page-content" class="row row-cards">
+
+      <control-list-sidebar :controls="{{ controls_json }}" :hash="hash">
+      </control-list-sidebar>
+
+      <div id="controls" class="col-lg-8">
+
+        {% for control in controls %}
+          <div v-show="hash === '#control-{{ control.id }}'" class="card" id="control-{{ control.id }}">
+            <div class="card-status card-status-left bg-blue">
+            </div>
+            <div class="card-header">
+              <control-title :control="{{ control.data }}" :key={{ control.id }}></control-title>
+            </div>
+            <div class="card-body"> <!--// opening: questionnaire_description_card_body  //-->
+              <div class="card border-0 mb-0"> <!--// opening: list of questionnaires for control  //-->
+                {% get_user_questionnaires control as questionnaires %}
+                {% if questionnaires.count > 0 %}
+                  <div class="card">
+                    <table class="table card-table table-vcenter">
+                      <tbody>
                       {% for questionnaire in questionnaires %}
                         {% if user.profile.is_inspector or not questionnaire.is_draft %}
                           <tr>
@@ -98,57 +108,60 @@
                           </tr>
                         {% endif %}
                       {% endfor %}
-                    </tbody>
-                  </table>
-                </div>
-              {% else %}
-                  <div class="alert alert-icon alert-secondary">
-                     <i class="fe fe-info mr-2" aria-hidden="true"></i>
-                       Il n'y a pas encore de questionnaire pour cet espace de dépôt.
+                      </tbody>
+                    </table>
                   </div>
-              {% endif %}
+                {% else %}
+                  <div class="alert alert-icon alert-secondary">
+                    <i class="fe fe-info mr-2" aria-hidden="true"></i>
+                    Il n'y a pas encore de questionnaire pour cet espace de dépôt.
+                  </div>
+                {% endif %}
+                {% if user.profile.is_inspector %}
+                  <div class="mb-2">
+                    <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
+                      <i class="fe fe-plus"></i>
+                      Ajouter un questionnaire
+                    </a>
+                  </div>
+                {% endif %}
+              </div> <!--// closing: list of questionnaires for control  //-->
+
+              <user-section :control="{{ control.data }}" :key={{ control.id }}></user-section>
+
               {% if user.profile.is_inspector %}
-                <div class="mb-2">
-                  <a href="{% url 'questionnaire-create' control.id %}" class="btn btn-primary">
-                    <i class="fe fe-plus"></i>
-                    Ajouter un questionnaire
-                  </a>
-                </div>
+                <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
               {% endif %}
-            </div> <!--// closing: list of questionnaires for control  //-->
 
-            <user-section :control="{{ control.data }}" :key={{ control.id }}></user-section>
-
-            {% if user.profile.is_inspector %}
-              <webdav-tip webdavurl="{{ settings.WEBDAV_URL }}/{{ control.reference_code }}"></webdav-tip>
-            {% endif %}
-
-          </div>  <!--// closing: questionnaire_description_card_body  //-->
-        </div>
-      {% empty %}
-        <div class="card">
-          <div class="card-body">
-            {% if user.profile.is_inspector %}
-              Vous n'avez aucun espace de dépôt ouvert.
-            {% else %}
-              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
-            {% endif %}
+            </div>  <!--// closing: questionnaire_description_card_body  //-->
           </div>
-        </div>
-      {% endfor %}
+        {% empty %}
+          <div class="card">
+            <div class="card-body">
+              {% if user.profile.is_inspector %}
+                Vous n'avez aucun espace de dépôt ouvert.
+              {% else %}
+                Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
 
-    <add-user-modal></add-user-modal>
+      <add-user-modal></add-user-modal>
 
-    <update-user-modal></update-user-modal>
+      <update-user-modal></update-user-modal>
 
-    <remove-user-modal></remove-user-modal>
+      <remove-user-modal></remove-user-modal>
 
-    <video-modal
-      id="fileExplorerVideoModal"
-      video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
-      video-type="video/mp4"
-    >
-    </video-modal>
+      <video-modal
+        id="fileExplorerVideoModal"
+        video-url="//{{ current_site.domain }}{% static 'videos/file-explorer.mp4' %}"
+        video-type="video/mp4"
+      >
+      </video-modal>
+
+    </div>
 
   </div>
 {% endblock page_content %}

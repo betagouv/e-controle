@@ -72,10 +72,6 @@ class Control(models.Model):
             return 1
         return self.questionnaires.last().numbering + 1
 
-    @property
-    def published_questionnaires(self):
-        return self.questionnaires.filter(is_draft=False)
-
     def __str__(self):
         if self.depositing_organization:
             return f'{self.title} - {self.depositing_organization}'

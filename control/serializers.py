@@ -110,3 +110,20 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
                 'allow_null': False,
             }
         }
+
+
+# Serializers for displaying questionnaire_list.html
+class QuestionnaireListQuestionnaireSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Questionnaire
+        fields = ('id', 'title',)
+
+
+class QuestionnaireListControlSerializer(serializers.ModelSerializer):
+    questionnaires = QuestionnaireListQuestionnaireSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
+
+
