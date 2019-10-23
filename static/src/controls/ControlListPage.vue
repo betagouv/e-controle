@@ -1,17 +1,8 @@
 <template>
   <div>
-    <div class="mt-5 mb-5">
-      <div class="flex-row justify-content-between">
-        <div class="page-title">
-          Accueil - Mes espaces de dépôt
-        </div>
-        <control-create v-if="user.is_inspector"></control-create>
-      </div>
-    </div>
-
     <div id="page-content" class="row row-cards">
 
-      <control-list-sidebar :controls="controls" :hash="hash">
+      <control-list-sidebar :controls="controls" :hash="hash" :user="user">
       </control-list-sidebar>
 
       <div id="controls" class="col-lg-8">
@@ -45,7 +36,6 @@
   import Vue from 'vue'
 
   import AddUserModal from "../users/AddUserModal"
-  import ControlCreate from "./ControlCreate"
   import ControlList from './ControlList'
   import ControlListSidebar from './ControlListSidebar'
   import RemoveUserModal from "../users/RemoveUserModal"
@@ -101,7 +91,6 @@
     },
     components: {
       AddUserModal,
-      ControlCreate,
       ControlList,
       ControlListSidebar,
       RemoveUserModal,

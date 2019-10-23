@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="page-title mb-4">
+      Mon espace de dépôt
+    </div>
+
     <control-title :control="control" :key="control.id"></control-title>
 
     <questionnaire-list :control="control" :user="user"></questionnaire-list>
