@@ -18,7 +18,9 @@
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires">
             <td>
-              {{ questionnaire.numbering }}
+              <div class="stamp stamp-md bg-blue">
+                {{ questionnaire.numbering }}
+              </div>
             </td>
             <td>
                 <span v-if="questionnaire.is_draft">
