@@ -31,6 +31,12 @@
     border-bottom-width: 4px;
 }
 
+.page-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 /* QuestionnaireCreate.vue */
 .big-icon {
     font-size: 4rem;
