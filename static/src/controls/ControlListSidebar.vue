@@ -9,11 +9,11 @@
                   :selected="item.selected"
     >
       <div v-if="item.organization" class="sidebar-item-title">
-        <i class="fa fa-building mr-2 text-muted"></i>
+        <i class="fa fa-building mr-4 text-muted"></i>
         {{ item.organization }}
       </div>
       <div class="sidebar-item-subtitle">
-        <i class="fa fa-exchange-alt mr-2 text-muted"></i>
+        <i class="fa fa-exchange-alt mr-4 text-muted"></i>
         {{ item.procedure }}
       </div>
     </sidebar-item>

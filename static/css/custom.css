@@ -258,11 +258,18 @@ table.trash-list {
     font-size: 1.125rem;
     line-height: 1.2;
     font-weight: 600;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
 }
 
-.sidebar-item-subtitle {
+.sidebar-item-subtitle, .sidebar-item-title {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+}
+
+.sidebar-item-subtitle i, .sidebar-item-title i {
+    /* Same as body. */
+    font-size: 0.9375rem;
+    margin-top: 0.25rem
 }
