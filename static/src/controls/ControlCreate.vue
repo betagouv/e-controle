@@ -26,7 +26,10 @@
             <div id="title-help" class="text-muted">
               Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+            <div class="flex-row align-items-center">
+              <i class="fa fa-exchange-alt mr-2"></i>
+              <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+            </div>
           </div>
 
           <div class="form-group mb-6">
@@ -34,7 +37,10 @@
             <div id="organization-help" class="text-muted">
               Exemple : Ministère des Sports. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+            <div class="flex-row align-items-center">
+              <i class="fa fa-building mr-2"></i>
+              <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+            </div>
           </div>
 
           <div class="form-group mb-6">

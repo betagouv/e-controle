@@ -1,11 +1,21 @@
 <template>
-  <sidebar title="Tous mes espaces">
+  <sidebar>
+    <template v-slot:title>
+      <i class="fa fa-archive mr-2"></i>
+      Tous mes espaces
+    </template>
     <sidebar-item v-for="item in items"
                   :link="item.link"
                   :selected="item.selected"
     >
-      <div class="sidebar-item-title">{{ item.text1 }}</div>
-      <div class="sidebar-item-subtitle">{{ item.text2 }}</div>
+      <div v-if="item.organization" class="sidebar-item-title">
+        <i class="fa fa-building mr-2"></i>
+        {{ item.organization }}
+      </div>
+      <div class="sidebar-item-subtitle">
+        <i class="fa fa-exchange-alt mr-2"></i>
+        {{ item.procedure }}
+      </div>
     </sidebar-item>
     <div class="card-header flex-row justify-content-center">
       <control-create v-if="user.is_inspector"></control-create>
@@ -33,8 +43,8 @@
         return this.controls.map(control => {
           return {
             link: '#control-' + control.id,
-            text1: control.depositing_organization,
-            text2: control.title,
+            organization: control.depositing_organization,
+            procedure: control.title,
             selected: this.hash === '#control-' + control.id ,
           }
         })

@@ -11,12 +11,24 @@
           <div class="card-title">Modifier l'espace de dépôt</div>
           <fieldset class="form-fieldset">
             <div class="form-group">
-              <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
-              <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
+              <label id="organization-label" class="form-label">
+                Quel est le nom de l’organisme qui va déposer les réponses ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-building mr-2"></i>
+                <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
+              </div>
             </div>
             <div class="form-group">
-              <label id="title-label" class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
-              <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              <label id="title-label" class="form-label">
+                Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-exchange-alt mr-2"></i>
+                <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              </div>
             </div>
           </fieldset>
           <div class="text-right">
@@ -40,11 +52,17 @@
 
         <div v-if="organization">
           <div class="mb-3">
-            <div class="text-muted font-italic">Organisme interrogé</div>
+            <div class="text-muted font-italic">
+              <i class="fa fa-building mr-2"></i>
+              Organisme interrogé
+            </div>
             <div class="page-title">{{ organization }}</div>
           </div>
           <div class="mb-3">
-            <div class="text-muted font-italic">Procédure</div>
+            <div class="text-muted font-italic">
+              <i class="fa fa-exchange-alt mr-2"></i>
+              Procédure
+            </div>
             <div class="card-title">{{ title }}</div>
           </div>
         </div>

@@ -27,7 +27,7 @@
 
       <div class="card mb-0">
         <div class="card-header justify-content-between">
-          <h3 class="card-title"><i class="fe fe-user mr-2"></i><strong>Organisme interrogé</strong></h3>
+          <h3 class="card-title"><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h3>
           <a v-if="sessionUser.is_inspector"
              href=""
              data-toggle="modal"

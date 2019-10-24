@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="page-title mb-4">
+      <i class="fa fa-archive mr-2"></i>
       Mon espace de dépôt
     </div>
 

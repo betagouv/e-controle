@@ -1,5 +1,8 @@
 <template>
-  <sidebar title="Thèmes">
+  <sidebar>
+    <template v-slot:title>
+      Thèmes
+    </template>
     <sidebar-item v-for="(theme, themeIndex) in themes"
                   :link="'#theme' + (themeIndex + 1)"
     >
