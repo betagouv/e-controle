@@ -16,7 +16,7 @@
                 <span class="form-required">*</span>
               </label>
               <div class="flex-row align-items-center">
-                <i class="fa fa-building mr-2"></i>
+                <i class="fa fa-building mr-2 text-muted"></i>
                 <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
               </div>
             </div>
@@ -26,7 +26,7 @@
                 <span class="form-required">*</span>
               </label>
               <div class="flex-row align-items-center">
-                <i class="fa fa-exchange-alt mr-2"></i>
+                <i class="fa fa-exchange-alt mr-2 text-muted"></i>
                 <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
               </div>
             </div>
