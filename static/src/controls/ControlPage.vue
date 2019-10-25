@@ -6,12 +6,27 @@
       </control-list-sidebar>
 
       <div id="controls" class="col-lg-8">
-        <control-list :controls="controls"
-                      :user="user"
-                      :webdavurl="webdavurl"
-                      :hash="hash"
-        >
-        </control-list>
+        <div v-if="controls.length === 0" class="card">
+          <div class="card-body">
+            <span v-if="user.is_inspector">
+              Vous n'avez aucun espace de dépôt ouvert.
+            </span>
+            <span v-else>
+              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
+            </span>
+          </div>
+        </div>
+
+        <template v-else>
+          <control-card v-for="control in controls"
+                        v-if="hash === '#control-' + control.id "
+                        :key="control.id"
+                        :control="control"
+                        :user="user"
+                        :webdavurl="webdavurl"
+          >
+          </control-card>
+        </template>
       </div>
 
       <add-user-modal></add-user-modal>
@@ -36,7 +51,7 @@
   import Vue from 'vue'
 
   import AddUserModal from "../users/AddUserModal"
-  import ControlList from './ControlList'
+  import ControlCard from './ControlCard'
   import ControlListSidebar from './ControlListSidebar'
   import RemoveUserModal from "../users/RemoveUserModal"
   import UpdateUserModal from "../users/UpdateUserModal"
@@ -91,7 +106,7 @@
     },
     components: {
       AddUserModal,
-      ControlList,
+      ControlCard,
       ControlListSidebar,
       RemoveUserModal,
       UpdateUserModal,
