@@ -5,7 +5,7 @@ import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 
 import { store } from "./store"
-import ControlListPage from './controls/ControlListPage'
+import ControlPage from './controls/ControlPage'
 
 Vue.use(Vuex);
 
@@ -13,7 +13,7 @@ new Vue({
   store,
   el: '#questionnaire-list-vm',
   components: {
-    ControlListPage,
+    ControlPage,
   },
   methods: {
     ...mapActions(['setSessionUser']),
