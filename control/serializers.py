@@ -125,7 +125,7 @@ class QuestionnaireListQuestionnaireSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'title_display', 'url', 'is_draft', 'sent_date', 'end_date', 'author_id', 'author')
+        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'author_id', 'author')
 
 
 class QuestionnaireListControlSerializer(serializers.ModelSerializer):

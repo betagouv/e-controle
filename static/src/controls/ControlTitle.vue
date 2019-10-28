@@ -1,66 +1,90 @@
 <template>
-<div class="row container-fluid">
-  <template v-if="editMode">
-    <div class="col">
-      <error-bar v-if="hasErrors">
-        <div>
-          L'espace de dépôt n'a pas pu être modifié. Erreur : {{JSON.stringify(errors)}}
+  <div class="card">
+    <div class="card-status card-status-top bg-blue"></div>
+    <template v-if="editMode">
+      <div class="card-body">
+        <error-bar v-if="hasErrors">
+            L'espace de dépôt n'a pas pu être modifié. Erreur : {{JSON.stringify(errors)}}
+        </error-bar>
+
+        <form @submit.prevent="updateControl">
+          <div class="card-title">Modifier l'espace de dépôt</div>
+          <fieldset class="form-fieldset">
+            <div class="form-group">
+              <label id="organization-label" class="form-label">
+                Quel est le nom de l’organisme qui va déposer les réponses ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-building mr-2 text-muted"></i>
+                <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
+              </div>
+            </div>
+            <div class="form-group">
+              <label id="title-label" class="form-label">
+                Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-exchange-alt mr-2 text-muted"></i>
+                <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              </div>
+            </div>
+          </fieldset>
+          <div class="text-right">
+            <a href="javascript:void(0)"
+               @click="cancel"
+               class="btn btn-secondary">
+              Annuler
+            </a>
+            <button type="submit"
+                    class="btn btn-primary">
+              Modifier l'espace de dépôt
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </template>
+
+    <template v-else>
+      <div class="card-body flex-row justify-content-between align-items-center">
+
+        <div v-if="organization">
+          <div class="mb-3">
+            <div class="text-muted font-italic">
+              <i class="fa fa-building mr-2"></i>
+              Organisme interrogé
+            </div>
+            <div class="page-title">{{ organization }}</div>
+          </div>
+          <div class="mb-3">
+            <div class="text-muted font-italic">
+              <i class="fa fa-exchange-alt mr-2"></i>
+              Procédure
+            </div>
+            <div class="card-title">{{ title }}</div>
+          </div>
         </div>
-      </error-bar>
-      <form @submit.prevent="updateControl" class="mb-4">
-        <div class="card-title mb-4 mt-3">Modifier l'espace de dépôt</div>
-        <fieldset class="form-fieldset">
-          <div class="form-group">
-            <label id="organization-label" class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
-            <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
-          </div>
-          <div class="form-group mb-6">
-            <label id="title-label" class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
-            <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
-          </div>
-        </fieldset>
-        <div class="text-right">
+        <div v-else>
+          <div class="page-title">{{ title }}</div>
+        </div>
+
+        <div v-if="sessionUser.is_inspector">
           <a href="javascript:void(0)"
-             @click="cancel"
-             class="btn btn-secondary">
-            Annuler
+             class="btn btn-secondary"
+             title="Modifier l'espace de dépôt"
+             @click="enterEditMode"
+          >
+            <i class="fe fe-edit"></i>
+            Modifier
           </a>
-          <button type="submit"
-                  class="btn btn-primary">
-            Modifier l'espace de dépôt
-          </button>
         </div>
-      </form>
-    </div>
-  </template>
-  <template v-else>
-    <div class="col">
-      <div v-if="organization">
-        <div class="mb-3">
-          <div class="text-muted font-italic">Organisme interrogé</div>
-          <div class="page-title">{{ organization }}</div>
-        </div>
-        <div class="mb-3">
-          <div class="text-muted font-italic">Procédure</div>
-          <div class="card-title">{{ title }}</div>
-        </div>
+
       </div>
-      <div v-else>
-        <div class="page-title mt-2">{{ title }}</div>
-      </div>
-    </div>
-    <div class="col-auto mt-4 pr-0" v-if="sessionUser.is_inspector">
-      <a href="javascript:void(0)"
-         class="btn btn-secondary"
-         title="Modifier l'espace de dépôt"
-         @click="enterEditMode"
-      >
-        <i class="fe fe-edit"></i>
-        Modifier
-      </a>
-    </div>
-  </template>
-</div>
+    </template>
+
+  </div>
 </template>
 
 <script>

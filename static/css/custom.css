@@ -31,6 +31,12 @@
     border-bottom-width: 4px;
 }
 
+.page-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 /* QuestionnaireCreate.vue */
 .big-icon {
     font-size: 4rem;
@@ -250,7 +256,7 @@ table.trash-list {
     z-index: 1;
     color: #467fcf;
     background: #edf2fa;
-    border: 1px solid #467fcf;
+    border-left: 3px solid #467fcf;
 }
 
 .sidebar-item-title {
@@ -258,11 +264,18 @@ table.trash-list {
     font-size: 1.125rem;
     line-height: 1.2;
     font-weight: 600;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
 }
 
-.sidebar-item-subtitle {
+.sidebar-item-subtitle, .sidebar-item-title {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+}
+
+.sidebar-item-subtitle i, .sidebar-item-title i {
+    /* Same as body. */
+    font-size: 0.9375rem;
+    margin-top: 0.25rem
 }

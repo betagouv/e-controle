@@ -4,12 +4,12 @@
 
 {% block page_content %}
   <div id="questionnaire-list-vm">
-    <control-list-page :controls="{{ controls_json }}"
+    <control-page :controls="{{ controls_json }}"
                        :user="{{ user_json }}"
                        webdavurl="{{ settings.WEBDAV_URL }}"
                        static-files-url="//{{ current_site.domain }}{% static '' %}"
     >
-    </control-list-page>
+    </control-page>
   </div>
 {% endblock page_content %}
 
