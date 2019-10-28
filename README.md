@@ -8,7 +8,7 @@ Outil permettant de simplifier la relation entre un organisme de contrôle et de
   une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
 
 Autres technos utilisées (pas besoin de les installer localement, elles sont sur docker):
- - python
+ - Python
  - Django
 
 Notre code review process pour collaborer dans la bonne humeur :
@@ -22,6 +22,23 @@ Le container postgres a une image standard, le django une image faite maison (d�
 Quand on lance le container django avec `docker-compose run django`, il commence par exécuter https://github.com/betagouv/e-controle/blob/develop/docker-entrypoint.sh. Ce script source l'environnement, migre la base postgres si necessaire, puis exécute une commande si elle est donnée (par exemple la commande `dev`, avec `docker-compose run django dev`, lance le serveur django.).
 
 Le filesystem de la machine hôte est partagé avec le container django : le dossier `.` en local (root du repo github) est le même que le dossier `\app` sur le container. Les modifs en local apparaissent dans le container sans le relancer.
+
+
+## Notre Docker Django
+
+L'image docker pour Django peut être construite sur la base d'une image Centos.
+Mais on peut également utiliser une image Python.
+
+Pour construire le docker Django sur une base centos :
+
+    ln -sf docker/Dockerfile.centos Dockerfile
+    docker-compose build django
+
+Pour construire le docker Django sur une base Python :
+
+    ln -sf docker/Dockerfile.python Dockerfile
+    docker-compose build django
+
 
 ## Variables d'environnement
 
@@ -108,7 +125,7 @@ Pour se connecter à postgres avec l'installation docker, une méthode simple es
 Ensuite charger le dump dans la base :
 
     psql -h postgres -U ecc -d ecc < db_<date>.dump
-    
+
 (si l'installation postgres est locale, sans docker, utiliser `localhost` au lieu de `postgres` dans la commande)
 
 Le mot de passe est `ecc` (défini dans docker-compose.yml)
@@ -242,9 +259,9 @@ Ils se situent dans `static/src/` avec le code, dans des dossiers `test`. Ce son
 
 Lancer les tests : `npm test`
 
-Tester un fichier en particulier : 
+Tester un fichier en particulier :
 
-`npm test <tout ou partie du nom de fichier>`. 
+`npm test <tout ou partie du nom de fichier>`.
 
 Par exemple : `npm test Metadata` trouve le fichier `static/src/questionnaires/test/QuestionnaireMetadataCreate.spec.js`.
 
