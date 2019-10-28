@@ -2,8 +2,7 @@
   <div>
     <div id="page-content" class="row row-cards">
 
-      <control-list-sidebar :controls="controls" :hash="hash" :user="user">
-      </control-list-sidebar>
+      <sidebar></sidebar>
 
       <div id="controls" class="col-lg-8">
         <div v-if="controls.length === 0" class="card">
@@ -54,6 +53,7 @@
   import ControlCard from './ControlCard'
   import ControlListSidebar from './ControlListSidebar'
   import RemoveUserModal from "../users/RemoveUserModal"
+  import Sidebar from '../controls/Sidebar'
   import UpdateUserModal from "../users/UpdateUserModal"
   import VideoModal from "../utils/VideoModal"
 
@@ -109,6 +109,7 @@
       ControlCard,
       ControlListSidebar,
       RemoveUserModal,
+      Sidebar,
       UpdateUserModal,
       VideoModal,
     },
