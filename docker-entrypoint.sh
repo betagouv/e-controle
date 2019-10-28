@@ -8,6 +8,7 @@ then
 fi
 
 echo "############# Running Django collectstatic and migrate"""
+pip3 install -r requirements.txt
 python3.6 manage.py collectstatic --noinput
 python3.6 manage.py migrate
 
