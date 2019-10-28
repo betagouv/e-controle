@@ -16,7 +16,7 @@ def make_user(agreed_to_tos):
 def test_user_who_did_not_agree_to_tos_is_redirected():
     user = make_user(agreed_to_tos=False)
     utils.login(client, user=user)
-    url = reverse('questionnaire-list')
+    url = reverse('control-detail')
 
     response = client.get(url)
 
@@ -28,7 +28,7 @@ def test_user_who_agreed_to_tos_is_not_redirected():
     user = make_user(agreed_to_tos=True)
 
     utils.login(client, user=user)
-    url = reverse('questionnaire-list')
+    url = reverse('control-detail')
 
     response = client.get(url)
 
@@ -36,7 +36,7 @@ def test_user_who_agreed_to_tos_is_not_redirected():
 
 
 def test_anonymous_user_is_not_redirected():
-    url = reverse('questionnaire-list')
+    url = reverse('control-detail')
 
     response = client.get(url)
 

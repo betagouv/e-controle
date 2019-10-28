@@ -222,12 +222,13 @@ Quelques commandes bash utiles:
 
     npm run build-all
 
-    npm run watch-questionnaire-list  # Pour construire le fichier bundle en mode watch
-    npm run build-questionnaire-create  # Pour construire le fichier bundle
+    npm run watch-control-detail  # Pour construire le fichier bundle en mode watch
+    npm run build-control-detail  # Pour construire le fichier bundle
 
-    npm run watch-questionnaire-create  # Pour construire le fichier bundle en mode watch
-    npm run build-questionnaire-list  # Pour construire le fichier bundle
-
+    npm run watch-questionnaire-create 
+    npm run watch-questionnaire-detail
+    npm run watch-session-management
+    
 ## Tests
 
 ### Backend tests

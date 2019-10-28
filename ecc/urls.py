@@ -38,7 +38,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
     path('bienvenue/', tos_views.Welcome.as_view(), name='welcome'),
-    path('accueil/', control_views.QuestionnaireList.as_view(), name='questionnaire-list'),
+    path('accueil/', control_views.ControlDetail.as_view(), name='control-detail'),
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
     path('questionnaire/controle-<int:pk>/creer',
          control_views.QuestionnaireCreate.as_view(),

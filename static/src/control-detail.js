@@ -11,7 +11,7 @@ Vue.use(Vuex);
 
 new Vue({
   store,
-  el: '#questionnaire-list-vm',
+  el: '#control-detail-vm',
   components: {
     ControlPage,
   },
