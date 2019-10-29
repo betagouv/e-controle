@@ -26,18 +26,12 @@ Le filesystem de la machine hôte est partagé avec le container django : le dos
 
 ## Notre Docker Django
 
-L'image docker pour Django peut être construite sur la base d'une image Centos.
-Mais on peut également utiliser une image Python.
+L'image docker pour Django peut être construite à partir de plusieurs images :
 
-Pour construire le docker Django sur une base centos :
+- sur la base d'une image Centos
+- sur la bien une image Python/Node
 
-    ln -sf docker/Dockerfile.centos Dockerfile
-    docker-compose build django
-
-Pour construire le docker Django sur une base Python :
-
-    ln -sf docker/Dockerfile.python Dockerfile
-    docker-compose build django
+Pour changer l'image de base, il faut modifier le fichier `docker-compose.yml`
 
 
 ## Variables d'environnement
