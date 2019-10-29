@@ -5,11 +5,11 @@
       Mon espace de dépôt
     </div>
 
-    <control-title :control="control" :key="control.id"></control-title>
+    <control-title :control="control"></control-title>
 
     <questionnaire-list :control="control" :user="user"></questionnaire-list>
 
-    <user-section :control="control" :key="control.id"></user-section>
+    <user-section :control="control"></user-section>
 
     <webdav-tip v-if="user.is_inspector" :webdavurl="webdavurl + '/' + control.reference_code"></webdav-tip>
 
