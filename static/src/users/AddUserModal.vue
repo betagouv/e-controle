@@ -104,7 +104,7 @@
             'last_name': '',
             'email': '',
             'organization': '',
-            'controls': [],
+            'control': '',
             'profile_type': ''
         },
         'postResult': [],
@@ -133,7 +133,7 @@
             'last_name': '',
             'email': '',
             'organization': '',
-            'controls': [],
+            'control': '',
             'profile_type': ''
         }
         this.showStep1 = true
@@ -143,7 +143,7 @@
         this.errors = []
       },
       addUser() {
-        this.formData.controls.push(this.editingControl.id)
+        this.formData.control = this.editingControl.id
         this.formData.profile_type = this.editingProfileType
         this.axios.post('/api/user/', this.formData)
           .then(response => {

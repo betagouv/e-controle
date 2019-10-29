@@ -15,8 +15,8 @@ User = get_user_model()
 
 
 def test_logged_in_user_can_list_users():
-    factories.UserProfileFactory()
-    user = factories.UserFactory()
+    user_profile = factories.UserProfileFactory()
+    user = user_profile.user
     utils.login(client, user=user)
     url = reverse('api:user-list')
     response = client.get(url)
@@ -32,7 +32,7 @@ def test_inspector_can_create_user():
         'last_name': 'Proust',
         'profile_type': UserProfile.AUDITED,
         'email': 'marcel@proust.com',
-        'controls': [control.id]
+        'control': control.id
     }
     utils.login(client, user=inspector.user)
     url = reverse('api:user-list')
@@ -41,6 +41,30 @@ def test_inspector_can_create_user():
     count_after = User.objects.count()
     assert count_after == count_before + 1
     assert response.status_code == 201
+
+
+def test_inspector_can_update_an_existing_user():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    control = factories.ControlFactory()
+    existing_user = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    inspector.controls.add(control)
+    existing_user.controls.add(control)
+    post_data = {
+        'first_name': 'Marcel',
+        'last_name': 'Proust',
+        'profile_type': UserProfile.AUDITED,
+        'organization': '',
+        'email': existing_user.user.email,
+    }
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    client.post(url, post_data)
+    count_after = User.objects.count()
+    modified_user = UserProfile.objects.get(pk=existing_user.pk)
+    assert count_after == count_before
+    assert modified_user.user.first_name == 'Marcel'
+    assert modified_user.user.last_name == 'Proust'
 
 
 def test_can_associate_a_control_to_anexisting_user():
@@ -54,7 +78,7 @@ def test_can_associate_a_control_to_anexisting_user():
         'profile_type': 'audited',
         'email': existing_user.email,
         'organization': '',
-        'controls': [control.id]
+        'control': control.id
     }
     utils.login(client, user=inspector.user)
     assert control not in existing_user.profile.controls.all()
@@ -76,7 +100,7 @@ def test_audited_cannot_create_user():
         'last_name': 'Gadget',
         'profile_type': UserProfile.INSPECTOR,
         'email': 'inspector@gadget.com',
-        'controls': [control.id]
+        'control': control.id
     }
     utils.login(client, user=audited.user)
     url = reverse('api:user-list')
@@ -99,7 +123,7 @@ def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():
         'profile_type': 'audited',
         'email': existing_user.email,
         'organization': '',
-        'controls': [control.id]
+        'control': control.id
     }
     utils.login(client, user=inspector.user)
     url = reverse('api:user-list')
@@ -127,8 +151,8 @@ def test_inspector_can_remove_user_from_control():
 
 
 def test_logged_in_user_can_get_current_user():
-    factories.UserProfileFactory()
-    user = factories.UserFactory()
+    user_profile = factories.UserProfileFactory()
+    user = user_profile.user
     utils.login(client, user=user)
     url = reverse('api:user-current')
     response = client.get(url)
@@ -144,7 +168,7 @@ def test_new_audited_user_should_not_have_the_file_reporting_flag_activated():
         'last_name': 'Proust',
         'profile_type': 'audited',
         'email': 'marcel@proust.com',
-        'controls': [control.id]
+        'control': control.id
     }
     utils.login(client, user=inspector.user)
     url = reverse('api:user-list')

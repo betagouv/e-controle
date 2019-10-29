@@ -1,4 +1,4 @@
-from actstream import action
+from django.dispatch import Signal
 from rest_framework import decorators
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
@@ -8,7 +8,13 @@ from .permissions import ChangeUserPermission
 from .serializers import UserProfileSerializer, RemoveControlSerializer
 
 
-class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+# These signals are triggered after the user is deleted via the API
+user_api_post_remove = Signal(providing_args=['user_profile', 'control'])
+
+
+class UserProfileViewSet(
+        mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
     filterset_fields = ('controls', 'profile_type')
     search_fields = ('=user__username',)
@@ -27,17 +33,9 @@ class UserProfileViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.
             control_id = serializer.data['control']
             control = profile.controls.get(pk=control_id)
             profile.controls.remove(control)
-            if profile.is_inspector:
-                verb = 'removed inspector user'
-            if profile.is_audited:
-                verb = 'removed audited user'
-            action_details = {
-                'sender': self.request.user,
-                'verb': verb,
-                'action_object': profile,
-                'target': control,
-            }
-            action.send(**action_details)
+            user_api_post_remove.send(
+                sender=UserProfile, session_user=self.request.user, user_profile=profile,
+                control=control)
             return Response({'status': f"Removed control {control}"})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

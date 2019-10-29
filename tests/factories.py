@@ -34,6 +34,7 @@ class UserFactory(factory.DjangoModelFactory):
 @register
 class UserProfileFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
+    agreed_to_tos = True
 
     class Meta:
         model = 'user_profiles.UserProfile'
