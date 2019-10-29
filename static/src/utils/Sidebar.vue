@@ -11,8 +11,6 @@
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
-                  :showOneChild="true"
-                  :showChild="true"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
@@ -41,26 +39,9 @@
 
         menu: [
           {
-            header: true,
-            title: 'Main Navigation',
-            hiddenOnCollapse: true
+            title: 'En attente de la liste de contrôles...',
+            icon: 'btn-loading',
           },
-          {
-            href: '/',
-            title: 'Dashboard',
-            icon: 'fa fa-user'
-          },
-          {
-            href: '#control-7',
-            title: 'Charts',
-            icon: 'fa fa-chart-area',
-            child: [
-              {
-                href: '/charts/sublink',
-                title: 'Sub Link'
-              }
-            ]
-          }
         ]
       }
     },
