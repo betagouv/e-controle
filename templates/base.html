@@ -82,10 +82,13 @@
     </div> <!--// closing: main_page  //-->
   </div> <!--// closing: page  //-->
 
-  <div id="sidebar-vm">
-    <sidebar></sidebar>
-  </div>
-  <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
+  {% block sidebar %}
+    <div id="sidebar-vm">
+      <sidebar></sidebar>
+    </div>
+    <link href="{% static "vue-sidebar-menu/vue-sidebar-menu-4.4.1.css" %}" rel="stylesheet" />
+    <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
+  {% endblock sidebar %}
 
 {% endblock content %}
 {% block session_management %}
