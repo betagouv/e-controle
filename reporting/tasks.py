@@ -83,7 +83,7 @@ def send_files_report():
         number_of_recipients = len(recipient_list)
         if number_of_sent_email != number_of_recipients:
             logger.warning(
-                f'There was {number_of_recipients} recipients, '
+                f'There was {number_of_recipients} recipient(s), '
                 f'but {number_of_sent_email} email(s) sent.')
         if number_of_sent_email > 0:
             logger.info(f'Email sent for {control}')
