@@ -279,3 +279,14 @@ table.trash-list {
     font-size: 0.9375rem;
     margin-top: 0.25rem
 }
+
+/* Sidebar : adjust the margin of the main body of the page, to fit the sidebar when collapsed or not. */
+.page {
+    padding-left: 350px;
+    -webkit-transition: 0.3s padding-left;
+    transition: 0.3s padding-left;
+}
+
+.page.sidebar-collapsed {
+    padding-left: 50px;
+}

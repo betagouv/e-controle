@@ -1,6 +1,10 @@
 <template>
   <div>
-    <sidebar-menu :menu="menu" />
+    <sidebar-menu :menu="menu"
+                  :collapsed="collapsed"
+                  @toggle-collapse="onToggleCollapse"
+                  @item-click="onItemClick"
+    />
   </div>
 </template>
 
@@ -18,6 +22,8 @@
     },
     data() {
       return {
+        collapsed: false,
+
         menu: [
           {
             header: true,
@@ -42,6 +48,25 @@
           }
         ]
       }
-    }
+    },
+    mounted: function() {
+      this.onToggleCollapse(this.collapsed)
+    },
+    methods: {
+      onToggleCollapse (collapsed) {
+        console.log(collapsed)
+        this.collapsed = collapsed
+        if (collapsed) {
+          $('.page').addClass('sidebar-collapsed')
+        } else {
+          $('.page').removeClass('sidebar-collapsed')
+        }
+      },
+      onItemClick (event, item) {
+        console.log('onItemClick')
+        // console.log(event)
+        // console.log(item)
+      }
+    },
   })
 </script>
