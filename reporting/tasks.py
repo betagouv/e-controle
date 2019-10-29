@@ -87,7 +87,7 @@ def send_files_report():
                 f'but {number_of_sent_email} email(s) sent.')
         if number_of_sent_email > 0:
             logger.info(f'Email sent for {control}')
-            action.send(sender=control, verb='sent-files-report')
+            action.send(sender=control, verb='files report email sent')
         else:
             logger.info(f'No email was sent for "{control}"')
-            action.send(sender=control, verb='files-report-not-sent')
+            action.send(sender=control, verb='files report email not sent')
