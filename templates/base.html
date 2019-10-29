@@ -20,14 +20,6 @@
             {% block nav_items %}
               <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
                 <div class="nav-item">
-                  {% url 'control-detail' as control_detail_url %}
-                  <a class="nav-link nav-link-thick-line {% if request.path == control_detail_url %}active{% endif %}"
-                     href="{% url 'control-detail' %}">
-                    <i class="fe fe-home"></i>Accueil
-                  </a>
-                </div>
-
-                <div class="nav-item">
                   {% url 'faq' as faq_url %}
                   <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
                      href="{% url 'faq'%}">
