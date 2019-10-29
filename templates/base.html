@@ -16,16 +16,16 @@
       {% block page_top_row %}
         <div class="header py-1"> <!--// opening: top_header  //-->
           <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
-            <a class="header-brand p-3" href="{% url 'questionnaire-list' %}">
+            <a class="header-brand p-3" href="{% url 'control-detail' %}">
               <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
             </a>
 
             {% block nav_items %}
               <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
                 <div class="nav-item">
-                  {% url 'questionnaire-list' as questionnaire_list_url %}
-                  <a class="nav-link nav-link-thick-line {% if request.path == questionnaire_list_url %}active{% endif %}"
-                     href="{% url 'questionnaire-list' %}">
+                  {% url 'control-detail' as control_detail_url %}
+                  <a class="nav-link nav-link-thick-line {% if request.path == control_detail_url %}active{% endif %}"
+                     href="{% url 'control-detail' %}">
                     <i class="fe fe-home"></i>Accueil
                   </a>
                 </div>

@@ -13,7 +13,7 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
-from .serializers import QuestionnaireListControlSerializer, QuestionnaireSerializer, QuestionnaireListUserSerializer
+from .serializers import ControlDetailControlSerializer, QuestionnaireSerializer, ControlDetailUserSerializer
 
 
 class WithListOfControlsMixin(object):
@@ -27,18 +27,18 @@ class WithListOfControlsMixin(object):
         return context
 
 
-class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    template_name = "ecc/questionnaire_list.html"
+class ControlDetail(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
+    template_name = "ecc/control_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         control_list = context['controls']
         controls_serialized = []
         for control in control_list:
-            control_serialized = QuestionnaireListControlSerializer(instance=control).data
+            control_serialized = ControlDetailControlSerializer(instance=control).data
             controls_serialized.append(control_serialized)
         context['controls_json'] = json.dumps(controls_serialized)
-        user_serialized = QuestionnaireListUserSerializer(instance=self.request.user).data
+        user_serialized = ControlDetailUserSerializer(instance=self.request.user).data
         user_serialized['is_inspector'] = self.request.user.profile.is_inspector
         context['user_json'] = json.dumps(user_serialized)
         return context
