@@ -24,8 +24,8 @@ def add_log_entry(site, verb, to, cc, subject, error=''):
 
 
 def send_email(
-        to, cc, subject, text_template, html_template,
-        from_email=settings.DEFAULT_FROM_EMAIL, extra_context=None):
+        to, subject, text_template, html_template,
+        cc=None, from_email=settings.DEFAULT_FROM_EMAIL, extra_context=None):
     context = {'site': current_site}
     if extra_context:
         context.update(extra_context)
@@ -33,16 +33,17 @@ def send_email(
     html_message = loader.render_to_string(html_template, context)
     email = EmailMultiAlternatives(
         to=to,
-        cc=cc,
+        cc=cc or [],
         subject=subject,
         body=text_message,
         from_email=from_email,
     )
     email.attach_alternative(html_message, "text/html")
     try:
-        email.send(fail_silently=False)
+        return email.send(fail_silently=False)
         add_log_entry(site=current_site, verb='email sent', to=to, cc=cc, subject=subject)
     except Exception as e:
         add_log_entry(
             site=current_site, verb='email not sent', to=to, cc=cc, subject=subject,
             error=str(e))
+        return 0  # Zero email sent

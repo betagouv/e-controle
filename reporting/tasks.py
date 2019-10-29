@@ -73,17 +73,21 @@ def send_files_report():
             'files': files,
         }
         number_of_sent_email = send_email(
+            to=recipient_list,
             subject=subject,
-            text_template=text_template,
             html_template=html_template,
-            recipient_list=recipient_list,
+            text_template=text_template,
             extra_context=context,
         )
         logger.info(f"Sent {number_of_sent_email} emails")
         number_of_recipients = len(recipient_list)
         if number_of_sent_email != number_of_recipients:
             logger.warning(
-                "There was {number_of_recipients} recipients, "
-                "but {number_of_sent_email} email(s) sent.")
-        logger.info(f'Email sent for {control}')
-        action.send(sender=control, verb='sent-files-report')
+                f'There was {number_of_recipients} recipients, '
+                f'but {number_of_sent_email} email(s) sent.')
+        if number_of_sent_email > 0:
+            logger.info(f'Email sent for {control}')
+            action.send(sender=control, verb='sent-files-report')
+        else:
+            logger.info(f'No email was sent for "{control}"')
+            action.send(sender=control, verb='files-report-not-sent')
