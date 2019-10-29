@@ -11,6 +11,7 @@
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
+                  theme="white-theme"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
@@ -40,7 +41,7 @@
         menu: [
           {
             title: 'En attente de la liste de contrôles...',
-            icon: 'btn-loading',
+            icon: 'btn-loading btn-secondary bg-white',
           },
         ]
       }
@@ -52,6 +53,7 @@
         this.controls = response.data
         this.menu = response.data.reverse().map(control => {
           return {
+            icon: 'fa fa-building text-muted bg-white',
             href: ('#control-' + control.id),
             title: control.depositing_organization ? control.depositing_organization : control.title,
             child: control.questionnaires.map(questionnaire => {
