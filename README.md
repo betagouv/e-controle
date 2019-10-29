@@ -118,21 +118,21 @@ Pour se connecter à postgres avec l'installation docker, une méthode simple es
 
 Ensuite charger le dump dans la base :
 
-    psql -h postgres -U ecc -d ecc < db_<date>.dump
+    psql -h postgres -U ecc -d ecc < db.dump
 
 (si l'installation postgres est locale, sans docker, utiliser `localhost` au lieu de `postgres` dans la commande)
 
 Le mot de passe est `ecc` (défini dans docker-compose.yml)
 
 Voilà des utilisateurs admin qui existent par défaut quand on utilise le dump de démo:
-- inspector@demo.com / demoe12345
-- audited@demo.com / demoe12345
+- inspector@demo.com / demo12345
+- audited@demo.com / demo12345
 
 Note : Pour créer un nouveau dump :
 
     pg_dump --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc > db.dump
 
-Ensuite, ajouter dezipper les fichiers de `media_<date>.zip` dans un dossier `media` à la racine de ce projet.
+Ensuite, ajouter dezipper les fichiers de `media.zip` dans un dossier `media` à la racine de ce projet.
 
 ## Login et envoi d'emails
 
