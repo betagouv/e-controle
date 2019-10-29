@@ -15,28 +15,26 @@
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
 
-      <div id="body" class="row row-cards">
-        <div class="col-lg-8">
-          <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
-                     :theme="theme"
-                     :theme-numbering="themeIndex + 1">
+      <div>
+        <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
+                   :theme="theme"
+                   :theme-numbering="themeIndex + 1">
 
-            <question-box v-for="(question, qIndex) in theme.questions"
-                          :with-collapse="true"
-                          :theme-numbering="themeIndex + 1"
-                          :question-numbering="qIndex + 1"
-                          :question="question">
+          <question-box v-for="(question, qIndex) in theme.questions"
+                        :with-collapse="true"
+                        :theme-numbering="themeIndex + 1"
+                        :question-numbering="qIndex + 1"
+                        :question="question">
 
-              <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-              <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
-              <response-dropzone :is-audited="user.is_audited"
-                                 :question-id="question.id">
-              </response-dropzone>
+            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+            <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
+            <response-dropzone :is-audited="user.is_audited"
+                               :question-id="question.id">
+            </response-dropzone>
 
-            </question-box>
+          </question-box>
 
-          </theme-box>
-        </div>
+        </theme-box>
 
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sidebar-header flex-row justify-content-between align-items-center">
+    <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
       <a class="header-brand" href="/accueil">
         <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
       </a>

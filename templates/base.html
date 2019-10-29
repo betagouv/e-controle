@@ -10,15 +10,12 @@
 {% endblock extra_static_header %}
 
 {% block content %}
-  <div class="page container"> <!--// opening: page  //-->
+  <div class="page container-fluid pr-0"> <!--// opening: page  //-->
     <div id="app"></div>
     <div class="page-main"> <!--// opening: main_page  //-->
       {% block page_top_row %}
         <div class="header py-1"> <!--// opening: top_header  //-->
           <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
-            <a class="header-brand p-3" href="{% url 'control-detail' %}">
-              <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
-            </a>
 
             {% block nav_items %}
               <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->

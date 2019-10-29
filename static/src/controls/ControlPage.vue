@@ -1,45 +1,42 @@
 <template>
-  <div>
-    <div id="page-content" class="row row-cards">
+  <div id="page-content">
 
-      <div id="controls" class="col-lg-8">
-        <div v-if="controls.length === 0" class="card">
-          <div class="card-body">
-            <span v-if="user.is_inspector">
-              Vous n'avez aucun espace de dépôt ouvert.
-            </span>
-            <span v-else>
-              Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
-            </span>
-          </div>
+    <div id="controls">
+      <div v-if="controls.length === 0" class="card">
+        <div class="card-body">
+          <span v-if="user.is_inspector">
+            Vous n'avez aucun espace de dépôt ouvert.
+          </span>
+          <span v-else>
+            Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
+          </span>
         </div>
-
-        <template v-else>
-          <control-card v-for="control in controls"
-                        v-if="hash === '#control-' + control.id "
-                        :key="control.id"
-                        :control="control"
-                        :user="user"
-                        :webdavurl="webdavurl"
-          >
-          </control-card>
-        </template>
       </div>
 
-      <add-user-modal></add-user-modal>
-
-      <update-user-modal></update-user-modal>
-
-      <remove-user-modal></remove-user-modal>
-
-      <video-modal
-        id="fileExplorerVideoModal"
-        :video-url="staticFilesUrl + 'videos/file-explorer.mp4'"
-        video-type="video/mp4"
-      >
-      </video-modal>
-
+      <template v-else>
+        <control-card v-for="control in controls"
+                      v-if="hash === '#control-' + control.id "
+                      :key="control.id"
+                      :control="control"
+                      :user="user"
+                      :webdavurl="webdavurl"
+        >
+        </control-card>
+      </template>
     </div>
+
+    <add-user-modal></add-user-modal>
+
+    <update-user-modal></update-user-modal>
+
+    <remove-user-modal></remove-user-modal>
+
+    <video-modal
+      id="fileExplorerVideoModal"
+      :video-url="staticFilesUrl + 'videos/file-explorer.mp4'"
+      video-type="video/mp4"
+    >
+    </video-modal>
 
   </div>
 </template>

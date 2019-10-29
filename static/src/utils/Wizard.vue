@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-around mb-6">
+  <div class="flex-row justify-content-around mb-6">
     <wizard-step v-for="(stepTitle, i) in stepTitles"
                  :number="i+1"
                  :class="{ 'active': activeI === i , 'done': activeI > i }"
