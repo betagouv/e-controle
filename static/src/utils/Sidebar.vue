@@ -12,6 +12,7 @@
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
                   :showOneChild="true"
+                  :showChild="true"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
@@ -27,6 +28,7 @@
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
   const controls_url = '/api/control/'
+  const questionnaire_detail_url = '/questionnaire/'
 
   export default Vue.extend({
     components: {
@@ -63,13 +65,20 @@
       }
     },
     mounted: function() {
+      console.debug('sidebar getting controls...')
       axios.get(controls_url).then((response) => {
         console.debug('sidebar got controls', response)
         this.controls = response.data
-        this.menu = response.data.map(control => {
+        this.menu = response.data.reverse().map(control => {
           return {
             href: ('#control-' + control.id),
             title: control.depositing_organization,
+            child: control.questionnaires.map(questionnaire => {
+              return {
+                href: questionnaire_detail_url + questionnaire.id,
+                title: questionnaire.title
+              }
+            }),
           }
         })
       }).catch(err => {

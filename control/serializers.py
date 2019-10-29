@@ -17,18 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name')
 
 
-class ControlSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization', 'reference_code')
-
-
-class ControlUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization')
-
-
 class ResponseFileSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     creation_date = DateTimeFieldWihTZ(source='created', format='%a %d %B %Y')
@@ -79,6 +67,20 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
                   'title_display')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
+
+
+class ControlSerializer(serializers.ModelSerializer):
+    questionnaires = QuestionnaireSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
+
+
+class ControlUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization')
 
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
