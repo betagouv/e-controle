@@ -1,6 +1,16 @@
 <template>
   <div>
-    <sidebar-menu :menu="menu"
+    <div class="sidebar-header flex-row justify-content-between align-items-center">
+      <a class="header-brand" href="accueil">
+        <img src="http://localhost:8080/static/img/e-controle.png" class="header-brand-img" alt="logo" />
+      </a>
+      <a>
+        <i class="page-title fe fe-menu"></i>
+      </a>
+    </div>
+
+    <sidebar-menu class="sidebar-body"
+                  :menu="menu"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"

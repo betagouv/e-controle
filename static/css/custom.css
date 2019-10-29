@@ -290,3 +290,15 @@ table.trash-list {
 .page.sidebar-collapsed {
     padding-left: 50px;
 }
+
+.sidebar-header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 1rem;
+    width: 350px;
+}
+
+.v-sidebar-menu.sidebar-body {
+    top: 4rem;
+}
