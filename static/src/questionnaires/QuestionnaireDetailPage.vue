@@ -16,9 +16,6 @@
       </questionnaire-metadata>
 
       <div id="body" class="row row-cards">
-        <theme-list-sidebar :themes="questionnaire.themes">
-        </theme-list-sidebar>
-
         <div class="col-lg-8">
           <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
                      :theme="theme"
@@ -58,7 +55,6 @@
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
   import ThemeBox from '../themes/ThemeBox'
-  import ThemeListSidebar from '../themes/ThemeListSidebar'
 
   const questionnaire_url = "/api/questionnaire/";
   const session_user_url = "/api/user/current/";
@@ -89,7 +85,6 @@
       ResponseDropzone,
       ResponseFileList,
       ThemeBox,
-      ThemeListSidebar,
     }
   })
 

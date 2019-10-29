@@ -4,8 +4,6 @@
     </questionnaire-metadata>
 
     <div id="body" class="row row-cards">
-      <theme-list-sidebar :themes="questionnaire.themes">
-      </theme-list-sidebar>
 
       <div class="col-lg-8">
         <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
@@ -34,7 +32,6 @@
   import QuestionFileList from "../questions/QuestionFileList"
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ThemeBox from '../themes/ThemeBox'
-  import ThemeListSidebar from '../themes/ThemeListSidebar'
 
   export default Vue.extend({
     props: ['questionnaire'],
@@ -46,7 +43,6 @@
       QuestionFileList,
       QuestionnaireMetadata,
       ThemeBox,
-      ThemeListSidebar,
     }
   });
 </script>

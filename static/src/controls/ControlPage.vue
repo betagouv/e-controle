@@ -49,9 +49,7 @@
 
   import AddUserModal from "../users/AddUserModal"
   import ControlCard from './ControlCard'
-  import ControlListSidebar from './ControlListSidebar'
   import RemoveUserModal from "../users/RemoveUserModal"
-  import Sidebar from '../controls/Sidebar'
   import UpdateUserModal from "../users/UpdateUserModal"
   import VideoModal from "../utils/VideoModal"
 
@@ -105,9 +103,7 @@
     components: {
       AddUserModal,
       ControlCard,
-      ControlListSidebar,
       RemoveUserModal,
-      Sidebar,
       UpdateUserModal,
       VideoModal,
     },

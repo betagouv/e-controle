@@ -1,6 +1,6 @@
 import "@babel/polyfill"
 
-import Sidebar from './controls/Sidebar'
+import Sidebar from './utils/Sidebar'
 import Vue from 'vue/dist/vue.js'
 
 new Vue({
