@@ -40,10 +40,11 @@ def send_email(
     )
     email.attach_alternative(html_message, "text/html")
     try:
-        return email.send(fail_silently=False)
+        number_of_sent_email = email.send(fail_silently=False)
         add_log_entry(site=current_site, verb='email sent', to=to, cc=cc, subject=subject)
     except Exception as e:
         add_log_entry(
             site=current_site, verb='email not sent', to=to, cc=cc, subject=subject,
             error=str(e))
-        return 0  # Zero email sent
+        number_of_sent_email = 0
+    return number_of_sent_email
