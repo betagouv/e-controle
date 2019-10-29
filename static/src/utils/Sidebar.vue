@@ -11,6 +11,7 @@
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
+                  :showOneChild="true"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
@@ -20,9 +21,12 @@
 
 
 <script>
+  import axios from "axios"
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+
+  const controls_url = '/api/control/'
 
   export default Vue.extend({
     components: {
@@ -31,6 +35,7 @@
     data() {
       return {
         collapsed: false,
+        controls: [],
 
         menu: [
           {
@@ -56,6 +61,21 @@
           }
         ]
       }
+    },
+    mounted: function() {
+      axios.get(controls_url).then((response) => {
+        console.debug('sidebar got controls', response)
+        this.controls = response.data
+        this.menu = response.data.map(control => {
+          return {
+            href: ('#control-' + control.id),
+            title: control.depositing_organization,
+          }
+        })
+      }).catch(err => {
+        console.error('sidebar got error when getting controls', err)
+        // todo err.message err.response.status
+      })
     },
     methods: {
       onToggleCollapse (collapsed) {
