@@ -72,7 +72,7 @@
         this.menu = response.data.reverse().map(control => {
           return {
             href: ('#control-' + control.id),
-            title: control.depositing_organization,
+            title: control.depositing_organization ? control.depositing_organization : control.title,
             child: control.questionnaires.map(questionnaire => {
               return {
                 href: questionnaire_detail_url + questionnaire.id,
