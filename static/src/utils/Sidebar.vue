@@ -75,3 +75,31 @@
     },
   })
 </script>
+
+<style scoped>
+  .sidebar-header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 1rem;
+    width: 350px;
+  }
+
+  .v-sidebar-menu.sidebar-body {
+      top: 4rem;
+  }
+
+</style>
+
+<style>
+    /* Adjust the margin of the main body of the page, to fit the sidebar when collapsed or not. */
+  .page {
+      padding-left: 350px;
+      -webkit-transition: 0.3s padding-left;
+      transition: 0.3s padding-left;
+  }
+
+  .page.sidebar-collapsed {
+      padding-left: 50px;
+  }
+</style>
