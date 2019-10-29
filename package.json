@@ -4,16 +4,22 @@
     "node": "10.x"
   },
   "scripts": {
-    "build-all": "npm run build-control-detail && npm run build-questionnaire-create && npm run build-questionnaire-detail && npm run build-session-management",
+    "build-all": "npm run build-control-detail && npm run build-questionnaire-create && npm run build-questionnaire-detail && npm run build-session-management && npm run build-sidebar",
+
+    "build-control-detail": "parcel build static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
-    "build-control-detail": "parcel build static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "build-session-management": "parcel build static/src/session-management.js --out-dir ./static/dist/ --out-file session-management-bundle.js",
+    "build-sidebar": "parcel build static/src/sidebar.js --out-dir ./static/dist/ --out-file sidebar-bundle.js",
+
+    "watch-control-detail": "parcel watch static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
-    "watch-control-detail": "parcel watch static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "watch-session-management": "parcel watch static/src/session-management.js --out-dir ./static/dist/ --out-file session-management-bundle.js",
+    "watch-sidebar": "parcel watch static/src/sidebar.js --out-dir ./static/dist/ --out-file sidebar-bundle.js",
+
     "postinstall": "npm run build-all",
+
     "test": "jest"
   },
   "dependencies": {
