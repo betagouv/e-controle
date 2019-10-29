@@ -2,8 +2,6 @@
   <div>
     <div id="page-content" class="row row-cards">
 
-      <sidebar></sidebar>
-
       <div id="controls" class="col-lg-8">
         <div v-if="controls.length === 0" class="card">
           <div class="card-body">

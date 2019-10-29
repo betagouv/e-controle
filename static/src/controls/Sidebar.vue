@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sidebar-menu :menu="menu" hide-toggle="true" relative="true"/>
+    <sidebar-menu :menu="menu" />
   </div>
 </template>
 
@@ -30,7 +30,7 @@
             icon: 'fa fa-user'
           },
           {
-            href: '/charts',
+            href: '#control-7',
             title: 'Charts',
             icon: 'fa fa-chart-area',
             child: [

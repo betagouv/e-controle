@@ -10,7 +10,7 @@
 {% endblock extra_static_header %}
 
 {% block content %}
-  <div class="page"> <!--// opening: page  //-->
+  <div class="page container"> <!--// opening: page  //-->
     <div id="app"></div>
     <div class="page-main"> <!--// opening: main_page  //-->
       {% block page_top_row %}
@@ -81,6 +81,11 @@
 
     </div> <!--// closing: main_page  //-->
   </div> <!--// closing: page  //-->
+
+  <div id="sidebar-vm">
+    <sidebar></sidebar>
+  </div>
+  <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
 {% endblock content %}
 {% block session_management %}
