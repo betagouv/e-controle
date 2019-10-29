@@ -20,13 +20,17 @@ console_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 
 
+ACTION_LOG_VERB_SENT = 'files report email sent'
+ACTION_LOG_VERB_NOT_SENT = 'files report email not sent'
+
+
 def get_date_cutoff(control):
     """
     The reporting tool looks for files uploaded after a certain date cutoff, which could be :
     - The last thime a reporting email was sent
     - 24h from now
     """
-    latest_email_sent = control.actor_actions.filter(verb='sent-files-report').first()
+    latest_email_sent = control.actor_actions.filter(verb=ACTION_LOG_VERB_SENT).first()
     if latest_email_sent:
         date_cutoff = latest_email_sent.timestamp
     else:
@@ -87,7 +91,7 @@ def send_files_report():
                 f'but {number_of_sent_email} email(s) sent.')
         if number_of_sent_email > 0:
             logger.info(f'Email sent for {control}')
-            action.send(sender=control, verb='files report email sent')
+            action.send(sender=control, verb=ACTION_LOG_VERB_SENT)
         else:
             logger.info(f'No email was sent for "{control}"')
-            action.send(sender=control, verb='files report email not sent')
+            action.send(sender=control, verb=ACTION_LOG_VERB_NOT_SENT)
