@@ -2,17 +2,14 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import filer.fields.file
 import mptt.fields
+
+import control.upload_path
 
 
 class Migration(migrations.Migration):
 
     initial = True
-
-    dependencies = [
-        ('filer', '0010_auto_20180414_2058'),
-    ]
 
     operations = [
         migrations.CreateModel(
@@ -44,7 +41,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('order', models.PositiveIntegerField(db_index=True, editable=False, verbose_name='order')),
-                ('file', filer.fields.file.FilerFileField(on_delete=django.db.models.deletion.CASCADE, to='filer.File', verbose_name='fichier')),
+                ('file', models.FileField(default='', upload_to=control.upload_path.question_file_path, verbose_name='fichier')),
                 ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='files', to='control.Question', verbose_name='question')),
             ],
             options={
