@@ -176,6 +176,8 @@ except locale.Error as e:
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+ADMIN_URL_PATH = env('ADMIN_URL_PATH', default='admin/')
+
 STATIC_URL = '/static/'
 
 # Collect static won't work if you haven't configured this
