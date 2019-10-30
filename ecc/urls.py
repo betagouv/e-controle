@@ -34,7 +34,7 @@ router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='s
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', tos_views.tos, name='tos'),
-    path(settings.ADMIN_URL_PATH, admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
     path('bienvenue/', tos_views.Welcome.as_view(), name='welcome'),
