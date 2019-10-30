@@ -105,10 +105,12 @@ class QuestionFileAdmin(admin.ModelAdmin):
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     fields = (
-        'id', 'file', 'question_display', 'questionnaire_display', 'control_display', 'order')
+        'id', 'file', 'question', 'question_display', 'questionnaire_display',
+        'control_display', 'order')
     readonly_fields = (
         'id', 'question_display', 'questionnaire_display', 'control_display', 'order')
     search_fields = ('file', 'question__description')
+    raw_id_fields = ('question',)
 
 
 @method_decorator(staff_member_required, name='dispatch')
