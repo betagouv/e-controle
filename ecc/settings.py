@@ -56,7 +56,6 @@ INSTALLED_APPS = [
 
     'control',
     'demo',
-    'ecc',
     'faq',
     'magicauth',
     'reporting',
@@ -65,6 +64,10 @@ INSTALLED_APPS = [
     'adauth',
     'session',
     'tos',
+
+    # Central app - loaded last
+    'ecc',
+
 ]
 
 
