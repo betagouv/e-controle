@@ -59,7 +59,7 @@
             title: control.depositing_organization ? control.depositing_organization : control.title,
             child: control.questionnaires.map(questionnaire => {
               return {
-                href: questionnaire_detail_url + questionnaire.id,
+                href: questionnaire_detail_url + questionnaire.id + '/',
                 title: questionnaire.title
               }
             }),
