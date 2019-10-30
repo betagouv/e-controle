@@ -93,19 +93,22 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
         'id', 'author', 'file_name', 'question_display', 'questionnaire_display', 'control_display',
         'created', 'modified', 'is_deleted')
     readonly_fields = ('file_name', 'question_display', 'questionnaire_display', 'control_display')
-    search_fields = ('author', 'file')
+    search_fields = (
+        'file', 'question__description', 'author__first_name', 'author__last_name',
+        'author__username')
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'question_display')
+class QuestionFileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'file', 'question_display')
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     fields = (
-        'id', 'file_name', 'question_display', 'questionnaire_display', 'control_display', 'order')
-    readonly_fields = ('file_name', 'question_display', 'questionnaire_display', 'control_display')
-    search_fields = ('file',)
+        'id', 'file', 'question_display', 'questionnaire_display', 'control_display', 'order')
+    readonly_fields = (
+        'id', 'question_display', 'questionnaire_display', 'control_display', 'order')
+    search_fields = ('file', 'question__description')
 
 
 @method_decorator(staff_member_required, name='dispatch')
