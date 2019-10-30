@@ -125,8 +125,8 @@ Ensuite charger le dump dans la base :
 Le mot de passe est `ecc` (défini dans docker-compose.yml)
 
 Voilà des utilisateurs admin qui existent par défaut quand on utilise le dump de démo:
-- inspector@demo.com / demo12345
-- audited@demo.com / demo12345
+- Controlé: robert@demo.com / demo12345
+- Contrôleur: martine@demo.com / demo12345
 
 Note : Pour créer un nouveau dump :
 
@@ -137,7 +137,7 @@ Ensuite, ajouter dezipper les fichiers de `media.zip` dans un dossier `media` à
 ## Login et envoi d'emails
 
 Les utlisateurs admin peuvent se logger sans envoi d'email à http://localhost:8080/admin.
-(Si vous avez utilisé le dump ci-dessus, essayez admon@demo.com / demo12345)
+(Si vous avez utilisé le dump ci-dessus, essayez admin@demo.com / demo12345)
 
 Les utilisateurs non-admin n'ont pas de mot de passe, ils recoivent un email contenant un lien de connexion. Votre serveur doit donc être configuré pour envoyer des mails.
 
