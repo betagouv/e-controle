@@ -11,6 +11,7 @@
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
+                  :show-one-child="true"
                   theme="white-theme"
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
@@ -47,15 +48,6 @@
       }
     },
     mounted: function() {
-      const currentUrl = window.location.pathname
-      const makeControlLink = control => {
-        let link = ''
-        if (!currentUrl.startsWith('/accueil')) {
-          link += '/accueil/'
-        }
-        link += '#control-' + control.id
-        return link
-      }
       console.debug('sidebar getting controls...')
       axios.get(controls_url).then((response) => {
         console.debug('sidebar got controls', response)
@@ -63,7 +55,7 @@
         this.menu = response.data.reverse().map(control => {
           return {
             icon: 'fa fa-building text-muted bg-white',
-            href: makeControlLink(control),
+            href: '/accueil/#control-' + control.id,
             title: control.depositing_organization ? control.depositing_organization : control.title,
             child: control.questionnaires.map(questionnaire => {
               return {
@@ -73,6 +65,8 @@
             }),
           }
         })
+        this.menu.push(this.menu[6].child[0])
+        this.menu[7].child = this.menu[6].child[0]
       }).catch(err => {
         console.error('sidebar got error when getting controls', err)
         // todo err.message err.response.status
