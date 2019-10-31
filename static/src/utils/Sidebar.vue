@@ -94,8 +94,10 @@
       }
 
       const buildMenu = () => {
-        this.menu = this.controls.reverse().map(control => {
-          return {
+        const controlCreatingQuestionnaireId = findControlCreatingQuestionnaire()
+        const menu =  this.controls.reverse().map(control => {
+
+          const controlMenu = {
             icon: 'fa fa-building text-muted bg-white',
             href: '/accueil/#control-' + control.id,
             title: control.depositing_organization ? control.depositing_organization : control.title,
@@ -106,7 +108,25 @@
               }
             }),
           }
+          // Add menu item for the questionnaire being created, if there is one.
+          if (controlCreatingQuestionnaireId === ('' + control.id)) {
+            controlMenu.child.push({
+              href: '/questionnaire/controle-' + control.id + '/creer',
+              title: 'Q' + (controlMenu.child.length + 1),
+            })
+          }
+          return controlMenu
+
         })
+        this.menu = menu
+      }
+
+      // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
+      const findControlCreatingQuestionnaire = () => {
+        const found = window.location.pathname.match(/^\/questionnaire\/controle-([0-9]+)\/creer$/)
+        if (found) {
+          return found[1]
+        }
       }
 
       getCurrentUser().then(getControls).then(buildMenu)
