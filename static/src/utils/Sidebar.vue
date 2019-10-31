@@ -30,6 +30,8 @@
 
   const controls_url = '/api/control/'
   const questionnaire_detail_url = '/questionnaire/'
+  const questionnaire_modify_url = '/questionnaire/modifier/'
+  const welcome_url = '/bienvenue/'
 
   export default Vue.extend({
     components: {
@@ -39,6 +41,7 @@
       return {
         collapsed: false,
         controls: [],
+        currentUser: undefined,
 
         menu: [
           {
@@ -49,7 +52,7 @@
       }
     },
     mounted: function() {
-      if (window.location.pathname === '/bienvenue/') {
+      if (window.location.pathname === welcome_url) {
         this.collapsed = true
         this.menu = []
         this.moveBodyForCollapse()
@@ -59,27 +62,54 @@
         return
       }
 
-      console.debug('sidebar getting controls...')
-      axios.get(controls_url).then((response) => {
-        console.debug('sidebar got controls', response)
-        this.controls = response.data
-        this.menu = response.data.reverse().map(control => {
+      const getCurrentUser = () => {
+        console.debug('sidebar getting current user...')
+        return axios.get('/api/user/current/').then((response) => {
+          console.debug('sidebar got user', response)
+          this.currentUser = response.data
+        }).catch(err => {
+          // todo deal with error
+        })
+      }
+
+      const getControls = () => {
+        console.debug('sidebar getting controls...')
+        return axios.get(controls_url).then((response) => {
+          console.debug('sidebar got controls', response)
+          this.controls = response.data
+        }).catch(err => {
+          console.error('sidebar got error when getting controls', err)
+          // todo err.message err.response.status
+        })
+      }
+
+      const makeQuestionnaireLink = questionnaire => {
+        if (!questionnaire.is_draft) {
+          return questionnaire_detail_url + questionnaire.id + '/'
+        }
+        if (questionnaire.author && questionnaire.author.id === this.currentUser.id) {
+          return questionnaire_modify_url + questionnaire.id + '/'
+        }
+        return questionnaire_detail_url + questionnaire.id + '/'
+      }
+
+      const buildMenu = () => {
+        this.menu = this.controls.reverse().map(control => {
           return {
             icon: 'fa fa-building text-muted bg-white',
             href: '/accueil/#control-' + control.id,
             title: control.depositing_organization ? control.depositing_organization : control.title,
             child: control.questionnaires.map(questionnaire => {
               return {
-                href: questionnaire_detail_url + questionnaire.id + '/',
+                href: makeQuestionnaireLink(questionnaire),
                 title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
               }
             }),
           }
         })
-      }).catch(err => {
-        console.error('sidebar got error when getting controls', err)
-        // todo err.message err.response.status
-      })
+      }
+
+      getCurrentUser().then(getControls).then(buildMenu)
     },
     methods: {
       moveBodyForCollapse () {
