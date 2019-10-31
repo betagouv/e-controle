@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div class="page-title mb-4">
-      <i class="fa fa-archive mr-2"></i>
-      Mon espace de dépôt
+    <div class="mb-4 flex-row justify-content-between">
+      <div class="page-title">
+        <i class="fa fa-archive mr-2"></i>
+        Mon espace de dépôt
+      </div>
+      <control-create v-if="user.is_inspector"></control-create>
     </div>
 
     <control-title :control="control"></control-title>
@@ -20,6 +23,7 @@
 <script>
   import Vue from 'vue'
 
+  import ControlCreate from './ControlCreate'
   import ControlTitle from "./ControlTitle"
   import QuestionnaireList from '../questionnaires/QuestionnaireList'
   import UserSection from '../users/UserSection'
@@ -32,6 +36,7 @@
       'webdavurl',
     ],
     components: {
+      ControlCreate,
       ControlTitle,
       QuestionnaireList,
       UserSection,
