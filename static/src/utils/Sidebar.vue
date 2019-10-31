@@ -48,6 +48,13 @@
       }
     },
     mounted: function() {
+      if (window.location.pathname === '/bienvenue/') {
+        this.collapsed = true
+        this.menu = []
+        this.moveBodyForCollapse()
+        return
+      }
+
       console.debug('sidebar getting controls...')
       axios.get(controls_url).then((response) => {
         console.debug('sidebar got controls', response)
@@ -71,13 +78,21 @@
       })
     },
     methods: {
+      moveBodyForCollapse () {
+        const element = document.getElementById('page')
+        element.classList.add('sidebar-collapsed')
+      },
+      moveBodyForUncollapse () {
+        const element = document.getElementById('page')
+        element.classList.remove('sidebar-collapsed')
+      },
       onToggleCollapse (collapsed) {
         console.log(collapsed)
         this.collapsed = collapsed
         if (collapsed) {
-          $('.page').addClass('sidebar-collapsed')
+          this.moveBodyForCollapse()
         } else {
-          $('.page').removeClass('sidebar-collapsed')
+          this.moveBodyForUncollapse()
         }
       },
       onItemClick (event, item) {
