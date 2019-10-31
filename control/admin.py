@@ -16,6 +16,13 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile, Respo
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
 
 
+class AdminHelpers(object):
+
+    def more_details(self, instance):
+        return 'détails...'
+    more_details.short_description = 'détails'
+
+
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
@@ -69,7 +76,7 @@ class QuestionFileInline(OrderedTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
+class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
     list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
     list_editable = ('description', 'theme')
     raw_id_fields = ('theme',)
@@ -77,14 +84,13 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
 
-    def more_details(self, instance):
-        return 'détails...'
-    more_details.short_description = 'détails'
-
 
 @admin.register(ResponseFile)
-class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
-    list_display = ('id', 'file_name', 'question_display', 'created', 'author', 'is_deleted')
+class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
+    list_display = (
+        'more_details', 'id', 'file_name', 'question_display', 'questionnaire_display',
+        'control_display', 'created', 'author', 'is_deleted')
+    list_display_links = ('more_details', 'id')
     date_hierarchy = 'created'
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
@@ -99,8 +105,11 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(admin.ModelAdmin):
-    list_display = ('id', 'file', 'question_display')
+class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
+    list_display = (
+        'more_details', 'id', 'file', 'question_display', 'questionnaire_display',
+        'control_display')
+    list_display_links = ('more_details', 'id')
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
