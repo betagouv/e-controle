@@ -4,13 +4,14 @@
       <a class="header-brand" href="/accueil">
         <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
       </a>
-      <a>
+      <!-- remove for now, collapse by user not supported a>
         <i class="page-title fe fe-menu"></i>
-      </a>
+      </a-->
     </div>
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
+                  :hideToggle="true"
                   :show-one-child="true"
                   theme="white-theme"
                   :collapsed="collapsed"
@@ -52,6 +53,9 @@
         this.collapsed = true
         this.menu = []
         this.moveBodyForCollapse()
+        // Hack for top bar to stay on top, until we figure out the layout for collapsed menu.
+        const topBar = document.getElementsByClassName('sidebar-header')[0];
+        topBar.setAttribute('style', 'width: 100%;')
         return
       }
 
