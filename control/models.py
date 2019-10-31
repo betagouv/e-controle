@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.safestring import mark_safe
+
 
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
@@ -17,13 +19,48 @@ from .upload_path import questionnaire_file_path, question_file_path, response_f
 
 class WithNumberingMixin(object):
     """
-    Add an helper method for getting the numbering base on the order field.
+    Add an helper for getting the numbering base on the order field.
     """
 
     @property
     def numbering(self):
         return self.order + 1
     numbering.fget.short_description = 'Numérotation'
+
+
+class QuestionnaireFileMixin(object):
+    """
+    Add common helpers for file information.
+    """
+
+    @property
+    def file_name(self):
+        return self.file.name
+
+    @property
+    def question_display(self):
+        question = self.question
+        url = reverse('admin:control_question_change', args=[question.pk])
+        return mark_safe(f'<a href="{url}">{question.numbering}. {question}</a>')
+    question_display.fget.short_description = 'question'
+
+    @property
+    def questionnaire_display(self):
+        questionnaire = self.question.theme.questionnaire
+        url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
+        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
+    questionnaire_display.fget.short_description = 'questionnaire'
+
+    @property
+    def control_display(self):
+        control = self.question.theme.questionnaire.control
+        url = reverse('admin:control_control_change', args=[control.pk])
+        return mark_safe(f'<a href="{url}">{control}</a>')
+    control_display.fget.short_description = 'control'
+
+
+    def __str__(self):
+        return self.file_name
 
 
 class Control(models.Model):
@@ -205,7 +242,7 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.description
 
 
-class QuestionFile(OrderedModel):
+class QuestionFile(OrderedModel, QuestionnaireFileMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
@@ -214,8 +251,8 @@ class QuestionFile(OrderedModel):
 
     class Meta:
         ordering = ('question', 'order')
-        verbose_name = 'Question: Fichier Attaché'
-        verbose_name_plural = 'Question: Fichiers Attachés'
+        verbose_name = 'Question: Fichier Annexe'
+        verbose_name_plural = 'Question: Fichiers Annexes'
 
     @property
     def url(self):
@@ -228,12 +265,9 @@ class QuestionFile(OrderedModel):
         """
         return os.path.basename(self.file.name)
 
-    def __str__(self):
-        return self.file.name
-
 
 @cleanup.ignore
-class ResponseFile(TimeStampedModel):
+class ResponseFile(TimeStampedModel, QuestionnaireFileMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)
@@ -245,8 +279,8 @@ class ResponseFile(TimeStampedModel):
         help_text="Ce fichier est=il dans la corbeille?")
 
     class Meta:
-        verbose_name = 'Réponse: Fichier Attaché'
-        verbose_name_plural = 'Réponse: Fichiers Attachés'
+        verbose_name = 'Réponse: Fichier Déposé'
+        verbose_name_plural = 'Réponse: Fichiers Déposés'
 
     @property
     def url(self):
@@ -261,6 +295,3 @@ class ResponseFile(TimeStampedModel):
         if self.is_deleted:
             return prefixer.strip_deleted_file_prefix()
         return prefixer.strip_file_prefix()
-
-    def __str__(self):
-        return self.file.name
