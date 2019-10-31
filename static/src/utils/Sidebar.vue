@@ -9,6 +9,11 @@
       </a-->
     </div>
 
+    <div v-if="isLoading" class="sidebar-load-message card-header border-0">
+      <div class="loader mr-2"></div>
+      En attente de la liste de contrôles...
+    </div>
+
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
                   :hideToggle="true"
@@ -42,13 +47,8 @@
         collapsed: false,
         controls: [],
         currentUser: undefined,
-
-        menu: [
-          {
-            title: 'En attente de la liste de contrôles...',
-            icon: 'btn-loading btn-secondary bg-white',
-          },
-        ]
+        menu: [],
+        isLoading: true,
       }
     },
     mounted: function() {
@@ -118,6 +118,7 @@
           return controlMenu
 
         })
+        this.isLoading = false
         this.menu = menu
       }
 
@@ -169,6 +170,13 @@
 
   .v-sidebar-menu.sidebar-body {
       top: 4rem;
+  }
+
+  .sidebar-load-message {
+    position: fixed;
+    top: 5rem;
+    left: 0px;
+    z-index: 9999;
   }
 
 </style>
