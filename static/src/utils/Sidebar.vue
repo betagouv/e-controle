@@ -60,13 +60,11 @@
             child: control.questionnaires.map(questionnaire => {
               return {
                 href: questionnaire_detail_url + questionnaire.id + '/',
-                title: questionnaire.title
+                title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
               }
             }),
           }
         })
-        this.menu.push(this.menu[6].child[0])
-        this.menu[7].child = this.menu[6].child[0]
       }).catch(err => {
         console.error('sidebar got error when getting controls', err)
         // todo err.message err.response.status
