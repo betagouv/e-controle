@@ -7,7 +7,6 @@ psycopg2-binary==2.8.3
 Jinja2==2.10.1
 uwsgi==2.0.18
 django-model-utils==3.2.0
-django-filer==1.5.0
 django-ordered-model==3.3.0
 django-environ==0.4.5
 pytest==4.6.4

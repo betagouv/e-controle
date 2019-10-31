@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'model_utils',
     'easy_thumbnails',
-    'filer',
     'ordered_model',
     'django_extensions',
     'actstream',
