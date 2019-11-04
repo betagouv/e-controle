@@ -58,7 +58,6 @@ class QuestionnaireFileMixin(object):
         return mark_safe(f'<a href="{url}">{control}</a>')
     control_display.fget.short_description = 'control'
 
-
     def __str__(self):
         return self.file_name
 
@@ -124,6 +123,9 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name="échéance", blank=True, null=True,
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
+    editor = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, related_name='questionnaires', on_delete=models.PROTECT,
+        blank=True, null=True)
     uploaded_file = models.FileField(
         verbose_name="fichier du questionnaire", upload_to=questionnaire_file_path,
         null=True, blank=True,
