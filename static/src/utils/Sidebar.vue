@@ -9,13 +9,14 @@
       </a-->
     </div>
 
-    <div v-if="isLoading" class="sidebar-load-message card-header border-0">
+    <div v-if="isLoading" class="sidebar-load-message card-header border-0 mt-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
     </div>
 
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
+                  :relative="true"
                   :hideToggle="true"
                   :show-one-child="true"
                   theme="white-theme"
@@ -158,9 +159,7 @@
         }
       },
       onItemClick (event, item) {
-        console.log('onItemClick')
-        // console.log(event)
-        // console.log(item)
+        console.debug('onItemClick', event, item)
       }
     },
   })
@@ -168,35 +167,10 @@
 
 <style scoped>
   .sidebar-header {
-    position: fixed;
-    top: 0px;
-    left: 0px;
     padding: 1rem;
     width: 350px;
   }
-
-  .v-sidebar-menu.sidebar-body {
-      top: 4rem;
-  }
-
-  .sidebar-load-message {
-    position: fixed;
-    top: 5rem;
-    left: 0px;
-    z-index: 9999;
-  }
-
 </style>
 
 <style>
-    /* Adjust the margin of the main body of the page, to fit the sidebar when collapsed or not. */
-  .page {
-      padding-left: 350px;
-      -webkit-transition: 0.3s padding-left;
-      transition: 0.3s padding-left;
-  }
-
-  .page.sidebar-collapsed {
-      padding-left: 50px;
-  }
 </style>

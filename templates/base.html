@@ -10,70 +10,68 @@
 {% endblock extra_static_header %}
 
 {% block content %}
-  <div id="page" class="page container-fluid pr-0"> <!--// opening: page  //-->
+  <div id="page" class="page container-fluid flex-col justify-content-start"> <!--// opening: page  //-->
     <div id="app"></div>
-    <div class="page-main"> <!--// opening: main_page  //-->
-      {% block page_top_row %}
-        <div class="header py-1"> <!--// opening: top_header  //-->
-          <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
+    <div class="flex-row">
+      <div id="sidebar-vm">
+        <sidebar></sidebar>
+      </div>
+      <link href="{% static "dist/sidebar-bundle.css" %}" rel="stylesheet" />
+      <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
-            {% block nav_items %}
-              <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
-                <div class="nav-item">
-                  {% url 'faq' as faq_url %}
-                  <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
-                     href="{% url 'faq'%}">
-                    <i class="fe fe-help-circle"></i> FAQ
+      <div class="page-main"> <!--// opening: main_page  //-->
+        {% block page_top_row %}
+          <div class="header py-1"> <!--// opening: top_header  //-->
+            <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
+
+              {% block nav_items %}
+                <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
+                  <div class="nav-item">
+                    {% url 'faq' as faq_url %}
+                    <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
+                       href="{% url 'faq'%}">
+                      <i class="fe fe-help-circle"></i> FAQ
+                    </a>
+                  </div>
+                </div>   <!--// closing: nav_items  //-->
+              {% endblock nav_items %}
+
+              <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
+                <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                  <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                  <span class="ml-2 d-none d-lg-block">
+                  <span class="text-default">{{ user.get_full_name }}</span>
+                  <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
+                </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
                   </a>
                 </div>
-              </div>   <!--// closing: nav_items  //-->
-            {% endblock nav_items %}
+              </div> <!--// closing: main_profile_dropdown  //-->
+            </div>   <!--// opening: top_header_container  //-->
+          </div>  <!--// closing: top_header  //-->
+        {% endblock page_top_row %}
 
-            <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
-              <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-                <span class="ml-2 d-none d-lg-block">
-                <span class="text-default">{{ user.get_full_name }}</span>
-                <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
-              </span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
-                </a>
-              </div>
-            </div> <!--// closing: main_profile_dropdown  //-->
-          </div>   <!--// opening: top_header_container  //-->
-        </div>  <!--// closing: top_header  //-->
-      {% endblock page_top_row %}
+        {% block page_top_nav %}
+        {% endblock page_top_nav %}
 
-      {% block page_top_nav %}
-      {% endblock page_top_nav %}
+        {% block page_main_container %}
+          <div class="my-3 my-md-5">
+            <div class="container">
+              {% block page_title %}
+              {% endblock page_title %}
 
-      {% block page_main_container %}
-        <div class="my-3 my-md-5">
-          <div class="container">
-            {% block page_title %}
-            {% endblock page_title %}
-
-            {% block page_content %}
-            {% endblock page_content %}
+              {% block page_content %}
+              {% endblock page_content %}
+            </div>
           </div>
-        </div>
-      {% endblock page_main_container %}
-
-      {% include "footer.html" %}
-
-    </div> <!--// closing: main_page  //-->
-  </div> <!--// closing: page  //-->
-
-  {% block sidebar %}
-    <div id="sidebar-vm">
-      <sidebar></sidebar>
+        {% endblock page_main_container %}
+      </div>  <!--// closing: main_page  //-->
     </div>
-    <link href="{% static "dist/sidebar-bundle.css" %}" rel="stylesheet" />
-    <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
-  {% endblock sidebar %}
+    {% include "footer.html" %}
+ </div> <!--// closing: page  //-->
 
 {% endblock content %}
 {% block session_management %}
