@@ -101,13 +101,20 @@
             icon: 'fa fa-building text-muted bg-white',
             href: '/accueil/#control-' + control.id,
             title: control.depositing_organization ? control.depositing_organization : control.title,
-            child: control.questionnaires.map(questionnaire => {
-              return {
-                href: makeQuestionnaireLink(questionnaire),
-                title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
-              }
-            }),
           }
+
+          const children = control.questionnaires.map(questionnaire => {
+              if (this.currentUser.is_inspector || !questionnaire.is_draft) {
+                return {
+                  href: makeQuestionnaireLink(questionnaire),
+                  title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
+                }
+              }
+            }).filter(item => !!item)
+          if (children.length > 0) {
+            controlMenu.child = children
+          }
+
           // Add menu item for the questionnaire being created, if there is one.
           if (controlCreatingQuestionnaireId === ('' + control.id)) {
             controlMenu.child.push({
