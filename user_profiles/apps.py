@@ -1,3 +1,5 @@
+import sys
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,5 @@ class UserProfilesConfig(AppConfig):
     verbose_name = "Profiles Utilisateurs"
 
     def ready(self):
-        import user_profiles.signals  # noqa
+        if 'migrate' not in sys.argv:
+            import user_profiles.signals  # noqa
