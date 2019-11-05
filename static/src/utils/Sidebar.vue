@@ -193,4 +193,7 @@
 </style>
 
 <style>
+  #sidebar-vm {
+    background-color: white;
+  }
 </style>
