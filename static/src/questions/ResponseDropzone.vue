@@ -35,7 +35,8 @@
 
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-  const url = "/api/question/";
+  const url = "/api/question/"
+  const UPLOAD_TIMEOUT = 2000
 
   export default Vue.extend({
     props: [
@@ -80,12 +81,20 @@
       const errorCallback = this.dropzoneErrorCallback.bind(this)
       const successCallback = this.dropzoneSuccessCallback.bind(this)
       const addedFileCallback = this.clearErrors.bind(this)
+      const timeoutCallback = this.dropzoneTimeoutCallback.bind(this)
 
       Dropzone.options['dropzoneArea' + this.questionId] = {
+        timeout: UPLOAD_TIMEOUT,
         init: function() {
           this.on('success', successCallback),
           this.on('error', errorCallback),
           this.on('addedfile', addedFileCallback)
+          this.on('sending', (file, xhr, formdata) => {
+            console.debug('dropzone sending', file, xhr, formdata)
+            xhr.ontimeout = error => {
+              timeoutCallback(file, error)
+            }
+          })
         },
         dictFileTooBig: "La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo."
       }
@@ -94,6 +103,13 @@
       clearErrors() {
         this.errors = ""
         this.hasErrors = false
+      },
+      dropzoneTimeoutCallback: function(file, error) {
+        console.debug('dropzone timeout', file, error)
+        clearCache()
+        this.hasErrors = true
+        this.errorMessage = 'L\'envoi du fichier ' + file.name + ' a mis plus de ' + (UPLOAD_TIMEOUT / 1000) +
+            ' secondes, et a été annulé.'
       },
       dropzoneSuccessCallback: function() {
         clearCache()
