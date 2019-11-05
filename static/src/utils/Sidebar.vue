@@ -118,6 +118,9 @@
 
           // Add menu item for the questionnaire being created, if there is one.
           if (controlCreatingQuestionnaireId === ('' + control.id)) {
+            if (!controlMenu.child) {
+              controlMenu.child = []
+            }
             controlMenu.child.push({
               href: '/questionnaire/controle-' + control.id + '/creer',
               title: 'Q' + (controlMenu.child.length + 1),
