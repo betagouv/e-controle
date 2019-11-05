@@ -96,7 +96,8 @@
 
       const buildMenu = () => {
         const controlCreatingQuestionnaireId = findControlCreatingQuestionnaire()
-        const menu =  this.controls.reverse().map(control => {
+        const menu =  this.controls.sort((a, b) => { return b.id - a.id })
+            .map(control => {
 
           const controlMenu = {
             icon: 'fa fa-building text-muted bg-white',
