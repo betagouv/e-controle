@@ -153,20 +153,6 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name_plural = "Questionnaires"
 
     @property
-    def author_id(self):
-        stream = model_stream(Questionnaire)
-        creation_action = stream.filter(action_object_object_id=self.id)\
-            .filter(verb='created questionnaire')\
-            .first()
-        if creation_action is None:
-            return None
-        return creation_action.actor_object_id
-
-    @property
-    def author(self):
-        return User.objects.get(id=self.author_id)
-
-    @property
     def file(self):
         """
         If there is a manually uplodaed file it will take precedence.

@@ -119,14 +119,11 @@ class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView)
     def get_queryset(self):
         if not self.request.user.profile.is_inspector:
             return Control.objects.none()
-        questionnaires_in_control = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
-
-        authoring_actions = model_stream(Questionnaire)\
-            .filter(verb='created questionnaire')\
-            .filter(actor_object_id=self.request.user.id)
-        authored_questionnaires_ids = authoring_actions.values_list('action_object_object_id', flat=True)
-
-        return questionnaires_in_control.filter(id__in=list(authored_questionnaires_ids))
+        questionnaires = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all(),
+            editor=self.request.user
+        )
+        return questionnaires
 
 
 class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailView):

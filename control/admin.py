@@ -44,8 +44,8 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
     save_as = True
     list_display = (
-        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor', 'author',
-        'sent_date', 'end_date',)
+        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
+        'sent_date', 'end_date')
     list_editable = ('order', 'control')
     readonly_fields = ('order',)
     search_fields = ('title', 'description')

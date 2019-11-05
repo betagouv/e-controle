@@ -234,7 +234,7 @@ def test_questionnaire_create_fails_with_malformed_question():
     assert_no_data_is_saved()
 
 
-# Create questionnaire draft through api, to set the author properly.
+# Create questionnaire draft through api, to set the editor properly.
 def create_questionnaire_through_api(user, control):
     payload = make_create_payload(control.id)
     payload['is_draft'] = True
@@ -243,7 +243,7 @@ def create_questionnaire_through_api(user, control):
     return response.data
 
 
-def test_questionnaire_draft_update__author_can_update():
+def test_questionnaire_draft_update__editor_can_update():
     increment_ids()
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
@@ -256,18 +256,18 @@ def test_questionnaire_draft_update__author_can_update():
     assert response.status_code == 200
 
 
-def test_questionnaire_draft_update__non_author_cannot_update():
+def test_questionnaire_draft_update__non_editor_cannot_update():
     increment_ids()
-    # Create questionnaire draft through api, to set the author properly.
+    # Create questionnaire draft through api, to set the editor properly.
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
     questionnaire = create_questionnaire_through_api(user, control)
 
-    non_author = utils.make_inspector_user(control)
+    non_editor = utils.make_inspector_user(control)
     payload = questionnaire
     payload['description'] = 'this is a great questionnaire.'
 
-    response = update_questionnaire(non_author, payload)
+    response = update_questionnaire(non_editor, payload)
     assert 400 <= response.status_code < 500
 
 
