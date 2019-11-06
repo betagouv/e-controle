@@ -4,20 +4,27 @@
     "node": "10.x"
   },
   "scripts": {
-    "build-all": "npm run build-control-detail && npm run build-questionnaire-create && npm run build-questionnaire-detail && npm run build-session-management",
+    "build-all": "npm run build-control-detail && npm run build-questionnaire-create && npm run build-questionnaire-detail && npm run build-session-management && npm run build-sidebar",
+
+    "build-control-detail": "parcel build static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "build-questionnaire-create": "parcel build static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "build-questionnaire-detail": "parcel build static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
-    "build-control-detail": "parcel build static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "build-session-management": "parcel build static/src/session-management.js --out-dir ./static/dist/ --out-file session-management-bundle.js",
+    "build-sidebar": "parcel build static/src/sidebar.js --out-dir ./static/dist/ --out-file sidebar-bundle.js",
+
+    "watch-control-detail": "parcel watch static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "watch-questionnaire-create": "parcel watch static/src/questionnaire-create.js --out-dir ./static/dist/ --out-file questionnaire-create-bundle.js",
     "watch-questionnaire-detail": "parcel watch static/src/questionnaire-detail.js --out-dir ./static/dist/ --out-file questionnaire-detail-bundle.js",
-    "watch-control-detail": "parcel watch static/src/control-detail.js --out-dir ./static/dist/ --out-file control-detail-bundle.js",
     "watch-session-management": "parcel watch static/src/session-management.js --out-dir ./static/dist/ --out-file session-management-bundle.js",
+    "watch-sidebar": "parcel watch static/src/sidebar.js --out-dir ./static/dist/ --out-file sidebar-bundle.js",
+
     "postinstall": "npm run build-all",
+
     "test": "jest"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "autoprefixer": "^9.7.1",
     "axios": "^0.19.0",
     "dropzone": "^5.5.1",
     "moment": "^2.24.0",
@@ -27,6 +34,7 @@
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
     "vue-hot-reload-api": "^2.3.3",
+    "vue-sidebar-menu": "^4.4.1",
     "vuejs-datepicker": "^1.5.4",
     "vuex": "^3.1.1",
     "vuex-map-fields": "^1.3.4"

@@ -14,19 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
-
-
-class ControlSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization', 'reference_code')
-
-
-class ControlUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization')
+        fields = ('first_name', 'last_name', 'id')
 
 
 class ResponseFileSerializer(serializers.ModelSerializer):
@@ -84,9 +72,23 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
     class Meta:
         model = Questionnaire
         fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'editor',
-                  'title_display')
+                  'title_display', 'numbering')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
+
+
+class ControlSerializer(serializers.ModelSerializer):
+    questionnaires = QuestionnaireSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
+
+
+class ControlUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization')
 
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):

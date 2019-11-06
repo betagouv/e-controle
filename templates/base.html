@@ -10,77 +10,69 @@
 {% endblock extra_static_header %}
 
 {% block content %}
-  <div class="page"> <!--// opening: page  //-->
+  <div id="page" class="page container-fluid flex-col justify-content-start"> <!--// opening: page  //-->
     <div id="app"></div>
-    <div class="page-main"> <!--// opening: main_page  //-->
-      {% block page_top_row %}
-        <div class="header py-1"> <!--// opening: top_header  //-->
-          <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
-            <a class="header-brand p-3" href="{% url 'control-detail' %}">
-              <img src="{% static 'img/e-controle.png' %}" class="header-brand-img" alt="logo" style="height: 4;"/>
-            </a>
+    <div class="flex-row">
+      <div id="sidebar-vm">
+        <sidebar></sidebar>
+      </div>
 
-            {% block nav_items %}
-              <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
-                <div class="nav-item">
-                  {% url 'control-detail' as control_detail_url %}
-                  <a class="nav-link nav-link-thick-line {% if request.path == control_detail_url %}active{% endif %}"
-                     href="{% url 'control-detail' %}">
-                    <i class="fe fe-home"></i>Accueil
-                  </a>
-                </div>
+      <div id="page-main" class="page-main"> <!--// opening: main_page  //-->
+        {% block page_top_row %}
+          <div class="header py-1"> <!--// opening: top_header  //-->
+            <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
 
-                <div class="nav-item">
-                  {% url 'faq' as faq_url %}
-                  <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
-                     href="{% url 'faq'%}">
-                    <i class="fe fe-help-circle"></i> FAQ
-                  </a>
-                </div>
-              </div>   <!--// closing: nav_items  //-->
-            {% endblock nav_items %}
+              {% block nav_items %}
+                <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
+                  <div class="nav-item">
+                    {% url 'faq' as faq_url %}
+                    <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
+                       href="{% url 'faq'%}">
+                      <i class="fe fe-help-circle"></i> FAQ
+                    </a>
+                  </div>
+                </div>   <!--// closing: nav_items  //-->
+              {% endblock nav_items %}
 
-            <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
-              <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
-                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-                <span class="ml-2 d-none d-lg-block">
-                <span class="text-default">{{ user.get_full_name }}</span>
-                <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
-              </span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+              <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
+                <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                  <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                  <span class="ml-2 d-none d-lg-block">
+                  <span class="text-default">{{ user.get_full_name }}</span>
+                  <small class="text-muted d-block mt-1">{{ user.profile.organization }}</small>
+                </span>
                 </a>
-              </div>
-            </div> <!--// closing: main_profile_dropdown  //-->
-          </div>   <!--// opening: top_header_container  //-->
-        </div>  <!--// closing: top_header  //-->
-      {% endblock page_top_row %}
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+                  </a>
+                </div>
+              </div> <!--// closing: main_profile_dropdown  //-->
+            </div>   <!--// opening: top_header_container  //-->
+          </div>  <!--// closing: top_header  //-->
+        {% endblock page_top_row %}
 
-      {% block page_top_nav %}
-      {% endblock page_top_nav %}
+        {% block page_top_nav %}
+        {% endblock page_top_nav %}
 
-      {% block page_main_container %}
-        <div class="my-3 my-md-5">
-          <div class="container">
-            <div class="page-header">
-              <h1 class="page-title">
-                {% block page_title %}
-                {% endblock page_title %}
-              </h1>
+        {% block page_main_container %}
+          <div class="my-3 my-md-5">
+            <div class="container">
+              {% block page_title %}
+              {% endblock page_title %}
+
+              {% block page_content %}
+              {% endblock page_content %}
             </div>
-
-            {% block page_content %}
-            {% endblock page_content %}
           </div>
-        </div>
-      {% endblock page_main_container %}
-
-      {% include "footer.html" %}
-
-    </div> <!--// closing: main_page  //-->
+        {% endblock page_main_container %}
+      </div>  <!--// closing: main_page  //-->
+    </div>
+    {% include "footer.html" %}
   </div> <!--// closing: page  //-->
+
+  <link href="{% static "dist/sidebar-bundle.css" %}" rel="stylesheet" />
+  <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
 {% endblock content %}
 {% block session_management %}

@@ -113,8 +113,7 @@
           .then(response => {
             console.debug(response)
             processingDoneCallback(null, response)
-            // Force reload
-            window.location.href = home_url + "?reload=" + Math.random() + '#control-' + response.data.id
+            window.location.href = '/accueil'
           })
           .catch((error) => {
             console.error('Error creating control', error)
