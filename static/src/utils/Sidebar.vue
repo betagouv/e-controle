@@ -9,7 +9,7 @@
       </a-->
     </div>
 
-    <div v-if="isLoading" class="sidebar-load-message card-header border-0 mt-4">
+    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
     </div>
@@ -162,11 +162,11 @@
     },
     methods: {
       moveBodyForCollapse () {
-        const element = document.getElementById('page')
+        const element = document.getElementById('page-main')
         element.classList.add('sidebar-collapsed')
       },
       moveBodyForUncollapse () {
-        const element = document.getElementById('page')
+        const element = document.getElementById('page-main')
         element.classList.remove('sidebar-collapsed')
       },
       onToggleCollapse (collapsed) {

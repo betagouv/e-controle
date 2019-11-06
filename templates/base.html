@@ -16,10 +16,8 @@
       <div id="sidebar-vm">
         <sidebar></sidebar>
       </div>
-      <link href="{% static "dist/sidebar-bundle.css" %}" rel="stylesheet" />
-      <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
-      <div class="page-main"> <!--// opening: main_page  //-->
+      <div id="page-main"> <!--// opening: main_page  //-->
         {% block page_top_row %}
           <div class="header py-1"> <!--// opening: top_header  //-->
             <div class="container flex-row justify-content-between"> <!--// opening: top_header_container  //-->
@@ -71,7 +69,10 @@
       </div>  <!--// closing: main_page  //-->
     </div>
     {% include "footer.html" %}
- </div> <!--// closing: page  //-->
+  </div> <!--// closing: page  //-->
+
+  <link href="{% static "dist/sidebar-bundle.css" %}" rel="stylesheet" />
+  <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
 {% endblock content %}
 {% block session_management %}
