@@ -2,9 +2,6 @@
   <div :id="'dropzone_' + questionId">
     <div v-show="isAudited" class="form-group question-box-child">
       <div class="form-label">Déposer vos réponses</div>
-      <info-bar>
-        Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
-      </info-bar>
       <error-bar v-if="hasErrors">
         <div>
           Une erreur s'est produite lors de la transmision d'un fichier.
