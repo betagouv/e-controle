@@ -88,7 +88,7 @@
         if (!questionnaire.is_draft) {
           return questionnaire_detail_url + questionnaire.id + '/'
         }
-        if (questionnaire.author && questionnaire.author.id === this.currentUser.id) {
+        if (questionnaire.editor && questionnaire.editor.id === this.currentUser.id) {
           return questionnaire_modify_url + questionnaire.id + '/'
         }
         return questionnaire_detail_url + questionnaire.id + '/'
