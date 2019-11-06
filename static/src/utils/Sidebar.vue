@@ -193,6 +193,13 @@
 </style>
 
 <style>
+  .v-sidebar-menu .vsm--title {
+    /* Wrap test for titles that overflow */
+    white-space: normal;
+    /* Text was flowing over arrows */
+    margin-right: 30px;
+  }
+
   #sidebar-vm {
     background-color: white;
   }
