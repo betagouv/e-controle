@@ -49,7 +49,7 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft">
-                  <a v-if="user.id === questionnaire.author_id"
+                  <a v-if="questionnaire.editor && (user.id === questionnaire.editor.id)"
                      :href="'/questionnaire/modifier/' + questionnaire.id "
                      class="btn btn-primary"
                      title="Modifier le brouillon de questionnaire"
@@ -65,10 +65,10 @@
                     <i class="fe fe-eye"></i>
                     Voir
                   </a>
-                  <div v-if="questionnaire.author_id" class="mt-1 text-nowrap">
+                  <div v-if="questionnaire.editor" class="mt-1 text-nowrap">
                     <i class="fe fe-edit"></i>
-                    Rédacteur : {{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}
-                    <help-tooltip text="Le rédacteur du brouillon est la personne qui l'a créé, et qui peut le modifier."></help-tooltip>
+                    Rédacteur : {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
+                    <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
                   </div>
                 </template>
                 <template v-else>

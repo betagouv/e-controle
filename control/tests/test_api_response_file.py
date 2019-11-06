@@ -120,16 +120,11 @@ def test_trashing_logs_an_action():
     response_file = factories.ResponseFileFactory()
     user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
     payload = { "is_deleted": "true" }
-    action_count_before = Action.objects.count()
-
+    assert not Action.objects.filter(verb__contains="trashed response-file").exists()
     trash_response_file(user, response_file.id, payload)
-
-    action_count_after = Action.objects.count()
-    assert action_count_after == action_count_before + 1
-
-    action = Action.objects.last()
+    assert Action.objects.filter(verb__contains="trashed response-file").exists()
+    action = Action.objects.filter(verb__contains="trashed response-file").last()
     assert action.actor_object_id == str(user.id)
-    assert action.verb == 'trashed response-file'
     assert action.target_object_id == str(response_file.id)
 
 
@@ -180,4 +175,3 @@ def test_cannot_untrash_a_file():
 
     assert 400 <= response.status_code < 500
     assert ResponseFile.objects.get(id=response_file.id).is_deleted
-

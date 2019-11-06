@@ -44,12 +44,13 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
     save_as = True
     list_display = (
-        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'author',
-        'sent_date', 'end_date',)
-    list_editable = ('order', 'control')
+        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
+        'sent_date', 'end_date')
+    list_editable = ('order',)
     readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
+    raw_id_fields = ('editor',)
     actions = ['megacontrol_admin_action']
 
 
@@ -62,7 +63,6 @@ class QuestionInline(OrderedTabularInline):
 @admin.register(Theme)
 class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
-    list_editable = ('title', 'questionnaire')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
     inlines = (QuestionInline,)
@@ -78,7 +78,6 @@ class QuestionFileInline(OrderedTabularInline):
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
     list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
-    list_editable = ('description', 'theme')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)

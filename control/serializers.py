@@ -57,13 +57,21 @@ class ThemeSerializer(serializers.ModelSerializer):
         # not serialized : order
 
 
+# Serializers for displaying control_detail.html
+class ControlDetailUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'id',)
+
+
 class QuestionnaireSerializer(serializers.ModelSerializer):
     themes = ThemeSerializer(many=True, read_only=True)
-    author = UserSerializer(read_only=True, required=False)
+    editor = ControlDetailUserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'author',
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'editor',
                   'title_display', 'numbering')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
@@ -114,20 +122,12 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
         }
 
 
-# Serializers for displaying control_detail.html
-class ControlDetailUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'id',)
-
-
 class ControlDetailQuestionnaireSerializer(serializers.ModelSerializer):
-    author = ControlDetailUserSerializer(read_only=True, required=False)
+    editor = ControlDetailUserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'author_id', 'author')
+        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'editor')
 
 
 class ControlDetailControlSerializer(serializers.ModelSerializer):
@@ -136,5 +136,3 @@ class ControlDetailControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = Control
         fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
-
-
