@@ -46,7 +46,7 @@ class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
     list_display = (
         'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
         'sent_date', 'end_date')
-    list_editable = ('order')
+    list_editable = ('order',)
     readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
