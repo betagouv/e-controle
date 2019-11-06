@@ -12,7 +12,7 @@
       </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
         <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
-        <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
+        <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
         <input type="hidden" id="idQuestionId" name="question_id" :value="questionId" />
         <div class="fallback">
           <input name="file" type="file" multiple />
