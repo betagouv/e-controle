@@ -258,15 +258,11 @@ def test_questionnaire_draft_update__editor_can_update():
 
 def test_questionnaire_draft_update__non_editor_cannot_update():
     increment_ids()
-    # Create questionnaire draft through api, to set the editor properly.
-    control = factories.ControlFactory()
-    user = utils.make_inspector_user(control)
-    questionnaire = create_questionnaire_through_api(user, control)
-
-    non_editor = utils.make_inspector_user(control)
-    payload = questionnaire
+    questionnaire = factories.QuestionnaireFactory()
+    control = questionnaire.control
+    non_editor = utils.make_inspector_user(control, assign_questionnaire_editor=False)
+    payload = make_update_payload(questionnaire)
     payload['description'] = 'this is a great questionnaire.'
-
     response = update_questionnaire(non_editor, payload)
     assert 400 <= response.status_code < 500
 
