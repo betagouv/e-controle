@@ -95,8 +95,8 @@ def test_no_access_questionnaire_create_page_if_not_inspector_user(client):
     assert 400 <= response.status_code < 500
 
 
-def test_can_access_questionnaire_edit_page_if_control_is_associated_with_the_inspector_user_and_user_is_author(client):
-    # Create questionnaire through API so that the author is set properly.
+def test_can_access_questionnaire_edit_page_if_control_is_associated_with_the_inspector_user_and_user_is_editor(client):
+    # Create questionnaire through API so that the editor is set properly.
     control = ControlFactory()
     user = utils.make_user(UserProfile.INSPECTOR, control)
     payload = test_api_questionnaire.make_create_payload(control.id)

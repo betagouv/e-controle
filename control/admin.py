@@ -44,12 +44,13 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
     save_as = True
     list_display = (
-        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'author',
-        'sent_date', 'end_date',)
-    list_editable = ('order',)
+        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
+        'sent_date', 'end_date')
+    list_editable = ('order')
     readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
+    raw_id_fields = ('editor',)
     actions = ['megacontrol_admin_action']
 
 

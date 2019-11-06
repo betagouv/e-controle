@@ -12,14 +12,12 @@ class SendResponseFileRunner:
     def __init__(self, client):
         response_file = factories.ResponseFileFactory()
         self.filename = response_file.basename
-
         user = response_file.author
         user.profile.controls.add(response_file.question.theme.questionnaire.control)
+        user.profile.agreed_to_tos = True
         user.profile.save()
-
         utils.login(client, user=response_file.author)
         url = reverse('send-response-file', args=[response_file.id])
-
         self.response = client.get(url)
 
 
@@ -45,6 +43,3 @@ def test_download_response_file_fails_if_the_control_is_not_associated_with_the_
     url = reverse('send-response-file', args=[response_file.id])
     response = client.get(url)
     assert response.status_code != 200
-
-
-

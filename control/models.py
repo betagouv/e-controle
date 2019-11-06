@@ -58,7 +58,6 @@ class QuestionnaireFileMixin(object):
         return mark_safe(f'<a href="{url}">{control}</a>')
     control_display.fget.short_description = 'control'
 
-
     def __str__(self):
         return self.file_name
 
@@ -124,6 +123,9 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name="échéance", blank=True, null=True,
         help_text="Date de réponse souhaitée")
     description = models.TextField("description", blank=True)
+    editor = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, related_name='questionnaires', on_delete=models.PROTECT,
+        blank=True, null=True)
     uploaded_file = models.FileField(
         verbose_name="fichier du questionnaire", upload_to=questionnaire_file_path,
         null=True, blank=True,
@@ -149,20 +151,6 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         ordering = ('control', 'order')
         verbose_name = "Questionnaire"
         verbose_name_plural = "Questionnaires"
-
-    @property
-    def author_id(self):
-        stream = model_stream(Questionnaire)
-        creation_action = stream.filter(action_object_object_id=self.id)\
-            .filter(verb='created questionnaire')\
-            .first()
-        if creation_action is None:
-            return None
-        return creation_action.actor_object_id
-
-    @property
-    def author(self):
-        return User.objects.get(id=self.author_id)
 
     @property
     def file(self):
