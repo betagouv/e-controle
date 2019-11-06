@@ -33,10 +33,12 @@ def reload_urlconf():
         importlib.reload(sys.modules[urlconf])
 
 
-def make_user(profile_type, control=None):
+def make_user(profile_type, control=None, assign_questionnaire_editor=True):
     user_profile = factories.UserProfileFactory(profile_type=profile_type)
     if control is not None:
         user_profile.controls.add(control)
+        if assign_questionnaire_editor:
+            control.questionnaires.update(editor=user_profile.user)
     user_profile.save()
     return user_profile.user
 
@@ -45,8 +47,9 @@ def make_audited_user(control=None):
     return make_user(UserProfile.AUDITED, control)
 
 
-def make_inspector_user(control=None):
-    return make_user(UserProfile.INSPECTOR, control)
+def make_inspector_user(control=None, assign_questionnaire_editor=True):
+    return make_user(
+        UserProfile.INSPECTOR, control, assign_questionnaire_editor=assign_questionnaire_editor)
 
 
 def get_resource(client, user, resource_type, resource_id):
