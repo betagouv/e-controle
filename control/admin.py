@@ -11,6 +11,7 @@ from django.views.generic.detail import SingleObjectMixin
 
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
@@ -41,7 +42,7 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
+class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin, SimpleHistoryAdmin):
     save_as = True
     list_display = (
         'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',

@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'utils',
     'adauth',
     'session',
+    'simple_history',
     'tos',
 
     # Central app - loaded last
@@ -83,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'ecc.urls'

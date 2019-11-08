@@ -9,6 +9,7 @@ from django.utils.safestring import mark_safe
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+from simple_history.models import HistoricalRecords
 
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
@@ -143,6 +144,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     is_draft = models.BooleanField(
         verbose_name="brouillon", default=False,
         help_text="Ce questionnaire est-il encore au stade de brouillon?")
+    history = HistoricalRecords()
 
     class Meta:
         ordering = ('control', 'order')
