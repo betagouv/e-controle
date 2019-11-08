@@ -37,6 +37,7 @@ class QuestionnaireDuplicateMixin(object):
             original_pk = resolve(request.path).kwargs['object_id']
             original_questionnaire = Questionnaire.objects.get(pk=original_pk)
             self.__copy_themes(original_questionnaire, new_questionnaire)
+        super().save_model(request, obj, form, change)
 
     def copy_questionnaire(self, existing_questionnaire, control_to_copy_to):
         existing_questionnaire_id = existing_questionnaire.id

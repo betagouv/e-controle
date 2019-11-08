@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.views.generic import DetailView, RedirectView
 from django.views.generic.detail import SingleObjectMixin
 
-
+from actstream import action
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
@@ -23,6 +23,28 @@ class AdminHelpers(object):
     more_details.short_description = 'détails'
 
 
+class WithActionLog(object):
+    logging_model_name = None
+
+    def add_log_entry(self, sender, verb, obj):
+        action_details = {
+            'sender': sender,
+            'verb': verb,
+            'action_object': obj,
+        }
+        action.send(**action_details)
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            verb = 'admin updated'
+        else:
+            verb = 'admin added'
+        model_name = self.logging_model_name or self.model._meta.model_name
+        verb += f' {model_name}'
+        self.add_log_entry(request.user, verb, obj)
+        super().save_model(request, obj, form, change)
+
+
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
@@ -33,7 +55,7 @@ class QuestionnaireInline(OrderedTabularInline):
 
 
 @admin.register(Control)
-class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
+class ControlAdmin(WithActionLog, OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('title', 'depositing_organization', 'reference_code')
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
@@ -41,7 +63,7 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
+class QuestionnaireAdmin(WithActionLog, QuestionnaireDuplicateMixin, OrderedModelAdmin):
     save_as = True
     list_display = (
         'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
@@ -61,7 +83,7 @@ class QuestionInline(OrderedTabularInline):
 
 
 @admin.register(Theme)
-class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
+class ThemeAdmin(WithActionLog, OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
@@ -76,7 +98,7 @@ class QuestionFileInline(OrderedTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
+class QuestionAdmin(WithActionLog, OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
     list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
@@ -104,7 +126,7 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
+class QuestionFileAdmin(WithActionLog, admin.ModelAdmin, AdminHelpers):
     list_display = (
         'more_details', 'id', 'file', 'question_display', 'questionnaire_display',
         'control_display')
@@ -119,6 +141,7 @@ class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
         'id', 'question_display', 'questionnaire_display', 'control_display', 'order')
     search_fields = ('file', 'question__description')
     raw_id_fields = ('question',)
+    logging_model_name = 'question annexe'
 
 
 @method_decorator(staff_member_required, name='dispatch')
