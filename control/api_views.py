@@ -7,7 +7,6 @@ from rest_framework import serializers
 
 import django.dispatch
 from django.core.files import File
-import os
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
