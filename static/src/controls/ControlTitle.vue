@@ -37,7 +37,8 @@
                class="btn btn-secondary">
               Annuler
             </a>
-            <button type="submit"
+            <button id="control-title-submit-button"
+                    type="submit"
                     class="btn btn-primary">
               Modifier l'espace de dépôt
             </button>
@@ -153,7 +154,11 @@
             console.debug(response)
             this.title = response.data.title
             this.organization = response.data.depositing_organization
-            this.quitEditMode()
+
+            // Display a "loading" spinner on clicked button, while the page reloads, so that they know their click
+            // has been registered.
+            $('#control-title-submit-button').addClass('btn-loading')
+            window.location.reload()
           })
           .catch((error) => {
             console.error(error)
