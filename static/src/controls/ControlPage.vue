@@ -4,9 +4,10 @@
     <div id="controls">
       <div v-if="controls.length === 0" class="card">
         <div class="card-body">
-          <span v-if="user.is_inspector">
-            Vous n'avez aucun espace de dépôt ouvert.
-          </span>
+          <div v-if="user.is_inspector">
+            <div class="mb-5">Vous n'avez aucun espace de dépôt ouvert.</div>
+            <control-create v-if="user.is_inspector"></control-create>
+          </div>
           <span v-else>
             Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
           </span>
@@ -46,6 +47,7 @@
 
   import AddUserModal from "../users/AddUserModal"
   import ControlCard from './ControlCard'
+  import ControlCreate from './ControlCreate'
   import RemoveUserModal from "../users/RemoveUserModal"
   import UpdateUserModal from "../users/UpdateUserModal"
   import VideoModal from "../utils/VideoModal"
@@ -100,6 +102,7 @@
     components: {
       AddUserModal,
       ControlCard,
+      ControlCreate,
       RemoveUserModal,
       UpdateUserModal,
       VideoModal,
