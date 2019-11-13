@@ -11,7 +11,9 @@ admin.site.unregister(Follow)
 @admin.register(Action)
 class ActionAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     date_hierarchy = 'timestamp'
-    list_display = ('__str__', 'actor', 'verb', 'target', 'action_object', 'timestamp')
+    list_display = (
+        '__str__', 'actor', 'verb', 'target', 'target_content_type', 'action_object',
+        'action_object_content_type', 'timestamp')
     list_filter = ('timestamp', 'verb',)
     fieldsets = (
         (None, {
