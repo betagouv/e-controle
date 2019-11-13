@@ -20,7 +20,15 @@ class EccConfig(AppConfig):
         registry.register(apps.get_model('control.Questionnaire'))
         registry.register(apps.get_model('control.Theme'))
         registry.register(apps.get_model('user_profiles.UserProfile'))
+        registry.register(apps.get_model('faq.FAQItem'))
         registry.register(apps.get_model('admin.LogEntry'))
+        registry.register(apps.get_model('sites.Site'))
+        registry.register(apps.get_model('django_celery_beat.SolarSchedule'))
+        registry.register(apps.get_model('django_celery_beat.IntervalSchedule'))
+        registry.register(apps.get_model('django_celery_beat.ClockedSchedule'))
+        registry.register(apps.get_model('django_celery_beat.CrontabSchedule'))
+        registry.register(apps.get_model('django_celery_beat.PeriodicTasks'))
+        registry.register(apps.get_model('django_celery_beat.PeriodicTask'))
         registry.register(get_user_model())
 
         # Signals
