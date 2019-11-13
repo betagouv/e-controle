@@ -46,6 +46,9 @@ class QuestionnaireFileMixin(object):
 
     @property
     def questionnaire_display(self):
+        is_empty = not self.question.theme or not self.question.theme.questionnaire
+        if is_empty:
+            return ''
         questionnaire = self.question.theme.questionnaire
         url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
         return mark_safe(f'<a href="{url}">{questionnaire}</a>')
@@ -53,6 +56,13 @@ class QuestionnaireFileMixin(object):
 
     @property
     def control_display(self):
+        is_empty = (
+            not self.question.theme or
+            not self.question.theme.questionnaire or
+            not self.question.theme.questionnaire.control
+        )
+        if is_empty:
+            return ''
         control = self.question.theme.questionnaire.control
         url = reverse('admin:control_control_change', args=[control.pk])
         return mark_safe(f'<a href="{url}">{control}</a>')
