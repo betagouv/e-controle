@@ -84,6 +84,17 @@
         })
       }
 
+      const makeControlTitle = control => {
+        let title
+        if (control.depositing_organization) {
+          title = control.depositing_organization
+        } else {
+          title = control.title
+        }
+        title += '\n(' + control.reference_code + ')'
+        return title
+      }
+
       const makeQuestionnaireLink = questionnaire => {
         if (!questionnaire.is_draft) {
           return questionnaire_detail_url + questionnaire.id + '/'
@@ -103,7 +114,7 @@
           const controlMenu = {
             icon: 'fa fa-building text-muted bg-white',
             href: '/accueil/#control-' + control.id,
-            title: control.depositing_organization ? control.depositing_organization : control.title,
+            title: makeControlTitle(control),
           }
 
           const children = control.questionnaires.map(questionnaire => {
@@ -195,9 +206,9 @@
 <style>
   .v-sidebar-menu .vsm--title {
     /* Wrap test for titles that overflow */
-    white-space: normal;
+    white-space: pre-wrap;
     /* Text was flowing over arrows */
-    margin-right: 30px;
+    margin-right: 20px;
   }
 
   #sidebar-vm {
