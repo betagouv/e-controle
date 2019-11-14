@@ -34,3 +34,4 @@ django-session-timeout==0.0.4
 django-activity-stream==0.8.0
 django-magicauth==0.2
 django-admin==2.0.0
+django-http-referrer-policy==1.0.1

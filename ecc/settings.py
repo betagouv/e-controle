@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'django_filters',
     'django_admin',
+    'django_http_referrer_policy',
 
     'control',
     'demo',
@@ -83,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_http_referrer_policy.middleware.ReferrerPolicyMiddleware',
 ]
 
 ROOT_URLCONF = 'ecc.urls'
@@ -136,6 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # HTTP Security
 SECURE_CONTENT_TYPE_NOSNIFF = True
+REFERRER_POLICY = 'no-referrer'
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
