@@ -85,13 +85,12 @@
       }
 
       const makeControlTitle = control => {
-        let title
+        let title = '[ ' + control.reference_code + ' ]\n'
         if (control.depositing_organization) {
-          title = control.depositing_organization
+          title += control.depositing_organization
         } else {
-          title = control.title
+          title += control.title
         }
-        title += '\n(' + control.reference_code + ')'
         return title
       }
 
@@ -112,7 +111,7 @@
             .map(control => {
 
           const controlMenu = {
-            icon: 'fa fa-building text-muted bg-white',
+            icon: 'fa fa-archive',
             href: '/accueil/#control-' + control.id,
             title: makeControlTitle(control),
           }
@@ -209,6 +208,17 @@
     white-space: pre-wrap;
     /* Text was flowing over arrows */
     margin-right: 20px;
+  }
+
+  .v-sidebar-menu.vsm_white-theme .vsm--icon,
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1 .vsm--icon {
+    color: #495057;
+    background-color: white;
+  }
+
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon, .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
+    color: #495057;
+    background-color: white;
   }
 
   #sidebar-vm {
