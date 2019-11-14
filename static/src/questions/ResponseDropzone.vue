@@ -1,9 +1,12 @@
 <template>
-  <div :id="'dropzone_' + questionId">
+  <div :id="'dropzone_' + questionId" class="response-dropzone">
     <div v-show="isAudited" class="form-group question-box-child">
       <div class="form-label">Déposer vos réponses</div>
-      <error-bar v-if="hasErrors">
-        <div>
+      <error-bar v-if="hasErrors" @dismissed="clearErrors">
+        <div v-if="errorMessage">
+          {{ errorMessage }}
+        </div>
+        <div v-else>
           Une erreur s'est produite lors de la transmision d'un fichier.
         </div>
       </error-bar>
@@ -36,7 +39,7 @@
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
   const url = "/api/question/"
-  const UPLOAD_TIMEOUT = 2000
+  const UPLOAD_TIMEOUT_MS = 3000
 
   export default Vue.extend({
     props: [
@@ -84,7 +87,8 @@
       const timeoutCallback = this.dropzoneTimeoutCallback.bind(this)
 
       Dropzone.options['dropzoneArea' + this.questionId] = {
-        timeout: UPLOAD_TIMEOUT,
+        addRemoveLinks: true,
+        timeout: UPLOAD_TIMEOUT_MS,
         init: function() {
           this.on('success', successCallback),
           this.on('error', errorCallback),
@@ -96,6 +100,10 @@
             }
           })
         },
+        dictCancelUpload: "Annuler l'envoi",
+        dictUploadCanceled: "L'envoi a été annulé.",
+        dictCancelUploadConfirmation: "Etes-vous sûr.e de vouloir annuler l'envoi?",
+        dictRemoveFile: "Retirer le fichier",
         dictFileTooBig: "La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo."
       }
     },
@@ -107,9 +115,21 @@
       dropzoneTimeoutCallback: function(file, error) {
         console.debug('dropzone timeout', file, error)
         clearCache()
+
         this.hasErrors = true
-        this.errorMessage = 'L\'envoi du fichier ' + file.name + ' a mis plus de ' + (UPLOAD_TIMEOUT / 1000) +
+        this.errorMessage = 'L\'envoi du fichier "' + file.name + '" a mis plus de ' + (UPLOAD_TIMEOUT_MS / 1000) +
             ' secondes, et a été annulé.'
+
+        // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
+        const styleFileAsError = (file, removeText, errorMessage) => {
+          file.previewElement.classList.add('dz-error')
+          file.previewElement.classList.remove('dz-procession')
+          file.previewElement.getElementsByClassName('dz-progress')[0].remove()
+          file.previewElement.getElementsByClassName('dz-error-message')[0].getElementsByTagName('span')[0].textContent = errorMessage
+          file.previewElement.getElementsByClassName('dz-remove')[0].textContent = removeText
+        }
+        styleFileAsError(file, "Retirer le fichier", this.errorMessage)
+
       },
       dropzoneSuccessCallback: function() {
         clearCache()
@@ -133,3 +153,10 @@
   })
 
 </script>
+
+<style>
+  /* Shift the error bubble down, it's overlapping the "Remove file" link. */
+  .response-dropzone .dropzone .dz-preview .dz-error-message {
+    top:150px;
+  }
+</style>
