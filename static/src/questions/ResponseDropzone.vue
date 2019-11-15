@@ -121,14 +121,15 @@
 
         this.hasErrors = true
         this.errorMessage = 'L\'envoi du fichier "' + file.name + '" a mis plus de ' + (UPLOAD_TIMEOUT_MS / 1000) +
-            ' secondes, et a été annulé.'
+            ' secondes, et a été annulé. Essayez avec des fichiers plus petits, ou un réseau internet plus rapide.'
 
         // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
         const styleFileAsError = (file, removeText, errorMessage) => {
           file.previewElement.classList.add('dz-error')
           file.previewElement.classList.remove('dz-procession')
           file.previewElement.getElementsByClassName('dz-progress')[0].remove()
-          file.previewElement.getElementsByClassName('dz-error-message')[0].getElementsByTagName('span')[0].textContent = errorMessage
+          file.previewElement.getElementsByClassName('dz-error-message')[0]
+              .getElementsByTagName('span')[0].textContent = errorMessage
           file.previewElement.getElementsByClassName('dz-remove')[0].textContent = removeText
           this.makeErrorIconRed(file)
         }
