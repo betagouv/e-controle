@@ -17,25 +17,42 @@
       <table class="table card-table table-vcenter">
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires" :key="'questionnaire-' + questionnaire.id">
-            <td>
-              Q{{ questionnaire.numbering }}
+            <td v-if="user.is_inspector">
+              <span v-if="questionnaire.is_draft">
+                <span class="tag tag-azure round-tag font-italic">Brouillon</span>
+                <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
+              </span>
+              <span v-else>
+                <span class="tag tag-lime round-tag font-italic">Publié</span>
+                <help-tooltip text="Les questionnaires publiés sont visibles pas l'organisme contrôlé, et ne sont plus modifiables."></help-tooltip>
+              </span>
             </td>
             <td>
-                <span v-if="questionnaire.is_draft">
-                  <span class="tag tag-azure round-tag font-italic">Brouillon</span>
-                  <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
-                </span>
-                <span>{{ questionnaire.title }}</span>
-                <div v-if="questionnaire.sent_date">
-                  <i class="fe fe-send"></i>
-                  Date de transmission du questionnaire :
-                  {{ questionnaire.sent_date }}
-                </div>
-                <div v-if="questionnaire.end_date">
+              <div>Questionnaire {{ questionnaire.numbering }}</div>
+              <div>{{ questionnaire.title }}</div>
+            </td>
+            <td>
+              <div v-if="questionnaire.end_date">
+                <div>
                   <i class="fe fe-clock"></i>
                   Date de réponse souhaitée :
-                  {{ questionnaire.end_date | DateFormat}}
                 </div>
+                <div>
+                  {{ questionnaire.end_date | DateFormat }}
+                </div>
+              </div>
+            </td>
+            <td>
+              <div v-if="questionnaire.is_draft && questionnaire.editor">
+                <div>
+                  <i class="fe fe-edit"></i>
+                  Rédacteur
+                  <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
+                </div>
+                <div>
+                  {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
+                </div>
+              </div>
             </td>
             <td class="w-1 text-right">
               <template v-if="!user.is_inspector">
@@ -65,11 +82,6 @@
                     <i class="fe fe-eye"></i>
                     Voir
                   </a>
-                  <div v-if="questionnaire.editor" class="mt-1 text-nowrap">
-                    <i class="fe fe-edit"></i>
-                    Rédacteur : {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
-                    <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
-                  </div>
                 </template>
                 <template v-else>
                   <a :href="questionnaire.url"
