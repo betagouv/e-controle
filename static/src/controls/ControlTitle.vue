@@ -76,7 +76,8 @@
             <div class="text-muted card-title mb-1">
               <strong>../{{control.reference_code}}</strong>
             </div>
-            <a class="btn btn-secondary btn-fake-icon">
+            <a class="btn btn-secondary btn-fake-icon"
+               @click="showWebdavTip">
               <i class="fe fe-folder mr-2"></i>
               <img :src="'/static/img/file-explorer.png'" 
                    alt="Explorateur Windows"
@@ -97,6 +98,10 @@
       </div>
     </template>
 
+    <webdav-tip :id="'webdav-tip-' + control.id"
+                :webdavurl="webdavurl + '/' + control.reference_code">
+    </webdav-tip>
+
   </div>
 </template>
 
@@ -104,6 +109,7 @@
   import { mapFields } from 'vuex-map-fields'
   import axios from 'axios'
   import Vue from "vue"
+  import WebdavTip from '../controls/WebdavTip'
 
   import ErrorBar from "../utils/ErrorBar"
 
@@ -113,6 +119,7 @@
   export default Vue.extend({
     props: {
       control: Object,
+      webdavurl: String,
     },
     data: function() {
       return {
@@ -129,7 +136,8 @@
       ]),
     },
     components: {
-      ErrorBar
+      ErrorBar,
+      WebdavTip,
     },
     mounted() {
       this.restoreForm()
@@ -177,7 +185,10 @@
             this.errors = error.response.data
             this.hasErrors = true
           })
-      }
+      },
+      showWebdavTip() {
+        $('#webdav-tip-' + this.control.id).modal('show')
+      },
     }
   })
 

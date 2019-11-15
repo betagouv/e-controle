@@ -4,13 +4,11 @@
       <control-create></control-create>
     </div>
 
-    <control-title :control="control"></control-title>
+    <control-title :control="control" :webdavurl="webdavurl"></control-title>
 
     <questionnaire-list :control="control" :user="user"></questionnaire-list>
 
     <user-section :control="control"></user-section>
-
-    <webdav-tip v-if="user.is_inspector" :webdavurl="webdavurl + '/' + control.reference_code"></webdav-tip>
 
   </div>
 
@@ -23,7 +21,6 @@
   import ControlTitle from "./ControlTitle"
   import QuestionnaireList from '../questionnaires/QuestionnaireList'
   import UserSection from '../users/UserSection'
-  import WebdavTip from './WebdavTip'
 
   export default Vue.extend({
     props: [
@@ -36,7 +33,6 @@
       ControlTitle,
       QuestionnaireList,
       UserSection,
-      WebdavTip,
     },
   })
 </script>
