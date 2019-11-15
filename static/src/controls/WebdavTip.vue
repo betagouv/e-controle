@@ -1,8 +1,11 @@
 <template>
   <empty-modal>
-    <div class="modal-header">
+    <div class="modal-header parent-fake-icon">
       <div class="modal-title">
-        <i class="fe fe-folder mr-2"></i>
+        <i class="fe fe-folder mr-4"></i>
+        <img :src="'/static/img/file-explorer.png'" 
+              alt="Explorateur Windows"
+              class="fake-icon" />
         <span>Comment voir les réponses dans l’Explorateur Windows ?</span>
       </div>
       <button type="button"
@@ -96,3 +99,14 @@
     }
   })
 </script>
+
+<style scoped>
+  .parent-fake-icon {
+    position: relative;
+  }
+  .fake-icon {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+  }
+</style>

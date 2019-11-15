@@ -194,13 +194,13 @@
 
 </script>
 
-<style>
-.btn-fake-icon {
-  position: relative;
-}
-.fake-icon {
-  position: absolute;
-  top: 2px;
-  left: 5px;
-}
+<style scoped>
+  .btn-fake-icon {
+    position: relative;
+  }
+  .fake-icon {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+  }
 </style>
