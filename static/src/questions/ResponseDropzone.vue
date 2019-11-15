@@ -36,7 +36,7 @@
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
   const url = "/api/question/"
-  const UPLOAD_TIMEOUT_MS = 30000
+  const UPLOAD_TIMEOUT_MS = 5 * 60 * 1000 // 5 min : timeout apache
 
   export default Vue.extend({
     props: [
