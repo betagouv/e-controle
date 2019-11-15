@@ -109,6 +109,12 @@
         this.errors = ""
         this.hasErrors = false
       },
+      makeErrorIconRed(file) {
+        file.previewElement.getElementsByClassName('dz-error-mark')[0]
+            .getElementsByTagName('g')[0]
+            .getElementsByTagName('g')[0]
+            .setAttribute("fill", "red")
+      },
       dropzoneTimeoutCallback: function(file, error) {
         console.debug('dropzone timeout', file, error)
         clearCache()
@@ -124,12 +130,14 @@
           file.previewElement.getElementsByClassName('dz-progress')[0].remove()
           file.previewElement.getElementsByClassName('dz-error-message')[0].getElementsByTagName('span')[0].textContent = errorMessage
           file.previewElement.getElementsByClassName('dz-remove')[0].textContent = removeText
+          this.makeErrorIconRed(file)
         }
         styleFileAsError(file, "Retirer le fichier", this.errorMessage)
-
       },
-      dropzoneSuccessCallback: function() {
+      dropzoneSuccessCallback: function(file) {
         clearCache()
+        // Remove "Remove file" message, since it's a success.
+        file.previewElement.getElementsByClassName('dz-remove')[0].remove()
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
@@ -139,6 +147,7 @@
         this.hasErrors = true
         this.errorMessage =  errorMessage
         console.debug("Error when uploading response file.", file, errorMessage)
+        this.makeErrorIconRed(file)
       },
       fetchQuestionData: function () {
         return axios.get(url + this.questionId).then(response =>{
@@ -156,4 +165,17 @@
   .response-dropzone .dropzone .dz-preview .dz-error-message {
     top:150px;
   }
+
+  /* The progress bar and success/error mark are on top of the filename. Move it up. */
+  .dropzone .dz-preview .dz-details {
+    padding-top: 0.7em;
+  }
+  .dropzone .dz-preview .dz-details .dz-size {
+    margin-bottom: 0.3em;
+  }
+  .dropzone .dz-preview .dz-success-mark, .dropzone .dz-preview .dz-error-mark {
+    top: 60%;
+  }
+
+
 </style>
