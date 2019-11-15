@@ -16,7 +16,7 @@
       </div>
       <table class="table card-table table-vcenter">
         <tbody>
-          <tr v-for="questionnaire in accessibleQuestionnaires">
+          <tr v-for="questionnaire in accessibleQuestionnaires" :key="'questionnaire-' + questionnaire.id">
             <td>
               Q{{ questionnaire.numbering }}
             </td>
@@ -34,7 +34,7 @@
                 <div v-if="questionnaire.end_date">
                   <i class="fe fe-clock"></i>
                   Date de réponse souhaitée :
-                  {{ questionnaire.end_date }}
+                  {{ questionnaire.end_date | DateFormat}}
                 </div>
             </td>
             <td class="w-1 text-right">
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+  import DateFormat from '../utils/DateFormat.js';
   import HelpTooltip from "../utils/HelpTooltip"
   import Vue from 'vue'
 
@@ -105,6 +106,9 @@
       'control',
       'user',
     ],
+    filters: {
+      DateFormat
+    },
     components: {
       HelpTooltip,
     },
