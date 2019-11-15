@@ -71,13 +71,25 @@
           <div class="page-title">{{ title }}</div>
         </div>
 
-        <div v-if="sessionUser.is_inspector">
+        <div v-if="sessionUser.is_inspector" class="flex-column align-items-end">
+          <div class="mb-6 flex-column align-items-end">
+            <div class="text-muted card-title mb-1">
+              <strong>../{{control.reference_code}}</strong>
+            </div>
+            <a class="btn btn-secondary btn-fake-icon">
+              <i class="fe fe-folder mr-2"></i>
+              <img :src="'/static/img/file-explorer.png'" 
+                   alt="Explorateur Windows"
+                   class="fake-icon" />
+              Voir les réponses
+            </a>
+          </div>
           <a href="javascript:void(0)"
              class="btn btn-secondary"
              title="Modifier l'espace de dépôt"
              @click="enterEditMode"
           >
-            <i class="fe fe-edit"></i>
+            <i class="fe fe-edit mr-2"></i>
             Modifier
           </a>
         </div>
@@ -170,3 +182,14 @@
   })
 
 </script>
+
+<style>
+.btn-fake-icon {
+  position: relative;
+}
+.fake-icon {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+}
+</style>
