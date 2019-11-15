@@ -3,10 +3,7 @@
     <div v-show="isAudited" class="form-group question-box-child">
       <div class="form-label">Déposer vos réponses</div>
       <error-bar v-if="hasErrors" @dismissed="clearErrors">
-        <div v-if="errorMessage">
-          {{ errorMessage }}
-        </div>
-        <div v-else>
+        <div>
           Une erreur s'est produite lors de la transmision d'un fichier.
         </div>
       </error-bar>
@@ -39,7 +36,7 @@
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
   const url = "/api/question/"
-  const UPLOAD_TIMEOUT_MS = 3000
+  const UPLOAD_TIMEOUT_MS = 30000
 
   export default Vue.extend({
     props: [
