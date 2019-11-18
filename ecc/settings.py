@@ -73,6 +73,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django_http_referrer_policy.middleware.ReferrerPolicyMiddleware',
+    'django_feature_policy.FeaturePolicyMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
@@ -84,7 +86,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_http_referrer_policy.middleware.ReferrerPolicyMiddleware',
 ]
 
 ROOT_URLCONF = 'ecc.urls'
