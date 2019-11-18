@@ -157,8 +157,9 @@ SECURE_HSTS_SECONDS = 15768000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 # Content-Security-Policy
-CSP_DEFAULT_SRC = ("'self'", "'unsafe-eval'")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_DEFAULT_SRC = env('CSP_DEFAULT_SRC', default=("'self'",))
+CSP_STYLE_SRC = env('CSP_STYLE_SRC', default=("'self'",))
+CSP_SCRIPT_SRC = env('CSP_SCRIPT_SRC', default=("'self'",))
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
