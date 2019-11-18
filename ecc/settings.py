@@ -140,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # HTTP Security
 SECURE_CONTENT_TYPE_NOSNIFF = True
-REFERRER_POLICY = 'no-referrer'
+REFERRER_POLICY = 'same-origin'
 FEATURE_POLICY = {
     'geolocation': 'none',
     'autoplay': ['self', ],
