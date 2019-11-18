@@ -151,8 +151,10 @@
       },
       dropzoneErrorCallback: function(file, errorMessage) {
         clearCache()
-        this.hasErrors = true
-        this.errorMessage =  errorMessage
+        if (file.status !== 'canceled') {
+          this.hasErrors = true
+          this.errorMessage =  errorMessage
+        }
         this.styleError(file)
         console.debug("Error when uploading response file.", file, errorMessage)
       },
