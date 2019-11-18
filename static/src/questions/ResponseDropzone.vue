@@ -110,17 +110,21 @@
         this.hasErrors = false
       },
       styleSuccess(file) {
+        file.previewElement.getElementsByClassName('dz-success-mark')[0]
+            .getElementsByTagName('g')[0]
+            .getElementsByTagName('path')[0]
+            .setAttribute('fill', '#5EBB00') // success color in tabler
         file.previewElement.getElementsByClassName('dz-remove')[0].remove()
       },
       styleError(file) {
         file.previewElement.getElementsByClassName('dz-error-mark')[0]
             .getElementsByTagName('g')[0]
             .getElementsByTagName('g')[0]
-            .setAttribute("fill", "red")
+            .setAttribute('fill', '#cd201f') // danger color in tabler
         file.previewElement.getElementsByClassName('dz-remove')[0].remove()
       },
-      // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
-      styleTimeoutAsError(file, errorMessage) {
+      styleTimeout(file, errorMessage) {
+        // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
         file.previewElement.classList.add('dz-error')
         file.previewElement.classList.remove('dz-procession')
         file.previewElement.getElementsByClassName('dz-progress')[0].remove()
@@ -136,7 +140,7 @@
         this.errorMessage = 'L\'envoi du fichier "' + file.name + '" a mis plus de ' + (UPLOAD_TIMEOUT_MS / 1000) +
             ' secondes, et a été annulé. Essayez avec des fichiers plus petits, ou un réseau internet plus rapide.'
 
-        this.styleTimeoutAsError(file, this.errorMessage)
+        this.styleTimeout(file, this.errorMessage)
       },
       dropzoneSuccessCallback: function(file) {
         clearCache()
@@ -180,5 +184,16 @@
     top: 60%;
   }
 
-
+  /* 
+    Make the checkmark for success stay visible, instead of disappearing after a while.
+    We just copy the animation for the error case.
+  */
+  .response-dropzone .dropzone .dz-preview.dz-success .dz-success-mark {
+    opacity: 1;
+    -webkit-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+    -moz-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+    -ms-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+    -o-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+    animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1); 
+  }
 </style>
