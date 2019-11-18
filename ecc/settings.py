@@ -152,6 +152,10 @@ FEATURE_POLICY = {
     'payment': 'none',
     'usb': 'none',
 }
+# Strict-Transport-Security
+SECURE_HSTS_SECONDS = 15768000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
