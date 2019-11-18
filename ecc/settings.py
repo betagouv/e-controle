@@ -141,6 +141,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # HTTP Security
 SECURE_CONTENT_TYPE_NOSNIFF = True
 REFERRER_POLICY = 'no-referrer'
+FEATURE_POLICY = {
+    'geolocation': 'none',
+    'autoplay': ['self', ],
+    'accelerometer': 'none',
+    'camera': 'none',
+    'gyroscope': 'none',
+    'magnetometer': 'none',
+    'microphone': 'none',
+    'payment': 'none',
+    'usb': 'none',
+}
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
