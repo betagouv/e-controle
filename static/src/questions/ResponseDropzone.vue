@@ -109,11 +109,24 @@
         this.errors = ""
         this.hasErrors = false
       },
-      makeErrorIconRed(file) {
+      styleSuccess(file) {
+        file.previewElement.getElementsByClassName('dz-remove')[0].remove()
+      },
+      styleError(file) {
         file.previewElement.getElementsByClassName('dz-error-mark')[0]
             .getElementsByTagName('g')[0]
             .getElementsByTagName('g')[0]
             .setAttribute("fill", "red")
+        file.previewElement.getElementsByClassName('dz-remove')[0].remove()
+      },
+      // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
+      styleTimeoutAsError(file, errorMessage) {
+        file.previewElement.classList.add('dz-error')
+        file.previewElement.classList.remove('dz-procession')
+        file.previewElement.getElementsByClassName('dz-progress')[0].remove()
+        file.previewElement.getElementsByClassName('dz-error-message')[0]
+            .getElementsByTagName('span')[0].textContent = errorMessage
+        this.styleError(file)
       },
       dropzoneTimeoutCallback: function(file, error) {
         console.debug('dropzone timeout', file, error)
@@ -123,22 +136,11 @@
         this.errorMessage = 'L\'envoi du fichier "' + file.name + '" a mis plus de ' + (UPLOAD_TIMEOUT_MS / 1000) +
             ' secondes, et a été annulé. Essayez avec des fichiers plus petits, ou un réseau internet plus rapide.'
 
-        // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like an error state.
-        const styleFileAsError = (file, removeText, errorMessage) => {
-          file.previewElement.classList.add('dz-error')
-          file.previewElement.classList.remove('dz-procession')
-          file.previewElement.getElementsByClassName('dz-progress')[0].remove()
-          file.previewElement.getElementsByClassName('dz-error-message')[0]
-              .getElementsByTagName('span')[0].textContent = errorMessage
-          file.previewElement.getElementsByClassName('dz-remove')[0].textContent = removeText
-          this.makeErrorIconRed(file)
-        }
-        styleFileAsError(file, "Retirer le fichier", this.errorMessage)
+        this.styleTimeoutAsError(file, this.errorMessage)
       },
       dropzoneSuccessCallback: function(file) {
         clearCache()
-        // Remove "Remove file" message, since it's a success.
-        file.previewElement.getElementsByClassName('dz-remove')[0].remove()
+        this.styleSuccess(file)
         this.fetchQuestionData().then(response_files => {
           EventBus.$emit('response-files-updated-' + this.questionId, response_files);
         })
@@ -147,8 +149,8 @@
         clearCache()
         this.hasErrors = true
         this.errorMessage =  errorMessage
+        this.styleError(file)
         console.debug("Error when uploading response file.", file, errorMessage)
-        this.makeErrorIconRed(file)
       },
       fetchQuestionData: function () {
         return axios.get(url + this.questionId).then(response =>{
