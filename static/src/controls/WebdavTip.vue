@@ -1,5 +1,5 @@
 <template>
-  <empty-modal>
+  <empty-modal class="webdav-tip">
     <div class="modal-header parent-fake-icon">
       <div class="modal-title">
         <i class="fe fe-folder mr-4"></i>
@@ -114,5 +114,12 @@
     position: absolute;
     top: 10px;
     left: 14px;
+  }
+
+</style>
+
+<style>
+  .webdav-tip .modal-dialog {
+    max-width: 800px;
   }
 </style>
