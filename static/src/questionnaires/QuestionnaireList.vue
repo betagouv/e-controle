@@ -15,16 +15,29 @@
         Il n'y a pas encore de questionnaire pour cet espace de dépôt.
       </div>
       <table class="table card-table table-vcenter">
+        <thead>
+          <tr>
+            <th v-if="user.is_inspector">
+              Statut
+              <help-tooltip text="Un questionnaire est d'abord en Brouillon : il est modifiable et l'organisme interrogé ne le voit pas. Puis il est Publié : il n'est plus modifiable et l'organisme interrogé le voit."></help-tooltip>
+            </th>
+            <th>Titre</th>
+            <th>Date de réponse</th>
+            <th v-if="user.is_inspector">
+              Rédacteur
+              <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires" :key="'questionnaire-' + questionnaire.id">
             <td class="tag-column" v-if="user.is_inspector">
               <div v-if="questionnaire.is_draft">
                 <div class="tag tag-azure round-tag font-italic">Brouillon</div>
-                <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
               </div>
               <div v-else>
                 <div class="tag tag-lime round-tag font-italic">Publié</div>
-                <help-tooltip text="Les questionnaires publiés sont visibles pas l'organisme contrôlé, et ne sont plus modifiables."></help-tooltip>
               </div>
             </td>
             <td>
@@ -33,29 +46,16 @@
             </td>
             <td class="end-date-column">
               <div v-if="questionnaire.end_date">
-                <div>
-                  <i class="fe fe-clock mr-1"></i>
-                  Répondre avant le :
-                </div>
-                <div>
-                  <strong>
-                    {{ questionnaire.end_date | DateFormat }}
-                  </strong>
-                </div>
+                <small>
+                  {{ questionnaire.end_date | DateFormat }}
+                </small>
               </div>
             </td>
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
-                <div>
-                  <i class="fe fe-edit mr-1"></i>
-                  Rédacteur
-                  <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
-                </div>
-                <div>
-                  <strong>
-                    {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
-                  </strong>
-                </div>
+                <small>
+                  {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
+                </small>
               </div>
             </td>
             <td class="w-1 text-right">
