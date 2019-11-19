@@ -8,11 +8,16 @@
         {{ questionnaire.title_display }}
       </div>
     </div>
-    <info-bar v-if="questionnaire.is_draft">
-      <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
-      <span v-else>[INCONNU]</span>
-      est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
-    </info-bar>
+    <template v-if="user.is_inspector">
+      <info-bar v-if="questionnaire.is_draft">
+        <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
+        <span v-else>[INCONNU]</span>
+        est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
+      </info-bar>
+      <success-bar v-else>
+        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
+      </success-bar>
+    </template>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
