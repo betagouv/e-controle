@@ -24,10 +24,9 @@
       </p>
 
       <div class="flex-row mb-4">
-        <span class="mr-4">{{ webdavurl}}</span>
+        <span id="link-text" class="mr-4">{{ webdavurl}}</span>
         <button class="btn btn-sm btn-secondary pr-4"
-                v-clipboard="webdavurl"
-                v-clipboard:success="clipboardSuccessHandler"
+                @click="copyLink"
                 style="position: relative;">
           <i class="fe fe-copy"></i>
           Copier le lien
@@ -67,11 +66,8 @@
 
 <script>
   import Vue from 'vue'
-  import Clipboard from 'v-clipboard'
   import EmptyModal from '../utils/EmptyModal'
   import InfoBar from '../utils/InfoBar'
-
-  Vue.use(Clipboard)
 
   export default Vue.extend({
     props: [ 'webdavurl' ],
@@ -85,7 +81,17 @@
       }
     },
     methods: {
-      clipboardSuccessHandler ({ value, event }) {
+      copyLink() {
+        const selectElementContents = (el) => {
+          var range = document.createRange();
+          range.selectNodeContents(el);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+        const linkEl = document.getElementById('link-text')
+        selectElementContents(linkEl)
+        document.execCommand("copy")
         this.showCopySuccess = true
       },
 
