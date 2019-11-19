@@ -84,7 +84,7 @@
                      title="Voir le brouillon de questionnaire"
                   >
                     <i class="fe fe-eye"></i>
-                    Voir
+                    Consulter
                   </a>
                 </template>
                 <template v-else>
