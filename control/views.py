@@ -13,7 +13,7 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile
-from .serializers import QuestionnaireSerializer
+from .serializers import ControlDetailControlSerializer, QuestionnaireSerializer, ControlDetailUserSerializer
 
 
 class WithListOfControlsMixin(object):
@@ -22,13 +22,26 @@ class WithListOfControlsMixin(object):
         context = super().get_context_data(**kwargs)
         # Questionnaires are grouped by control:
         # we get the list of questionnaire from the list of controls
-        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('id')
+        control_list = Control.objects.filter(id__in=self.request.user.profile.controls.all()).order_by('-id')
         context['controls'] = control_list
         return context
 
 
-class QuestionnaireList(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    template_name = "ecc/questionnaire_list.html"
+class ControlDetail(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
+    template_name = "ecc/control_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        control_list = context['controls']
+        controls_serialized = []
+        for control in control_list:
+            control_serialized = ControlDetailControlSerializer(instance=control).data
+            controls_serialized.append(control_serialized)
+        context['controls_json'] = json.dumps(controls_serialized)
+        user_serialized = ControlDetailUserSerializer(instance=self.request.user).data
+        user_serialized['is_inspector'] = self.request.user.profile.is_inspector
+        context['user_json'] = json.dumps(user_serialized)
+        return context
 
 
 class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
@@ -106,14 +119,11 @@ class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView)
     def get_queryset(self):
         if not self.request.user.profile.is_inspector:
             return Control.objects.none()
-        questionnaires_in_control = Questionnaire.objects.filter(control__in=self.request.user.profile.controls.all())
-
-        authoring_actions = model_stream(Questionnaire)\
-            .filter(verb='created questionnaire')\
-            .filter(actor_object_id=self.request.user.id)
-        authored_questionnaires_ids = authoring_actions.values_list('action_object_object_id', flat=True)
-
-        return questionnaires_in_control.filter(id__in=list(authored_questionnaires_ids))
+        questionnaires = Questionnaire.objects.filter(
+            control__in=self.request.user.profile.controls.all(),
+            editor=self.request.user
+        )
+        return questionnaires
 
 
 class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailView):

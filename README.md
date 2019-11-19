@@ -8,7 +8,7 @@ Outil permettant de simplifier la relation entre un organisme de contrôle et de
   une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
 
 Autres technos utilisées (pas besoin de les installer localement, elles sont sur docker):
- - python
+ - Python
  - Django
 
 Notre code review process pour collaborer dans la bonne humeur :
@@ -22,6 +22,17 @@ Le container postgres a une image standard, le django une image faite maison (d�
 Quand on lance le container django avec `docker-compose run django`, il commence par exécuter https://github.com/betagouv/e-controle/blob/develop/docker-entrypoint.sh. Ce script source l'environnement, migre la base postgres si necessaire, puis exécute une commande si elle est donnée (par exemple la commande `dev`, avec `docker-compose run django dev`, lance le serveur django.).
 
 Le filesystem de la machine hôte est partagé avec le container django : le dossier `.` en local (root du repo github) est le même que le dossier `\app` sur le container. Les modifs en local apparaissent dans le container sans le relancer.
+
+
+## Notre Docker Django
+
+L'image docker pour Django peut être construite à partir de plusieurs images :
+
+- sur la base d'une image Centos
+- sur la base une image Python/Node
+
+Pour changer l'image de base, il faut changer l'option `dockerfile` specifiée dans `docker-compose.yml`.
+
 
 ## Variables d'environnement
 
@@ -107,26 +118,26 @@ Pour se connecter à postgres avec l'installation docker, une méthode simple es
 
 Ensuite charger le dump dans la base :
 
-    psql -h postgres -U ecc -d ecc < db_<date>.dump
-    
+    psql -h postgres -U ecc -d ecc < db.dump
+
 (si l'installation postgres est locale, sans docker, utiliser `localhost` au lieu de `postgres` dans la commande)
 
 Le mot de passe est `ecc` (défini dans docker-compose.yml)
 
 Voilà des utilisateurs admin qui existent par défaut quand on utilise le dump de démo:
-- inspector@demo.com / demoe12345
-- audited@demo.com / demoe12345
+- Controlé: robert@demo.com / demo12345
+- Contrôleur: martine@demo.com / demo12345
 
 Note : Pour créer un nouveau dump :
 
     pg_dump --verbose --clean --no-acl --no-owner -h postgres -U ecc -d ecc > db.dump
 
-Ensuite, ajouter dezipper les fichiers de `media_<date>.zip` dans un dossier `media` à la racine de ce projet.
+Ensuite, ajouter dezipper les fichiers de `media.zip` dans un dossier `media` à la racine de ce projet.
 
 ## Login et envoi d'emails
 
 Les utlisateurs admin peuvent se logger sans envoi d'email à http://localhost:8080/admin.
-(Si vous avez utilisé le dump ci-dessus, essayez inspector@demo.com / demoe12345)
+(Si vous avez utilisé le dump ci-dessus, essayez admin@demo.com / demo12345)
 
 Les utilisateurs non-admin n'ont pas de mot de passe, ils recoivent un email contenant un lien de connexion. Votre serveur doit donc être configuré pour envoyer des mails.
 
@@ -222,11 +233,12 @@ Quelques commandes bash utiles:
 
     npm run build-all
 
-    npm run watch-questionnaire-list  # Pour construire le fichier bundle en mode watch
-    npm run build-questionnaire-create  # Pour construire le fichier bundle
+    npm run watch-control-detail  # Pour construire le fichier bundle en mode watch
+    npm run build-control-detail  # Pour construire le fichier bundle
 
-    npm run watch-questionnaire-create  # Pour construire le fichier bundle en mode watch
-    npm run build-questionnaire-list  # Pour construire le fichier bundle
+    npm run watch-questionnaire-create
+    npm run watch-questionnaire-detail
+    npm run watch-session-management
 
 ## Tests
 
@@ -242,9 +254,9 @@ Ils se situent dans `static/src/` avec le code, dans des dossiers `test`. Ce son
 
 Lancer les tests : `npm test`
 
-Tester un fichier en particulier : 
+Tester un fichier en particulier :
 
-`npm test <tout ou partie du nom de fichier>`. 
+`npm test <tout ou partie du nom de fichier>`.
 
 Par exemple : `npm test Metadata` trouve le fichier `static/src/questionnaires/test/QuestionnaireMetadataCreate.spec.js`.
 

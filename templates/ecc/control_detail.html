@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% load control_tags %}
+
+{% block page_content %}
+  <div id="control-detail-vm">
+    <control-page :controls="{{ controls_json }}"
+                       :user="{{ user_json }}"
+                       webdavurl="{{ settings.WEBDAV_URL }}"
+                       static-files-url="//{{ current_site.domain }}{% static '' %}"
+    >
+    </control-page>
+  </div>
+{% endblock page_content %}
+
+{% block js_bundle %}
+  <script src="{% static 'dist/control-detail-bundle.js' %}"></script>
+{% endblock js_bundle %}

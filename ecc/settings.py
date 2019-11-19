@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'model_utils',
     'easy_thumbnails',
-    'filer',
     'ordered_model',
     'django_extensions',
     'actstream',
@@ -56,7 +55,6 @@ INSTALLED_APPS = [
 
     'control',
     'demo',
-    'ecc',
     'faq',
     'magicauth',
     'reporting',
@@ -65,6 +63,10 @@ INSTALLED_APPS = [
     'adauth',
     'session',
     'tos',
+
+    # Central app - loaded last
+    'ecc',
+
 ]
 
 
@@ -148,7 +150,7 @@ SEND_EMAIL_WHEN_USER_REMOVED = env('SEND_EMAIL_WHEN_USER_REMOVED', default=False
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 MAGICAUTH_FROM_EMAIL = DEFAULT_FROM_EMAIL
-MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME = 'questionnaire-list'
+MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME = 'control-detail'
 MAGICAUTH_EMAIL_SUBJECT = 'Connexion e.controle'
 MAGICAUTH_EMAIL_HTML_TEMPLATE = 'login/email.html'
 MAGICAUTH_EMAIL_TEXT_TEMPLATE = 'login/email.txt'
@@ -175,6 +177,8 @@ except locale.Error as e:
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+
+ADMIN_URL = env('ADMIN_URL', default='admin/')
 
 STATIC_URL = '/static/'
 

@@ -2,43 +2,39 @@
   <div>
     <div class="page-header">
       <div class="page-title">
+        <i class="fe fe-list mr-2"></i>
         <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>{{ questionnaire.title_display }}
       </div>
     </div>
     <info-bar v-if="questionnaire.is_draft">
-      <span v-if="questionnaire.author">{{ questionnaire.author.first_name }} {{ questionnaire.author.last_name }}</span>
+      <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
       <span v-else>[INCONNU]</span>
-      a créé ce brouillon. Il/elle en est rédacteur et est le/la seule à pouvoir le modifier. Suggérez-lui vos modifications.
+      est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
     </info-bar>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
 
-      <div id="body" class="row row-cards">
-        <theme-list-sidebar :themes="questionnaire.themes">
-        </theme-list-sidebar>
+      <div>
+        <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
+                   :theme="theme"
+                   :theme-numbering="themeIndex + 1">
 
-        <div class="col-lg-8">
-          <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
-                     :theme="theme"
-                     :theme-numbering="themeIndex + 1">
+          <question-box v-for="(question, qIndex) in theme.questions"
+                        :with-collapse="true"
+                        :theme-numbering="themeIndex + 1"
+                        :question-numbering="qIndex + 1"
+                        :question="question">
 
-            <question-box v-for="(question, qIndex) in theme.questions"
-                          :with-collapse="true"
-                          :theme-numbering="themeIndex + 1"
-                          :question-numbering="qIndex + 1"
-                          :question="question">
+            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+            <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
+            <response-dropzone :is-audited="user.is_audited"
+                               :question-id="question.id">
+            </response-dropzone>
 
-              <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
-              <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
-              <response-dropzone :is-audited="user.is_audited"
-                                 :question-id="question.id">
-              </response-dropzone>
+          </question-box>
 
-            </question-box>
-
-          </theme-box>
-        </div>
+        </theme-box>
 
       </div>
     </div>
@@ -57,7 +53,6 @@
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
   import ThemeBox from '../themes/ThemeBox'
-  import ThemeListSidebar from '../themes/ThemeListSidebar'
 
   const questionnaire_url = "/api/questionnaire/";
   const session_user_url = "/api/user/current/";
@@ -88,7 +83,6 @@
       ResponseDropzone,
       ResponseFileList,
       ThemeBox,
-      ThemeListSidebar,
     }
   })
 

@@ -28,7 +28,7 @@
                   Vous êtes déjà connecté
                 </div>
                 <div class="text-center">
-                  <a href="{% url 'questionnaire-list' %}" class="btn btn-success">Accédez à l'accueil</a>
+                  <a href="{% url 'control-detail' %}" class="btn btn-success">Accédez à l'accueil</a>
                   <a href="{% url 'logout' %}" class="btn btn-warning">Déconnectez-vous</a>
                 </div>
               {% else %}
@@ -64,7 +64,7 @@
               <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
             </div>
           </div>
-          <img src="{% static 'img/logo-cc.jpg' %}" class="img resize-bug" alt="logo-cc"/>
+          <img src="{% static 'img/logo-cc.png' %}" class="img resize-bug" alt="logo-cc"/>
         </div>
       </div>
       <div class="mt-9">

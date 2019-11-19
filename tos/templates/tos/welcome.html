@@ -2,11 +2,16 @@
 {% load static %}
 
 {% block nav_items %}
-  <!-- No nav items -->
+  <!-- No nav items, leave empty div for layout to stay the same apart from nav items -->
+  <div></div>
 {% endblock nav_items %}
 
 {% block page_title %}
-  Bienvenue sur e.contrôle
+  <div class="page-header">
+    <h1 class="page-title">
+      Bienvenue sur e.contrôle
+    </h1>
+  </div>
 {% endblock page_title %}
 
 {% block subtitle %}
@@ -35,7 +40,7 @@
                {% if user.profile.agreed_to_tos %}checked{% endif %}
                required>
         <span class="custom-control-label">
-          J'ai lu et j'accepte les conditions générales d'utilisation. Je m'engage à respecter le secret de l'instruction.
+          J'ai lu et j'accepte les conditions générales d'utilisation.
         </span>
       </label>
     </div>

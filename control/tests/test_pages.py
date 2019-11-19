@@ -10,11 +10,14 @@ from user_profiles.models import UserProfile
 pytestmark = mark.django_db
 
 
-def access_questionnaire_page(client, page_name, is_control_associated_with_user, profile_type, is_draft=False):
+def access_questionnaire_page(
+        client, page_name, is_control_associated_with_user,
+        profile_type, is_draft=False, assign_questionnaire_editor=True):
     questionnaire = factories.QuestionnaireFactory(is_draft=is_draft)
     control = questionnaire.control
     if is_control_associated_with_user:
-        user = utils.make_user(profile_type, control)
+        user = utils.make_user(
+            profile_type, control, assign_questionnaire_editor=assign_questionnaire_editor)
     else:
         user = utils.make_user(profile_type, None)
 
@@ -95,8 +98,8 @@ def test_no_access_questionnaire_create_page_if_not_inspector_user(client):
     assert 400 <= response.status_code < 500
 
 
-def test_can_access_questionnaire_edit_page_if_control_is_associated_with_the_inspector_user_and_user_is_author(client):
-    # Create questionnaire through API so that the author is set properly.
+def test_can_access_questionnaire_edit_page_if_control_is_associated_with_the_inspector_user_and_user_is_editor(client):
+    # Create questionnaire through API so that the editor is set properly.
     control = ControlFactory()
     user = utils.make_user(UserProfile.INSPECTOR, control)
     payload = test_api_questionnaire.make_create_payload(control.id)
@@ -111,11 +114,12 @@ def test_can_access_questionnaire_edit_page_if_control_is_associated_with_the_in
     assert response.status_code == 200
 
 
-def test_no_access_questionnaire_edit_page_if_user_is_not_author(client):
+def test_no_access_questionnaire_edit_page_if_user_is_not_editor(client):
     response = access_questionnaire_page(client,
                                          page_name='questionnaire-edit',
                                          is_control_associated_with_user=True,
-                                         profile_type=UserProfile.INSPECTOR)
+                                         profile_type=UserProfile.INSPECTOR,
+                                         assign_questionnaire_editor=False)
     assert 400 <= response.status_code < 500
 
 

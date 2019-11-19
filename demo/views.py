@@ -27,7 +27,7 @@ class DemoView(View):
         is_admin = user.is_staff or user.is_superuser
         if not is_admin:
             django_login(request, user)
-            return HttpResponseRedirect(reverse('questionnaire-list'))
+            return HttpResponseRedirect(reverse('control-detail'))
         else:
             return HttpResponseForbidden("Non autorisé")
         return HttpResponseRedirect(reverse('login'))

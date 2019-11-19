@@ -1,0 +1,26 @@
+FROM nikolaik/python-nodejs:python3.6-nodejs10
+
+ENV PYTHONUNBUFFERED 1
+ENV PORT 8080
+
+# System packages
+RUN apt-get -qq update && \
+    apt-get -q -y upgrade && \
+    apt-get install -y curl wget locales postgresql-client
+
+# App
+COPY . /app
+WORKDIR /app
+
+# Python and NPM Packaging
+RUN python -m pip install -r requirements.txt
+RUN npm install
+
+# Locales
+RUN localedef -c -f UTF-8 -i fr_FR fr_FR.UTF-8
+
+RUN chmod +x docker-entrypoint.sh
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

@@ -38,6 +38,7 @@ def test_response_file_listed_in_question_endpoint():
     response_file = factories.ResponseFileFactory()
     question = response_file.question
     user = response_file.author
+    user.profile.agreed_to_tos = True
     user.profile.controls.add(question.theme.questionnaire.control)
     user.profile.save()
 

@@ -1,54 +1,35 @@
 <template>
-  <div class="card">
-    <div class="card-status card-status-left bg-blue"></div>
-    <div id="add-control-button-bar" class="card-header">
-      <a href="javascript:void(0)"
-         class="btn btn-primary"
-         data-toggle="collapse"
-         data-target="#controlcreate"
-         @click="hideAddControlButton">
-        <i class="fe fe-plus"></i>
-        Ajouter un espace de dépôt
-      </a>
-    </div>
+  <div>
+    <a href="javascript:void(0)"
+       class="btn btn-primary"
+       data-toggle="modal"
+       data-target="#controlcreate">
+      <i class="fe fe-plus"></i>
+      Ajouter un espace de dépôt
+    </a>
 
 
-    <div id="controlcreate" class="collapse">
-      <div class="card-header">
-        <div class="card-title">
-          Créer un nouvel espace de dépôt
-        </div>
-
-        <div class="card-options">
-          <button type="button"
-                  class="close"
-                  data-toggle="collapse"
-                  data-target="#controlcreate"
-                  @click="cancel">
-          </button>
-        </div>
-      </div>
-
-      <div class="card-body">
-        <error-bar v-if="hasErrors">
-          <div v-if="errorMessage">
-            {{ errorMessage }}
-          </div>
-          <div v-else>
-            L'espace de dépôt n'a pas pu être créé. Erreur : {{JSON.stringify(errors)}}
-          </div>
-        </error-bar>
+    <confirm-modal-with-wait id="controlcreate"
+                             cancel-button="Annuler"
+                             confirm-button="Créer l'espace de dépôt"
+                             title="Créer un nouvel espace de dépôt"
+                             @confirm="createControl"
+    >
+      <div>
         <info-bar>
           Chaque espace de dépôt n'est visible que par les personnes que vous inviterez.
         </info-bar>
 
-        <form @submit.prevent="createControl">
+        <form>
           <div class="form-group mb-6">
             <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
               Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+            <div class="flex-row align-items-center">
+              <i class="fa fa-exchange-alt mr-2 text-muted"></i>
+              <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+            </div>
           </div>
 
           <div class="form-group mb-6">
@@ -56,7 +37,10 @@
             <div id="organization-help" class="text-muted">
               Exemple : Ministère des Sports. 255 caractères maximum.
             </div>
-            <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+            <div class="flex-row align-items-center">
+              <i class="fa fa-building mr-2 text-muted"></i>
+              <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+            </div>
           </div>
 
           <div class="form-group mb-6">
@@ -79,22 +63,9 @@
             </div>
           </div>
 
-          <div class="text-right">
-            <a href="javascript:void(0)"
-               data-toggle="collapse"
-               data-target="#controlcreate"
-               @click="cancel"
-               class="btn btn-secondary">
-              Annuler
-            </a>
-            <button type="submit"
-                    class="btn btn-primary">
-              Créer l'espace de dépôt
-            </button>
-          </div>
         </form>
       </div>
-    </div>
+    </confirm-modal-with-wait>
   </div>
 </template>
 
@@ -102,7 +73,7 @@
   import axios from 'axios'
   import Vue from "vue"
 
-  import ConfirmModal from "../utils/ConfirmModal"
+  import ConfirmModalWithWait from "../utils/ConfirmModalWithWait"
   import ErrorBar from "../utils/ErrorBar"
   import InfoBar from "../utils/InfoBar"
 
@@ -119,9 +90,6 @@
         organization: "",
         reference_code_suffix: "",
         year: new Date().getFullYear(),
-        errorMessage: "",
-        errors: "",
-        hasErrors: false,
       }
     },
     computed: {
@@ -130,17 +98,12 @@
       }
     },
     components: {
-      ConfirmModal,
+      ConfirmModalWithWait,
       ErrorBar,
       InfoBar,
     },
     methods: {
-      clearErrors: function() {
-        this.errors = ""
-        this.hasErrors = false
-      },
-      createControl: function() {
-        this.clearErrors()
+      createControl: function(processingDoneCallback) {
         const payload = {
           title: this.title,
           depositing_organization: this.organization,
@@ -149,35 +112,38 @@
         axios.post(create_control_url, payload)
           .then(response => {
             console.debug(response)
-            // Force reload
-            window.location.href = home_url + "?reload=" + Math.random()
+            processingDoneCallback(null, response)
+            window.location.href = '/accueil'
           })
           .catch((error) => {
-            console.error(error)
-            if (error.response.data['reference_code']) {
-              if (error.response.data['reference_code'][0] === 'UNIQUE') {
-                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                    '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
-              }
-              if (error.response.data['reference_code'][0] === 'INVALID') {
-                this.errorMessage = 'Le nom abrégé "' + payload.reference_code +
-                    '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
-                    ' Veuillez en choisir un autre.'
-              }
-            }
-            this.errors = error.response.data
-            this.hasErrors = true
+            console.error('Error creating control', error)
+            const errorMessage = this.makeErrorMessage(error)
+            processingDoneCallback(errorMessage)
           })
       },
-      hideAddControlButton: function() {
-        document.getElementById('add-control-button-bar').style.display = 'none';
-      },
-      cancel: function() {
-        this.clearErrors()
-        this.showAddControlButton()
-      },
-      showAddControlButton: function() {
-        document.getElementById('add-control-button-bar').style.display = 'flex';
+      makeErrorMessage: function (error) {
+        if (error.response && error.response.data && error.response.data['reference_code']) {
+          const requestedCode = JSON.parse(error.response.config.data).reference_code
+          if (error.response.data['reference_code'][0] === 'UNIQUE') {
+            return 'Le nom abrégé "' + requestedCode +
+                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+          }
+          if (error.response.data['reference_code'][0] === 'INVALID') {
+            return 'Le nom abrégé "' + requestedCode +
+                '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                ' Veuillez en choisir un autre.'
+          }
+        }
+
+        if (error.message && error.message === 'Network Error') {
+          return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
+        }
+
+        if (error.message) {
+          return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+        }
+
+        return "L'espace de dépôt n'a pas pu être créé."
       },
     }
   })

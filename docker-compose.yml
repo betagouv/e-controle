@@ -9,7 +9,7 @@ services:
   django:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile.python
     volumes:
       - .:/app
     ports:

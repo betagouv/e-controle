@@ -14,19 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name')
-
-
-class ControlSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization', 'reference_code')
-
-
-class ControlUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Control
-        fields = ('id', 'title', 'depositing_organization')
+        fields = ('first_name', 'last_name', 'id')
 
 
 class ResponseFileSerializer(serializers.ModelSerializer):
@@ -69,16 +57,38 @@ class ThemeSerializer(serializers.ModelSerializer):
         # not serialized : order
 
 
+# Serializers for displaying control_detail.html
+class ControlDetailUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'id',)
+
+
 class QuestionnaireSerializer(serializers.ModelSerializer):
     themes = ThemeSerializer(many=True, read_only=True)
-    author = UserSerializer(read_only=True, required=False)
+    editor = ControlDetailUserSerializer(read_only=True, required=False)
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'author',
-                  'title_display')
+        fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'editor',
+                  'title_display', 'numbering')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
+
+
+class ControlSerializer(serializers.ModelSerializer):
+    questionnaires = QuestionnaireSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
+
+
+class ControlUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization')
 
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
@@ -110,3 +120,19 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
                 'allow_null': False,
             }
         }
+
+
+class ControlDetailQuestionnaireSerializer(serializers.ModelSerializer):
+    editor = ControlDetailUserSerializer(read_only=True, required=False)
+
+    class Meta:
+        model = Questionnaire
+        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'editor')
+
+
+class ControlDetailControlSerializer(serializers.ModelSerializer):
+    questionnaires = ControlDetailQuestionnaireSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Control
+        fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')

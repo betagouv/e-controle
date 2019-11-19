@@ -181,6 +181,9 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         validated_themes_and_questions = self.__validate_all(request, pre_existing_qr)
         response = save_questionnaire_func()
         saved_qr = Questionnaire.objects.get(id=response.data['id'])
+        saved_qr.editor = request.user
+        saved_qr.save()
+
         log(saved_qr)
 
         if is_update:

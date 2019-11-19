@@ -1,3 +1,5 @@
+import sys
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,5 @@ class SessionConfig(AppConfig):
     verbose_name = "session"
 
     def ready(self):
-        import session.signals  # noqa
+        if 'migrate' not in sys.argv:
+            import session.signals  # noqa

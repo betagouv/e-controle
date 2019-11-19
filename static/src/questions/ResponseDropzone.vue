@@ -2,9 +2,6 @@
   <div :id="'dropzone_' + questionId">
     <div v-show="isAudited" class="form-group question-box-child">
       <div class="form-label">Déposer vos réponses</div>
-      <info-bar>
-        Astuces : Vous pouvez déposer des dossiers zippés contenant plusieurs documents.
-      </info-bar>
       <error-bar v-if="hasErrors">
         <div>
           Une erreur s'est produite lors de la transmision d'un fichier.
@@ -12,7 +9,7 @@
       </error-bar>
       <form class="dropzone" :action="uploadUrl" method="post" enctype="multipart/form-data" :id="'dropzone-area-' + questionId ">
         <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
-        <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers ou dossiers zippés.</span></div>
+        <div class="dz-message" data-dz-message><span>Cliquer ou glisser-déposer vos fichiers.</span></div>
         <input type="hidden" id="idQuestionId" name="question_id" :value="questionId" />
         <div class="fallback">
           <input name="file" type="file" multiple />
