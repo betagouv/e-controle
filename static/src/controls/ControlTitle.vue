@@ -49,7 +49,7 @@
     </template>
 
     <template v-else>
-      <div class="card-body flex-row justify-content-between align-items-center">
+      <div class="card-body flex-row justify-content-between">
 
         <div v-if="organization">
           <div class="mb-3">
@@ -71,9 +71,9 @@
           <div class="page-title">{{ title }}</div>
         </div>
 
-        <div v-if="sessionUser.is_inspector" class="flex-column align-items-end">
+        <div v-if="sessionUser.is_inspector" class="flex-column align-items-end right-column">
           <div class="mb-6 flex-column align-items-end">
-            <div class="text-muted card-title mb-1">
+            <div class="text-muted card-title mb-1 break-word text-right">
               <strong>../{{control.reference_code}}</strong>
             </div>
             <a class="btn btn-secondary btn-fake-icon"
@@ -202,5 +202,13 @@
     position: absolute;
     top: 2px;
     left: 5px;
+  }
+
+  .right-column {
+    max-width: 33%;
+  }
+
+  .break-word {
+    word-break: break-word;
   }
 </style>
