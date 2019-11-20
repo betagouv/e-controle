@@ -155,7 +155,6 @@ FEATURE_POLICY = {
 # Strict-Transport-Security
 SECURE_BROWSER_XSS_FILTER = True
 CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 30
 # Content-Security-Policy
@@ -165,7 +164,7 @@ CSP_SCRIPT_SRC = env('CSP_SCRIPT_SRC', default=("'self'",))
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
-
+    SESSION_COOKIE_SECURE = True
 
 # Email
 EMAIL_HOST = env('EMAIL_HOST')
