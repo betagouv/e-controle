@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import mptt.fields
 
 import control.upload_path
 
@@ -74,7 +73,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('tree_id', models.PositiveIntegerField(db_index=True, editable=False)),
                 ('level', models.PositiveIntegerField(db_index=True, editable=False)),
-                ('parent', mptt.fields.TreeForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='control.Theme')),
+                ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='children', to='control.Theme')),
                 ('questionnaire', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='themes', to='control.Questionnaire', verbose_name='questionnaire')),
             ],
             options={
