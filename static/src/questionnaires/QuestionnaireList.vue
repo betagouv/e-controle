@@ -149,6 +149,6 @@
   }
 
   .end-date-column {
-    min-width: 11.5em;
+    min-width: 9em;
   }
 </style>
