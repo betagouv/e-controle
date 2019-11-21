@@ -26,7 +26,7 @@
                 <span class="form-required">*</span>
               </label>
               <div class="flex-row align-items-center">
-                <i class="fa fa-exchange-alt mr-2 text-muted"></i>
+                <i class="fa fa-award mr-2 text-muted"></i>
                 <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
               </div>
             </div>
@@ -61,7 +61,7 @@
           </div>
           <div class="mb-3">
             <div class="text-muted font-italic">
-              <i class="fa fa-exchange-alt mr-2"></i>
+              <i class="fa fa-award mr-2"></i>
               Procédure
             </div>
             <div class="card-title">{{ title }}</div>

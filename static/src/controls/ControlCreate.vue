@@ -27,7 +27,7 @@
               Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
-              <i class="fa fa-exchange-alt mr-2 text-muted"></i>
+              <i class="fa fa-award mr-2 text-muted"></i>
               <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
             </div>
           </div>
