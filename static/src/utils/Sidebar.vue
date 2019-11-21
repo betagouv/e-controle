@@ -24,12 +24,18 @@
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
     />
+
+    <div>
+      <control-create></control-create>
+    </div>
+
   </div>
 </template>
 
 
 <script>
   import axios from "axios"
+  import ControlCreate from '../controls/ControlCreate'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
@@ -41,7 +47,8 @@
 
   export default Vue.extend({
     components: {
-      SidebarMenu
+      ControlCreate,
+      SidebarMenu,
     },
     data() {
       return {
