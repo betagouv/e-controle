@@ -47,7 +47,7 @@
       return {
         collapsed: false,
         controls: [],
-        currentUser: undefined,
+        user: undefined,
         menu: [],
         isLoading: true,
       }
@@ -67,7 +67,7 @@
         console.debug('sidebar getting current user...')
         return axios.get('/api/user/current/').then((response) => {
           console.debug('sidebar got user', response)
-          this.currentUser = response.data
+          this.user = response.data
         }).catch(err => {
           // todo deal with error
         })
@@ -98,7 +98,7 @@
         if (!questionnaire.is_draft) {
           return questionnaire_detail_url + questionnaire.id + '/'
         }
-        if (questionnaire.editor && questionnaire.editor.id === this.currentUser.id) {
+        if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
           return questionnaire_modify_url + questionnaire.id + '/'
         }
         return questionnaire_detail_url + questionnaire.id + '/'
@@ -117,7 +117,7 @@
           }
 
           const children = control.questionnaires.map(questionnaire => {
-              if (this.currentUser.is_inspector || !questionnaire.is_draft) {
+              if (this.user.is_inspector || !questionnaire.is_draft) {
                 const questionnaireItem =  {
                   href: makeQuestionnaireLink(questionnaire),
                   title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
