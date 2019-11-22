@@ -3,8 +3,10 @@
     <div class="page-header">
       <div class="page-title">
         <i class="fe fe-list mr-2"></i>
-        <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>
-        <span v-else class="tag tag-lime big-tag round-tag font-italic mr-2">Publié</span>
+        <template v-if="user.is_inspector">
+          <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>
+          <span v-else class="tag tag-lime big-tag round-tag font-italic mr-2">Publié</span>
+        </template>
         {{ questionnaire.title_display }}
       </div>
     </div>
