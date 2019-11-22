@@ -9,6 +9,12 @@
       </a-->
     </div>
 
+    <div class="card-header flex-row justify-content-center border-top">
+      <div class="card-title">
+        Mes espaces de dépôt
+      </div>
+    </div>
+
     <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
@@ -92,7 +98,7 @@
       }
 
       const makeControlTitle = control => {
-        let title = '[ ' + control.reference_code + ' ]\n'
+        let title = control.reference_code + '\n'
         if (control.depositing_organization) {
           title += control.depositing_organization
         } else {
@@ -127,7 +133,7 @@
               if (this.user.is_inspector || !questionnaire.is_draft) {
                 const questionnaireItem =  {
                   href: makeQuestionnaireLink(questionnaire),
-                  title: 'Q' + questionnaire.numbering + ' - ' + questionnaire.title
+                  title: 'Questionnaire ' + questionnaire.numbering + ' - ' + questionnaire.title
                 }
                 if (questionnaireForTrash === '' + questionnaire.id) {
                   questionnaireItem.child = [{
@@ -206,29 +212,41 @@
   .sidebar-header {
     padding: 1rem;
     width: 350px;
+    margin-top: 1px;
   }
 </style>
 
 <style>
+  #sidebar-vm {
+    background-color: white;
+  }
+
+  /* Add borders to items */
+  .v-sidebar-menu .vsm--item {
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+      border-bottom-color: rgba(0, 40, 100, 0.12); /* same color as tabler borders */
+  }
+  .v-sidebar-menu .vsm--item:last-child {
+      border-bottom-style: none;
+  }
+
+  /* Wrap test for titles that overflow */
   .v-sidebar-menu .vsm--title {
-    /* Wrap test for titles that overflow */
     white-space: pre-wrap;
     /* Text was flowing over arrows */
     margin-right: 20px;
   }
 
+  /* Style icons */
   .v-sidebar-menu.vsm_white-theme .vsm--icon,
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1 .vsm--icon {
     color: #495057;
     background-color: white;
   }
-
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon, .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
     color: #495057;
     background-color: white;
   }
 
-  #sidebar-vm {
-    background-color: white;
-  }
 </style>
