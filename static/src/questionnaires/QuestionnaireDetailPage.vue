@@ -61,6 +61,7 @@
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
+  import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
 
   const questionnaire_url = "/api/questionnaire/";
@@ -91,6 +92,7 @@
       QuestionnaireMetadata,
       ResponseDropzone,
       ResponseFileList,
+      SuccessBar,
       ThemeBox,
     }
   })
