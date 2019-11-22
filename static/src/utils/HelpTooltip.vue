@@ -1,6 +1,6 @@
 <template>
   <span>
-    <a href="javascript:void(0);" data-toggle="tooltip" :title="text" style="color:#467fcf">
+    <a href="javascript:void(0);" data-toggle="tooltip" data-placement="right" :title="text" style="color:#467fcf">
       <i class="fe fe-help-circle"></i>
     </a>
   </span>
@@ -10,7 +10,11 @@
   import Vue from "vue"
 
   export default Vue.extend({
-    props: [ 'text' ]
+    props: [ 'text' ],
+    mounted: function() {
+      // Initialize tooltips
+      $('[data-toggle="tooltip"]').tooltip()
+    },
   })
 
 </script>
