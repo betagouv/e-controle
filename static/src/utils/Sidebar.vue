@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4">
+    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
     </div>
@@ -29,9 +29,10 @@
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
-    />
+    >
+    </sidebar-menu>
 
-    <div>
+    <div class="card-header border-top flex-row justify-content-center">
       <control-create></control-create>
     </div>
 
