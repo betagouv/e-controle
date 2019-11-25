@@ -14,7 +14,7 @@
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
         Il n'y a pas encore de questionnaire pour cet espace de dépôt.
       </div>
-      <table class="table card-table table-vcenter">
+      <table v-else class="table card-table table-vcenter">
         <thead>
           <tr>
             <th v-if="user.is_inspector">
