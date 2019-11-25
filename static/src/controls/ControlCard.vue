@@ -1,15 +1,8 @@
 <template>
   <div>
-    <div v-if="user.is_inspector" class="mb-4 flex-row justify-content-end">
-      <control-create></control-create>
-    </div>
-
     <control-title :control="control" :webdavurl="webdavurl"></control-title>
-
     <questionnaire-list :control="control" :user="user"></questionnaire-list>
-
     <user-section :control="control"></user-section>
-
   </div>
 
 </template>
