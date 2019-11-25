@@ -232,11 +232,12 @@
       border-bottom-style: none;
   }
 
-  /* Wrap test for titles that overflow */
+  /* Wrap text for titles that overflow */
   .v-sidebar-menu .vsm--title {
     white-space: pre-wrap;
     /* Text was flowing over arrows */
     margin-right: 20px;
+    word-break: break-word;
   }
 
   /* Style icons */
