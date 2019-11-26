@@ -15,13 +15,13 @@ def undelete(modeladmin, request, queryset):
         add_log_entry(verb='admin undeleted', session_user=request.user, obj=item)
 
 
-soft_delete.short_description = "Supprimer les éléments sélectionnés"
-undelete.short_description = "Restaurer les éléments sélectionnés"
+soft_delete.short_description = "Deactivate selected items - soft delete"
+undelete.short_description = "Re-activate seleted items - undelete"
 
 
-class IsDeletedFilter(admin.SimpleListFilter):
-    title = 'deleted'
-    parameter_name = 'deleted'
+class IsActiveFilter(admin.SimpleListFilter):
+    title = 'active'
+    parameter_name = 'active'
 
     def lookups(self, request, model_admin):
         return (
@@ -32,9 +32,9 @@ class IsDeletedFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         value = self.value()
         if value == 'yes':
-            return queryset.filter(deleted_at__isnull=False)
+            return queryset.filter(deleted_at__isnull=True)
         elif value == 'no':
-            return queryset.exclude(deleted_at__isnull=False)
+            return queryset.filter(deleted_at__isnull=False)
         return queryset
 
 
