@@ -46,9 +46,6 @@ class SoftDeletedAdmin(object):
     is_active.boolean = True
     is_active.short_description = "active"
 
-    def get_list_filter(self, request):
-        return super().get_list_filter(request) + (IsDeletedFilter,)
-
     def get_list_display(self, request):
         return super().get_list_display(request) + ('deleted_at', 'is_active')
 
