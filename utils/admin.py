@@ -1,14 +1,28 @@
 from django.contrib import admin
 
+from actstream import action
+
+
+def add_log_entry(verb, session_user, obj, description=''):
+    action_details = {
+        'sender': session_user,
+        'action_object': obj,
+        'verb': verb,
+        'description': description,
+    }
+    action.send(**action_details)
+
 
 def soft_delete(modeladmin, request, queryset):
     for item in queryset:
         item.soft_delete()
+        add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item)
 
 
 def undelete(modeladmin, request, queryset):
     for item in queryset:
         item.undelete()
+        add_log_entry(verb='admin undeleted', session_user=request.user, obj=item)
 
 
 soft_delete.short_description = "Supprimer les éléments sélectionnés"
