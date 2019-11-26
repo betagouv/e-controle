@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from ordered_model.admin import OrderedModelAdmin
 
-from utils.admin import SoftDeletedAdmin, IsDeletedFilter
+from utils.soft_delete import SoftDeletedAdmin
 
 from .models import FAQItem
 
