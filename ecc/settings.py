@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'django_filters',
     'django_admin',
+    'django_http_referrer_policy',
 
     'control',
     'demo',
@@ -71,6 +72,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django_http_referrer_policy.middleware.ReferrerPolicyMiddleware',
+    'django_feature_policy.FeaturePolicyMiddleware',
+    'csp.middleware.CSPMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django_session_timeout.middleware.SessionTimeoutMiddleware',
@@ -133,7 +137,35 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# HTTP Security
+SECURE_CONTENT_TYPE_NOSNIFF = True
+REFERRER_POLICY = 'same-origin'
+FEATURE_POLICY = {
+    'geolocation': 'none',
+    'autoplay': ['self', ],
+    'accelerometer': 'none',
+    'camera': 'none',
+    'gyroscope': 'none',
+    'magnetometer': 'none',
+    'microphone': 'none',
+    'payment': 'none',
+    'usb': 'none',
+}
+# Strict-Transport-Security
+SECURE_BROWSER_XSS_FILTER = True
+CSRF_COOKIE_SECURE = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_HSTS_SECONDS = 30
+# Content-Security-Policy
+CSP_DEFAULT_SRC = env('CSP_DEFAULT_SRC', default=("'self'",))
+CSP_STYLE_SRC = env('CSP_STYLE_SRC', default=("'self'",))
+CSP_SCRIPT_SRC = env('CSP_SCRIPT_SRC', default=("'self'",))
 
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+
+# Email
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER',)
