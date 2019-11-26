@@ -15,7 +15,11 @@
       </div>
     </div>
 
-    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4">
+    <div class="card-header flex-row justify-content-center">
+      <control-create></control-create>
+    </div>
+
+    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
     </div>
@@ -29,13 +33,16 @@
                   :collapsed="collapsed"
                   @toggle-collapse="onToggleCollapse"
                   @item-click="onItemClick"
-    />
+    >
+    </sidebar-menu>
+
   </div>
 </template>
 
 
 <script>
   import axios from "axios"
+  import ControlCreate from '../controls/ControlCreate'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
@@ -47,13 +54,14 @@
 
   export default Vue.extend({
     components: {
-      SidebarMenu
+      ControlCreate,
+      SidebarMenu,
     },
     data() {
       return {
         collapsed: false,
         controls: [],
-        currentUser: undefined,
+        user: undefined,
         menu: [],
         isLoading: true,
       }
@@ -73,7 +81,7 @@
         console.debug('sidebar getting current user...')
         return axios.get('/api/user/current/').then((response) => {
           console.debug('sidebar got user', response)
-          this.currentUser = response.data
+          this.user = response.data
         }).catch(err => {
           // todo deal with error
         })
@@ -104,7 +112,7 @@
         if (!questionnaire.is_draft) {
           return questionnaire_detail_url + questionnaire.id + '/'
         }
-        if (questionnaire.editor && questionnaire.editor.id === this.currentUser.id) {
+        if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
           return questionnaire_modify_url + questionnaire.id + '/'
         }
         return questionnaire_detail_url + questionnaire.id + '/'
@@ -123,7 +131,7 @@
           }
 
           const children = control.questionnaires.map(questionnaire => {
-              if (this.currentUser.is_inspector || !questionnaire.is_draft) {
+              if (this.user.is_inspector || !questionnaire.is_draft) {
                 const questionnaireItem =  {
                   href: makeQuestionnaireLink(questionnaire),
                   title: 'Questionnaire ' + questionnaire.numbering + ' - ' + questionnaire.title
@@ -224,11 +232,12 @@
       border-bottom-style: none;
   }
 
-  /* Wrap test for titles that overflow */
+  /* Wrap text for titles that overflow */
   .v-sidebar-menu .vsm--title {
     white-space: pre-wrap;
     /* Text was flowing over arrows */
     margin-right: 20px;
+    word-break: break-word;
   }
 
   /* Style icons */

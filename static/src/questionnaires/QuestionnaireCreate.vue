@@ -45,7 +45,7 @@
         {{ message }}
       </div>
     </div>
-    <a :href="home_url"
+    <a :href="home_url + '#control-' + questionnaire.control"
        class="btn btn-secondary"
        style="position:relative; bottom: 151px; left: 2em;">
       < Revenir à l'accueil
