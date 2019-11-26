@@ -2,9 +2,10 @@ from django.db import models
 
 from ckeditor.fields import RichTextField
 from ordered_model.models import OrderedModel
+from softdelete.models import SoftDeleteModel
 
 
-class FAQItem(OrderedModel):
+class FAQItem(OrderedModel, SoftDeleteModel):
     title = models.CharField("title", max_length=255)
     slug = models.SlugField("slug", max_length=255)
     description = RichTextField("description", blank=True)

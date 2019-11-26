@@ -8,4 +8,4 @@ register = template.Library()
 
 @register.simple_tag
 def get_faq_items():
-    return FAQItem.objects.all()
+    return FAQItem.objects.filter(deleted_at__isnull=True)

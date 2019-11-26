@@ -2,13 +2,15 @@ from django.contrib import admin
 
 from ordered_model.admin import OrderedModelAdmin
 
+from utils.admin import SoftDeletedAdmin, IsDeletedFilter
+
 from .models import FAQItem
 
 
 @admin.register(FAQItem)
-class FAQItemAdmin(OrderedModelAdmin):
+class FAQItemAdmin(SoftDeletedAdmin, OrderedModelAdmin):
     list_display = ('title',  'slug', 'order', 'move_up_down_links')
     prepopulated_fields = {'slug': ('title',)}
-    readonly_fields = ('order', 'move_up_down_links')
+    readonly_fields = ('order',)
     search_fields = ('title', 'description')
     ordering = ('order',)
