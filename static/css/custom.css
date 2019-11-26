@@ -12,11 +12,6 @@
     flex-direction: row;
 }
 
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
 /* Fixes to tabler*/
 .btn-primary.disabled, .btn-primary:disabled, .btn.disabled, .btn:disabled {
     cursor: not-allowed;
