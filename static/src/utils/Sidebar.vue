@@ -24,6 +24,18 @@
       En attente de la liste de contrôles...
     </div>
 
+    <error-bar v-if="hasError" noclose=true>
+      <div>
+        Nous n'avons pas pu obtenir vos espaces de dépôt. Erreur :
+      </div>
+      <div>
+        {{ errorMessage }}
+      </div>
+      <div>
+        Vous pouvez essayer de recharger la page.
+      </div>
+    </error-bar>
+
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
                   :relative="true"
@@ -43,11 +55,13 @@
 <script>
   import axios from "axios"
   import ControlCreate from '../controls/ControlCreate'
+  import ErrorBar from '../utils/ErrorBar'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
   const controls_url = '/api/control/'
+  const current_user_url = '/api/user/current/'
   const questionnaire_detail_url = '/questionnaire/'
   const questionnaire_modify_url = '/questionnaire/modifier/'
   const welcome_url = '/bienvenue/'
@@ -55,15 +69,18 @@
   export default Vue.extend({
     components: {
       ControlCreate,
+      ErrorBar,
       SidebarMenu,
     },
     data() {
       return {
         collapsed: false,
         controls: [],
+        hasError: false,
+        errorMessage: '',
+        isLoading: true,
         user: undefined,
         menu: [],
-        isLoading: true,
       }
     },
     mounted: function() {
@@ -79,11 +96,12 @@
 
       const getCurrentUser = () => {
         console.debug('sidebar getting current user...')
-        return axios.get('/api/user/current/').then((response) => {
+        return axios.get(current_user_url).then((response) => {
           console.debug('sidebar got user', response)
           this.user = response.data
         }).catch(err => {
-          // todo deal with error
+          console.error('sidebar got error when getting current user', err)
+          throw err
         })
       }
 
@@ -94,7 +112,7 @@
           this.controls = response.data
         }).catch(err => {
           console.error('sidebar got error when getting controls', err)
-          // todo err.message err.response.status
+          throw err
         })
       }
 
@@ -182,7 +200,16 @@
         }
       }
 
-      getCurrentUser().then(getControls).then(buildMenu)
+      const displayError = (err) => {
+        this.isLoading = false
+        this.hasError = true
+        this.errorMessage = err.message ? err.message : err
+      }
+
+      getCurrentUser()
+          .then(getControls)
+          .then(buildMenu)
+          .catch(displayError)
     },
     methods: {
       moveBodyForCollapse () {
