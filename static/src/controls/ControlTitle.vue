@@ -71,8 +71,8 @@
           <div class="page-title">{{ title }}</div>
         </div>
 
-        <div v-if="sessionUser.is_inspector" class="col-4 flex-column align-items-end ml-6">
-          <div class="mb-6 flex-column align-items-end">
+        <div v-if="sessionUser.is_inspector" class="col-4 flex-column ie-flex-column-fix align-items-end ml-6">
+          <div class="mb-6 flex-column ie-flex-column-fix align-items-end">
             <div class="text-muted card-title mb-1 break-word text-right">
               <strong>../{{control.reference_code}}</strong>
             </div>
