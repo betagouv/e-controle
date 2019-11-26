@@ -31,6 +31,3 @@ class ActionAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     )
     search_fields = ('verb', 'description', 'actor_object_id')
     readonly_fields = ('actor', 'action_object', 'target')
-
-    def has_delete_permission(self, request, obj=None):
-        return True
