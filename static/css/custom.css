@@ -12,6 +12,14 @@
     flex-direction: row;
 }
 
+/* Non-IE styles here. Should work for Edge. */
+@supports not (-ms-high-contrast: none) {
+    /* Flex bug on IE : if you add this it breaks word wrap. */
+    .flex-column {
+        display: flex;
+     }
+}
+
 /* Fixes to tabler*/
 .btn-primary.disabled, .btn-primary:disabled, .btn.disabled, .btn:disabled {
     cursor: not-allowed;
