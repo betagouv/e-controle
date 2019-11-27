@@ -37,3 +37,4 @@ django-admin==2.0.0
 django-http-referrer-policy==1.0.1
 django-feature-policy==3.0.0
 django-csp==3.5
+git+https://github.com/collabo-br/django-soft-delete.git

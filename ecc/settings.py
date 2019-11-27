@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'session',
     'tos',
 
+    'logs',
     # Central app - loaded last
     'ecc',
 
