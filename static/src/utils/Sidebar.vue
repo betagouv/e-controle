@@ -32,7 +32,7 @@
         Erreur : {{ errorMessage }}
       </div>
       <div class="mt-2">
-        Vous pouvez essayer de recharger la page, ou 
+        Vous pouvez essayer de recharger la page, ou
         <a :href="'mailto:' + errorEmailTo + '?subject=' + errorEmailSubject + '&body=' + errorEmailBody + JSON.stringify(error)"
            target="_blank"
         >
@@ -59,17 +59,13 @@
 
 <script>
   import axios from "axios"
+  import backend from '../utils/backend.js'
   import ControlCreate from '../controls/ControlCreate'
   import ErrorBar from '../utils/ErrorBar'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
-  const controls_url = '/api/control/'
-  const current_user_url = '/api/user/current/'
-  const questionnaire_detail_url = '/questionnaire/'
-  const questionnaire_modify_url = '/questionnaire/modifier/'
-  const welcome_url = '/bienvenue/'
   const error_email_body = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
   const error_email_subject = 'Erreur de chargement des espaces de dépôt'
   const error_email_to = 'e-controle@beta.gouv.fr'
@@ -96,7 +92,7 @@
       }
     },
     mounted: function() {
-      if (window.location.pathname === welcome_url) {
+      if (window.location.pathname === backend.welcome()) {
         this.collapsed = true
         this.menu = []
         this.moveBodyForCollapse()
@@ -108,7 +104,7 @@
 
       const getCurrentUser = () => {
         console.debug('sidebar getting current user...')
-        return axios.get(current_user_url).then((response) => {
+        return axios.get(backend.currentUser()).then((response) => {
           console.debug('sidebar got user', response)
           this.user = response.data
         }).catch(err => {
@@ -119,7 +115,7 @@
 
       const getControls = () => {
         console.debug('sidebar getting controls...')
-        return axios.get(controls_url).then((response) => {
+        return axios.get(backend.control()).then((response) => {
           console.debug('sidebar got controls', response)
           this.controls = response.data
         }).catch(err => {
@@ -140,12 +136,12 @@
 
       const makeQuestionnaireLink = questionnaire => {
         if (!questionnaire.is_draft) {
-          return questionnaire_detail_url + questionnaire.id + '/'
+          return backend['questionnaire-detail'](questionnaire.id)
         }
         if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
-          return questionnaire_modify_url + questionnaire.id + '/'
+          return backend['questionnaire-edit'](questionnaire.id)
         }
-        return questionnaire_detail_url + questionnaire.id + '/'
+        return backend['questionnaire-detail'](questionnaire.id)
       }
 
       const buildMenu = () => {
@@ -156,7 +152,7 @@
 
           const controlMenu = {
             icon: 'fa fa-archive',
-            href: '/accueil/#control-' + control.id,
+            href: backend['control-detail'](control.id),
             title: makeControlTitle(control),
           }
 
@@ -168,7 +164,7 @@
                 }
                 if (questionnaireForTrash === '' + questionnaire.id) {
                   questionnaireItem.child = [{
-                    href: '/questionnaire/corbeille/' + questionnaire.id + '/',
+                    href: backend.trash(questionnaire.id),
                     title: 'Corbeille',
                   }]
                 }
@@ -185,7 +181,7 @@
               controlMenu.child = []
             }
             controlMenu.child.push({
-              href: '/questionnaire/controle-' + control.id + '/creer',
+              href: backend['questionnaire-create'](control.id),
               title: 'Q' + (controlMenu.child.length + 1),
             })
           }
