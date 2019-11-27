@@ -26,13 +26,18 @@
 
     <error-bar v-if="hasError" noclose=true>
       <div>
-        Nous n'avons pas pu obtenir vos espaces de dépôt. Erreur :
+        Nous n'avons pas pu obtenir vos espaces de dépôt.
       </div>
-      <div>
-        {{ errorMessage }}
+      <div class="mt-2">
+        Erreur : {{ errorMessage }}
       </div>
-      <div>
-        Vous pouvez essayer de recharger la page.
+      <div class="mt-2">
+        Vous pouvez essayer de recharger la page, ou 
+        <a :href="'mailto:' + errorEmailTo + '?subject=' + errorEmailSubject + '&body=' + errorEmailBody + JSON.stringify(error)"
+           target="_blank"
+        >
+          cliquez ici pour nous contacter
+        </a>.
       </div>
     </error-bar>
 
@@ -65,6 +70,9 @@
   const questionnaire_detail_url = '/questionnaire/'
   const questionnaire_modify_url = '/questionnaire/modifier/'
   const welcome_url = '/bienvenue/'
+  const error_email_body = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
+  const error_email_subject = 'Erreur de chargement des espaces de dépôt'
+  const error_email_to = 'e-controle@beta.gouv.fr'
 
   export default Vue.extend({
     components: {
@@ -77,7 +85,11 @@
         collapsed: false,
         controls: [],
         hasError: false,
+        error: undefined,
         errorMessage: '',
+        errorEmailBody: error_email_body,
+        errorEmailSubject: error_email_subject,
+        errorEmailTo: error_email_to,
         isLoading: true,
         user: undefined,
         menu: [],
@@ -204,6 +216,7 @@
         this.isLoading = false
         this.hasError = true
         this.errorMessage = err.message ? err.message : err
+        this.error = err
       }
 
       getCurrentUser()
