@@ -22,7 +22,7 @@ const apiUrls = {
 
 // From ecc/urls.py. 
 // For the frontend queries we need to add leading slashes.
-const viewUrls = {
+const backendViewUrls = {
     welcome: 'bienvenue/',
     // Questionnaire pages
     'questionnaire-detail': 'questionnaire/<int:pk>/',
@@ -31,9 +31,14 @@ const viewUrls = {
     trash: 'questionnaire/corbeille/<int:pk>/',
     // Control pages
     'control-detail': 'accueil/#control-<int:pk>',
-  }
-  
+}
+const viewUrls = {}
+for (const [name, url] of Object.entries(backendViewUrls)) {
+  viewUrls[name] = '/' + url
+}
+
 const urlMaker = {}
+
 for (const [name, url] of Object.entries(apiUrls)) {
   urlMaker[name] = (id) => {
     if (id) {
@@ -48,13 +53,25 @@ urlMaker.currentUser = () => '/api/user/current/'
 for (const [name, url] of Object.entries(viewUrls)) {
   urlMaker[name] = (id) => {
     if (!url.includes('<int:pk>')) {
-      return '/' + url
+      return url
     }
     if (id === undefined) {
       throw Error('Url ' + url + ' needs id arg')
     }
-    return '/' + url.replace('<int:pk>', id)
+    return url.replace('<int:pk>', id)
   }
+}
+
+urlMaker.getIdFromViewUrl = (urlValue, urlName) => {
+  if (viewUrls[urlName] === undefined) {
+    return null
+  }
+  const regex = new RegExp('^' + viewUrls[urlName].replace('<int:pk>', '([0-9]+)') + '$')
+  const found = urlValue.match(regex)
+  if (!found) {
+    return null
+  }
+  return parseInt(found[1], 10)
 }
 
 export default urlMaker

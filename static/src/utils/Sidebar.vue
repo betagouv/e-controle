@@ -145,8 +145,10 @@
       }
 
       const buildMenu = () => {
-        const controlCreatingQuestionnaireId = findControlCreatingQuestionnaire()
-        const questionnaireForTrash = findQuestionnaireForTrash()
+        // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
+        const controlCreatingQuestionnaire = backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+        // If we are on a trash page, find the control for which the trash folder is.
+        const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
         const menu =  this.controls.sort((a, b) => { return b.id - a.id })
             .map(control => {
 
@@ -162,7 +164,7 @@
                   href: makeQuestionnaireLink(questionnaire),
                   title: 'Questionnaire ' + questionnaire.numbering + ' - ' + questionnaire.title
                 }
-                if (questionnaireForTrash === '' + questionnaire.id) {
+                if (questionnaireForTrash === questionnaire.id) {
                   questionnaireItem.child = [{
                     href: backend.trash(questionnaire.id),
                     title: 'Corbeille',
@@ -176,7 +178,7 @@
           }
 
           // Add menu item for the questionnaire being created, if there is one.
-          if (controlCreatingQuestionnaireId === ('' + control.id)) {
+          if (controlCreatingQuestionnaire === (control.id)) {
             if (!controlMenu.child) {
               controlMenu.child = []
             }
@@ -190,22 +192,6 @@
         })
         this.isLoading = false
         this.menu = menu
-      }
-
-      // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
-      const findControlCreatingQuestionnaire = () => {
-        const found = window.location.pathname.match(/^\/questionnaire\/controle-([0-9]+)\/creer$/)
-        if (found) {
-          return found[1]
-        }
-      }
-
-      // If we are on a trash page, find the control for which the trash folder is.
-      const findQuestionnaireForTrash = () => {
-        const found = window.location.pathname.match(/^\/questionnaire\/corbeille\/([0-9]+)\/$/)
-        if (found) {
-          return found[1]
-        }
       }
 
       const displayError = (err) => {
