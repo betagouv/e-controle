@@ -15,6 +15,12 @@
       </div>
     </div>
 
+    <div v-if="!isLoading && controls.length === 0">
+      <div class="text-muted card-title text-center mx-7 mt-9 mb-4">
+        Vous n'avez pas encore créé d'espace de dépôt.
+      </div>
+    </div>
+
     <div class="card-header flex-row justify-content-center">
       <control-create></control-create>
     </div>
