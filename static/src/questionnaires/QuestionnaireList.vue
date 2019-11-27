@@ -37,7 +37,7 @@
                 <div class="tag tag-azure round-tag font-italic">Brouillon</div>
               </div>
               <div v-else>
-                <div class="tag tag-lime round-tag font-italic">Publié</div>
+                <div class="tag tag-green round-tag font-italic">Publié</div>
               </div>
             </td>
             <td>

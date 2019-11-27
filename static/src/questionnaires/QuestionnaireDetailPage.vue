@@ -5,7 +5,7 @@
         <i class="fe fe-list mr-2"></i>
         <template v-if="user.is_inspector">
           <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>
-          <span v-else class="tag tag-lime big-tag round-tag font-italic mr-2">Publié</span>
+          <span v-else class="tag tag-green big-tag round-tag font-italic mr-2">Publié</span>
         </template>
         {{ questionnaire.title_display }}
       </div>
