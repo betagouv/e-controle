@@ -37,6 +37,10 @@
     align-items: center;
 }
 
+.text-large {
+    font-size: 2em;
+}
+
 /* QuestionnaireCreate.vue */
 .big-icon {
     font-size: 4rem;
