@@ -224,7 +224,6 @@
 
   .sidebar {
     width: 350px;
-    height: 100%;
   }
 </style>
 
