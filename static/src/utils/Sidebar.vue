@@ -17,11 +17,16 @@
 
     <div v-if="!isLoading && controls.length === 0">
       <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
-        Vous n'avez pas encore créé d'espace de dépôt.
+        <div v-if="user.is_inspector">
+          Vous n'avez pas encore créé d'espace de dépôt.
+        </div>
+        <div v-else>
+          Vous n'avez pas d'espace de dépôt.
+        </div>
       </div>
     </div>
 
-    <div class="card-header flex-row justify-content-center border-0">
+    <div v-if="user.is_inspector" class="card-header flex-row justify-content-center border-0">
       <control-create></control-create>
     </div>
 
