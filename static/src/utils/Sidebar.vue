@@ -218,7 +218,7 @@
 <style scoped>
   .sidebar-header {
     padding: 1rem;
-    width: 350px;
+    width: 351px; /* 1px wider so that the right-border is hidden */
     margin-top: 1px;
   }
 
