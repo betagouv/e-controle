@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="card-header flex-row justify-content-center">
+    <div class="card-header flex-row justify-content-center border-0">
       <control-create></control-create>
     </div>
 
@@ -234,8 +234,10 @@
       border-bottom-style: solid;
       border-bottom-color: rgba(0, 40, 100, 0.12); /* same color as tabler borders */
   }
-  .v-sidebar-menu .vsm--item:last-child {
-      border-bottom-style: none;
+  .v-sidebar-menu .vsm--item:first-child {
+      border-top-width: 1px;
+      border-top-style: solid;
+      border-top-color: rgba(0, 40, 100, 0.12); /* same color as tabler borders */
   }
 
   /* Wrap text for titles that overflow */
