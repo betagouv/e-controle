@@ -15,6 +15,21 @@
 .flex-column {
     display: flex;
     flex-direction: column;
+ }
+
+/* IE10+ CSS styles */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* 
+    Bug on IE : display:flex on a flex column messes up the text wrapping. 
+    This fix might mess up the alignment of the items in the columns, but solves text wrapping.
+    */
+    .ie-flex-column-fix {
+        display: block;
+    } 
+}
+
+/* Non-IE styles here. Should work for Edge. */
+@supports not (-ms-high-contrast: none) {
 }
 
 /* Fixes to tabler*/

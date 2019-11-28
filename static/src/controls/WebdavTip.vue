@@ -24,16 +24,17 @@
       </p>
 
       <div class="flex-row mb-4">
-        <span id="link-text" class="mr-4">{{ webdavurl}}</span>
-        <button class="btn btn-sm btn-secondary pr-4"
-                @click="copyLink"
-                style="position: relative;">
-          <i class="fe fe-copy"></i>
-          Copier le lien
-        </button>
-        <transition name="fade" v-on:enter="enterFade">
-          <span class="tag tag-success ml-4" v-if="showCopySuccess">C'est copié !</span>
-        </transition>
+        <div id="link-text" class="mr-4">{{ webdavurl}}</div>
+        <div id="copy-success-message-parent">
+          <button class="btn btn-sm btn-secondary"
+                  @click="copyLink">
+            <i class="fe fe-copy"></i>
+            Copier le lien
+          </button>
+          <transition name="fade" v-on:enter="enterFade">
+            <div id="copy-success-message" class="tag tag-success" v-if="showCopySuccess">C'est copié !</div>
+          </transition>
+        </div>
       </div>
 
       <div class="alert alert-icon alert-primary" role="alert">
@@ -69,6 +70,8 @@
   import EmptyModal from '../utils/EmptyModal'
   import InfoBar from '../utils/InfoBar'
 
+  const SUCCESS_MESSAGE_FADE_SECONDS = 5
+
   export default Vue.extend({
     props: [ 'webdavurl' ],
     components: {
@@ -96,10 +99,9 @@
       },
 
       enterFade: function(el, done) {
-        var that = this;
-        setTimeout(function() {
-          that.showCopySuccess = false;
-        }, 3000); // hide the message after 3 seconds
+        setTimeout(() => {
+          this.showCopySuccess = false;
+        }, SUCCESS_MESSAGE_FADE_SECONDS * 1000)
       }
 
     }
@@ -116,6 +118,15 @@
     left: 14px;
   }
 
+  #copy-success-message-parent {
+    position: relative;
+  }
+  #copy-success-message {
+    position: absolute;
+    top: 2rem;
+    left: 1rem;
+    z-index: 100;
+  }
 </style>
 
 <style>
