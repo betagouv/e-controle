@@ -26,6 +26,31 @@
     color: #5EBB00;
 }
 
+/* Extend margin system to one more size (tabler stops at 9) */
+.m-10 {
+    margin: 10rem !important;
+}
+
+.mt-10,
+.my-10 {
+    margin-top: 10rem !important;
+}
+
+.mr-10,
+.mx-10 {
+    margin-right: 10rem !important;
+}
+
+.mb-10,
+.my-10 {
+    margin-bottom: 10rem !important;
+}
+
+.ml-10,
+.mx-10 {
+    margin-left: 10rem !important;
+}
+
 /* Top bar */
 .nav-tabs .nav-link-thick-line {
     border-bottom-width: 4px;

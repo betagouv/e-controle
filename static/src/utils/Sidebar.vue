@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sidebar">
     <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
       <a class="header-brand" href="/accueil">
         <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
@@ -16,13 +16,16 @@
     </div>
 
     <div v-if="!isLoading && controls.length === 0">
-      <div class="text-muted card-title text-center mx-7 mt-9 mb-4">
+      <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
         Vous n'avez pas encore créé d'espace de dépôt.
       </div>
     </div>
 
     <div class="card-header flex-row justify-content-center border-0">
       <control-create></control-create>
+    </div>
+
+    <div v-if="!isLoading && controls.length === 0" class="height-filler">
     </div>
 
     <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4 mb-4">
@@ -220,6 +223,15 @@
     padding: 1rem;
     width: 350px;
     margin-top: 1px;
+  }
+
+  .sidebar {
+    width: 350px;
+  }
+
+  /* Add vertical space filler in the case where there are no controls, otherwise the footer is weirdly high. */
+  .height-filler {
+    margin-bottom: 15rem;
   }
 </style>
 
