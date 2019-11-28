@@ -1,9 +1,9 @@
 <template>
   <div class="flex-column align-items-center">
-    <div class="page-title text-large mt-6 mb-2">
+    <div class="page-title text-large mt-xl-6 mb-2">
       Bienvenue sur e.contrôle !
     </div>
-    <div class="card-title mb-8">
+    <div class="card-title mb-xl-8">
       Quelques étapes pour bien démarrer...
     </div>
     <div class="flex-column col-lg-11 col-xl-7">
