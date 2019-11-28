@@ -21,6 +21,23 @@
       En attente de la liste de contrôles...
     </div>
 
+    <error-bar v-if="hasError" noclose=true>
+      <div>
+        Nous n'avons pas pu obtenir vos espaces de dépôt.
+      </div>
+      <div class="mt-2">
+        Erreur : {{ errorMessage }}
+      </div>
+      <div class="mt-2">
+        Vous pouvez essayer de recharger la page, ou
+        <a :href="'mailto:' + errorEmailTo + '?subject=' + errorEmailSubject + '&body=' + errorEmailBody + JSON.stringify(error)"
+           target="_blank"
+        >
+          cliquez ici pour nous contacter
+        </a>.
+      </div>
+    </error-bar>
+
     <sidebar-menu class="sidebar-body"
                   :menu="menu"
                   :relative="true"
@@ -39,32 +56,40 @@
 
 <script>
   import axios from "axios"
+  import backend from '../utils/backend.js'
   import ControlCreate from '../controls/ControlCreate'
+  import ErrorBar from '../utils/ErrorBar'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
-  const controls_url = '/api/control/'
-  const questionnaire_detail_url = '/questionnaire/'
-  const questionnaire_modify_url = '/questionnaire/modifier/'
-  const welcome_url = '/bienvenue/'
+  const error_email_body = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
+  const error_email_subject = 'Erreur de chargement des espaces de dépôt'
+  const error_email_to = 'e-controle@beta.gouv.fr'
 
   export default Vue.extend({
     components: {
       ControlCreate,
+      ErrorBar,
       SidebarMenu,
     },
     data() {
       return {
         collapsed: false,
         controls: [],
+        hasError: false,
+        error: undefined,
+        errorMessage: '',
+        errorEmailBody: error_email_body,
+        errorEmailSubject: error_email_subject,
+        errorEmailTo: error_email_to,
+        isLoading: true,
         user: undefined,
         menu: [],
-        isLoading: true,
       }
     },
     mounted: function() {
-      if (window.location.pathname === welcome_url) {
+      if (window.location.pathname === backend.welcome()) {
         this.collapsed = true
         this.menu = []
         this.moveBodyForCollapse()
@@ -76,22 +101,23 @@
 
       const getCurrentUser = () => {
         console.debug('sidebar getting current user...')
-        return axios.get('/api/user/current/').then((response) => {
+        return axios.get(backend.currentUser()).then((response) => {
           console.debug('sidebar got user', response)
           this.user = response.data
         }).catch(err => {
-          // todo deal with error
+          console.error('sidebar got error when getting current user', err)
+          throw err
         })
       }
 
       const getControls = () => {
         console.debug('sidebar getting controls...')
-        return axios.get(controls_url).then((response) => {
+        return axios.get(backend.control()).then((response) => {
           console.debug('sidebar got controls', response)
           this.controls = response.data
         }).catch(err => {
           console.error('sidebar got error when getting controls', err)
-          // todo err.message err.response.status
+          throw err
         })
       }
 
@@ -107,23 +133,25 @@
 
       const makeQuestionnaireLink = questionnaire => {
         if (!questionnaire.is_draft) {
-          return questionnaire_detail_url + questionnaire.id + '/'
+          return backend['questionnaire-detail'](questionnaire.id)
         }
         if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
-          return questionnaire_modify_url + questionnaire.id + '/'
+          return backend['questionnaire-edit'](questionnaire.id)
         }
-        return questionnaire_detail_url + questionnaire.id + '/'
+        return backend['questionnaire-detail'](questionnaire.id)
       }
 
       const buildMenu = () => {
-        const controlCreatingQuestionnaireId = findControlCreatingQuestionnaire()
-        const questionnaireForTrash = findQuestionnaireForTrash()
+        // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
+        const controlCreatingQuestionnaire = backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+        // If we are on a trash page, find the control for which the trash folder is.
+        const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
         const menu =  this.controls.sort((a, b) => { return b.id - a.id })
             .map(control => {
 
           const controlMenu = {
             icon: 'fa fa-archive',
-            href: '/accueil/#control-' + control.id,
+            href: backend['control-detail'](control.id),
             title: makeControlTitle(control),
           }
 
@@ -133,9 +161,9 @@
                   href: makeQuestionnaireLink(questionnaire),
                   title: 'Questionnaire ' + questionnaire.numbering + ' - ' + questionnaire.title
                 }
-                if (questionnaireForTrash === '' + questionnaire.id) {
+                if (questionnaireForTrash === questionnaire.id) {
                   questionnaireItem.child = [{
-                    href: '/questionnaire/corbeille/' + questionnaire.id + '/',
+                    href: backend.trash(questionnaire.id),
                     title: 'Corbeille',
                   }]
                 }
@@ -147,12 +175,12 @@
           }
 
           // Add menu item for the questionnaire being created, if there is one.
-          if (controlCreatingQuestionnaireId === ('' + control.id)) {
+          if (controlCreatingQuestionnaire === (control.id)) {
             if (!controlMenu.child) {
               controlMenu.child = []
             }
             controlMenu.child.push({
-              href: '/questionnaire/controle-' + control.id + '/creer',
+              href: backend['questionnaire-create'](control.id),
               title: 'Q' + (controlMenu.child.length + 1),
             })
           }
@@ -163,23 +191,17 @@
         this.menu = menu
       }
 
-      // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
-      const findControlCreatingQuestionnaire = () => {
-        const found = window.location.pathname.match(/^\/questionnaire\/controle-([0-9]+)\/creer$/)
-        if (found) {
-          return found[1]
-        }
+      const displayError = (err) => {
+        this.isLoading = false
+        this.hasError = true
+        this.errorMessage = err.message ? err.message : err
+        this.error = err
       }
 
-      // If we are on a trash page, find the control for which the trash folder is.
-      const findQuestionnaireForTrash = () => {
-        const found = window.location.pathname.match(/^\/questionnaire\/corbeille\/([0-9]+)\/$/)
-        if (found) {
-          return found[1]
-        }
-      }
-
-      getCurrentUser().then(getControls).then(buildMenu)
+      getCurrentUser()
+          .then(getControls)
+          .then(buildMenu)
+          .catch(displayError)
     },
     methods: {
       moveBodyForCollapse () {
