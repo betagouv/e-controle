@@ -25,9 +25,6 @@
       <control-create></control-create>
     </div>
 
-    <div v-if="!isLoading && controls.length === 0" class="height-filler">
-    </div>
-
     <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
@@ -227,11 +224,7 @@
 
   .sidebar {
     width: 350px;
-  }
-
-  /* Add vertical space filler in the case where there are no controls, otherwise the footer is weirdly high. */
-  .height-filler {
-    margin-bottom: 15rem;
+    height: 100%;
   }
 </style>
 

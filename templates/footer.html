@@ -1,13 +1,15 @@
 {% load static %}
 
-<div class="footer">
+<div id="footer" class="footer pb-0">
   <div class="container">
     <div class="flex-row justify-content-between align-items-center">
-      <a href="{% url 'tos' %}">Conditions générales d'utilisation</a>
-      <span>
+      <div class="flex-grow">
+        <a href="{% url 'tos' %}">Conditions générales d'utilisation</a>
+      </div>
+      <div class="flex-grow">
         e-contrôle
         <a href='https://github.com/betagouv/e-controle/blob/develop/docs/releases/1.8.md'>v1.8 beta</a>
-      </span>
+      </div>
     </div>
     <div class="text-center">
       <img src="{% static 'img/logo-cc.png' %}" class="img" alt="logo Cour des comptes" style="max-width: 500px;"/>
