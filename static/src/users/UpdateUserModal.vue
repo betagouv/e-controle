@@ -31,7 +31,7 @@
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
             <div class="form-group">
-              <label class="form-label">Organisme<span class="form-required"></span></label>
+              <label class="form-label">Administration/Entreprise de l'agent<span class="form-required"></span></label>
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="editingUser.organization">
               <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
             </div>
