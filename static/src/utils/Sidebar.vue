@@ -4,9 +4,6 @@
       <a class="header-brand" href="/accueil">
         <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
       </a>
-      <!-- remove for now, collapse by user not supported a>
-        <i class="page-title fe fe-menu"></i>
-      </a-->
     </div>
 
     <div class="card-header flex-row justify-content-center border-top">
