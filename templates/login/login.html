@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load email_obfuscator %}
 {% block content %}
 <div class="page">
   <div class="main-page white">
@@ -61,7 +62,7 @@
             </form>
             <div class="text-center text-muted small mt-2 mt-lg-5">
               Vous rencontrez des difficultés pour vous connecter?
-              <a href="mailto:e-controle@beta.gouv.fr">Demandez de l'aide</a>
+              {{ settings.SUPPORT_TEAM_EMAIL|obfuscate_mailto:"Demandez de l'aide" }}
             </div>
           </div>
           <img src="{% static 'img/logo-cc.png' %}" class="img resize-bug" alt="logo-cc"/>
@@ -135,4 +136,3 @@
 </div>
 {% include "footer.html" %}
 {% endblock content %}
-

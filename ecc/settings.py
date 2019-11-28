@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_admin',
     'django_http_referrer_policy',
+    'email_obfuscator',
 
     'control',
     'demo',
@@ -63,11 +64,10 @@ INSTALLED_APPS = [
     'adauth',
     'session',
     'tos',
-
     'logs',
+
     # Central app - loaded last
     'ecc',
-
 ]
 
 
@@ -180,6 +180,7 @@ SEND_EMAIL_WHEN_USER_ADDED = env('SEND_EMAIL_WHEN_USER_ADDED', default=False)
 SEND_EMAIL_WHEN_USER_REMOVED = env('SEND_EMAIL_WHEN_USER_REMOVED', default=False)
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+SUPPORT_TEAM_EMAIL = env('SUPPORT_TEAM_EMAIL', default='support@e-controle.fr')
 
 MAGICAUTH_FROM_EMAIL = DEFAULT_FROM_EMAIL
 MAGICAUTH_LOGGED_IN_REDIRECT_URL_NAME = 'control-detail'
@@ -240,6 +241,7 @@ SETTINGS_EXPORT = [
     'PIWIK_SITE_ID',
     'PIWIK_TRACKER_BASE_URL',
     'SESSION_EXPIRE_SECONDS',
+    'SUPPORT_TEAM_EMAIL',
     'WEBDAV_URL',
     'DEBUG',
 ]
