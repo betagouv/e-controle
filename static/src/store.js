@@ -11,7 +11,8 @@ export const store = new Vuex.Store({
       editingControl: {},
       editingUser: {},
       editingProfileType: '',
-      sessionUser: {}
+      sessionUser: {},
+      supportTeamEmail: 'bb'
     },
     getters: {
       getField,
