@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div v-if="user.is_inspector" class="card-header flex-row justify-content-center">
+    <div v-if="user && user.is_inspector" class="card-header flex-row justify-content-center">
       <control-create></control-create>
     </div>
 
