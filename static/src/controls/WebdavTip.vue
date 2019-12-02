@@ -3,7 +3,7 @@
     <div class="modal-header parent-fake-icon">
       <div class="modal-title">
         <i class="fe fe-folder mr-4"></i>
-        <img :src="'/static/img/file-explorer.png'" 
+        <img :src="'/static/img/file-explorer.png'"
               alt="Explorateur Windows"
               class="fake-icon" />
         <span>Comment voir les réponses dans l’Explorateur Windows ?</span>
@@ -85,16 +85,22 @@
     },
     methods: {
       copyLink() {
-        const selectElementContents = (el) => {
-          var range = document.createRange();
-          range.selectNodeContents(el);
-          var sel = window.getSelection();
-          sel.removeAllRanges();
-          sel.addRange(range);
+        const copyElementContents = (el) => {
+          if (window.clipboardData) { // IE
+            console.debug('Copying for IE, user agent : ', window.navigator.userAgent)
+            window.clipboardData.setData('Text', el.innerText)
+          } else { // Other browsers
+            console.debug('Copying for non-IE browser, user agent : ', window.navigator.userAgent)
+            const range = document.createRange()
+            range.selectNodeContents(el)
+            const sel = window.getSelection()
+            sel.removeAllRanges()
+            sel.addRange(range)
+            document.execCommand("copy")
+          }
         }
         const linkEl = document.getElementById('link-text')
-        selectElementContents(linkEl)
-        document.execCommand("copy")
+        copyElementContents(linkEl)
         this.showCopySuccess = true
       },
 
