@@ -76,15 +76,6 @@
     },
     mounted: function(){
       this.getSessionUser()
-
-      // Create Element.remove() function if it doesn't exist, for IE
-      if (!('remove' in Element.prototype)) {
-        Element.prototype.remove = function () {
-          if (this.parentNode) {
-            this.parentNode.removeChild(this)
-          }
-        }
-      }
     },
     methods: {
       // todo reuse the Vuex store ?
