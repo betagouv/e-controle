@@ -19,13 +19,13 @@
 
 /* IE10+ CSS styles */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    /* 
-    Bug on IE : display:flex on a flex column messes up the text wrapping. 
+    /*
+    Bug on IE : display:flex on a flex column messes up the text wrapping.
     This fix might mess up the alignment of the items in the columns, but solves text wrapping.
     */
     .ie-flex-column-fix {
         display: block;
-    } 
+    }
 }
 
 /* Non-IE styles here. Should work for Edge. */
@@ -91,7 +91,8 @@
 }
 #footer {
     position: absolute;
-    bottom: 0;
+    bottom: 0px;
+    left: 0px;
     width: 100%;
     height: 140px;
     z-index: 999;
