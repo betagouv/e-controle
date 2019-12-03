@@ -20,17 +20,17 @@ const apiUrls = {
   user: '/api/user/',
 }
 
-// From ecc/urls.py. 
+// From ecc/urls.py.
 // For the frontend queries we need to add leading slashes.
 const backendViewUrls = {
-    welcome: 'bienvenue/',
-    // Questionnaire pages
-    'questionnaire-detail': 'questionnaire/<int:pk>/',
-    'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
-    'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
-    trash: 'questionnaire/corbeille/<int:pk>/',
-    // Control pages
-    'control-detail': 'accueil/#control-<int:pk>',
+  welcome: 'bienvenue/',
+  // Questionnaire pages
+  'questionnaire-detail': 'questionnaire/<int:pk>/',
+  'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
+  'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
+  trash: 'questionnaire/corbeille/<int:pk>/',
+  // Control pages
+  'control-detail': 'accueil/#control-<int:pk>',
 }
 const viewUrls = {}
 for (const [name, url] of Object.entries(backendViewUrls)) {
@@ -49,6 +49,7 @@ for (const [name, url] of Object.entries(apiUrls)) {
 }
 
 urlMaker.currentUser = () => '/api/user/current/'
+urlMaker.removeUserFromControl = (id) => '/api/user/' + id + '/remove-control/'
 
 for (const [name, url] of Object.entries(viewUrls)) {
   urlMaker[name] = (id) => {
