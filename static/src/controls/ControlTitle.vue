@@ -30,6 +30,15 @@
                 <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
               </div>
             </div>
+            <div class="form-group">
+              <label id="title-label" class="form-label">
+                Nom abrégé de l'espace de dépôt (non modifiable)
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fe fe-folder mr-2 text-muted"></i>
+                {{ control.reference_code }}
+              </div>
+            </div>
           </fieldset>
           <div class="text-right">
             <a href="javascript:void(0)"
