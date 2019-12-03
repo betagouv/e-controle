@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_http_referrer_policy',
     'email_obfuscator',
 
+    'config',
     'control',
     'demo',
     'faq',

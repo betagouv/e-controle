@@ -12,7 +12,7 @@ export const store = new Vuex.Store({
       editingUser: {},
       editingProfileType: '',
       sessionUser: {},
-      supportTeamEmail: 'bb'
+      config: {}
     },
     getters: {
       getField,
@@ -21,12 +21,20 @@ export const store = new Vuex.Store({
       updateField,
       setSessionUser(state, user) {
           state.sessionUser = user
+      },
+      loadConfig(state, config) {
+          state.config = config
       }
     },
     actions: {
       setSessionUser({commit}) {
         axios.get('/api/user/current/').then((response) => {
           commit('setSessionUser', response.data)
+        })
+      },
+      loadConfig({commit}) {
+        axios.get('/api/config/').then((response) => {
+          commit('loadConfig', response.data)
         })
       }
     }

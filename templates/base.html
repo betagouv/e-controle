@@ -84,13 +84,6 @@
   <script src="{% static 'dist/session-management-bundle.js' %}"></script>
 {% endblock session_management %}
 
-{% block settings_management %}
-  <div id="settings-management-vm">
-      <load-settings backend-support-team-email="{{ settings.SUPPORT_TEAM_EMAIL }}"></load-settings>
-  </div>
-  <script src="{% static 'dist/settings-management-bundle.js' %}"></script>
-{% endblock settings_management %}
-
 {% block analytics %}
   {% if settings.PIWIK_SITE_ID and settings.PIWIK_TRACKER_BASE_URL %}
     <script type="text/javascript">
