@@ -9,8 +9,18 @@
 
         <form @submit.prevent="updateControl">
           <div class="card-title">Modifier l'espace de dépôt</div>
-          <fieldset class="form-fieldset">
-            <div class="form-group">
+          <fieldset>
+            <div class="form-group mb-6 mt-2">
+              <label id="title-label" class="form-label">
+                Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-award mr-2 text-muted"></i>
+                <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              </div>
+            </div>
+            <div class="form-group mb-6">
               <label id="organization-label" class="form-label">
                 Quel est le nom de l’organisme qui va déposer les réponses ?
                 <span class="form-required">*</span>
@@ -22,12 +32,14 @@
             </div>
             <div class="form-group">
               <label id="title-label" class="form-label">
-                Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
-                <span class="form-required">*</span>
+                Nom abrégé de l'espace de dépôt (non modifiable)
               </label>
-              <div class="flex-row align-items-center">
-                <i class="fa fa-award mr-2 text-muted"></i>
-                <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              <div class="flex-row align-items-center fake-icon-parent">
+                <i class="fe fe-folder mr-3 text-muted"></i>
+                <img :src="'/static/img/file-explorer.png'"
+                    alt="Explorateur Windows"
+                    class="fake-icon-small" />
+                {{ control.reference_code }}
               </div>
             </div>
           </fieldset>
@@ -76,7 +88,7 @@
             <div class="text-muted card-title mb-1 break-word text-right">
               <strong>../{{control.reference_code}}</strong>
             </div>
-            <a class="btn btn-secondary btn-fake-icon"
+            <a class="btn btn-secondary fake-icon-parent"
                @click="showWebdavTip">
               <i class="fe fe-folder mr-2"></i>
               <img :src="'/static/img/file-explorer.png'"
@@ -195,13 +207,19 @@
 </script>
 
 <style scoped>
-  .btn-fake-icon {
+  .fake-icon-parent {
     position: relative;
   }
   .fake-icon {
     position: absolute;
     top: 2px;
     left: 5px;
+  }
+  .fake-icon-small {
+    position: absolute;
+    top: 0px;
+    left: -2px;
+    width: 24px;
   }
 
   .break-word {
