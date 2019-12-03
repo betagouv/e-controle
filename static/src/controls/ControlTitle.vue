@@ -11,16 +11,6 @@
           <div class="card-title">Modifier l'espace de dépôt</div>
           <fieldset>
             <div class="form-group mb-6 mt-2">
-              <label id="organization-label" class="form-label">
-                Quel est le nom de l’organisme qui va déposer les réponses ?
-                <span class="form-required">*</span>
-              </label>
-              <div class="flex-row align-items-center">
-                <i class="fa fa-building mr-2 text-muted"></i>
-                <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
-              </div>
-            </div>
-            <div class="form-group mb-6">
               <label id="title-label" class="form-label">
                 Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
                 <span class="form-required">*</span>
@@ -28,6 +18,16 @@
               <div class="flex-row align-items-center">
                 <i class="fa fa-award mr-2 text-muted"></i>
                 <input type="text" class="form-control" v-model="title" required aria-labelledby="title-label" maxlength="255">
+              </div>
+            </div>
+            <div class="form-group mb-6">
+              <label id="organization-label" class="form-label">
+                Quel est le nom de l’organisme qui va déposer les réponses ?
+                <span class="form-required">*</span>
+              </label>
+              <div class="flex-row align-items-center">
+                <i class="fa fa-building mr-2 text-muted"></i>
+                <input type="text" class="form-control" v-model="organization" required aria-labelledby="organization-label" maxlength="255">
               </div>
             </div>
             <div class="form-group">
