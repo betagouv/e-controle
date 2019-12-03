@@ -34,8 +34,11 @@
               <label id="title-label" class="form-label">
                 Nom abrégé de l'espace de dépôt (non modifiable)
               </label>
-              <div class="flex-row align-items-center">
-                <i class="fe fe-folder mr-2 text-muted"></i>
+              <div class="flex-row align-items-center fake-icon-parent">
+                <i class="fe fe-folder mr-3 text-muted"></i>
+                <img :src="'/static/img/file-explorer.png'"
+                    alt="Explorateur Windows"
+                    class="fake-icon-small" />
                 {{ control.reference_code }}
               </div>
             </div>
@@ -85,7 +88,7 @@
             <div class="text-muted card-title mb-1 break-word text-right">
               <strong>../{{control.reference_code}}</strong>
             </div>
-            <a class="btn btn-secondary btn-fake-icon"
+            <a class="btn btn-secondary fake-icon-parent"
                @click="showWebdavTip">
               <i class="fe fe-folder mr-2"></i>
               <img :src="'/static/img/file-explorer.png'"
@@ -204,13 +207,19 @@
 </script>
 
 <style scoped>
-  .btn-fake-icon {
+  .fake-icon-parent {
     position: relative;
   }
   .fake-icon {
     position: absolute;
     top: 2px;
     left: 5px;
+  }
+  .fake-icon-small {
+    position: absolute;
+    top: 0px;
+    left: -2px;
+    width: 24px;
   }
 
   .break-word {
