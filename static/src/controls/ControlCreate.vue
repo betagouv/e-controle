@@ -22,7 +22,7 @@
 
         <form>
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
+            <label class="form-label">Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
               Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
