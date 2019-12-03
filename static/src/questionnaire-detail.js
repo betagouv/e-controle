@@ -1,4 +1,5 @@
 import "@babel/polyfill"
+import './utils/polyfills.js'
 
 import InfoBar from './utils/InfoBar'
 import QuestionBox from './questions/QuestionBox'
