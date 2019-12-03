@@ -38,7 +38,6 @@
           <div v-if="foundUser" class="form-fieldset">
             <p class="form-label">Prénom : {{ formData.first_name}}</p>
             <p class="form-label">Nom : {{ formData.last_name}}</p>
-            <p class="form-label">Organisme : {{ formData.organization}}</p>
           </div>
           <fieldset v-else class="form-fieldset">
             <div class="form-group">
@@ -50,12 +49,6 @@
               <label class="form-label">Nom<span class="form-required"></span></label>
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name" required>
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
-            </div>
-            <div class="form-group">
-
-              <label class="form-label">Administration/Entreprise de l'agent<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="formData.organization">
-              <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
             </div>
           </fieldset>
           <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
@@ -84,11 +77,12 @@
 <script lang="ts">
   import { mapFields } from 'vuex-map-fields'
   import axios from 'axios'
-  import Vue from "vue";
+  import backend from '../utils/backend'
+  import Vue from "vue"
   import VueAxios from 'vue-axios'
 
   import { store } from '../store'
-  import EventBus from '../events';
+  import EventBus from '../events'
 
   Vue.use(VueAxios, axios)
 
@@ -97,15 +91,14 @@
 
   export default Vue.extend({
     store,
-    data: () {
+    data: function() {
       return {
         'formData': {
             'first_name': '',
             'last_name': '',
             'email': '',
-            'organization': '',
             'control': '',
-            'profile_type': ''
+            'profile_type': '',
         },
         'postResult': [],
         'errors': [],
@@ -118,23 +111,22 @@
     },
     computed: {
       ...mapFields([
-        'editingControl'
+        'editingControl',
         'editingProfileType',
       ]),
     },
     methods: {
       hideThisModal() {
-          this.resetFormData()
-        $('#addUserModal').modal('hide');
+        this.resetFormData()
+        $('#addUserModal').modal('hide')
       },
       resetFormData() {
         this.formData = {
             'first_name': '',
             'last_name': '',
             'email': '',
-            'organization': '',
             'control': '',
-            'profile_type': ''
+            'profile_type': '',
         }
         this.showStep1 = true
         this.showStep2 = false
@@ -145,7 +137,7 @@
       addUser() {
         this.formData.control = this.editingControl.id
         this.formData.profile_type = this.editingProfileType
-        this.axios.post('/api/user/', this.formData)
+        this.axios.post(backend.user(), this.formData)
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
@@ -157,7 +149,7 @@
           })
       },
       findUser() {
-        this.axios.get('/api/user/', {
+        this.axios.get(backend.user(), {
             params: {
               search: this.formData.email
             }

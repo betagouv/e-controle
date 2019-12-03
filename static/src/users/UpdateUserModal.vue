@@ -30,11 +30,6 @@
               <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name" required>
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
-            <div class="form-group">
-              <label class="form-label">Administration/Entreprise de l'agent<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.organization }" v-model="editingUser.organization">
-              <p class="text-muted pl-2" v-if="errors.organization"><i class="fa fa-warning"></i> {{ errors.organization.join(' / ')}}</p>
-            </div>
           </fieldset>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
@@ -48,16 +43,17 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields';
+  import { mapFields } from 'vuex-map-fields'
   import axios from 'axios'
-  import Vue from "vue";
+  import backend from '../utils/backend'
+  import Vue from "vue"
   import VueAxios from 'vue-axios'
   import Vuex from 'vuex'
 
   import { store } from '../store'
-  import EventBus from '../events';
+  import EventBus from '../events'
 
-  Vue.use(Vuex);
+  Vue.use(Vuex)
   Vue.use(VueAxios, axios)
 
   axios.defaults.xsrfCookieName = 'csrftoken'
@@ -65,34 +61,34 @@
 
   export default Vue.extend({
     store,
-    data: () {
+    data: function() {
       return {
         'postResult': [],
         'errors': [],
-        'hasErrors': false
+        'hasErrors': false,
       }
     },
     computed: {
       ...mapFields([
         'editingUser',
-        'editingControl'
+        'editingControl',
       ]),
     },
     methods: {
       showRemoveModal() {
         this.hideThisModal()
-        $('#removeUserModal').modal('show');
+        $('#removeUserModal').modal('show')
       },
       hideThisModal() {
         this.resetFormData()
-        $('#updateUserModal').modal('hide');
+        $('#updateUserModal').modal('hide')
       },
       resetFormData() {
         this.hasErrors = false
         this.errors = []
       },
       updateUser() {
-        this.axios.post('/api/user/', this.editingUser)
+        this.axios.post(backend.user(), this.editingUser)
           .then(response => {
             this.postResult = response.data
             EventBus.$emit('users-changed', this.postResult)
