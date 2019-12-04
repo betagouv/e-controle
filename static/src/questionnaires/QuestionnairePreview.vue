@@ -3,7 +3,7 @@
 
     <wizard :active-step-number="3"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @previous="back()">
+            @previous="back">
     </wizard>
 
     <div class="card">
@@ -85,8 +85,8 @@
       showPublishConfirmModal: function() {
         $(this.$refs.publishConfirmModal.$el).modal('show')
       },
-      back: function () {
-        this.$emit('back')
+      back: function (clickedStep) {
+        this.$emit('back', clickedStep)
       },
       publish: function () {
         this.$emit('publish-questionnaire')

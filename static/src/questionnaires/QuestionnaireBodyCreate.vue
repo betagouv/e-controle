@@ -4,7 +4,7 @@
     <wizard :active-step-number="2"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="createBody"
-            @previous="back()">
+            @previous="back">
     </wizard>
 
     <div class="card">
@@ -199,11 +199,11 @@
       })
     },
     methods: {
-      back: function () {
+      back: function (clickedStep) {
         if (!this.validateForm()) {
           return
         }
-        this.$emit('back', this.body);
+        this.$emit('back', clickedStep, this.body);
       },
       createBody: function () {
         if (!this.validateForm()) {

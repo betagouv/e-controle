@@ -222,8 +222,8 @@
         this._updateMetadata(metadata)
         this._updateBody(questionnaire.themes)
       },
-      back: function(data) {
-        console.debug('back');
+      back: function(clickedStep, data) {
+        console.debug('back', clickedStep, data)
         if (this.state === STATES.CREATING_BODY) {
           this._updateBody(data);
           this.saveDraft()
@@ -231,10 +231,16 @@
           return;
         }
         if (this.state === STATES.PREVIEW) {
-          this.moveToState(STATES.CREATING_BODY)
-          return;
+          if (clickedStep === 1) {
+            this.moveToState(STATES.START)
+            return;
+          }
+          if (clickedStep === 2) {
+            this.moveToState(STATES.CREATING_BODY)
+            return;
+          }
         }
-        console.error('Trying to go back from state', this.state);
+        console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep);
       },
       displayErrors: function(errorMessage, errors) {
         this.hasErrors = true
