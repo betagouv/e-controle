@@ -23,6 +23,7 @@ const apiUrls = {
 // From ecc/urls.py.
 // For the frontend queries we need to add leading slashes.
 const backendViewUrls = {
+  home: 'accueil/',
   welcome: 'bienvenue/',
   // Questionnaire pages
   'questionnaire-detail': 'questionnaire/<int:pk>/',
