@@ -58,7 +58,7 @@
               <input type="text" class="form-control" v-model="reference_code_suffix" required
                      pattern="^[\.\s\w-]+$"
                      maxlength="255"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux tels que ! , @ # $ / \"
+                     title="Ce champ ne doit pas contenir d'accents (é, à, è, ...) ou de caractères spéciaux (! , @ # $ / \...)"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -130,7 +130,7 @@
           }
           if (error.response.data['reference_code'][0] === 'INVALID') {
             return 'Le nom abrégé "' + requestedCode +
-                '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                '" ne doit pas contenir d'accents (é, à, è...) ou de caractères spéciaux ("! , @ # $ / \\".' +...).'
                 ' Veuillez en choisir un autre.'
           }
         }
