@@ -6,7 +6,7 @@
         <div class="card-body">
           <div v-if="user.is_inspector">
             <div class="mb-5">Vous n'avez aucun espace de dépôt ouvert.</div>
-            <control-create v-if="user.is_inspector"></control-create>
+            <control-create></control-create>
           </div>
           <span v-else>
             Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.

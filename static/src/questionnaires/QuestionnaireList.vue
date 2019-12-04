@@ -14,28 +14,49 @@
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
         Il n'y a pas encore de questionnaire pour cet espace de dépôt.
       </div>
-      <table class="table card-table table-vcenter">
+      <table v-else class="table card-table table-vcenter">
+        <thead>
+          <tr>
+            <th v-if="user.is_inspector">
+              Statut
+              <help-tooltip text="Un questionnaire est d'abord en Brouillon : il est modifiable et l'organisme interrogé ne le voit pas. Puis il est Publié : il n'est plus modifiable et l'organisme interrogé le voit."></help-tooltip>
+            </th>
+            <th>Titre</th>
+            <th>Date de réponse</th>
+            <th v-if="user.is_inspector">
+              Rédacteur
+              <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
         <tbody>
           <tr v-for="questionnaire in accessibleQuestionnaires" :key="'questionnaire-' + questionnaire.id">
-            <td>
-              Q{{ questionnaire.numbering }}
+            <td class="tag-column" v-if="user.is_inspector">
+              <div v-if="questionnaire.is_draft">
+                <div class="tag tag-azure round-tag font-italic">Brouillon</div>
+              </div>
+              <div v-else>
+                <div class="tag tag-green round-tag font-italic">Publié</div>
+              </div>
             </td>
             <td>
-                <span v-if="questionnaire.is_draft">
-                  <span class="tag tag-azure round-tag font-italic">Brouillon</span>
-                  <help-tooltip text="Les brouillons ne sont visibles que par l'équipe de contrôle, et sont modifiables."></help-tooltip>
-                </span>
-                <span>{{ questionnaire.title }}</span>
-                <div v-if="questionnaire.sent_date">
-                  <i class="fe fe-send"></i>
-                  Date de transmission du questionnaire :
-                  {{ questionnaire.sent_date }}
-                </div>
-                <div v-if="questionnaire.end_date">
-                  <i class="fe fe-clock"></i>
-                  Date de réponse souhaitée :
-                  {{ questionnaire.end_date | DateFormat}}
-                </div>
+              <div>Questionnaire {{ questionnaire.numbering }}</div>
+              <div>{{ questionnaire.title }}</div>
+            </td>
+            <td class="end-date-column">
+              <div v-if="questionnaire.end_date">
+                <small>
+                  {{ questionnaire.end_date | DateFormat }}
+                </small>
+              </div>
+            </td>
+            <td v-if="user.is_inspector" class="editor-column">
+              <div v-if="questionnaire.is_draft && questionnaire.editor">
+                <small>
+                  {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
+                </small>
+              </div>
             </td>
             <td class="w-1 text-right">
               <template v-if="!user.is_inspector">
@@ -63,13 +84,8 @@
                      title="Voir le brouillon de questionnaire"
                   >
                     <i class="fe fe-eye"></i>
-                    Voir
+                    Consulter
                   </a>
-                  <div v-if="questionnaire.editor" class="mt-1 text-nowrap">
-                    <i class="fe fe-edit"></i>
-                    Rédacteur : {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
-                    <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
-                  </div>
                 </template>
                 <template v-else>
                   <a :href="questionnaire.url"
@@ -122,3 +138,17 @@
     },
   })
 </script>
+
+<style scoped>
+  .tag-column {
+    max-width: 7em;
+  }
+
+  .editor-column {
+    min-width: 9em;
+  }
+
+  .end-date-column {
+    min-width: 9em;
+  }
+</style>

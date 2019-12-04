@@ -3,14 +3,23 @@
     <div class="page-header">
       <div class="page-title">
         <i class="fe fe-list mr-2"></i>
-        <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>{{ questionnaire.title_display }}
+        <template v-if="user.is_inspector">
+          <span v-if="questionnaire.is_draft" class="tag tag-azure big-tag round-tag font-italic mr-2">Brouillon</span>
+          <span v-else class="tag tag-green big-tag round-tag font-italic mr-2">Publié</span>
+        </template>
+        {{ questionnaire.title_display }}
       </div>
     </div>
-    <info-bar v-if="questionnaire.is_draft">
-      <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
-      <span v-else>[INCONNU]</span>
-      est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
-    </info-bar>
+    <template v-if="user.is_inspector">
+      <info-bar v-if="questionnaire.is_draft">
+        <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
+        <span v-else>[INCONNU]</span>
+        est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
+      </info-bar>
+      <success-bar v-else>
+        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
+      </success-bar>
+    </template>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
@@ -52,6 +61,7 @@
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
+  import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
 
   const questionnaire_url = "/api/questionnaire/";
@@ -82,6 +92,7 @@
       QuestionnaireMetadata,
       ResponseDropzone,
       ResponseFileList,
+      SuccessBar,
       ThemeBox,
     }
   })
