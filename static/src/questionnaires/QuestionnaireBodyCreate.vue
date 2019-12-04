@@ -17,7 +17,9 @@
           des questions et des annexes à vos questions.
         </info-bar>
         <form @submit.prevent="createBody" ref="form">
-          <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
+          <div class="card"
+               v-for="(theme, themeIndex) in body"
+               :key="'theme-' + themeIndex"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
 
@@ -76,7 +78,8 @@
             </div>
 
             <div v-for="(question, qIndex) in body[themeIndex].questions"
-                 class="card border-0 m-0 pt-2"> <!-- Card for each question -->
+                 class="card border-0 m-0 pt-2"
+                 :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
                 <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
                   <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
@@ -104,7 +107,6 @@
                 <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
               </div>
             </div>
-
 
             <div class="card-footer">
               <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">

@@ -45,7 +45,7 @@
         {{ message }}
       </div>
     </div>
-    <a :href="home_url + '#control-' + questionnaire.control"
+    <a :href="homeUrl + '#control-' + questionnaire.control"
        class="btn btn-secondary"
        style="position:relative; bottom: 151px; left: 2em;">
       < Revenir à l'accueil
@@ -89,6 +89,7 @@
 
 <script>
 import axios from 'axios'
+import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
@@ -107,9 +108,6 @@ const STATES = {
   PREVIEW: 'preview',
 }
 
-const get_questionnaire_url = '/api/questionnaire/'
-const save_questionnaire_url = '/api/questionnaire/'
-const home_url = '/accueil/'
 const PUBLISH_TIME_MILLIS = 3000
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -129,7 +127,7 @@ export default Vue.extend({
       questionnaire: {},
       state: '',
       message: '',
-      home_url: home_url,
+      homeUrl: backend.home,
     }
   },
   components: {
@@ -167,7 +165,7 @@ export default Vue.extend({
     },
     _loadQuestionnaireUpdate: function() {
       console.debug('Fetching draft questionnaire...')
-      axios.get(get_questionnaire_url + this.questionnaireId)
+      axios.get(backend.questionnaire(this.questionnaireId))
         .then(response => {
           console.debug('Got draft : ', response.data)
           if (response.data.is_draft !== undefined && !response.data.is_draft) {
@@ -227,19 +225,19 @@ export default Vue.extend({
         this._updateBody(data)
         this.saveDraft()
         this.moveToState(STATES.START)
-        return;
+        return
       }
       if (this.state === STATES.PREVIEW) {
         if (clickedStep === 1) {
           this.moveToState(STATES.START)
-          return;
+          return
         }
         if (clickedStep === 2) {
           this.moveToState(STATES.CREATING_BODY)
-          return;
+          return
         }
       }
-      console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep);
+      console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep)
     },
     displayErrors: function(errorMessage, errors) {
       this.hasErrors = true
@@ -267,9 +265,9 @@ export default Vue.extend({
           delete this.questionnaire.end_date // remove empty strings, it throws date format error.
         }
       }
-      const getCreateMethod = () => axios.post.bind(this, save_questionnaire_url)
+      const getCreateMethod = () => axios.post.bind(this, backend.questionnaire())
       const getUpdateMethod =
-          (questionnaireId) => axios.put.bind(this, save_questionnaire_url + questionnaireId + '/')
+          (questionnaireId) => axios.put.bind(this, backend.questionnaire(questionnaireId))
 
       this.clearErrors()
       cleanPreSave()
@@ -337,7 +335,7 @@ export default Vue.extend({
       // has been registered.
       $(event.target).addClass('btn-loading')
 
-      window.location.href = home_url + '#control-' + this.questionnaire.control
+      window.location.href = backend.home + '#control-' + this.questionnaire.control
     },
   },
 })
