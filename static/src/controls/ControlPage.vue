@@ -32,8 +32,16 @@
 
     <video-modal
       id="fileExplorerVideoModal"
-      :video-url="staticFilesUrl + 'videos/file-explorer.mp4'"
-      video-type="video/mp4"
+      :video-versions="[
+        {
+          url: staticFilesUrl + 'videos/file-explorer.mp4',
+          type: 'video/mp4'
+        },
+        {
+          url: staticFilesUrl + 'videos/file-explorer.webm',
+          type: 'video/webm'
+        },
+      ]"
     >
     </video-modal>
 
