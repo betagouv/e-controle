@@ -7,11 +7,11 @@
         </div>
         <div>
           Si l'erreur persiste, vous pouvez contacter
-          <a :href="'mailto:e-controle@beta.gouv.fr?subject=Erreur lors de la publication : ' + JSON.stringify(error)"
+          <a :href="'mailto:' + config.support_team_email + '?subject=Erreur lors de la publication :' + JSON.stringify(error)"
              class="text-nowrap"
              target="_blank"
           >
-            e-controle@beta.gouv.fr
+            {{ config.support_team_email }}
           </a>
           , et indiquer l'erreur suivante :
         </div>
@@ -84,16 +84,27 @@
 </template>
 
 <script>
+  import { mapFields } from 'vuex-map-fields'
+  import { store } from '../store'
   import EmptyModal from "../utils/EmptyModal"
   import ErrorBar from '../utils/ErrorBar'
   import Vue from 'vue'
+  import Vuex from 'vuex'
+
+  Vue.use(Vuex);
 
   export default Vue.extend({
+    store,
     components: {
       EmptyModal,
       ErrorBar,
     },
     props: ['error'],
+    computed: {
+      ...mapFields([
+        'config'
+      ]),
+    },
     methods: {
       done: function(event) {
         this.$emit('confirm')
