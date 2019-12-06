@@ -15,6 +15,6 @@ new Vue({ // eslint-disable-line no-new
     Sidebar,
   },
   mounted() {
-    this.$store.dispatch('setSessionUser')
+    this.$store.dispatch('fetchSessionUser')
   },
 })

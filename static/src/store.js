@@ -18,14 +18,14 @@ export const store = new Vuex.Store({
   },
   mutations: {
     updateField,
-    setSessionUser(state, user) {
+    updateSessionUser(state, user) {
       state.sessionUser = user
     },
   },
   actions: {
-    setSessionUser({ commit }) { // todo rename : action vs. mutation
+    fetchSessionUser({ commit }) {
       axios.get(backend.currentUser()).then((response) => {
-        commit('setSessionUser', response.data)
+        commit('updateSessionUser', response.data)
       }) // todo error case
     },
   },
