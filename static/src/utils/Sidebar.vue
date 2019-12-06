@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div v-if="!isLoading && controls.length === 0">
+    <div v-if="isLoaded && controls.length === 0">
       <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
         <div v-if="user.is_inspector">
           Vous n'avez pas encore créé d'espace de dépôt.
@@ -27,7 +27,7 @@
       <control-create></control-create>
     </div>
 
-    <div v-if="!collapsed && isLoading" class="sidebar-load-message card-header border-0 mt-4 mb-4">
+    <div v-if="!collapsed && !isLoaded && !hasError" class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
       En attente de la liste de contrôles...
     </div>
@@ -87,6 +87,7 @@
     },
     data() {
       return {
+        areControlsLoaded: false,
         collapsed: false,
         controls: [],
         hasError: false,
@@ -95,7 +96,7 @@
         errorEmailBody: error_email_body,
         errorEmailSubject: error_email_subject,
         errorEmailTo: error_email_to,
-        isLoading: true,
+        isMenuBuilt: false,
         menu: [],
       }
     },
@@ -103,6 +104,9 @@
       ...mapState({
         user: 'sessionUser',
       }),
+      isLoaded() {
+        return this.areControlsLoaded && !!this.user
+      },
     },
     mounted: function() {
       if (window.location.pathname === backend.welcome()) {
@@ -120,6 +124,7 @@
         return axios.get(backend.control()).then((response) => {
           console.debug('sidebar got controls', response)
           this.controls = response.data
+          this.areControlsLoaded = true
         }).catch(err => {
           console.error('sidebar got error when getting controls', err)
           throw err
@@ -192,19 +197,17 @@
           return controlMenu
 
         })
-        this.isLoading = false
+        this.isMenuBuilt = true
         this.menu = menu
       }
 
       const displayError = (err) => {
-        this.isLoading = false
         this.hasError = true
         this.errorMessage = err.message ? err.message : err
         this.error = err
       }
 
-      this.$store.dispatch('setSessionUser')
-          .then(getControls)
+      getControls()
           .then(buildMenu)
           .catch(displayError)
     },
