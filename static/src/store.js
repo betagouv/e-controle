@@ -1,4 +1,5 @@
 import axios from 'axios'
+import backend from './utils/backend'
 import { getField, updateField } from 'vuex-map-fields'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -23,7 +24,7 @@ export const store = new Vuex.Store({
   },
   actions: {
     setSessionUser({ commit }) {
-      axios.get('/api/user/current/').then((response) => {
+      axios.get(backend.currentUser()).then((response) => {
         commit('setSessionUser', response.data)
       })
     },
