@@ -70,6 +70,7 @@
   import backend from '../utils/backend.js'
   import ControlCreate from '../controls/ControlCreate'
   import ErrorBar from '../utils/ErrorBar'
+  import { Vuex, mapState } from 'vuex'
   import { SidebarMenu } from 'vue-sidebar-menu'
   import Vue from 'vue'
   import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
@@ -95,9 +96,13 @@
         errorEmailSubject: error_email_subject,
         errorEmailTo: error_email_to,
         isLoading: true,
-        user: undefined,
         menu: [],
       }
+    },
+    computed: {
+      ...mapState({
+        user: 'sessionUser',
+      }),
     },
     mounted: function() {
       if (window.location.pathname === backend.welcome()) {
@@ -108,17 +113,6 @@
         const topBar = document.getElementsByClassName('sidebar-header')[0];
         topBar.setAttribute('style', 'width: 100%;')
         return
-      }
-
-      const getCurrentUser = () => {
-        console.debug('sidebar getting current user...')
-        return axios.get(backend.currentUser()).then((response) => {
-          console.debug('sidebar got user', response)
-          this.user = response.data
-        }).catch(err => {
-          console.error('sidebar got error when getting current user', err)
-          throw err
-        })
       }
 
       const getControls = () => {
@@ -209,7 +203,7 @@
         this.error = err
       }
 
-      getCurrentUser()
+      this.$store.dispatch('setSessionUser')
           .then(getControls)
           .then(buildMenu)
           .catch(displayError)

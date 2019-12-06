@@ -23,10 +23,10 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    setSessionUser({ commit }) {
+    setSessionUser({ commit }) { // todo rename : action vs. mutation
       axios.get(backend.currentUser()).then((response) => {
         commit('setSessionUser', response.data)
-      })
+      }) // todo error case
     },
   },
 })
