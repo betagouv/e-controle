@@ -1,5 +1,6 @@
 import { getField, updateField } from 'vuex-map-fields';
 import axios from 'axios'
+import backendUrls from './utils/backend.js'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -33,7 +34,7 @@ export const store = new Vuex.Store({
         })
       },
       loadConfig({commit}) {
-        axios.get('/api/config/').then((response) => {
+        axios.get(backendUrls.config()).then((response) => {
           commit('loadConfig', response.data)
         })
       }

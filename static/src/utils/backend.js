@@ -18,9 +18,10 @@ const apiUrls = {
   questionnaire: '/api/questionnaire/',
   theme: '/api/theme/',
   user: '/api/user/',
+  config: '/api/config',
 }
 
-// From ecc/urls.py. 
+// From ecc/urls.py.
 // For the frontend queries we need to add leading slashes.
 const backendViewUrls = {
     welcome: 'bienvenue/',
