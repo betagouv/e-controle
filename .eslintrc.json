@@ -18,9 +18,12 @@
     },
     "plugins": [
         "vue",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "eslint-plugin-vue"
     ],
     "rules": {
-        "comma-dangle": ["error", "always-multiline"]
+        "comma-dangle": ["error", "always-multiline"],
+        "no-useless-return": "off",
+        "space-before-function-paren": "off"
     }
 }

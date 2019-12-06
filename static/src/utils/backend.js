@@ -20,17 +20,18 @@ const apiUrls = {
   user: '/api/user/',
 }
 
-// From ecc/urls.py. 
+// From ecc/urls.py.
 // For the frontend queries we need to add leading slashes.
 const backendViewUrls = {
-    welcome: 'bienvenue/',
-    // Questionnaire pages
-    'questionnaire-detail': 'questionnaire/<int:pk>/',
-    'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
-    'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
-    trash: 'questionnaire/corbeille/<int:pk>/',
-    // Control pages
-    'control-detail': 'accueil/#control-<int:pk>',
+  home: 'accueil/',
+  welcome: 'bienvenue/',
+  // Questionnaire pages
+  'questionnaire-detail': 'questionnaire/<int:pk>/',
+  'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
+  'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
+  trash: 'questionnaire/corbeille/<int:pk>/',
+  // Control pages
+  'control-detail': 'accueil/#control-<int:pk>',
 }
 const viewUrls = {}
 for (const [name, url] of Object.entries(backendViewUrls)) {

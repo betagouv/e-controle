@@ -26,5 +26,6 @@
 {% endblock page_content %}
 
 {% block js_bundle %}
-    <script src="{% static 'dist/questionnaire-create-bundle.js' %}"></script>
+  <link href="{% static "dist/questionnaire-create-bundle.css" %}" rel="stylesheet" />
+  <script src="{% static 'dist/questionnaire-create-bundle.js' %}"></script>
 {% endblock js_bundle %}
