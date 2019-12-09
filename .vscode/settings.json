@@ -1,0 +1,12 @@
+{
+  "editor.rulers": [
+    120
+  ],
+  "files.trimTrailingWhitespace": true,
+  "editor.tabSize": 2,
+  "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      { "language": "vue", "autoFix": true }
+  ]
+}
