@@ -1,6 +1,8 @@
 # Architecture of the repo
 Created 9 Dec 2019 - things could have changed since then, sorry :) Please add a date when you change sections of this doc. Place the date directly in the section you edited.
 
+The README.md file also contains info on how things work, check it out.
+
 ## Backend
 The backend uses Django. It is split up into several Django apps. On top of this, we have an API with Django Rest Framework.
 
