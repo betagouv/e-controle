@@ -223,8 +223,8 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
     redis-cli ping
 
 ### uWSGI
-Todo : c'est quoi, comment ca marche, ...
-
+Le server d'application uWSGI est utilisé sur Heroku.
+Pour plus de détail : https://uwsgi-docs.readthedocs.io/en/latest/
 
 ### Parcel : Bundler JS
 
