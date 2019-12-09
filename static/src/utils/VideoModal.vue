@@ -11,8 +11,11 @@
           </div>
           <div class="modal-body">
               <video width="960" height="540" controls>
-                <source :src="videoUrl" :type='videoType'>
-                  La vidéo ne fonctionne pas avec votre navigateur.
+                <source v-for="videoVersion in videoVersions"
+                        :key="videoVersion.type"
+                        :src="videoVersion.url"
+                        :type="videoVersion.type">
+                La vidéo ne fonctionne pas avec votre navigateur.
               </video>
           </div>
         </div>
@@ -21,14 +24,13 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: {
-      videoUrl: String,
-      videoType: String
-    }
-  })
+export default Vue.extend({
+  props: {
+    videoVersions: Array,
+  },
+})
 </script>
 
 <style scoped>
