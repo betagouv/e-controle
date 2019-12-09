@@ -2,13 +2,13 @@ Bonjour,
 
  {{ user.first_name }} {{ user.last_name }} vient d’ajouter une nouvelle personne:
 
-- {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
+- {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}
 - Profil : {{ target_user.profile.get_profile_type_display }}
 - Espace de dépôt : {{ control }}
 
 * * *
 
-Pensez à inviter la nouvelle personne à se connecter à e.contrôle. 
+Pensez à inviter la nouvelle personne à se connecter à e.contrôle.
 Voici un message type:
 
 * * *
