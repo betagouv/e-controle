@@ -3,8 +3,11 @@ Created 9 Dec 2019 - things could have changed since then, sorry :) Please add a
 
 The README.md file also contains info on how things work, check it out.
 
+## Database
+Our backend is in Postgres. We define the tables through Django files. Look at : https://github.com/betagouv/e-controle/blob/develop/control/models.py and https://github.com/betagouv/e-controle/blob/develop/user_profiles/models.py for the main ones.
+
 ## Backend
-The backend uses Django. It is split up into several Django apps. On top of this, we have an API with Django Rest Framework.
+The backend is in python, using Django. It is split up into several Django apps. We also have an API with Django Rest Framework.
 
 ### ecc
 Root app. Contains the urls.py file (https://github.com/betagouv/e-controle/blob/develop/ecc/urls.py) which is useful to see how views are mapped to urls.
