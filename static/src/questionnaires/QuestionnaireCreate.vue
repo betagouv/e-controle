@@ -45,11 +45,13 @@
         {{ message }}
       </div>
     </div>
-    <a :href="homeUrl + '#control-' + questionnaire.control"
-       class="btn btn-secondary"
-       style="position:relative; bottom: 151px; left: 2em;">
+    <button type="button"
+            class="btn btn-secondary"
+            style="position:relative; bottom: 151px; left: 2em;"
+            @click="goHome"
+    >
       < Revenir à l'accueil
-    </a>
+    </button>
 
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
@@ -127,7 +129,6 @@ export default Vue.extend({
       questionnaire: {},
       state: '',
       message: '',
-      homeUrl: backend.home,
     }
   },
   components: {
@@ -335,7 +336,7 @@ export default Vue.extend({
       // has been registered.
       $(event.target).addClass('btn-loading')
 
-      window.location.href = backend.home + '#control-' + this.questionnaire.control
+      window.location.href = backend['control-detail'](this.questionnaire.control)
     },
   },
 })
