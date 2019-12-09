@@ -2,6 +2,26 @@
 Created 9 Dec 2019 - things could have changed since then, sorry :) Please add a date when you change sections of this doc. Place the date directly in the section you edited.
 
 ## Backend
+The backend uses Django. It is split up into several Django apps. On top of this, we have an API with Django Rest Framework.
+
+### ecc
+Root app. Contains the urls.py file (https://github.com/betagouv/e-controle/blob/develop/ecc/urls.py) which is useful to see how views are mapped to urls.
+
+### control
+Contains the main model (https://github.com/betagouv/e-controle/blob/develop/control/models.py) which is useful to understand the main objects in our database.
+
+Most of the views are also there (https://github.com/betagouv/e-controle/blob/develop/control/views.py) : look at them to understand how the DB objects are passed into templates to the clients. The API views (used by Django REST API) are also there (https://github.com/betagouv/e-controle/blob/develop/control/api_views.py)
+
+
+### Other things
+#### Templates
+The Django templates live in templates/ . We also use Vue.js (see below for details of how they interact).
+
+#### Celery
+Celery runs periodically to send out emails.
+
+#### magicauth
+We do not use passwords : we have email-based authentication. This is done by a module we developed called magicauth (https://github.com/betagouv/django-magicauth), in partnership with beta.gouv.fr.
 
 ## Frontend : static/
 ### General structure
