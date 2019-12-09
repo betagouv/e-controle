@@ -2,7 +2,7 @@
 Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés.
 
 ## Architecture du code et du repo
-Voir https://github.com/betagouv/e-controle/blob/develop/docs/devdoc.md
+Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
 
 ## Environnement de développement
 ### Prérequis
