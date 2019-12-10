@@ -22,7 +22,7 @@
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
       </success-bar>
-      <reset-editor-modal id="reseteditor" :questionnaire='questionnaire'></reset-editor-modal>
+      <request-editor-modal id="reseteditor" :questionnaire='questionnaire'></request-editor-modal>
     </template>
 
     <div class="page-header">
@@ -76,7 +76,7 @@
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
-  import ResetEditorModal from '../editors/ResetEditorModal'
+  import RequestEditorModal from '../editors/RequestEditorModal'
   import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
 
@@ -106,7 +106,7 @@
       QuestionBox,
       QuestionFileList,
       QuestionnaireMetadata,
-      ResetEditorModal,
+      RequestEditorModal,
       ResponseDropzone,
       ResponseFileList,
       SuccessBar,
