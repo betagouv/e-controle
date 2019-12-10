@@ -1,5 +1,24 @@
 <template>
   <div>
+    <div class="alert alert-info flex-row justify-content-between" role="alert">
+        <div class="mt-2">
+        <i class="fe fe-users mr-1"></i>
+        <strong>Vous</strong> êtes actuellement le rédacteur de ce questionnaire.
+        </div>
+        <div class="text-right">
+        <button type="submit"
+          class="btn btn-primary"
+          title="Transférer les droits de rédaction..."
+          data-toggle="modal"
+          data-target="#swapeditor">
+          <i class="fa fa-share mr-1"></i>
+          Transférer les droits de rédaction...
+        </button>
+        </div>
+    </div>
+
+    <swap-editor-modal id="swapeditor"></swap-editor-modal>
+
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
@@ -14,9 +33,7 @@
     <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
       {{ errorMessage }}
     </div>
-    <info-bar>
-      Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
-    </info-bar>
+
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
             ref="createMetadataChild"
@@ -99,6 +116,7 @@ import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
+import SwapEditorModal from './SwapEditorModal'
 import Vue from 'vue'
 
 // State machine
@@ -137,6 +155,7 @@ export default Vue.extend({
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
+    SwapEditorModal,
   },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)
