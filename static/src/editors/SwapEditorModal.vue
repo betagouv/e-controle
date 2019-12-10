@@ -42,7 +42,8 @@
                           <button
                             class="btn btn-secondary"
                             title="Transférer" data-toggle="modal"
-                            data-target="#TODO">
+                            data-target="#swapEditorSuccessModal"
+                            @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
                               Transférer
                           </button>
@@ -63,7 +64,8 @@
                           <button
                             class="btn btn-secondary"
                             title="Transférer" data-toggle="modal"
-                            data-target="#TODO">
+                            data-target="#swapEditorSuccessModal"
+                            @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
                               Transférer
                           </button>
@@ -84,7 +86,8 @@
                           <button
                             class="btn btn-secondary"
                             title="Transférer" data-toggle="modal"
-                            data-target="#TODO">
+                            data-target="#swapEditorSuccessModal"
+                            @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
                               Transférer
                           </button>
@@ -144,6 +147,11 @@
 
 
   export default Vue.extend({
+    methods: {
+      swapEditor() {
+        $("#swapEditorModal").modal('hide')
+      },
+    }
   });
 </script>
 <style scoped>

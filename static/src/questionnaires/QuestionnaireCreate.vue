@@ -10,14 +10,15 @@
           class="btn btn-primary"
           title="Transférer les droits de rédaction..."
           data-toggle="modal"
-          data-target="#swapeditor">
+          data-target="#swapEditorModal">
           <i class="fa fa-share mr-1"></i>
           Transférer les droits de rédaction...
         </button>
         </div>
     </div>
 
-    <swap-editor-modal id="swapeditor"></swap-editor-modal>
+    <swap-editor-modal id="swapEditorModal"></swap-editor-modal>
+    <swap-editor-success-modal id="swapEditorSuccessModal"></swap-editor-success-modal>
 
     <div class="page-header">
       <div class="page-title flex-wrap">
@@ -117,6 +118,7 @@ import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
 import SwapEditorModal from '../editors/SwapEditorModal'
+import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
 import Vue from 'vue'
 
 // State machine
@@ -156,6 +158,7 @@ export default Vue.extend({
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
     SwapEditorModal,
+    SwapEditorSuccessModal,
   },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)
