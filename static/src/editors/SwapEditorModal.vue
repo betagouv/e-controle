@@ -111,7 +111,8 @@
                       <button
                         class="btn btn-primary"
                         title="Transférer" data-toggle="modal"
-                        data-target="#TODO">
+                          data-target="#swapEditorSuccessModal"
+                          @click="swapEditor()">
                           <i class="fa fa-lock-open mr-2"></i>
                           Libérer les droits
                       </button>
