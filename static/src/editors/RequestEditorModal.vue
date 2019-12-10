@@ -63,7 +63,6 @@
     props: [ 'questionnaire'],
     methods: {
       clickBecomeEditor() {
-        console.log("becoming....")
         $("#requestEditorModal").modal('hide')
       },
     },
