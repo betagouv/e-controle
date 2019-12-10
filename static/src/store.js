@@ -32,14 +32,14 @@ export const store = new Vuex.Store({
     updateLoadStatus(state, newStatus) {
       state.loadStatus = newStatus
     },
-    loadConfig(state, config) {
+    updateConfig(state, config) {
       state.config = config
     },
   },
   actions: {
     loadConfig({ commit }) {
       axios.get(backendUrls.config()).then((response) => {
-        commit('loadConfig', response.data)
+        commit('updateConfig', response.data)
       })
     },
     fetchSessionUser({ commit }) {
