@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
               <label id="title-label" class="form-label">
-                Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?
+                Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
                 <span class="form-required">*</span>
               </label>
               <div class="flex-row align-items-center">
@@ -79,7 +79,7 @@
             <a class="btn btn-secondary btn-fake-icon"
                @click="showWebdavTip">
               <i class="fe fe-folder mr-2"></i>
-              <img :src="'/static/img/file-explorer.png'" 
+              <img :src="'/static/img/file-explorer.png'"
                    alt="Explorateur Windows"
                    class="fake-icon" />
               Voir les réponses
