@@ -13,7 +13,7 @@
             class="btn btn-gray"
             title="Demander les droits de rédaction..."
             data-toggle="modal"
-            data-target="#reseteditor">
+            data-target="#resetEditor">
             <i class="fa fa-share mr-1"></i>
             Demander les droits de rédaction...
           </button>
@@ -22,7 +22,7 @@
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
       </success-bar>
-      <request-editor-modal id="reseteditor" :questionnaire='questionnaire'></request-editor-modal>
+      <request-editor-modal id="resetEditor" :questionnaire='questionnaire'></request-editor-modal>
     </template>
 
     <div class="page-header">
