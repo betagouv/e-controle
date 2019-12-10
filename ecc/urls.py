@@ -7,21 +7,23 @@ from django.urls import path, include
 
 from rest_framework import routers
 
+from config import api_views as config_api_views
 from control import admin as admin_views
 from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
-from user_profiles import api_views as user_profiles_api_views
 from session import api_views as session_api_views
 from tos import views as tos_views
+from user_profiles import api_views as user_profiles_api_views
 
 
 admin.site.site_header = 'e-contrôle Administration'
 
 router = routers.DefaultRouter()
 router.register(r'annexe', control_api_views.QuestionFileViewSet, basename='annexe')
+router.register(r'config', config_api_views.ConfigViewSet, basename='config')
 router.register(r'control', control_api_views.ControlViewSet, basename='control')
 router.register(r'fichier-reponse', control_api_views.ResponseFileViewSet, basename='response-file')
 router.register(r'question', control_api_views.QuestionViewSet, basename='question')
@@ -29,7 +31,6 @@ router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basena
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
 router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='session')
-
 
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),

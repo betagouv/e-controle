@@ -18,6 +18,7 @@ const apiUrls = {
   questionnaire: '/api/questionnaire/',
   theme: '/api/theme/',
   user: '/api/user/',
+  config: '/api/config',
 }
 
 // From ecc/urls.py.
@@ -50,6 +51,7 @@ for (const [name, url] of Object.entries(apiUrls)) {
 }
 
 urlMaker.currentUser = () => '/api/user/current/'
+urlMaker.removeUserFromControl = (id) => '/api/user/' + id + '/remove-control/'
 
 for (const [name, url] of Object.entries(viewUrls)) {
   urlMaker[name] = (id) => {

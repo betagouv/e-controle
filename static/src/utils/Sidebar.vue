@@ -29,7 +29,7 @@
 
     <div v-if="!collapsed && !isLoaded && !hasError" class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
-      En attente de la liste de contrôles...
+      En attente de la liste d'espaces...
     </div>
 
     <error-bar v-if="hasError" noclose=true>

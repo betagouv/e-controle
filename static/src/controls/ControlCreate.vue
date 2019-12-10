@@ -22,7 +22,7 @@
 
         <form>
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom du contrôle pour lequel vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
+            <label class="form-label">Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
             <div id="title-help" class="text-muted">
               Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
             </div>
@@ -56,9 +56,9 @@
               <span class="input-group-text">{{ reference_code_prefix }}</span>
             </span>
               <input type="text" class="form-control" v-model="reference_code_suffix" required
-                     pattern="^[\.\s\w-]+$"
+                     pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
                      maxlength="255"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux tels que ! , @ # $ / \"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux ( ! , @ # $ / \ ' &quot; + etc)"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -130,7 +130,7 @@
           }
           if (error.response.data['reference_code'][0] === 'INVALID') {
             return 'Le nom abrégé "' + requestedCode +
-                '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).'
                 ' Veuillez en choisir un autre.'
           }
         }

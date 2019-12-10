@@ -6,7 +6,7 @@
         <div class="alert alert-warning">
           <h4>Confirmer la suppression</h4>
           <p>
-            {{ editingUser.first_name }} {{ editingUser.last_name }} n'aura plus accès à ce contrôle : {{ editingControl.title }}.
+            {{ editingUser.first_name }} {{ editingUser.last_name }} n'aura plus accès à cette procédure : {{ editingControl.title }}.
           </p>
           <div class="btn-list">
             <button @click="remove()" class="btn btn-danger" type="button" data-dismiss="modal">Supprimer</button>
@@ -20,36 +20,37 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields';
-  import Vue from "vue";
+import { mapFields } from 'vuex-map-fields'
+import backend from '../utils/backend'
+import Vue from 'vue'
 
-  import { store } from '../store'
-  import EventBus from '../events';
+import { store } from '../store'
+import EventBus from '../events'
 
-  export default Vue.extend({
-    store,
-    data: () {
-      return {
-        postResult: {}
-      }
-    },
-    computed: {
-      ...mapFields([
-        'editingUser',
-        'editingControl'
-      ]),
-    },
-    methods: {
-      remove() {
+export default Vue.extend({
+  store,
+  data: function() {
+    return {
+      postResult: {},
+    }
+  },
+  computed: {
+    ...mapFields([
+      'editingUser',
+      'editingControl',
+    ]),
+  },
+  methods: {
+    remove() {
       var postData = { control: this.editingControl.id }
-      this.axios.post('/api/user/' + this.editingUser.id + '/remove-control/', postData)
+      this.axios.post(backend.removeUserFromControl(this.editingUser.id), postData)
         .then(response => {
           this.postResult = response.data
-          EventBus.$emit('users-changed', this.postResult);
+          EventBus.$emit('users-changed', this.postResult)
         })
-      }
-    }
-  })
+    },
+  },
+})
 </script>
 
 <style></style>

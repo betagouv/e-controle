@@ -1,6 +1,6 @@
 import axios from 'axios'
-import backend from './utils/backend'
 import { getField, updateField } from 'vuex-map-fields'
+import backendUrls from './utils/backend.js'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -14,6 +14,7 @@ const loadStatuses = {
 
 export const store = new Vuex.Store({
   state: {
+    config: {},
     editingControl: {},
     editingUser: {},
     editingProfileType: '',
@@ -31,10 +32,18 @@ export const store = new Vuex.Store({
     updateLoadStatus(state, newStatus) {
       state.loadStatus = newStatus
     },
+    loadConfig(state, config) {
+      state.config = config
+    },
   },
   actions: {
+    loadConfig({ commit }) {
+      axios.get(backendUrls.config()).then((response) => {
+        commit('loadConfig', response.data)
+      })
+    },
     fetchSessionUser({ commit }) {
-      axios.get(backend.currentUser()).then((response) => {
+      axios.get(backendUrls.currentUser()).then((response) => {
         console.debug('Got current user', response.data)
         commit('updateSessionUser', response.data)
         commit('updateLoadStatus', loadStatuses.SUCCESS)
