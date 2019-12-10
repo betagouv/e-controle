@@ -75,97 +75,97 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields'
-  import axios from 'axios'
-  import backend from '../utils/backend'
-  import Vue from "vue"
-  import VueAxios from 'vue-axios'
+import { mapFields } from 'vuex-map-fields'
+import axios from 'axios'
+import backend from '../utils/backend'
+import Vue from 'vue'
+import VueAxios from 'vue-axios'
 
-  import { store } from '../store'
-  import EventBus from '../events'
+import { store } from '../store'
+import EventBus from '../events'
 
-  Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios)
 
-  axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
-  export default Vue.extend({
-    store,
-    data: function() {
-      return {
-        'formData': {
-            'first_name': '',
-            'last_name': '',
-            'email': '',
-            'control': '',
-            'profile_type': '',
-        },
-        'postResult': [],
-        'errors': [],
-        'hasErrors': false,
-        'searchResult': {},
-        'foundUser': false,
-        'showStep1': true,
-        'showStep2': false,
-      }
-    },
-    computed: {
-      ...mapFields([
-        'editingControl',
-        'editingProfileType',
-      ]),
-    },
-    methods: {
-      hideThisModal() {
-        this.resetFormData()
-        $('#addUserModal').modal('hide')
+export default Vue.extend({
+  store,
+  data() {
+    return {
+      formData: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        control: '',
+        profile_type: '',
       },
-      resetFormData() {
-        this.formData = {
-            'first_name': '',
-            'last_name': '',
-            'email': '',
-            'control': '',
-            'profile_type': '',
-        }
-        this.showStep1 = true
-        this.showStep2 = false
-        this.foundUser = false
-        this.hasErrors = false
-        this.errors = []
-      },
-      addUser() {
-        this.formData.control = this.editingControl.id
-        this.formData.profile_type = this.editingProfileType
-        this.axios.post(backend.user(), this.formData)
-          .then(response => {
-            this.postResult = response.data
-            EventBus.$emit('users-changed', this.postResult)
-            this.hideThisModal()
-          })
-          .catch((error) => {
-            this.hasErrors = true
-            this.errors = error.response.data
-          })
-      },
-      findUser() {
-        this.axios.get(backend.user(), {
-            params: {
-              search: this.formData.email
-            }
-          })
-          .then(response => {
-            this.searchResult = response.data
-            if(response.data.length) {
-              this.foundUser = true
-              Object.assign(this.formData, response.data[0])
-            }
-            this.showStep1 = false
-            this.showStep2 = true
-          })
-      }
+      postResult: [],
+      errors: [],
+      hasErrors: false,
+      searchResult: {},
+      foundUser: false,
+      showStep1: true,
+      showStep2: false,
     }
-  })
+  },
+  computed: {
+    ...mapFields([
+      'editingControl',
+      'editingProfileType',
+    ]),
+  },
+  methods: {
+    hideThisModal() {
+      this.resetFormData()
+      $('#addUserModal').modal('hide')
+    },
+    resetFormData() {
+      this.formData = {
+        first_name: '',
+        last_name: '',
+        email: '',
+        control: '',
+        profile_type: '',
+      }
+      this.showStep1 = true
+      this.showStep2 = false
+      this.foundUser = false
+      this.hasErrors = false
+      this.errors = []
+    },
+    addUser() {
+      this.formData.control = this.editingControl.id
+      this.formData.profile_type = this.editingProfileType
+      this.axios.post(backend.user(), this.formData)
+        .then(response => {
+          this.postResult = response.data
+          EventBus.$emit('users-changed', this.postResult)
+          this.hideThisModal()
+        })
+        .catch((error) => {
+          this.hasErrors = true
+          this.errors = error.response.data
+        })
+    },
+    findUser() {
+      this.axios.get(backend.user(), {
+        params: {
+          search: this.formData.email,
+        },
+      })
+        .then(response => {
+          this.searchResult = response.data
+          if (response.data.length) {
+            this.foundUser = true
+            Object.assign(this.formData, response.data[0])
+          }
+          this.showStep1 = false
+          this.showStep2 = true
+        })
+    },
+  },
+})
 </script>
 
 <style></style>

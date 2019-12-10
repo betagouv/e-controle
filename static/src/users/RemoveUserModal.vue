@@ -20,37 +20,37 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields'
-  import backend from '../utils/backend'
-  import Vue from "vue"
+import { mapFields } from 'vuex-map-fields'
+import backend from '../utils/backend'
+import Vue from 'vue'
 
-  import { store } from '../store'
-  import EventBus from '../events'
+import { store } from '../store'
+import EventBus from '../events'
 
-  export default Vue.extend({
-    store,
-    data: function() {
-      return {
-        postResult: {}
-      }
-    },
-    computed: {
-      ...mapFields([
-        'editingUser',
-        'editingControl'
-      ]),
-    },
-    methods: {
-      remove() {
+export default Vue.extend({
+  store,
+  data: function() {
+    return {
+      postResult: {},
+    }
+  },
+  computed: {
+    ...mapFields([
+      'editingUser',
+      'editingControl',
+    ]),
+  },
+  methods: {
+    remove() {
       var postData = { control: this.editingControl.id }
       this.axios.post(backend.removeUserFromControl(this.editingUser.id), postData)
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)
         })
-      }
-    }
-  })
+    },
+  },
+})
 </script>
 
 <style></style>
