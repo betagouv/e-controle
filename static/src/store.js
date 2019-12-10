@@ -6,10 +6,10 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-const loadStatuses = {
-  LOADING: 'LOADING',
-  SUCCESS: 'SUCCESS',
-  ERROR: 'ERROR',
+export const loadStatuses = {
+  LOADING: Symbol('LOADING'),
+  SUCCESS: Symbol('SUCCESS'),
+  ERROR: Symbol('ERROR'),
 }
 
 export const store = new Vuex.Store({
