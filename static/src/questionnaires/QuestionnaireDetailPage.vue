@@ -13,7 +13,7 @@
             class="btn btn-gray"
             title="Demander les droits de rédaction..."
             data-toggle="modal"
-            data-target="#resetEditor">
+            data-target="#requestEditorModal">
             <i class="fa fa-share mr-1"></i>
             Demander les droits de rédaction...
           </button>
@@ -22,7 +22,8 @@
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
       </success-bar>
-      <request-editor-modal id="resetEditor" :questionnaire='questionnaire'></request-editor-modal>
+      <request-editor-modal id="requestEditorModal" :questionnaire='questionnaire'></request-editor-modal>
+      <become-editor-modal id="becomeEditorModal"></become-editor-modal>
     </template>
 
     <div class="page-header">
@@ -70,13 +71,14 @@
   import Vue from "vue";
 
   import axios from 'axios'
+  import BecomeEditorModal from '../editors/BecomeEditorModal'
   import InfoBar from '../utils/InfoBar'
   import QuestionBox from '../questions/QuestionBox'
   import QuestionFileList from '../questions/QuestionFileList'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
+  import RequestEditorModal from '../editors/RequestEditorModal'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
-  import RequestEditorModal from '../editors/RequestEditorModal'
   import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
 
@@ -102,6 +104,7 @@
       },
     },
     components: {
+      BecomeEditorModal,
       InfoBar,
       QuestionBox,
       QuestionFileList,

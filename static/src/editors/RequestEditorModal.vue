@@ -38,7 +38,10 @@
                 </button>
                 <button type="submit"
                   class="btn btn-secondary ml-2"
-                  title="Forcer le transfert des droits">
+                  title="Forcer le transfert des droits"
+                  data-toggle="modal"
+                  data-target="#becomeEditorModal"
+                  @click="clickBecomeEditor()">
                   <i class="fa fa-share mr-1"></i>
                   Forcer le transfert des droits
                 </button>
@@ -58,6 +61,12 @@
 
   export default Vue.extend({
     props: [ 'questionnaire'],
+    methods: {
+      clickBecomeEditor() {
+        console.log("becoming....")
+        $("#requestEditorModal").modal('hide')
+      },
+    },
   });
 </script>
 <style scoped>

@@ -41,7 +41,8 @@
                         <div class="flex-column mr-4">
                           <button
                             class="btn btn-secondary"
-                            title="Transférer" data-toggle="modal"
+                            title="Transférer"
+                            data-toggle="modal"
                             data-target="#swapEditorSuccessModal"
                             @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
@@ -63,7 +64,8 @@
                         <div class="flex-column mr-4">
                           <button
                             class="btn btn-secondary"
-                            title="Transférer" data-toggle="modal"
+                            title="Transférer"
+                            data-toggle="modal"
                             data-target="#swapEditorSuccessModal"
                             @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
@@ -85,7 +87,8 @@
                         <div class="flex-column mr-4">
                           <button
                             class="btn btn-secondary"
-                            title="Transférer" data-toggle="modal"
+                            title="Transférer"
+                            data-toggle="modal"
                             data-target="#swapEditorSuccessModal"
                             @click="swapEditor()">
                               <i class="fa fa-share mr-2"></i>
@@ -110,9 +113,10 @@
                     <div class="flex-column mr-4">
                       <button
                         class="btn btn-primary"
-                        title="Transférer" data-toggle="modal"
-                          data-target="#swapEditorSuccessModal"
-                          @click="swapEditor()">
+                        title="Transférer"
+                        data-toggle="modal"
+                        data-target="#swapEditorSuccessModal"
+                        @click="swapEditor()">
                           <i class="fa fa-lock-open mr-2"></i>
                           Libérer les droits
                       </button>
