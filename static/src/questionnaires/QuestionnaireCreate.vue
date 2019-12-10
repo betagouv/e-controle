@@ -116,7 +116,7 @@ import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
-import SwapEditorModal from './SwapEditorModal'
+import SwapEditorModal from '../editors/SwapEditorModal'
 import Vue from 'vue'
 
 // State machine
