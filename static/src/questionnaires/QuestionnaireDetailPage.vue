@@ -1,5 +1,30 @@
 <template>
   <div>
+    <template v-if="user.is_inspector">
+      <div class="alert alert-secondary flex-row justify-content-between" role="alert" v-if="questionnaire.is_draft">
+          <div class="mt-2">
+          <i class="fe fe-users mr-1"></i>
+          <span v-if="questionnaire.editor"><strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong></span>
+          <span v-else>[INCONNU]</span>
+          est actuellement la seule personne qui peut modifier ce questionnaire
+          </div>
+          <div class="text-right">
+          <button type="submit"
+            class="btn btn-gray"
+            title="Demander les droits de rédaction..."
+            data-toggle="modal"
+            data-target="#reseteditor">
+            <i class="fa fa-share mr-1"></i>
+            Demander les droits de rédaction...
+          </button>
+          </div>
+      </div>
+      <success-bar v-else>
+        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
+      </success-bar>
+      <reset-editor-modal id="reseteditor" :questionnaire='questionnaire'></reset-editor-modal>
+    </template>
+
     <div class="page-header">
       <div class="page-title">
         <i class="fe fe-list mr-2"></i>
@@ -10,16 +35,6 @@
         {{ questionnaire.title_display }}
       </div>
     </div>
-    <template v-if="user.is_inspector">
-      <info-bar v-if="questionnaire.is_draft">
-        <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
-        <span v-else>[INCONNU]</span>
-        est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
-      </info-bar>
-      <success-bar v-else>
-        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
-      </success-bar>
-    </template>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
@@ -61,6 +76,7 @@
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
+  import ResetEditorModal from '../editors/ResetEditorModal'
   import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
 
@@ -90,6 +106,7 @@
       QuestionBox,
       QuestionFileList,
       QuestionnaireMetadata,
+      ResetEditorModal,
       ResponseDropzone,
       ResponseFileList,
       SuccessBar,
