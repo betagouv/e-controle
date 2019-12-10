@@ -53,8 +53,15 @@
             </td>
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
-                <i class="fe fe-lock" v-if="user.id != questionnaire.editor.id"></i>
-
+                <a href="javascript:void(0);"
+                   data-toggle="tooltip"
+                   data-placement="right"
+                   title="Seule la personne affectée à la rédaction du questionnaire peut le modifier."
+                   style="color:#467fcf"
+                   v-if="user.id != questionnaire.editor.id"
+                   >
+                  <i class="fe fe-lock"></i>
+                </a>
                 <small>
                   {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
                   <p class="text-muted">Le 30 novembre 2019 à 17h30</p>
