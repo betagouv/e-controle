@@ -14,10 +14,11 @@ Lister les metrics loggées (https://docs.k6.io/docs/result-metrics#section-buil
 Faire une query (attention, les valeurs de type string doivent etre 'quoted', et on peut "quoter" les noms mais pas obligé s'ils ne contiennent pas d'espaces)
   SELECT "error_code","url" FROM "http_reqs" WHERE time >= '2019-11-12T00:00:00Z' AND error_code='1404' Limit 5 tz('Europe/Paris')
 
- */
+*/
 
 import http from 'k6/http'
-import { sleep } from 'k6'
+import { check, sleep } from 'k6'
+import { Counter } from 'k6/metrics'
 
 export const options = {
   /* Example 1 : during 30s, look through the script with 10 Virtual Users in parallel.
@@ -33,13 +34,22 @@ export const options = {
     { duration: '3m', target: 0 }, // ramp down to 0 users
   ],
   */
-  stages: [
-    { duration: '3m', target: 300 },
-    { duration: '3m', target: 0 },
-  ],
+  vus: 10,
+  duration: '10s',
+  throw: true,
 }
 
+const myCounter = new Counter('my_counter')
+
 export default function() {
-  http.get('http://e-controle-dev-beta.ccomptes.fr/')
+  const res = http.get('https://e-controle-pprod-beta.ccomptes.fr/')
+  if (res.error || res.error_code) {
+    console.error('error', res.error_code, res.error)
+  }
+  myCounter.add(1)//, { error: res.error, error_code: res.error_code })
+  check(res, {
+    'is status 200': (r) => r.status === 200,
+    'body size is 1176 bytes': (r) => r.body.length === 1176,
+  })
   sleep(1 + Math.random())
 }
