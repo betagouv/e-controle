@@ -3,6 +3,17 @@ Install k6 to run this script : https://docs.k6.io/docs/installation
 To make visualization graphs, you need InfluxDB and Grafana : https://docs.k6.io/docs/influxdb-grafana
 Then run
 k6 run --out influxdb=http://localhost:8086/myk6db <path to this script>
+
+View data in influxdb :
+Talk to it in SQL, with a CLI (and format timestamps in rfc3339 to make them human-readable)
+  influx -precision rfc3339
+Select the db :
+  USE mykydb
+Lister les metrics loggées (https://docs.k6.io/docs/result-metrics#section-built-in-metrics) :
+  SHOW measurements
+Faire une query (attention, les valeurs de type string doivent etre 'quoted', et on peut "quoter" les noms mais pas obligé s'ils ne contiennent pas d'espaces)
+  SELECT "error_code","url" FROM "http_reqs" WHERE time >= '2019-11-12T00:00:00Z' AND error_code='1404' Limit 5 tz('Europe/Paris')
+
  */
 
 import http from 'k6/http'
