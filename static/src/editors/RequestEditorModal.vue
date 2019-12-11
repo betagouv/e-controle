@@ -3,7 +3,7 @@
       <div class="modal-dialog large-modal" role="document">
         <div class="modal-content">
           <div class="modal-header border-bottom-0">
-            <i class="fa fa-share mr-2 mt-2"></i>
+            <i class="fa fa-exchange-alt mr-2 mt-3"></i>
             <div class="modal-title">
             <h3 class="modal-title">Demander les droits de rédaction du questionnaire</h3>
             </div>
@@ -42,7 +42,7 @@
                   data-toggle="modal"
                   data-target="#becomeEditorModal"
                   @click="clickBecomeEditor()">
-                  <i class="fa fa-share mr-1"></i>
+                  <i class="fa fa-exchange-alt mr-1"></i>
                   Forcer le transfert des droits
                 </button>
               </div>

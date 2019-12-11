@@ -51,7 +51,7 @@
                   class="btn btn-primary"
                   title="Forcer le transfert"
           >
-            <i class="fa fa-share mr-1"></i>
+            <i class="fa fa-exchange-alt mr-1"></i>
             Forcer le transfert
           </button>
         </div>

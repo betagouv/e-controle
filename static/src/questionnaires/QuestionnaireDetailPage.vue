@@ -14,7 +14,7 @@
             title="Demander les droits de rédaction..."
             data-toggle="modal"
             data-target="#requestEditorModal">
-            <i class="fa fa-share mr-1"></i>
+            <i class="fa fa-exchange-alt mr-1"></i>
             Demander les droits de rédaction...
           </button>
           </div>
