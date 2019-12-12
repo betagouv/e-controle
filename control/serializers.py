@@ -121,6 +121,7 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
             }
         }
 
+
 class ControlDetailQuestionnaireSerializer(serializers.ModelSerializer):
     editor = ControlDetailUserSerializer(read_only=True, required=False)
 

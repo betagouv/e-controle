@@ -15,6 +15,7 @@ from control.permissions import ChangeControlPermission, ChangeQuestionnairePerm
 from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
+
 # This signal is triggered after the questionnaire is saved via the API
 questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"])
 
