@@ -334,7 +334,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         }
         action.send(**action_details)
 
-class UpdateEditor(mixins.UpdateModelMixin, generics.GenericAPIView):  # todo move to separate app
+class UpdateEditor(generics.UpdateAPIView):  # todo move to separate app
     serializer_class = UpdateEditorQuestionnaireSerializer
 
     def get_queryset(self):
@@ -345,10 +345,3 @@ class UpdateEditor(mixins.UpdateModelMixin, generics.GenericAPIView):  # todo mo
             .filter(control__in=self.request.user.profile.controls.all())  \
             .filter(is_draft=True)
         return queryset
-
-    # PUT with no body or wrong body content type gets a 500 (instead of 400, bad request)
-    def put(self, request, *args, **kwargs):
-        # Validate args
-
-        # Call mixin's function
-        return self.update(request, *args, **kwargs)
