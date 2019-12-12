@@ -121,17 +121,6 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
             }
         }
 
-class UpdateEditorQuestionnaireSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Questionnaire
-        fields = ('editor',)
-        extra_kwargs = {
-            'editor': {
-                'required': True,
-                'allow_null': True,
-            }
-        }
-
 class ControlDetailQuestionnaireSerializer(serializers.ModelSerializer):
     editor = ControlDetailUserSerializer(read_only=True, required=False)
 
