@@ -15,6 +15,7 @@ from control.permissions import ChangeControlPermission, ChangeQuestionnairePerm
 from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
+from .serializers import UpdateEditorQuestionnaireSerializer # todo move to separate app
 
 # This signal is triggered after the questionnaire is saved via the API
 questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"])
@@ -332,3 +333,22 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             'target': control,
         }
         action.send(**action_details)
+
+class UpdateEditor(mixins.UpdateModelMixin, generics.GenericAPIView):  # todo move to separate app
+    serializer_class = UpdateEditorQuestionnaireSerializer
+
+    def get_queryset(self):
+        if not self.request.user.profile.is_inspector:
+            return Questionnaire.objects.none()
+
+        queryset = Questionnaire.objects  \
+            .filter(control__in=self.request.user.profile.controls.all())  \
+            .filter(is_draft=True)
+        return queryset
+
+    # PUT with no body or wrong body content type gets a 500 (instead of 400, bad request)
+    def put(self, request, *args, **kwargs):
+        # Validate args
+
+        # Call mixin's function
+        return self.update(request, *args, **kwargs)

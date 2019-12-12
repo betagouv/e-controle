@@ -64,9 +64,13 @@ urlpatterns = [
          admin_views.Megacontrol.as_view(),
          name='megacontrol-done'),
 
+    # Custom-made api endoints
     path('api/fichier-reponse/corbeille/<int:pk>/',
          control_api_views.ResponseFileTrash.as_view(),
          name='response-file-trash'),
+    path('api/questionnaire/<int:pk>/changer-redacteur/',
+         control_api_views.UpdateEditor.as_view(),
+         name='update-editor'),
 ]
 
 urlpatterns.extend(magicauth_urls)
