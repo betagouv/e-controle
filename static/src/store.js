@@ -1,42 +1,56 @@
-import { getField, updateField } from 'vuex-map-fields';
 import axios from 'axios'
+import { getField, updateField } from 'vuex-map-fields'
 import backendUrls from './utils/backend.js'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
+export const loadStatuses = {
+  LOADING: Symbol('LOADING'),
+  SUCCESS: Symbol('SUCCESS'),
+  ERROR: Symbol('ERROR'),
+}
 
 export const store = new Vuex.Store({
-    state: {
-      editingControl: {},
-      editingUser: {},
-      editingProfileType: '',
-      sessionUser: {},
-      config: {}
+  state: {
+    config: {},
+    editingControl: {},
+    editingUser: {},
+    editingProfileType: '',
+    sessionUser: {},
+    loadStatus: loadStatuses.LOADING,
+  },
+  getters: {
+    getField,
+  },
+  mutations: {
+    updateField,
+    updateSessionUser(state, user) {
+      state.sessionUser = user
     },
-    getters: {
-      getField,
+    updateLoadStatus(state, newStatus) {
+      state.loadStatus = newStatus
     },
-    mutations: {
-      updateField,
-      setSessionUser(state, user) {
-          state.sessionUser = user
-      },
-      loadConfig(state, config) {
-          state.config = config
-      }
+    updateConfig(state, config) {
+      state.config = config
     },
-    actions: {
-      setSessionUser({commit}) {
-        axios.get('/api/user/current/').then((response) => {
-          commit('setSessionUser', response.data)
-        })
-      },
-      loadConfig({commit}) {
-        axios.get(backendUrls.config()).then((response) => {
-          commit('loadConfig', response.data)
-        })
-      }
-    }
+  },
+  actions: {
+    loadConfig({ commit }) {
+      axios.get(backendUrls.config()).then((response) => {
+        commit('updateConfig', response.data)
+      })
+    },
+    fetchSessionUser({ commit }) {
+      axios.get(backendUrls.currentUser()).then((response) => {
+        console.debug('Got current user', response.data)
+        commit('updateSessionUser', response.data)
+        commit('updateLoadStatus', loadStatuses.SUCCESS)
+      }).catch(err => {
+        console.error('Error fetching current user', err)
+        commit('updateLoadStatus', loadStatuses.ERROR)
+      })
+    },
+  },
 })
