@@ -1,5 +1,6 @@
 # e-controle
 Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés.
+Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/document/d/1ETBSoGE-oSOqgq-bR2M3v3SsRAJ6L_R1t0SMcwWSwsI/edit?usp=sharing).
 
 ## Architecture du code et du repo
 Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
