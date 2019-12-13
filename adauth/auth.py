@@ -16,7 +16,7 @@ def active_directory_auth(user_email=None):
         # We now create the user if it is authorized
         create_user(user_info)
     else:
-        raise forms.ValidationError(f"Aucun utilisateur trouvé")
+        raise forms.ValidationError(f"Aucun utilisateur trouvé. Vérifiez l'orthographe de l'email renseigné ou assurez-vous que l'équipe de contrôle vous a bien ajouté à un espace de dépôt")
 
 
 def get_user_form_ad(user_email):
