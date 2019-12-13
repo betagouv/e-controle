@@ -4,7 +4,7 @@
     <wizard :active-step-number="2"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="createBody"
-            @previous="back()">
+            @previous="back">
     </wizard>
 
     <div class="card">
@@ -17,7 +17,9 @@
           des questions et des annexes à vos questions.
         </info-bar>
         <form @submit.prevent="createBody" ref="form">
-          <div class="card" v-for="(theme, themeIndex) in body"> <!-- Card for each theme-->
+          <div class="card"
+               v-for="(theme, themeIndex) in body"
+               :key="'theme-' + themeIndex"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
 
@@ -76,7 +78,8 @@
             </div>
 
             <div v-for="(question, qIndex) in body[themeIndex].questions"
-                 class="card border-0 m-0 pt-2"> <!-- Card for each question -->
+                 class="card border-0 m-0 pt-2"
+                 :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
                 <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
                   <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
@@ -104,7 +107,6 @@
                 <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
               </div>
             </div>
-
 
             <div class="card-footer">
               <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
@@ -145,100 +147,99 @@
 </template>
 
 <script>
-  import Vue from "vue";
+import Vue from 'vue'
 
-  import ConfirmModal from "../utils/ConfirmModal"
-  import EventBus from '../events'
-  import InfoBar from '../utils/InfoBar'
-  import QuestionFileList from "../questions/QuestionFileList"
-  import QuestionFileUpload from "../questions/QuestionFileUpload"
-  import Wizard from "../utils/Wizard"
+import ConfirmModal from '../utils/ConfirmModal'
+import EventBus from '../events'
+import InfoBar from '../utils/InfoBar'
+import QuestionFileList from '../questions/QuestionFileList'
+import QuestionFileUpload from '../questions/QuestionFileUpload'
+import Wizard from '../utils/Wizard'
 
-  import reportValidity from 'report-validity';
+import reportValidity from 'report-validity'
 
-
-  export default Vue.extend({
-    data() {
-      return {
-        body: [
-          {
-            title: "",
-            questions: [
-              {description: ""},
-            ]
-          }
-        ],
-        'errors': [],
-      }
-    },
-    components: {
-      ConfirmModal,
-      InfoBar,
-      QuestionFileList,
-      QuestionFileUpload,
-      Wizard,
-    },
-    mounted() {
-      let loadBody = function (data) {
-        console.debug('QuestionnaireBodyCreate loadBody', data);
-        // Empty old themes
-        this.body = []
-        // Replace with new themes
-        if (!data.themes) {
-          return
-        }
-        data.themes.forEach(theme => {
-          console.debug('theme', theme)
-          this.body.push(theme)
-        })
-      }.bind(this)
-
-      this.$parent.$on('questionnaire-updated', function(data) {
-        loadBody(data);
-        EventBus.$emit('question-files-changed');
-      })
-    },
-    methods: {
-      back: function () {
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('back', this.body);
-      },
-      createBody: function () {
-        if (!this.validateForm()) {
-          return
-        }
-        console.debug('QuestionnaireBodyCreate createBody', this.body)
-        this.$emit('body-created', this.body)
-      },
-      addQuestion: function (themeIndex) {
-        console.debug('addQuestion', themeIndex)
-        this.body[themeIndex].questions.push({ description: ""});
-      },
-      addTheme: function () {
-        console.debug('addTheme')
-        this.body.push({ title: "", questions: [{description: ""}]})
-      },
-      deleteQuestion: function (themeIndex, qIndex) {
-        this.body[themeIndex].questions.splice(qIndex, 1);
-      },
-      deleteTheme: function (themeIndex) {
-        this.body.splice(themeIndex, 1);
-      },
-      saveDraft(event) {
-        console.debug('save draft', event)
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('save-draft', this.body)
-      },
-      validateForm: function() {
-        let form = this.$refs.form
-        return reportValidity(form)
-      },
+export default Vue.extend({
+  data() {
+    return {
+      body: [
+        {
+          title: '',
+          questions: [
+            { description: '' },
+          ],
+        },
+      ],
+      errors: [],
     }
-  });
+  },
+  components: {
+    ConfirmModal,
+    InfoBar,
+    QuestionFileList,
+    QuestionFileUpload,
+    Wizard,
+  },
+  mounted() {
+    const loadBody = function (data) {
+      console.debug('QuestionnaireBodyCreate loadBody', data)
+      // Empty old themes
+      this.body = []
+      // Replace with new themes
+      if (!data.themes) {
+        return
+      }
+      data.themes.forEach(theme => {
+        console.debug('theme', theme)
+        this.body.push(theme)
+      })
+    }.bind(this)
+
+    this.$parent.$on('questionnaire-updated', function(data) {
+      loadBody(data)
+      EventBus.$emit('question-files-changed')
+    })
+  },
+  methods: {
+    back: function(clickedStep) {
+      if (!this.validateForm()) {
+        return
+      }
+      this.$emit('back', clickedStep, this.body)
+    },
+    createBody: function() {
+      if (!this.validateForm()) {
+        return
+      }
+      console.debug('QuestionnaireBodyCreate createBody', this.body)
+      this.$emit('body-created', this.body)
+    },
+    addQuestion: function(themeIndex) {
+      console.debug('addQuestion', themeIndex)
+      this.body[themeIndex].questions.push({ description: '' })
+    },
+    addTheme: function() {
+      console.debug('addTheme')
+      this.body.push({ title: '', questions: [{ description: '' }] })
+    },
+    deleteQuestion: function(themeIndex, qIndex) {
+      this.body[themeIndex].questions.splice(qIndex, 1)
+    },
+    deleteTheme: function(themeIndex) {
+      this.body.splice(themeIndex, 1)
+    },
+    saveDraft(event) {
+      console.debug('save draft', event)
+      if (!this.validateForm()) {
+        return
+      }
+      this.$emit('save-draft', this.body)
+    },
+    validateForm: function() {
+      const form = this.$refs.form
+      return reportValidity(form)
+    },
+  },
+})
 </script>
 
 <style>

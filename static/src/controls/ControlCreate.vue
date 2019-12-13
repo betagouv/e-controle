@@ -56,9 +56,9 @@
               <span class="input-group-text">{{ reference_code_prefix }}</span>
             </span>
               <input type="text" class="form-control" v-model="reference_code_suffix" required
-                     pattern="^[\.\s\w-]+$"
+                     pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
                      maxlength="255"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux tels que ! , @ # $ / \"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux ( ! , @ # $ / \ ' &quot; + etc)"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -130,7 +130,7 @@
           }
           if (error.response.data['reference_code'][0] === 'INVALID') {
             return 'Le nom abrégé "' + requestedCode +
-                '" ne doit pas contenir de caractères spéciaux tels que "! , @ # $ / \\".' +
+                '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).'
                 ' Veuillez en choisir un autre.'
           }
         }

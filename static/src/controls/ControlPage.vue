@@ -2,15 +2,13 @@
   <div id="page-content">
 
     <div id="controls">
-      <div v-if="controls.length === 0" class="card">
-        <div class="card-body">
-          <div v-if="user.is_inspector">
-            <div class="mb-5">Vous n'avez aucun espace de dépôt ouvert.</div>
-            <control-create></control-create>
-          </div>
-          <span v-else>
+      <div v-if="controls.length === 0">
+        <no-controls v-if="user.is_inspector">
+        </no-controls>
+        <div v-else class="card">
+          <div class="card-body">
             Vous n'avez accès à aucun espace de dépôt. Si vous avez besoin d'un accès, contactez l'équipe de contrôle.
-          </span>
+          </div>
         </div>
       </div>
 
@@ -34,8 +32,16 @@
 
     <video-modal
       id="fileExplorerVideoModal"
-      :video-url="staticFilesUrl + 'videos/file-explorer.mp4'"
-      video-type="video/mp4"
+      :video-versions="[
+        {
+          url: staticFilesUrl + 'videos/file-explorer.mp4',
+          type: 'video/mp4'
+        },
+        {
+          url: staticFilesUrl + 'videos/file-explorer.webm',
+          type: 'video/webm'
+        },
+      ]"
     >
     </video-modal>
 
@@ -48,6 +54,7 @@
   import AddUserModal from "../users/AddUserModal"
   import ControlCard from './ControlCard'
   import ControlCreate from './ControlCreate'
+  import NoControls from './NoControls'
   import RemoveUserModal from "../users/RemoveUserModal"
   import UpdateUserModal from "../users/UpdateUserModal"
   import VideoModal from "../utils/VideoModal"
@@ -103,6 +110,7 @@
       AddUserModal,
       ControlCard,
       ControlCreate,
+      NoControls,
       RemoveUserModal,
       UpdateUserModal,
       VideoModal,

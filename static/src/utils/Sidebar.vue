@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="sidebar">
     <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
       <a class="header-brand" href="/accueil">
         <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
@@ -12,7 +12,18 @@
       </div>
     </div>
 
-    <div v-if="user && user.is_inspector" class="card-header flex-row justify-content-center">
+    <div v-if="!isLoading && controls.length === 0">
+      <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
+        <div v-if="user.is_inspector">
+          Vous n'avez pas encore créé d'espace de dépôt.
+        </div>
+        <div v-else>
+          Vous n'avez pas d'espace de dépôt.
+        </div>
+      </div>
+    </div>
+
+    <div v-if="user && user.is_inspector" class="card-header flex-row justify-content-center border-0">
       <control-create></control-create>
     </div>
 
@@ -231,8 +242,12 @@
 <style scoped>
   .sidebar-header {
     padding: 1rem;
-    width: 350px;
+    width: 351px; /* 1px wider so that the right-border is hidden */
     margin-top: 1px;
+  }
+
+  .sidebar {
+    width: 350px;
   }
 </style>
 
@@ -247,8 +262,10 @@
       border-bottom-style: solid;
       border-bottom-color: rgba(0, 40, 100, 0.12); /* same color as tabler borders */
   }
-  .v-sidebar-menu .vsm--item:last-child {
-      border-bottom-style: none;
+  .v-sidebar-menu .vsm--item:first-child {
+      border-top-width: 1px;
+      border-top-style: solid;
+      border-top-color: rgba(0, 40, 100, 0.12); /* same color as tabler borders */
   }
 
   /* Wrap text for titles that overflow */

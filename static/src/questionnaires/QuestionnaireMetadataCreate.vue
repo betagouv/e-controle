@@ -72,33 +72,32 @@
 </template>
 
 <script>
-  import Vue from "vue";
-  import Datepicker from 'vuejs-datepicker';
+  import Vue from "vue"
+  import Datepicker from 'vuejs-datepicker'
   import Wizard from "../utils/Wizard"
   import fr from "../utils/vuejs-datepicker-locale-fr"
-  import reportValidity from 'report-validity';
+  import reportValidity from 'report-validity'
 
-
-  export let DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
+  const DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
 sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
 parvenir au fur et à mesure votre réponse. \
 \nJe reste à votre disposition ainsi qu’à celle de vos \
-services pour toute information complémentaire qu’appellerait ce questionnaire.";
+services pour toute information complémentaire qu’appellerait ce questionnaire."
 
-  export default Vue.extend({
+  const QuestionnaireMetadataCreate = Vue.extend({
     props: {
-      questionnaireNumbering: Number
+      questionnaireNumbering: Number,
     },
     data() {
       return {
         metadata: {
-            'description': '',
-            'end_date': '',
-            'title': ''
+          description: '',
+          end_date: '',
+          title: '',
         },
-        'errors': [],
-        'fr': fr // locale for datepicker
+        errors: [],
+        fr: fr, // locale for datepicker
       }
     },
     mounted() {
@@ -108,12 +107,12 @@ services pour toute information complémentaire qu’appellerait ce questionnair
           console.debug('key', key)
           this.$set(this.metadata, key, data[key])
         }
-      }.bind(this);
+      }.bind(this)
 
       this.$parent.$on('questionnaire-updated', function(data) {
-        console.debug('new metadata', data);
-        loadMetadata(data);
-      });
+        console.debug('new metadata', data)
+        loadMetadata(data)
+      })
     },
     methods: {
       validateForm: function() {
@@ -138,8 +137,12 @@ services pour toute information complémentaire qu’appellerait ce questionnair
     components: {
       Datepicker,
       Wizard,
-    }
-  });
+    },
+  })
+
+  QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT = DESCRIPTION_DEFAULT
+  export default QuestionnaireMetadataCreate
+
 </script>
 
 <style></style>
