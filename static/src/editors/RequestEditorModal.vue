@@ -56,22 +56,21 @@
 </template>
 
 <script>
-  import Vue from "vue";
+import Vue from 'vue';
 
-
-  export default Vue.extend({
-    props: [ 'questionnaire'],
-    methods: {
-      clickBecomeEditor() {
-        $("#requestEditorModal").modal('hide')
-      },
+export default Vue.extend({
+  props: ['questionnaire'],
+  methods: {
+    clickBecomeEditor() {
+      $('#requestEditorModal').modal('hide')
     },
-  });
+  },
+});
 </script>
 <style scoped>
-  .large-modal {
-      width: 1000px;
-      max-width: 100%;
-      margin: 2% auto;
-  }
+.large-modal {
+    width: 1000px;
+    max-width: 100%;
+    margin: 2% auto;
+}
 </style>

@@ -63,26 +63,24 @@
 </template>
 
 <script>
-  import { mapFields } from 'vuex-map-fields'
-  import { store } from '../store'
-  import EmptyModal from "../utils/EmptyModal"
-  import ErrorBar from '../utils/ErrorBar'
-  import Vue from 'vue'
-  import Vuex from 'vuex'
+import { store } from '../store'
+import EmptyModal from '../utils/EmptyModal'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-  Vue.use(Vuex);
+Vue.use(Vuex)
 
-  export default Vue.extend({
-    store,
-    components: {
-      EmptyModal,
+export default Vue.extend({
+  store,
+  components: {
+    EmptyModal,
+  },
+  methods: {
+    becomeEditor() {
+      window.location.href = '/accueil'
     },
-    methods: {
-      becomeEditor() {
-        window.location.href = '/accueil'
-      },
-    },
-  })
+  },
+})
 </script>
 
 <style scoped>

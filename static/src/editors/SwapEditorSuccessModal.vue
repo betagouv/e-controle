@@ -17,27 +17,19 @@
     <div class="modal-footer border-top-0 d-flex justify-content-center">
       <a  href="/accueil/" role="button" class="btn btn-primary">
         < Revenir à l'accueil
-      </button>
+      </a>
     </div>
   </empty-modal>
 </template>
 
 <script>
-  import Vue from "vue";
-  import EmptyModal from "../utils/EmptyModal"
+import Vue from 'vue'
+import EmptyModal from '../utils/EmptyModal'
 
-
-  export default Vue.extend({
-    props: [ 'questionnaire'],
-    components: {
-      EmptyModal,
-    },
-  });
+export default Vue.extend({
+  props: [ 'questionnaire'],
+  components: {
+    EmptyModal,
+  },
+})
 </script>
-<style scoped>
-  .large-modal {
-      width: 1000px;
-      max-width: 100%;
-      margin: 2% auto;
-  }
-</style>

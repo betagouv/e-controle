@@ -140,7 +140,6 @@
                   </div>
               </div>
 
-
           </div>
         </div>
       </div>
@@ -148,16 +147,15 @@
 </template>
 
 <script>
-  import Vue from "vue";
+import Vue from 'vue'
 
-
-  export default Vue.extend({
-    methods: {
-      swapEditor() {
-        $("#swapEditorModal").modal('hide')
-      },
-    }
-  });
+export default Vue.extend({
+  methods: {
+    swapEditor() {
+      $('#swapEditorModal').modal('hide')
+    },
+  },
+})
 </script>
 <style scoped>
   .large-modal {
