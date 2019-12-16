@@ -3,6 +3,8 @@ Install k6 to run this script : https://docs.k6.io/docs/installation
 To make visualization graphs, you need InfluxDB and Grafana : https://docs.k6.io/docs/influxdb-grafana
 Then run
 k6 run --out influxdb=http://localhost:8086/myk6db <path to this script>
+For more logging :
+GODEBUG=http2debug=2 k6 run --out influxdb=http://localhost:8086/myk6db <path to this script>
 
 View data in influxdb :
 Talk to it in SQL, with a CLI (and format timestamps in rfc3339 to make them human-readable)
@@ -43,7 +45,10 @@ export const options = {
 const myCounter = new Counter('my_counter')
 const myTrend = new Trend('my_trend')
 
-const url = 'https://e-controle-dev-beta.ccomptes.fr/'
+// const url = 'https://e-controle-pprod-beta.ccomptes.fr/'
+const url = 'http://10.203.1.10:8080/accueil/'
+
+const testId = Math.floor(Math.random() * 1000)
 
 export default function() {
   // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
@@ -54,7 +59,7 @@ export default function() {
     const res = http.get(url)
     if (res.error || res.error_code) {
       console.error('error', res.error_code, res.error)
-      myCounter.add(1, { error: res.error, error_code: res.error_code })
+      myCounter.add(1, { testId: testId, url: url, error: res.error, error_code: res.error_code })
     }
 
     check(res, {
@@ -63,6 +68,6 @@ export default function() {
     })
   } catch (error) {
     console.error('Non-HTTP error, test aborted.', error)
-    myTrend.add(1, { error: error })
+    myTrend.add(1, { testId: testId, url: url, error: error })
   }
 }
