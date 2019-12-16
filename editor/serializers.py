@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from control.models import Questionnaire
 
-class UpdateEditorQuestionnaireSerializer(serializers.ModelSerializer):
+class UpdateEditorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Questionnaire
         fields = ('editor',)

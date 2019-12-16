@@ -2,10 +2,10 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from control.models import Questionnaire
-from .serializers import UpdateEditorQuestionnaireSerializer
+from .serializers import UpdateEditorSerializer
 
 class UpdateEditor(generics.UpdateAPIView):
-    serializer_class = UpdateEditorQuestionnaireSerializer
+    serializer_class = UpdateEditorSerializer
 
     def get_queryset(self):
         if not self.request.user.profile.is_inspector:
