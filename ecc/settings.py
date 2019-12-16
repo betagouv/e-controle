@@ -161,8 +161,9 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 30
 # Content-Security-Policy
 CSP_DEFAULT_SRC = env('CSP_DEFAULT_SRC', default=("'self'",))
-CSP_STYLE_SRC = env('CSP_STYLE_SRC', default=("'self'", "'unsafe-inline'"))
+CSP_STYLE_SRC = env('CSP_STYLE_SRC', default=("'self'", "'unsafe-inline'", "https://tabler.github.io", "https://preview.tabler.io"))
 CSP_SCRIPT_SRC = env('CSP_SCRIPT_SRC', default=("'self'", "'unsafe-eval'", "'unsafe-inline'"))
+CSP_FONT_SRC = env('CSP_FONT_SRC', default=("'self'", "https://tabler.github.io", "https://preview.tabler.io"))
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True

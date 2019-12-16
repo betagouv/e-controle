@@ -247,3 +247,7 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
     file_type = 'response-file'
+
+
+class RedirectToHome(TemplateView):
+    template_name = 'login/redirect_to_home.html'
