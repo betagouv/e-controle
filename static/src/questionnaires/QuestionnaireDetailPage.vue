@@ -1,29 +1,10 @@
 <template>
   <div>
     <template v-if="user.is_inspector">
-      <div class="alert alert-secondary flex-row justify-content-between" role="alert" v-if="questionnaire.is_draft">
-          <div class="mt-2">
-          <i class="fe fe-users mr-1"></i>
-          <span v-if="questionnaire.editor"><strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong></span>
-          <span v-else>[INCONNU]</span>
-          est actuellement la seule personne qui peut modifier ce questionnaire
-          </div>
-          <div class="text-right">
-          <button type="submit"
-            class="btn btn-gray"
-            title="Demander les droits de rédaction..."
-            data-toggle="modal"
-            data-target="#requestEditorModal">
-            <i class="fa fa-exchange-alt mr-1"></i>
-            Demander les droits de rédaction...
-          </button>
-          </div>
-      </div>
+      <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft"></request-editor-button>
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
       </success-bar>
-      <request-editor-modal id="requestEditorModal" :questionnaire='questionnaire'></request-editor-modal>
-      <become-editor-modal id="becomeEditorModal"></become-editor-modal>
     </template>
 
     <div class="page-header">
@@ -71,12 +52,11 @@
   import Vue from "vue";
 
   import axios from 'axios'
-  import BecomeEditorModal from '../editors/BecomeEditorModal'
   import InfoBar from '../utils/InfoBar'
   import QuestionBox from '../questions/QuestionBox'
   import QuestionFileList from '../questions/QuestionFileList'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
-  import RequestEditorModal from '../editors/RequestEditorModal'
+  import RequestEditorButton from '../editors/RequestEditorButton'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
   import SuccessBar from '../utils/SuccessBar'
@@ -104,12 +84,11 @@
       },
     },
     components: {
-      BecomeEditorModal,
       InfoBar,
       QuestionBox,
       QuestionFileList,
       QuestionnaireMetadata,
-      RequestEditorModal,
+      RequestEditorButton,
       ResponseDropzone,
       ResponseFileList,
       SuccessBar,
