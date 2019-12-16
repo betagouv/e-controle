@@ -18,7 +18,7 @@ Faire une query (attention, les valeurs de type string doivent etre 'quoted', et
 
 import http from 'k6/http'
 import { check, sleep } from 'k6'
-import { Counter } from 'k6/metrics'
+import { Counter, Trend } from 'k6/metrics'
 
 export const options = {
   /* Example 1 : during 30s, look through the script with 10 Virtual Users in parallel.
@@ -34,22 +34,35 @@ export const options = {
     { duration: '3m', target: 0 }, // ramp down to 0 users
   ],
   */
-  vus: 10,
-  duration: '10s',
+  vus: 1,
+  duration: '30s',
   throw: true,
 }
 
+// Example metrics
 const myCounter = new Counter('my_counter')
+const myTrend = new Trend('my_trend')
+
+const url = 'https://e-controle-dev-beta.ccomptes.fr/'
 
 export default function() {
-  const res = http.get('https://e-controle-pprod-beta.ccomptes.fr/')
-  if (res.error || res.error_code) {
-    console.error('error', res.error_code, res.error)
-  }
-  myCounter.add(1)//, { error: res.error, error_code: res.error_code })
-  check(res, {
-    'is status 200': (r) => r.status === 200,
-    'body size is 1176 bytes': (r) => r.body.length === 1176,
-  })
+  // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
+  // (to avoid DDOSing our own server!)
   sleep(1 + Math.random())
+
+  try {
+    const res = http.get(url)
+    if (res.error || res.error_code) {
+      console.error('error', res.error_code, res.error)
+      myCounter.add(1, { error: res.error, error_code: res.error_code })
+    }
+
+    check(res, {
+      'is status 200': (r) => r.status === 200,
+      'body size is 1176 bytes': (r) => r.body.length === 1176,
+    })
+  } catch (error) {
+    console.error('Non-HTTP error, test aborted.', error)
+    myTrend.add(1, { error: error })
+  }
 }
