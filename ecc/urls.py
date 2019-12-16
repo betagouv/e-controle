@@ -41,7 +41,6 @@ urlpatterns = [
 
     path('bienvenue/', tos_views.Welcome.as_view(), name='welcome'),
     path('accueil/', control_views.ControlDetail.as_view(), name='control-detail'),
-    path('redirection/', control_views.RedirectToHome.as_view(), name='redirect-to-home'),
 
     path('questionnaire/<int:pk>/', control_views.QuestionnaireDetail.as_view(), name='questionnaire-detail'),
     path('questionnaire/controle-<int:pk>/creer',
