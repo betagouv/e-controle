@@ -12,6 +12,7 @@ from control import admin as admin_views
 from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
+from editor import api_views as editor_api_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from session import api_views as session_api_views
@@ -64,9 +65,13 @@ urlpatterns = [
          admin_views.Megacontrol.as_view(),
          name='megacontrol-done'),
 
+    # Custom-made api endoints
     path('api/fichier-reponse/corbeille/<int:pk>/',
          control_api_views.ResponseFileTrash.as_view(),
          name='response-file-trash'),
+    path('api/questionnaire/<int:pk>/changer-redacteur/',
+         editor_api_views.UpdateEditor.as_view(),
+         name='update-editor'),
 ]
 
 urlpatterns.extend(magicauth_urls)
