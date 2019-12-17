@@ -10,12 +10,7 @@
           <div>{{ user.first_name }} {{ user.last_name }}</div>
           <small><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
-        <div class="flex-column mr-4">
-          <button v-if="sessionUser.is_inspector" class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
-        </div>
-        <div class="flex-column">
-          <button v-if="sessionUser.is_inspector" class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
-        </div>
+        <slot name="user-buttons"></slot>
       </div>
     </li>
   </ul>
