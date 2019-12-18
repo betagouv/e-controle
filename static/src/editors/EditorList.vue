@@ -45,18 +45,16 @@ export default Vue.extend({
     questionnaireId: Number,
   },
   methods: {
-    callSwapEditorApi(user) {
+    callSwapEditorApi(editorUser) {
       const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
-      console.debug('URL:' + url)
       Vue.axios.put(url, {
-        editor: user.id,
+        editor: editorUser,
       }).then((response) => {
         this.postResult = response.data
-        console.debug(this.postResult)
       })
     },
     swapEditor(user) {
-      this.callSwapEditorApi(user)
+      this.callSwapEditorApi(user.id)
       $('#swapEditorModal').modal('hide')
     },
   }

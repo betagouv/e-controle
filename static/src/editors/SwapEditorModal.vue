@@ -42,7 +42,7 @@
                         title="Transférer"
                         data-toggle="modal"
                         data-target="#swapEditorSuccessModal"
-                        @click="swapEditor()">
+                        @click="SetEditorNull()">
                           <i class="fa fa-lock-open mr-2"></i>
                           Libérer les droits
                       </button>
@@ -106,8 +106,16 @@ export default Vue.extend({
         return item.profile_type === 'inspector'
       })
     },
-    swapEditor(user) {
-      this.callSwapEditorApi(user)
+    callSwapEditorApi(editorUser) {
+      const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
+      Vue.axios.put(url, {
+        editor: editorUser,
+      }).then((response) => {
+        this.postResult = response.data
+      })
+    },
+    SetEditorNull() {
+      this.callSwapEditorApi(null)
       $('#swapEditorModal').modal('hide')
     },
   },
