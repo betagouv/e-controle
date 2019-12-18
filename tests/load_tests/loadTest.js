@@ -5,6 +5,9 @@ Then run
 k6 run --out influxdb=http://localhost:8086/myk6db <path to this script>
 For more logging :
 GODEBUG=http2debug=2 k6 run --out influxdb=http://localhost:8086/myk6db <path to this script>
+Other useful flags :
+Log http request in full : --http-debug="full"
+Run only one user and one iteration (overloads options in script) : -i 1 -u 1
 
 View data in influxdb :
 Talk to it in SQL, with a CLI (and format timestamps in rfc3339 to make them human-readable)
@@ -18,8 +21,9 @@ Faire une query (attention, les valeurs de type string doivent etre 'quoted', et
 
 */
 
+import encoding from 'k6/encoding'
 import http from 'k6/http'
-import { check, sleep } from 'k6'
+import { check, group, sleep } from 'k6'
 import { Counter, Trend } from 'k6/metrics'
 
 export const options = {
@@ -45,28 +49,54 @@ export const options = {
 const myCounter = new Counter('my_counter')
 const myTrend = new Trend('my_trend')
 
-// const url = 'https://e-controle-pprod-beta.ccomptes.fr/'
-const url = 'http://127.0.0.1:8080/accueil/'
-
 const testId = Math.floor(Math.random() * 1000)
 
-export default function() {
+const username = 'inspector@demo.com'
+const password = 'demoe12345'
+
+const test = (url) => {
   // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
   // (to avoid DDOSing our own server!)
   sleep(1 + Math.random())
 
   try {
-    const res = http.get(url)
+    const res = http.get(
+      url,
+      {
+        headers: {
+          Authorization: 'Basic ' + encoding.b64encode(`${username}:${password}`),
+        },
+      },
+    )
     if (res.error || res.error_code) {
       console.error('error', res.error_code, res.error)
       myCounter.add(1, { testId: testId, url: url, error: res.error, error_code: res.error_code })
     }
 
+    console.log('Wanted', url, 'got redirected to', res.url)
     check(res, {
       'is status 200': (r) => r.status === 200,
+      'no redirect': (r) => r.url === url,
     })
+
+    console.log('res', res)
+    console.log('res.json()', res.json()) // crashes when non-authed. (when authed as well?)
+    check(res, {
+      'is authenticated': (r) => r.json().authenticated === true, // crashes. Will be displayed as successful anyway.
+    })
+
+    console.log('done')
   } catch (error) {
     console.error('Non-HTTP error, test aborted.', error)
     myTrend.add(1, { testId: testId, url: url, error: error })
   }
+}
+
+export default function() {
+  group('visit login page', function() {
+    test('http://127.0.0.1:8080/')
+  })
+  group('visit /accueil', function() {
+    test('http://127.0.0.1:8080/accueil/')
+  })
 }
