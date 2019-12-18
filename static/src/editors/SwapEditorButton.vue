@@ -17,7 +17,10 @@
         </div>
     </div>
 
-    <swap-editor-modal id="swapEditorModal" :control-id='controlId'></swap-editor-modal>
+    <swap-editor-modal id="swapEditorModal"
+                       :control-id='controlId'
+                       :questionnaire-id='questionnaireId'>
+    </swap-editor-modal>
     <swap-editor-success-modal id="swapEditorSuccessModal"></swap-editor-success-modal>
   </div>
 </template>
@@ -28,7 +31,10 @@ import SwapEditorModal from '../editors/SwapEditorModal'
 import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
 
 export default Vue.extend({
-  props: ['controlId'],
+  props: [
+    'controlId',
+    'questionnaireId',
+  ],
   components: {
     SwapEditorModal,
     SwapEditorSuccessModal,

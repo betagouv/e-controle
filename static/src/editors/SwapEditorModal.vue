@@ -96,7 +96,10 @@ import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
 export default Vue.extend({
-  props: ['controlId'],
+  props: [
+    'controlId',
+    'questionnaireId',
+  ],
   data() {
     return {
       users: [],
@@ -107,7 +110,7 @@ export default Vue.extend({
       Vue.axios.get(backendUrls.user(), {
         params: {
           controls: this.controlId,
-        }
+        },
       }).then((response) => {
         this.users = response.data
       })
@@ -117,7 +120,17 @@ export default Vue.extend({
         return item.profile_type === 'inspector'
       })
     },
+    callSwapEditorApi() {
+      const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
+      console.debug('URL:' + url)
+      Vue.axios.put(url, {
+        editor: 5,
+      }).then((response) => {
+        this.users = response.data
+      })
+    },
     swapEditor() {
+      this.callSwapEditorApi()
       $('#swapEditorModal').modal('hide')
     },
   },
