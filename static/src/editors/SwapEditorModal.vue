@@ -26,81 +26,21 @@
                   <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
 
-                <!-- User List Start-->
-                <div class="card-body">
-                  <ul class="list-unstyled list-separated">
-                    <li class="list-separated-item">
-                      <div class="flex-row align-items-center">
-                        <div class="flex-column mr-4">
-                          <span class="avatar avatar-pink">ML</span>
-                        </div>
-                        <div class="flex-column mr-4 flex-grow-1">
-                          <a href="javascript:void(0)" class="text-inherit">Mathilde Lili</a>
-                          <small class="d-block item-except h-1x"><a href="mailto:demo@demo.com">demo@demo.com</a></small>
-                        </div>
-                        <div class="flex-column mr-4">
-                          <button
-                            class="btn btn-secondary"
-                            title="Transférer"
-                            data-toggle="modal"
-                            data-target="#swapEditorSuccessModal"
-                            @click="swapEditor()">
-                              <i class="fa fa-exchange-alt mr-2"></i>
-                              Transférer
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-
-                    <li class="list-separated-item">
-                      <div class="flex-row align-items-center">
-                        <div class="flex-column mr-4">
-                          <span class="avatar avatar-pink">MD</span>
-                        </div>
-                        <div class="flex-column mr-4 flex-grow-1">
-                          <a href="javascript:void(0)" class="text-inherit">Myriam Dupont</a>
-                          <small class="d-block item-except h-1x"><a href="mailto:demo@demo.com">demo@demo.com</a></small>
-                        </div>
-                        <div class="flex-column mr-4">
-                          <button
-                            class="btn btn-secondary"
-                            title="Transférer"
-                            data-toggle="modal"
-                            data-target="#swapEditorSuccessModal"
-                            @click="swapEditor()">
-                              <i class="fa fa-exchange-alt mr-2"></i>
-                              Transférer
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-
-                    <li class="list-separated-item">
-                      <div class="flex-row align-items-center">
-                        <div class="flex-column mr-4">
-                          <span class="avatar avatar-pink">JB</span>
-                        </div>
-                        <div class="flex-column mr-4 flex-grow-1">
-                          <a href="javascript:void(0)" class="text-inherit">Jacques Briant</a>
-                          <small class="d-block item-except h-1x"><a href="mailto:demo@demo.com">demo@demo.com</a></small>
-                        </div>
-                        <div class="flex-column mr-4">
-                          <button
-                            class="btn btn-secondary"
-                            title="Transférer"
-                            data-toggle="modal"
-                            data-target="#swapEditorSuccessModal"
-                            @click="swapEditor()">
-                              <i class="fa fa-exchange-alt mr-2"></i>
-                              Transférer
-                          </button>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <!-- User List End -->
-
+                <user-list :users="inspectorUsers()" profile-type="inspector">
+                  <template slot="user-buttons">
+                    <div class="flex-column mr-4">
+                      <button
+                        class="btn btn-secondary"
+                        title="Transférer"
+                        data-toggle="modal"
+                        data-target="#swapEditorSuccessModal"
+                        @click="swapEditor()">
+                          <i class="fa fa-exchange-alt mr-2"></i>
+                          Transférer
+                      </button>
+                    </div>
+                  </template>
+                </user-list>
               </div>
 
               <div class="card">
@@ -147,14 +87,46 @@
 </template>
 
 <script>
+import axios from 'axios'
+import backendUrls from '../utils/backend.js'
+import UserList from '../users/UserList'
 import Vue from 'vue'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios)
 
 export default Vue.extend({
+  props: ['controlId'],
+  data() {
+    return {
+      users: [],
+    }
+  },
   methods: {
+    getUsers() {
+      Vue.axios.get(backendUrls.user(), {
+        params: {
+          controls: this.controlId,
+        }
+      }).then((response) => {
+        this.users = response.data
+      })
+    },
+    inspectorUsers() {
+      return this.users.filter(item => {
+        return item.profile_type === 'inspector'
+      })
+    },
     swapEditor() {
       $('#swapEditorModal').modal('hide')
     },
   },
+  components: {
+    UserList,
+  },
+  mounted() {
+    this.getUsers()
+},
 })
 </script>
 <style scoped>

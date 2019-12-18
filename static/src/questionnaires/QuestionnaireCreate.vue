@@ -1,6 +1,6 @@
 <template>
   <div>
-    <swap-editor-button ></swap-editor-button>
+    <swap-editor-button :control-id='controlId'></swap-editor-button>
 
     <div class="page-header">
       <div class="page-title flex-wrap">

@@ -36,7 +36,10 @@
     props: {
       users: Array,
       profileType: String,
-      control: Object,
+      control: {
+        type: Object,
+        default: () => ({})
+      },
     },
     computed: {
       ...mapFields([
