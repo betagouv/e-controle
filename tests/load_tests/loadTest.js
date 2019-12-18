@@ -46,7 +46,7 @@ const myCounter = new Counter('my_counter')
 const myTrend = new Trend('my_trend')
 
 // const url = 'https://e-controle-pprod-beta.ccomptes.fr/'
-const url = 'http://10.203.1.10:8080/accueil/'
+const url = 'http://127.0.0.1:8080/accueil/'
 
 const testId = Math.floor(Math.random() * 1000)
 
@@ -64,7 +64,6 @@ export default function() {
 
     check(res, {
       'is status 200': (r) => r.status === 200,
-      'body size is 1176 bytes': (r) => r.body.length === 1176,
     })
   } catch (error) {
     console.error('Non-HTTP error, test aborted.', error)
