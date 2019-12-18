@@ -63,22 +63,43 @@
 </template>
 
 <script>
+import { mapFields } from 'vuex-map-fields'
+import Vuex, { mapActions } from 'vuex'
 import { store } from '../store'
+import backendUrls from '../utils/backend.js'
 import EmptyModal from '../utils/EmptyModal'
 import Vue from 'vue'
-import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
 export default Vue.extend({
   store,
+  props: ['questionnaireId'],
   components: {
     EmptyModal,
   },
+  computed: {
+    ...mapFields([
+      'sessionUser',
+    ]),
+  },
   methods: {
+    ...mapActions(['fetchSessionUser']),
+    callSwapEditorApi(editorUser) {
+      const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
+      Vue.axios.put(url, {
+        editor: editorUser,
+      }).then((response) => {
+        this.postResult = response.data
+      })
+    },
     becomeEditor() {
+      this.callSwapEditorApi(this.sessionUser.id)
       window.location.href = '/accueil'
     },
+  },
+  created() {
+    this.fetchSessionUser()
   },
 })
 </script>

@@ -56,11 +56,26 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import { store } from '../store'
+import backendUrls from '../utils/backend.js'
+import Vue from 'vue'
 
 export default Vue.extend({
+  store,
   props: ['questionnaire'],
   methods: {
+    callSwapEditorApi(editorUser) {
+      const url = '/api' + backendUrls['swap-editor'](this.questionnaire.id)
+      Vue.axios.put(url, {
+        editor: editorUser,
+      }).then((response) => {
+        this.postResult = response.data
+      })
+    },
+    SetEditorNull() {
+      this.callSwapEditorApi(null)
+      $('#swapEditorModal').modal('hide')
+    },
     clickBecomeEditor() {
       $('#requestEditorModal').modal('hide')
     },
