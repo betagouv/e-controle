@@ -26,21 +26,7 @@
                   <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
 
-                <user-list :users="inspectorUsers()" profile-type="inspector">
-                  <template slot="user-buttons">
-                    <div class="flex-column mr-4">
-                      <button
-                        class="btn btn-secondary"
-                        title="Transférer"
-                        data-toggle="modal"
-                        data-target="#swapEditorSuccessModal"
-                        @click="swapEditor()">
-                          <i class="fa fa-exchange-alt mr-2"></i>
-                          Transférer
-                      </button>
-                    </div>
-                  </template>
-                </user-list>
+                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
               </div>
 
               <div class="card">
@@ -89,7 +75,7 @@
 <script>
 import axios from 'axios'
 import backendUrls from '../utils/backend.js'
-import UserList from '../users/UserList'
+import EditorList from './EditorList'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 
@@ -120,22 +106,13 @@ export default Vue.extend({
         return item.profile_type === 'inspector'
       })
     },
-    callSwapEditorApi() {
-      const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
-      console.debug('URL:' + url)
-      Vue.axios.put(url, {
-        editor: 5,
-      }).then((response) => {
-        this.users = response.data
-      })
-    },
-    swapEditor() {
-      this.callSwapEditorApi()
+    swapEditor(user) {
+      this.callSwapEditorApi(user)
       $('#swapEditorModal').modal('hide')
     },
   },
   components: {
-    UserList,
+    EditorList,
   },
   mounted() {
     this.getUsers()
