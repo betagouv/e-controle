@@ -22,16 +22,7 @@
             Ajouter un contrôleur
           </a>
         </div>
-        <user-list :users="inspectorUsers()" profile-type="inspector" :control="control">
-          <template slot="user-buttons" v-if="sessionUser.is_inspector">
-            <div class="flex-column mr-4">
-              <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
-            </div>
-            <div class="flex-column">
-              <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
-            </div>
-          </template>
-        </user-list>
+        <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
       </div>
 
       <div class="card mb-0">

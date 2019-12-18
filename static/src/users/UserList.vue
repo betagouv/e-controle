@@ -10,7 +10,14 @@
           <div>{{ user.first_name }} {{ user.last_name }}</div>
           <small><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
-        <slot name="user-buttons"></slot>
+        <template v-if="sessionUser.is_inspector">
+          <div class="flex-column mr-4">
+            <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
+          </div>
+          <div class="flex-column">
+            <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
+          </div>
+        </template>
       </div>
     </li>
   </ul>
@@ -35,11 +42,7 @@
     },
     props: {
       users: Array,
-      profileType: String,
-      control: {
-        type: Object,
-        default: () => ({})
-      },
+      control: Object,
     },
     computed: {
       ...mapFields([
