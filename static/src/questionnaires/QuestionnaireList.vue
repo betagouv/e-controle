@@ -117,30 +117,30 @@
 </template>
 
 <script>
-  import DateFormat from '../utils/DateFormat.js';
-  import HelpTooltip from "../utils/HelpTooltip"
-  import Vue from 'vue'
+import DateFormat from '../utils/DateFormat.js'
+import HelpTooltip from '../utils/HelpTooltip'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: [
-      'control',
-      'user',
-    ],
-    filters: {
-      DateFormat
+export default Vue.extend({
+  props: [
+    'control',
+    'user',
+  ],
+  filters: {
+    DateFormat,
+  },
+  components: {
+    HelpTooltip,
+  },
+  computed: {
+    accessibleQuestionnaires: function () {
+      if (this.user.is_inspector) {
+        return this.control.questionnaires
+      }
+      return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
     },
-    components: {
-      HelpTooltip,
-    },
-    computed: {
-      accessibleQuestionnaires: function () {
-        if (this.user.is_inspector) {
-          return this.control.questionnaires
-        }
-        return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
-      },
-    },
-  })
+  },
+})
 </script>
 
 <style scoped>
