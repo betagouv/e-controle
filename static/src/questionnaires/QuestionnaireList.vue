@@ -78,6 +78,7 @@
                      :href="'/questionnaire/modifier/' + questionnaire.id "
                      class="btn btn-primary"
                      title="Modifier le brouillon de questionnaire"
+                     @click="becomeEditor(questionnaire.id)"
                   >
                     <i class="fe fe-edit"></i>
                     Modifier+
@@ -115,9 +116,13 @@
 </template>
 
 <script>
+import backendUrls from '../utils/backend.js'
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
 import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
 
 export default Vue.extend({
   props: [
@@ -136,6 +141,19 @@ export default Vue.extend({
         return this.control.questionnaires
       }
       return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
+    },
+  },
+  methods: {
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
+      Vue.axios.put(url, {
+        editor: editorUser,
+      }).then((response) => {
+        this.postResult = response.data
+      })
+    },
+    becomeEditor(questionnaireId) {
+      this.callSwapEditorApi(this.user.id, questionnaireId)
     },
   },
 })
