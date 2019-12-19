@@ -1,7 +1,6 @@
 import encoding from 'k6/encoding'
 import http from 'k6/http'
 import { check, group, sleep } from 'k6'
-import { Counter, Trend } from 'k6/metrics'
 
 export const options = {
   vus: 1,
@@ -9,19 +8,18 @@ export const options = {
   throw: true,
 }
 
-// Example metrics
-const myCounter = new Counter('my_counter')
-const myTrend = new Trend('my_trend')
-
-const testId = Math.floor(Math.random() * 1000)
-
 const username = 'admin'
 const password = 'faleco2019'
 
-const loginUrl = 'http://127.0.0.1:8080/nonocat/login/?next=/nonocat/'
+const serverUrl = 'http://127.0.0.1:8080/'
+const adminPath = 'nonocat/'
+const adminUrl = serverUrl + adminPath
+const loginUrl = adminUrl + 'login/?next=/' + adminPath
 
-export function setup() {
+const login = () => {
   // Get the csrf token : load the login form.
+  console.log('Start login process')
+  console.log('Getting login form for csrf token')
   const res = http.get(
     loginUrl,
     {
@@ -34,21 +32,26 @@ export function setup() {
   if (res.error || res.error_code) {
     throw Error(res.error_code + ' - ' + JSON.stringify(res.error))
   }
+  console.log('Got login form.')
 
-  // Get the csrf cookie from the form by grepping the page body.
+  // Get the csrf cookie from the form by regexing the page body.
   const found = res.body.match(/name="csrfmiddlewaretoken" value="(.*)"/)
-  const csrf = found[1]
-  console.log('using csrf', csrf)
+  const formCsrf = found[1]
+  console.log('csrf token from form', formCsrf)
 
-  console.log('csrftoken cookie', res.cookies.csrftoken[0].value)
+  // Get the other csrf cookie from the response, and set it in cookies
+  console.log('response cookies', JSON.stringify(res.cookies))
+  const cookieCsrf = res.cookies.csrftoken[0].value
+  console.log('Setting csrf cookie', cookieCsrf)
   const jar = http.cookieJar()
-  jar.set('http://127.0.0.1:8080/nonocat/', 'csrftoken', res.cookies.csrftoken[0].value)
+  jar.set(serverUrl, 'csrftoken', cookieCsrf)
 
   // Log in
+  console.log('Making login request')
   const res2 = http.post(
     loginUrl,
     {
-      csrfmiddlewaretoken: csrf,
+      csrfmiddlewaretoken: formCsrf,
       username: username,
       password: password,
     },
@@ -58,16 +61,22 @@ export function setup() {
       },
     },
   )
-  console.log('res after login', JSON.stringify(res2))
-  console.log('authenticated', JSON.stringify(res2.authenticated))
+  console.log('response cookies', JSON.stringify(res2.cookies))
+  console.log('authenticated?', JSON.stringify(res2.authenticated))
   if (res2.error || res2.error_code) {
     throw Error(res2.error_code + ' - ' + JSON.stringify(res2.error))
   }
+  console.log('Done login request.')
 
-  return { csrf: csrf }
+  console.log('Final url : ', res2.url, 'expected : ', adminUrl)
+  if (res2.url !== adminUrl) {
+    throw Error('Login flow should end up on admin url : ' + adminUrl + ', but got : ' + res2.url)
+  }
+
+  console.log('done with login process.')
 }
 
-const test = (url, csrf) => {
+const test = (url) => {
   // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
   // (to avoid DDOSing our own server!)
   sleep(1 + Math.random())
@@ -79,14 +88,12 @@ const test = (url, csrf) => {
         headers: {
           Authorization: 'Basic ' + encoding.b64encode(`${username}:${password}`),
           Referer: loginUrl,
-          'X-CSRF-Token': csrf,
         },
       },
     )
 
     if (res.error || res.error_code) {
       console.error('error', res.error_code, res.error)
-      myCounter.add(1, { testId: testId, url: url, error: res.error, error_code: res.error_code })
     }
 
     console.log('Wanted', url, 'got redirected to', res.url)
@@ -95,32 +102,17 @@ const test = (url, csrf) => {
       'no redirect': (r) => r.url === url,
     })
 
-    console.log('res', res)
-    console.log('cookies', JSON.stringify(res.cookies))
-    console.log('csrftoken', res.cookies.csrftoken[0], JSON.stringify(res.cookies.csrftoken[0]))
-    console.log('csrftoken name', res.cookies.csrftoken[0].name)
-    console.log('csrftoken value', res.cookies.csrftoken[0].value)
-    console.log('res.json()', res.json()) // crashes when non-authed. (when authed as well?)
-    check(res, {
-      'is authenticated': (r) => r.json().authenticated === true, // crashes. Will be displayed as successful anyway.
-    })
-
     console.log('done')
   } catch (error) {
     console.error('Non-HTTP error, test aborted.', error)
-    myTrend.add(1, { testId: testId, url: url, error: error })
   }
 }
 
 export default function(data) {
-  const csrf = data.csrf
-  console.log('csrf', csrf)
-  // todo can you set this in setup?
-  // todo We should get one cookie per VU.
-/*  const jar = http.cookieJar()
-  jar.set('http://127.0.0.1:8080/accueil/', 'csrftoken', csrf) // todo is url for whole site?
-*/
+  group('login', () => {
+    login()
+  })
   group('visit /accueil', function() {
-    test('http://127.0.0.1:8080/accueil/', csrf)
+    test('http://127.0.0.1:8080/accueil/')
   })
 }
