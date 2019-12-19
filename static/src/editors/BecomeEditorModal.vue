@@ -85,8 +85,8 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions(['fetchSessionUser']),
-    callSwapEditorApi(editorUser) {
-      const url = '/api' + backendUrls['swap-editor'](this.questionnaireId)
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
       Vue.axios.put(url, {
         editor: editorUser,
       }).then((response) => {
@@ -94,7 +94,7 @@ export default Vue.extend({
       })
     },
     becomeEditor() {
-      this.callSwapEditorApi(this.sessionUser.id)
+      this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
       window.location.href = '/accueil'
     },
   },

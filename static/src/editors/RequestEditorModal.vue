@@ -64,8 +64,8 @@ export default Vue.extend({
   store,
   props: ['questionnaire'],
   methods: {
-    callSwapEditorApi(editorUser) {
-      const url = '/api' + backendUrls['swap-editor'](this.questionnaire.id)
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
       Vue.axios.put(url, {
         editor: editorUser,
       }).then((response) => {
@@ -73,7 +73,7 @@ export default Vue.extend({
       })
     },
     SetEditorNull() {
-      this.callSwapEditorApi(null)
+      this.callSwapEditorApi(null, this.questionnaire.id)
       $('#swapEditorModal').modal('hide')
     },
     clickBecomeEditor() {
