@@ -18,7 +18,7 @@ const testId = Math.floor(Math.random() * 1000)
 const username = 'admin'
 const password = 'faleco2019'
 
-const loginUrl = 'http://127.0.0.1:8080/nonocat/login/'
+const loginUrl = 'http://127.0.0.1:8080/nonocat/login/?next=/nonocat/'
 
 export function setup() {
   // Get the csrf token : load the login form.
