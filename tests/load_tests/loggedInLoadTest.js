@@ -112,15 +112,15 @@ export default function(data) {
   sleep(1 + Math.random())
 
   group('visit /accueil', function() {
-    test('http://127.0.0.1:8080/accueil/')
+    test(serverUrl + 'accueil/')
   })
   sleep(1 + Math.random())
 
   group('visit some pages', function() {
     for (let i = 0; i < 10; i++) {
-      test('http://127.0.0.1:8080/accueil/')
+      test(serverUrl + 'accueil/')
       sleep(1 + Math.random() * 10)
-      test('http://127.0.0.1:8080/faq/')
+      test(serverUrl + 'faq/')
       sleep(1 + Math.random() * 10)
     }
   })
