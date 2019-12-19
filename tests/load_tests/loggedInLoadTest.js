@@ -27,7 +27,6 @@ Make a query (warning : single-quote around strings values! Variable names can b
 
 */
 
-import encoding from 'k6/encoding'
 import http from 'k6/http'
 import { check, fail, group, sleep } from 'k6'
 
@@ -65,27 +64,20 @@ const loginUrl = adminUrl + 'login/?next=/' + adminPath
 const login = () => {
   // Get the csrf token : load the login form.
   console.log('Start login process')
+
   console.log('Getting login form for csrf token')
-  const res = http.get(
-    loginUrl,
-    {
-      headers: {
-        Authorization: 'Basic ' + encoding.b64encode(`${username}:${password}`),
-        Referer: loginUrl,
-      },
-    },
-  )
+  const res = http.get(loginUrl)
   if (res.error || res.error_code) {
     fail(res.error_code + ' - ' + JSON.stringify(res.error))
   }
   console.log('Got login form.')
 
-  // Get the csrf cookie from the form by regexing the page body.
+  // Get the csrf token from the form by regexing the page body.
   const found = res.body.match(/name="csrfmiddlewaretoken" value="(.*)"/)
   const formCsrf = found[1]
   console.log('csrf token from form', formCsrf)
 
-  // Get the other csrf cookie from the response, and set it in cookies
+  // Get the other csrf token from the Set-Cookie header in response, and set it in cookies
   console.log('response cookies', JSON.stringify(res.cookies))
   const cookieCsrf = res.cookies.csrftoken[0].value
   console.log('Setting csrf cookie', cookieCsrf)
@@ -108,7 +100,6 @@ const login = () => {
     },
   )
   console.log('response cookies', JSON.stringify(res2.cookies))
-  console.log('authenticated?', JSON.stringify(res2.authenticated))
   if (res2.error || res2.error_code) {
     fail(res2.error_code + ' - ' + JSON.stringify(res2.error))
   }
@@ -122,7 +113,7 @@ const login = () => {
   console.log('done with login process.')
 }
 
-const test = (url) => {
+const visitPage = (url) => {
   try {
     const res = http.get(url)
 
@@ -159,16 +150,16 @@ export default function(data) {
   sleep(1 + Math.random())
 
   group('visit /accueil', function() {
-    test(serverUrl + 'accueil/')
+    visitPage(serverUrl + 'accueil/')
   })
   sleep(1 + Math.random())
 
   group('visit some pages', function() {
     for (let i = 0; i < 2; i++) {
-      test(serverUrl + 'accueil/')
-      sleep(1 + Math.random() * 10)
-      test(serverUrl + 'faq/')
-      sleep(1 + Math.random() * 10)
+      visitPage(serverUrl + 'accueil/')
+      sleep(1 + Math.random() * 5)
+      visitPage(serverUrl + 'faq/')
+      sleep(1 + Math.random() * 5)
     }
   })
 }
