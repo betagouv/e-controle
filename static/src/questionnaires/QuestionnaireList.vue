@@ -74,7 +74,15 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft">
-                  <a v-if="questionnaire.editor && (user.id === questionnaire.editor.id)"
+                  <a v-if="!questionnaire.editor"
+                     :href="'/questionnaire/modifier/' + questionnaire.id "
+                     class="btn btn-primary"
+                     title="Modifier le brouillon de questionnaire"
+                  >
+                    <i class="fe fe-edit"></i>
+                    Modifier+
+                  </a>
+                  <a v-else-if="user.id === questionnaire.editor.id"
                      :href="'/questionnaire/modifier/' + questionnaire.id "
                      class="btn btn-primary"
                      title="Modifier le brouillon de questionnaire"
@@ -82,7 +90,7 @@
                     <i class="fe fe-edit"></i>
                     Modifier
                   </a>
-                  <a v-else
+                  <a v-else-if="user.id != questionnaire.editor"
                      :href="questionnaire.url"
                      class="btn btn-primary"
                      title="Voir le brouillon de questionnaire"
@@ -91,16 +99,6 @@
                     Consulter
                   </a>
                 </template>
-                <template v-else>
-                  <a :href="questionnaire.url"
-                     class="btn btn-primary"
-                     title="Consulter les réponses sur E-contrôle"
-                  >
-                    <i class="fe fe-eye"></i>
-                    Consulter
-                  </a>
-                </template>
-              </template>
             </td>
           </tr>
         </tbody>
