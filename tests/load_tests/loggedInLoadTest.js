@@ -77,20 +77,8 @@ const login = () => {
 }
 
 const test = (url) => {
-  // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
-  // (to avoid DDOSing our own server!)
-  sleep(1 + Math.random())
-
   try {
-    const res = http.get(
-      url,
-      {
-        headers: {
-          Authorization: 'Basic ' + encoding.b64encode(`${username}:${password}`),
-          Referer: loginUrl,
-        },
-      },
-    )
+    const res = http.get(url)
 
     if (res.error || res.error_code) {
       console.error('error', res.error_code, res.error)
@@ -108,11 +96,32 @@ const test = (url) => {
   }
 }
 
+// Setup is run only once, for all VUs. So you cannot do the login in setup, you need to login each user.
+export function setup() {
+  console.log('Running setup')
+}
+
 export default function(data) {
+  // Start with the sleep so that you are sure it is run, even if the rest of the test crashes.
+  // (to avoid DDOSing our own server!)
+  sleep(0.1 + Math.random())
+
   group('login', () => {
     login()
   })
+  sleep(1 + Math.random())
+
   group('visit /accueil', function() {
     test('http://127.0.0.1:8080/accueil/')
+  })
+  sleep(1 + Math.random())
+
+  group('visit some pages', function() {
+    for (let i = 0; i < 10; i++) {
+      test('http://127.0.0.1:8080/accueil/')
+      sleep(1 + Math.random() * 10)
+      test('http://127.0.0.1:8080/faq/')
+      sleep(1 + Math.random() * 10)
+    }
   })
 }
