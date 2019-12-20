@@ -18,7 +18,7 @@
         </info-bar>
         <form @submit.prevent="createBody" ref="form">
           <div class="card"
-               v-for="(theme, themeIndex) in body"
+               v-for="(theme, themeIndex) in themes"
                :key="'theme-' + themeIndex"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
@@ -33,13 +33,13 @@
                        type="text"
                        maxlength="255"
                        v-bind:id="'theme' + (themeIndex + 1)"
-                       v-model="body[themeIndex].title"
+                       v-model="themes[themeIndex].title"
                        oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
                        oninput="this.setCustomValidity('')"
                        :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
                        required>
                 <span>
-                  <a v-if="body[themeIndex].questions.length === 0"
+                  <a v-if="themes[themeIndex].questions.length === 0"
                      href="javascript:void(0)"
                      @click.prevent="deleteTheme(themeIndex)"
                      class="btn btn-link"
@@ -67,17 +67,17 @@
                              @confirm="deleteTheme(themeIndex)"
               >
                 <p>
-                  <span v-if="body[themeIndex].questions.length === 1">
+                  <span v-if="themes[themeIndex].questions.length === 1">
                     La question associée à ce thème sera également supprimée.
                   </span>
                   <span v-else>
-                    Les {{ body[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
+                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
                   </span>
                 </p>
               </confirm-modal>
             </div>
 
-            <div v-for="(question, qIndex) in body[themeIndex].questions"
+            <div v-for="(question, qIndex) in themes[themeIndex].questions"
                  class="card border-0 m-0 pt-2"
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
@@ -90,7 +90,7 @@
                           placeholder="Ecrivez une question ici"
                           rows="4"
                           v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
-                          v-model="body[themeIndex].questions[qIndex].description"
+                          v-model="themes[themeIndex].questions[qIndex].description"
                           oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
                           oninput="this.setCustomValidity('')"
                           required>
@@ -152,6 +152,7 @@ import Vue from 'vue'
 import ConfirmModal from '../utils/ConfirmModal'
 import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
+import { mapFields } from 'vuex-map-fields'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
 import Wizard from '../utils/Wizard'
@@ -171,6 +172,11 @@ export default Vue.extend({
       ],
       errors: [],
     }
+  },
+  computed: {
+    ...mapFields([
+      'currentQuestionnaire.themes',
+    ]),
   },
   components: {
     ConfirmModal,
@@ -215,17 +221,17 @@ export default Vue.extend({
     },
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
-      this.body[themeIndex].questions.push({ description: '' })
+      this.themes[themeIndex].questions.push({ description: '' })
     },
     addTheme: function() {
       console.debug('addTheme')
-      this.body.push({ title: '', questions: [{ description: '' }] })
+      this.themes.push({ title: '', questions: [{ description: '' }] })
     },
     deleteQuestion: function(themeIndex, qIndex) {
-      this.body[themeIndex].questions.splice(qIndex, 1)
+      this.themes[themeIndex].questions.splice(qIndex, 1)
     },
     deleteTheme: function(themeIndex) {
-      this.body.splice(themeIndex, 1)
+      this.themes.splice(themeIndex, 1)
     },
     saveDraft(event) {
       console.debug('save draft', event)
