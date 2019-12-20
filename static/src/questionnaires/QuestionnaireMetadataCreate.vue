@@ -72,76 +72,77 @@
 </template>
 
 <script>
-  import Vue from "vue"
-  import Datepicker from 'vuejs-datepicker'
-  import Wizard from "../utils/Wizard"
-  import fr from "../utils/vuejs-datepicker-locale-fr"
-  import reportValidity from 'report-validity'
+import Vue from 'vue'
+import Datepicker from 'vuejs-datepicker'
+import Wizard from '../utils/Wizard'
+import fr from '../utils/vuejs-datepicker-locale-fr'
+import reportValidity from 'report-validity'
 
-  const DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
+// eslint-disable-next-line no-multi-str
+const DESCRIPTION_DEFAULT = 'À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
 sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
 parvenir au fur et à mesure votre réponse. \
 \nJe reste à votre disposition ainsi qu’à celle de vos \
-services pour toute information complémentaire qu’appellerait ce questionnaire."
+services pour toute information complémentaire qu’appellerait ce questionnaire.'
 
-  const QuestionnaireMetadataCreate = Vue.extend({
-    props: {
-      questionnaireNumbering: Number,
-    },
-    data() {
-      return {
-        metadata: {
-          description: '',
-          end_date: '',
-          title: '',
-        },
-        errors: [],
-        fr: fr, // locale for datepicker
+const QuestionnaireMetadataCreate = Vue.extend({
+  props: {
+    questionnaireNumbering: Number,
+  },
+  data() {
+    return {
+      metadata: {
+        description: '',
+        end_date: '',
+        title: '',
+      },
+      errors: [],
+      fr: fr, // locale for datepicker
+    }
+  },
+  mounted() {
+    const loadMetadata = function(data) {
+      // Use Vue's $set to make the properties reactive.
+      for (const key of Object.keys(this.metadata)) {
+        console.debug('key', key)
+        this.$set(this.metadata, key, data[key])
       }
-    },
-    mounted() {
-      let loadMetadata = function(data) {
-        // Use Vue's $set to make the properties reactive.
-        for (const key of Object.keys(this.metadata)) {
-          console.debug('key', key)
-          this.$set(this.metadata, key, data[key])
-        }
-      }.bind(this)
+    }.bind(this)
 
-      this.$parent.$on('questionnaire-updated', function(data) {
-        console.debug('new metadata', data)
-        loadMetadata(data)
-      })
+    this.$parent.$on('questionnaire-updated', function(data) {
+      console.debug('new metadata', data)
+      loadMetadata(data)
+    })
+  },
+  methods: {
+    validateForm: function() {
+      const form = this.$refs.form
+      return reportValidity(form)
     },
-    methods: {
-      validateForm: function() {
-        let form = this.$refs.form
-        return reportValidity(form)
-      },
-      createMetadata: function () {
-        console.debug('metadata created', this.metadata)
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('metadata-created', this.metadata)
-      },
-      saveDraft(event) {
-        console.debug('save draft', event)
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('save-draft', this.metadata)
-      },
+    createMetadata: function () {
+      console.debug('metadata created', this.metadata)
+      if (!this.validateForm()) {
+        return
+      }
+      this.$emit('metadata-created', this.metadata)
     },
-    components: {
-      Datepicker,
-      Wizard,
+    saveDraft(event) {
+      console.debug('save draft', event)
+      if (!this.validateForm()) {
+        return
+      }
+      this.$emit('save-draft', this.metadata)
     },
-  })
+  },
+  components: {
+    Datepicker,
+    Wizard,
+  },
+})
 
-  QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT = DESCRIPTION_DEFAULT
-  export default QuestionnaireMetadataCreate
+QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT = DESCRIPTION_DEFAULT
+export default QuestionnaireMetadataCreate
 
 </script>
 
