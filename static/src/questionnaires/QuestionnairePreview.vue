@@ -63,18 +63,6 @@ export default Vue.extend({
     ]),
   },
   mounted() {
-    const updateQuestionnaire = function (data) {
-      // Use Vue's $set to make the properties reactive.
-      for (const [key, value] of Object.entries(data)) {
-        this.$set(this.questionnaire, key, value)
-      }
-    }.bind(this)
-
-    this.$parent.$on('questionnaire-updated', data => {
-      console.debug('new questionnaire', data)
-      updateQuestionnaire(data)
-    })
-
     this.$parent.$on('publish-questionnaire-error', error => {
       console.debug('got publish-questionnaire-error', error)
       this.showPublishConfirmModal()
