@@ -11,7 +11,7 @@
         <div class="card-title">Etape 3 : Aperçu avant publication</div>
       </div>
       <div class="card-body pb-6">
-        <questionnaire-detail-for-preview v-bind:questionnaire="questionnaire">
+        <questionnaire-detail-for-preview v-bind:questionnaire="currentQuestionnaire">
         </questionnaire-detail-for-preview>
         <div class="text-right">
           <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
@@ -45,6 +45,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapFields } from 'vuex-map-fields'
 import PublishConfirmModal from './PublishConfirmModal'
 import QuestionnaireDetailForPreview from './QuestionnaireDetailForPreview'
 import Wizard from '../utils/Wizard'
@@ -55,6 +56,11 @@ export default Vue.extend({
       questionnaire: {},
       publishError: undefined,
     }
+  },
+  computed: {
+    ...mapFields([
+      'currentQuestionnaire',
+    ]),
   },
   mounted() {
     const updateQuestionnaire = function (data) {
