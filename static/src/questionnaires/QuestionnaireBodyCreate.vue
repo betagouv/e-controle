@@ -162,14 +162,6 @@ import reportValidity from 'report-validity'
 export default Vue.extend({
   data() {
     return {
-      body: [
-        {
-          title: '',
-          questions: [
-            { description: '' },
-          ],
-        },
-      ],
       errors: [],
     }
   },
@@ -186,22 +178,8 @@ export default Vue.extend({
     Wizard,
   },
   mounted() {
-    const loadBody = function (data) {
-      console.debug('QuestionnaireBodyCreate loadBody', data)
-      // Empty old themes
-      this.body = []
-      // Replace with new themes
-      if (!data.themes) {
-        return
-      }
-      data.themes.forEach(theme => {
-        console.debug('theme', theme)
-        this.body.push(theme)
-      })
-    }.bind(this)
-
+    // Todo do we still need this? Can we avoid event? Can we use store loadStatus instead?
     this.$parent.$on('questionnaire-updated', function(data) {
-      loadBody(data)
       EventBus.$emit('question-files-changed')
     })
   },
@@ -210,14 +188,14 @@ export default Vue.extend({
       if (!this.validateForm()) {
         return
       }
-      this.$emit('back', clickedStep, this.body)
+      this.$emit('back', clickedStep)
     },
     createBody: function() {
       if (!this.validateForm()) {
         return
       }
-      console.debug('QuestionnaireBodyCreate createBody', this.body)
-      this.$emit('body-created', this.body)
+      console.debug('QuestionnaireBodyCreate createBody')
+      this.$emit('body-created')
     },
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
@@ -238,7 +216,7 @@ export default Vue.extend({
       if (!this.validateForm()) {
         return
       }
-      this.$emit('save-draft', this.body)
+      this.$emit('save-draft')
     },
     validateForm: function() {
       const form = this.$refs.form
