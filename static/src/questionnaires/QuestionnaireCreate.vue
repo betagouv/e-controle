@@ -96,6 +96,7 @@ import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
+import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
@@ -136,8 +137,30 @@ export default Vue.extend({
   computed: {
     ...mapFields([
       'controls',
+      'controlsLoadStatus',
       'currentQuestionnaire',
     ]),
+  },
+  watch: {
+    controlsLoadStatus(newValue, oldValue) {
+      if (newValue === loadStatuses.SUCCESS) {
+        if (typeof this.controlId !== 'undefined') {
+          const newQuestionnaire = {
+            control: this.controlId,
+            description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
+          }
+          console.debug('currentQuestionnaire is new', newQuestionnaire)
+          this.currentQuestionnaire = newQuestionnaire
+          return
+        }
+        const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
+        // Todo : what if no questionnaire?
+        // Todo : What if not a draft?
+        console.debug('currentQuestionnaire', currentQuestionnaire)
+        this.currentQuestionnaire = currentQuestionnaire
+      }
+      // todo do something on loadStatuses.ERROR
+    },
   },
   components: {
     EmptyModal,
@@ -191,23 +214,15 @@ export default Vue.extend({
           this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
         })
     },
-    // todo : run this when control load status is ready. Watch the value.
-    setCurrentQuestionnaire: function(controls, questionnaireId) {
-      const findCurrentQuestionnaire = (controls, questionnaireId) => {
-        for (let i = 0; i < controls.length; i++) {
-          const control = controls[i]
-          const foundQuestionnaires =
-            control.questionnaires.filter(questionnaire => questionnaire.id === questionnaireId)
-          if (foundQuestionnaires.length > 0) {
-            return foundQuestionnaires[0]
-          }
+    findCurrentQuestionnaire: function(controls, questionnaireId) {
+      for (let i = 0; i < controls.length; i++) {
+        const control = controls[i]
+        const foundQuestionnaires =
+          control.questionnaires.filter(questionnaire => questionnaire.id === questionnaireId)
+        if (foundQuestionnaires.length > 0) {
+          return foundQuestionnaires[0]
         }
       }
-      // Todo what if no questionnaire?
-      // Todo : What if not a draft?
-      const currentQuestionnaire = findCurrentQuestionnaire(controls, questionnaireId)
-      console.debug('currentQuestionnaire', currentQuestionnaire)
-      this.currentQuestionnaire = currentQuestionnaire
     },
     emitQuestionnaireUpdated: function() {
       this.$emit('questionnaire-updated', this.questionnaire)
