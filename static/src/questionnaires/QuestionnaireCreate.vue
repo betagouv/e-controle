@@ -4,12 +4,12 @@
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
-        <span v-if="questionnaire.is_draft || questionnaire.id === undefined"
+        <span v-if="currentQuestionnaire.is_draft || currentQuestionnaire.id === undefined"
               class="tag tag-azure big-tag round-tag font-italic mr-2">
           Brouillon
         </span>
         <span>Rédaction du Questionnaire n°{{ questionnaireNumbering }}</span>
-        <span v-if="questionnaire.title" class="ml-1"> - {{ questionnaire.title }}</span>
+        <span v-if="currentQuestionnaire.title" class="ml-1"> - {{ currentQuestionnaire.title }}</span>
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
@@ -129,7 +129,6 @@ export default Vue.extend({
       errors: [],
       hasErrors: false,
       STATES: STATES,
-      questionnaire: {},
       state: '',
       message: '',
     }
@@ -151,6 +150,8 @@ export default Vue.extend({
           }
           console.debug('currentQuestionnaire is new', newQuestionnaire)
           this.currentQuestionnaire = newQuestionnaire
+          this.emitQuestionnaireUpdated()
+          this.moveToState(STATES.START)
           return
         }
         const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
@@ -158,6 +159,8 @@ export default Vue.extend({
         // Todo : What if not a draft?
         console.debug('currentQuestionnaire', currentQuestionnaire)
         this.currentQuestionnaire = currentQuestionnaire
+        this.emitQuestionnaireUpdated()
+        this.moveToState(STATES.START)
       }
       // todo do something on loadStatuses.ERROR
     },
@@ -179,41 +182,8 @@ export default Vue.extend({
     EventBus.$on('display-error', (errorMessage) => {
       this.displayErrors(errorMessage)
     })
-
-    if (typeof this.controlId !== 'undefined') {
-      this._loadQuestionnaireCreate()
-      return
-    }
-
-    this._loadQuestionnaireUpdate()
   },
   methods: {
-    _loadQuestionnaireCreate: function() {
-      this.questionnaire.control = this.controlId
-      this.questionnaire.description = QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT
-      this.emitQuestionnaireUpdated()
-      console.debug('loaded new questionnaire', this.questionnaire)
-      this.moveToState(STATES.START)
-    },
-    _loadQuestionnaireUpdate: function() {
-      console.debug('Fetching draft questionnaire...')
-      axios.get(backend.questionnaire(this.questionnaireId))
-        .then(response => {
-          console.debug('Got draft : ', response.data)
-          if (response.data.is_draft !== undefined && !response.data.is_draft) {
-            const errorMessage = 'Le questionnaire ' + response.data.id +
-                ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
-            this.displayErrors(errorMessage)
-            return
-          }
-          this.questionnaire = response.data
-          this.emitQuestionnaireUpdated()
-          this.moveToState(STATES.START)
-        }).catch(error => {
-          const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
-          this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
-        })
-    },
     findCurrentQuestionnaire: function(controls, questionnaireId) {
       for (let i = 0; i < controls.length; i++) {
         const control = controls[i]
@@ -231,40 +201,20 @@ export default Vue.extend({
       this.clearErrors()
       this.state = newState
     },
-    onBodyCreated: function(body) {
-      console.debug('QuestionnaireCreate got body', body)
-      this._updateBody(body)
+    onBodyCreated: function() {
       this.saveDraft()
       this.moveToState(STATES.PREVIEW)
     },
-    onMetadataCreated: function(metadata) {
-      console.debug('got metadata', metadata)
-      this._updateMetadata(metadata)
+    onMetadataCreated: function() {
       this.saveDraft()
       this.moveToState(STATES.CREATING_BODY)
     },
-    _updateBody(body) {
-      this.questionnaire.themes = body
-    },
-    _updateMetadata: function(metadata) {
-      for (const [key, value] of Object.entries(metadata)) {
-        this.questionnaire[key] = value
-      }
-    },
     _updateQuestionnaire: function(questionnaire) {
-      this.questionnaire.id = questionnaire.id
-      const metadata = {
-        description: questionnaire.description,
-        end_date: questionnaire.end_date,
-        title: questionnaire.title,
-      }
-      this._updateMetadata(metadata)
-      this._updateBody(questionnaire.themes)
+      this.currentQuestionnaire = questionnaire // todo will this update or not?
     },
-    back: function(clickedStep, data) {
-      console.debug('back', clickedStep, data)
+    back: function(clickedStep) {
+      console.debug('back', clickedStep)
       if (this.state === STATES.CREATING_BODY) {
-        this._updateBody(data)
         this.saveDraft()
         this.moveToState(STATES.START)
         return
@@ -301,10 +251,10 @@ export default Vue.extend({
     },
     _doSave() {
       const cleanPreSave = () => {
-        if (this.questionnaire.end_date) {
-          this.questionnaire.end_date = moment(String(this.questionnaire.end_date)).format('YYYY-MM-DD')
+        if (this.currentQuestionnaire.end_date) {
+          this.currentQuestionnaire.end_date = moment(String(this.currentQuestionnaire.end_date)).format('YYYY-MM-DD')
         } else {
-          delete this.questionnaire.end_date // remove empty strings, it throws date format error.
+          delete this.currentQuestionnaire.end_date // remove empty strings, it throws date format error.
         }
       }
       const getCreateMethod = () => axios.post.bind(this, backend.questionnaire())
@@ -315,23 +265,21 @@ export default Vue.extend({
       cleanPreSave()
 
       let saveMethod
-      if (this.questionnaire.id !== undefined) {
-        saveMethod = getUpdateMethod(this.questionnaire.id)
+      if (this.currentQuestionnaire.id !== undefined) {
+        saveMethod = getUpdateMethod(this.currentQuestionnaire.id)
       } else {
         saveMethod = getCreateMethod()
       }
-      return saveMethod(this.questionnaire)
+      return saveMethod(this.currentQuestionnaire)
     },
-    saveDraftFromMetadata(data) {
-      this._updateMetadata(data)
+    saveDraftFromMetadata() {
       this.saveDraft()
     },
-    saveDraftFromBody(data) {
-      this._updateBody(data)
+    saveDraftFromBody() {
       this.saveDraft()
     },
     saveDraft() {
-      this.questionnaire.is_draft = true
+      this.currentQuestionnaire.is_draft = true
       this._doSave()
         .then((response) => {
           this._updateQuestionnaire(response.data)
