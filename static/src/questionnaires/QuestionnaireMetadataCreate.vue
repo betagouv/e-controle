@@ -70,69 +70,6 @@
 
       </div>
     </div>
-
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Etape 1 : Renseigner l'introduction</div>
-      </div>
-      <div class="card-body pb-6">
-        <form @submit.prevent="createMetadata" ref="form">
-          <div class="form-group">
-            <label class="form-label" id="questionnaireTitle">
-              Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
-              <span class="form-required">*</span>
-            </label>
-            <span class="text-muted" id="questionnaireTitleHelp">
-              Exemple :
-              <strong>"Présentation générale"</strong>
-              ou
-              <strong>"Suite à la réunion du 7 Mars 2019"</strong>. 255 caractères maximum.
-            </span>
-            <input type="text"
-                   aria-labelledby="questionnaireTitle"
-                   aria-describedby="questionnaireTitleHelp"
-                   class="form-control"
-                   v-model="metadata.title"
-                   maxlength="255"
-                   required>
-          </div>
-          <div class="form-group">
-            <label class="form-label" id="questionnaireDescription">
-              Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
-            </label>
-            <textarea class="form-control"
-                      aria-labelledby="questionnaireDescription"
-                      placeholder="Si nécessaire, décrivez votre questionnaire ici"
-                      rows="6"
-                      v-bind:class="{ 'state-invalid': errors.description }"
-                      v-model="metadata.description">
-            </textarea>
-            <p class="text-muted pl-2" v-if="errors.description">
-              <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
-            </p>
-          </div>
-          <div class="form-group">
-            <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
-            <datepicker class="blue"
-                        aria-labelledby="questionnaireEndDate"
-                        v-model="metadata.end_date"
-                        :language="fr"
-                        :monday-first="true">
-            </datepicker>
-          </div>
-          <div class="text-right">
-            <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-              <i class="fe fe-save"></i>
-              Enregistrer le brouillon
-            </button>
-            <button type="submit" class="btn btn-secondary">
-              Suivant >
-            </button>
-          </div>
-        </form>
-
-      </div>
-    </div>
   </div>
 </template>
 
@@ -158,11 +95,6 @@ const QuestionnaireMetadataCreate = Vue.extend({
   },
   data() {
     return {
-      metadata: {
-        description: '',
-        end_date: '',
-        title: '',
-      },
       errors: [],
       fr: fr, // locale for datepicker
     }
@@ -174,38 +106,24 @@ const QuestionnaireMetadataCreate = Vue.extend({
       'currentQuestionnaire.title',
     ]),
   },
-  mounted() {
-    const loadMetadata = function(data) {
-      // Use Vue's $set to make the properties reactive.
-      for (const key of Object.keys(this.metadata)) {
-        console.debug('key', key)
-        this.$set(this.metadata, key, data[key])
-      }
-    }.bind(this)
-
-    this.$parent.$on('questionnaire-updated', function(data) {
-      console.debug('new metadata', data)
-      loadMetadata(data)
-    })
-  },
   methods: {
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)
     },
     createMetadata: function () {
-      console.debug('metadata created', this.metadata)
+      console.debug('metadata created')
       if (!this.validateForm()) {
         return
       }
-      this.$emit('metadata-created', this.metadata)
+      this.$emit('metadata-created')
     },
     saveDraft(event) {
       console.debug('save draft', event)
       if (!this.validateForm()) {
         return
       }
-      this.$emit('save-draft', this.metadata)
+      this.$emit('save-draft')
     },
   },
   components: {
