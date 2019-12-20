@@ -17,7 +17,11 @@ export const store = new Vuex.Store({
     config: {},
     controls: [],
     controlsLoadStatus: loadStatuses.LOADING,
-    currentQuestionnaire: {},
+    currentQuestionnaire: {
+      description: '',
+      end_date: '',
+      title: '',
+    },
     editingControl: {},
     editingUser: {},
     editingProfileType: '',

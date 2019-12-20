@@ -1,10 +1,75 @@
 <template>
   <div>
-    <div>{{ newMetadata }}</div>
+    <div>{{ title }}</div>
+    <div>{{ description }}</div>
+    <div>{{ end_date }}</div>
     <wizard :active-step-number="1"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="createMetadata">
     </wizard>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Etape 1 : Renseigner l'introduction</div>
+      </div>
+      <div class="card-body pb-6">
+        <form @submit.prevent="createMetadata" ref="form">
+          <div class="form-group">
+            <label class="form-label" id="questionnaireTitle">
+              Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
+              <span class="form-required">*</span>
+            </label>
+            <span class="text-muted" id="questionnaireTitleHelp">
+              Exemple :
+              <strong>"Présentation générale"</strong>
+              ou
+              <strong>"Suite à la réunion du 7 Mars 2019"</strong>. 255 caractères maximum.
+            </span>
+            <input type="text"
+                   aria-labelledby="questionnaireTitle"
+                   aria-describedby="questionnaireTitleHelp"
+                   class="form-control"
+                   v-model="title"
+                   maxlength="255"
+                   required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="questionnaireDescription">
+              Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
+            </label>
+            <textarea class="form-control"
+                      aria-labelledby="questionnaireDescription"
+                      placeholder="Si nécessaire, décrivez votre questionnaire ici"
+                      rows="6"
+                      v-bind:class="{ 'state-invalid': errors.description }"
+                      v-model="description">
+            </textarea>
+            <p class="text-muted pl-2" v-if="errors.description">
+              <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
+            </p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
+            <datepicker class="blue"
+                        aria-labelledby="questionnaireEndDate"
+                        v-model="end_date"
+                        :language="fr"
+                        :monday-first="true">
+            </datepicker>
+          </div>
+          <div class="text-right">
+            <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
+              <i class="fe fe-save"></i>
+              Enregistrer le brouillon
+            </button>
+            <button type="submit" class="btn btn-secondary">
+              Suivant >
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
 
     <div class="card">
       <div class="card-header">
@@ -104,15 +169,10 @@ const QuestionnaireMetadataCreate = Vue.extend({
   },
   computed: {
     ...mapFields([
-      'currentQuestionnaire',
+      'currentQuestionnaire.description',
+      'currentQuestionnaire.end_date',
+      'currentQuestionnaire.title',
     ]),
-    newMetadata: function() {
-      return {
-        description: this.currentQuestionnaire.description,
-        end_date: this.currentQuestionnaire.end_date,
-        title: this.currentQuestionnaire.title,
-      }
-    },
   },
   mounted() {
     const loadMetadata = function(data) {
