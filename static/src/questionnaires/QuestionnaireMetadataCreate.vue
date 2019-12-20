@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <div>{{ newMetadata }}</div>
     <wizard :active-step-number="1"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="createMetadata">
@@ -74,6 +74,7 @@
 <script>
 import Vue from 'vue'
 import Datepicker from 'vuejs-datepicker'
+import { mapFields } from 'vuex-map-fields'
 import Wizard from '../utils/Wizard'
 import fr from '../utils/vuejs-datepicker-locale-fr'
 import reportValidity from 'report-validity'
@@ -100,6 +101,18 @@ const QuestionnaireMetadataCreate = Vue.extend({
       errors: [],
       fr: fr, // locale for datepicker
     }
+  },
+  computed: {
+    ...mapFields([
+      'currentQuestionnaire',
+    ]),
+    newMetadata: function() {
+      return {
+        description: this.currentQuestionnaire.description,
+        end_date: this.currentQuestionnaire.end_date,
+        title: this.currentQuestionnaire.title,
+      }
+    },
   },
   mounted() {
     const loadMetadata = function(data) {
