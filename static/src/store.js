@@ -21,7 +21,7 @@ export const store = new Vuex.Store({
     editingUser: {},
     editingProfileType: '',
     sessionUser: {},
-    loadStatus: loadStatuses.LOADING,
+    sessionUserLoadStatus: loadStatuses.LOADING,
   },
   getters: {
     getField,
@@ -31,8 +31,8 @@ export const store = new Vuex.Store({
     updateSessionUser(state, user) {
       state.sessionUser = user
     },
-    updateLoadStatus(state, newStatus) {
-      state.loadStatus = newStatus
+    updateSessionUserLoadStatus(state, newStatus) {
+      state.sessionUserLoadStatus = newStatus
     },
     updateConfig(state, config) {
       state.config = config
@@ -51,10 +51,10 @@ export const store = new Vuex.Store({
       axios.get(backendUrls.currentUser()).then((response) => {
         console.debug('Store got current user', response.data)
         commit('updateSessionUser', response.data)
-        commit('updateLoadStatus', loadStatuses.SUCCESS)
+        commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
       }).catch(err => {
         console.error('Store got error fetching current user', err)
-        commit('updateLoadStatus', loadStatuses.ERROR)
+        commit('updateSessionUserLoadStatus', loadStatuses.ERROR)
       })
     },
     fetchControls({ commit }) {
