@@ -16,6 +16,7 @@ export const store = new Vuex.Store({
   state: {
     config: {},
     controls: [],
+    controlsLoadStatus: loadStatuses.LOADING,
     currentQuestionnaire: {},
     editingControl: {},
     editingUser: {},
@@ -40,6 +41,9 @@ export const store = new Vuex.Store({
     updateControls(state, controls) {
       state.controls = controls
     },
+    updateControlsLoadStatus(state, newStatus) {
+      state.controlsLoadStatus = newStatus
+    },
   },
   actions: {
     loadConfig({ commit }) {
@@ -61,10 +65,10 @@ export const store = new Vuex.Store({
       axios.get(backendUrls.control()).then(response => {
         console.debug('Store got controls', response.data)
         commit('updateControls', response.data)
-        // todo update status
+        commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
       }).catch(err => {
         console.error('Store got esrror fetching controls', err)
-        // todo update status
+        commit('updateControlsLoadStatus', loadStatuses.ERROR)
       })
     },
   },
