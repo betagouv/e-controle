@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>{{ storeQuestionnaire }}</div>
+    <div>{{ currentQuestionnaire }}</div>
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
@@ -136,24 +136,8 @@ export default Vue.extend({
   computed: {
     ...mapFields([
       'controls',
+      'currentQuestionnaire',
     ]),
-    storeQuestionnaire: function() {
-      const findQuestionnaire = (controls, questionnaireId) => {
-        for (let i = 0; i < controls.length; i++) {
-          const control = controls[i]
-          const foundQuestionnaires =
-            control.questionnaires.filter(questionnaire => questionnaire.id === questionnaireId)
-          if (foundQuestionnaires.length > 0) {
-            return foundQuestionnaires[0]
-          }
-        }
-      }
-      const storeQuestionnaire = findQuestionnaire(this.controls, this.questionnaireId)
-      console.debug('questionnaire from store:', storeQuestionnaire)
-      // Todo what if no questionnaire?
-      // Todo : What if not a draft?
-      return storeQuestionnaire
-    },
   },
   components: {
     EmptyModal,
@@ -206,6 +190,24 @@ export default Vue.extend({
           const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
           this.displayErrors('Erreur lors du chargement du brouillon.', errorToDisplay)
         })
+    },
+    // todo : run this when control load status is ready. Watch the value.
+    setCurrentQuestionnaire: function(controls, questionnaireId) {
+      const findCurrentQuestionnaire = (controls, questionnaireId) => {
+        for (let i = 0; i < controls.length; i++) {
+          const control = controls[i]
+          const foundQuestionnaires =
+            control.questionnaires.filter(questionnaire => questionnaire.id === questionnaireId)
+          if (foundQuestionnaires.length > 0) {
+            return foundQuestionnaires[0]
+          }
+        }
+      }
+      // Todo what if no questionnaire?
+      // Todo : What if not a draft?
+      const currentQuestionnaire = findCurrentQuestionnaire(controls, questionnaireId)
+      console.debug('currentQuestionnaire', currentQuestionnaire)
+      this.currentQuestionnaire = currentQuestionnaire
     },
     emitQuestionnaireUpdated: function() {
       this.$emit('questionnaire-updated', this.questionnaire)

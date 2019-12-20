@@ -16,6 +16,7 @@ export const store = new Vuex.Store({
   state: {
     config: {},
     controls: [],
+    currentQuestionnaire: {},
     editingControl: {},
     editingUser: {},
     editingProfileType: '',
