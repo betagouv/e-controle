@@ -1,15 +1,14 @@
-import "@babel/polyfill"
+import '@babel/polyfill'
 import './utils/polyfills.js'
 
-import { mapActions } from 'vuex'
-import { store } from "./store"
+import Vuex, { mapActions } from 'vuex'
+import { store } from './store'
 import QuestionnaireCreate from './questionnaires/QuestionnaireCreate.vue'
 import Vue from 'vue/dist/vue.js'
-import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-
+// eslint-disable-next-line no-new
 new Vue({
   store,
   el: '#questionnaire-create-vm',
@@ -19,9 +18,10 @@ new Vue({
     QuestionnaireCreate,
   },
   methods: {
-    ...mapActions(['loadConfig']),
+    ...mapActions(['loadConfig', 'fetchControls']),
   },
   created() {
     this.loadConfig()
+    this.fetchControls()
   },
-});
+})

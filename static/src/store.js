@@ -15,6 +15,7 @@ export const loadStatuses = {
 export const store = new Vuex.Store({
   state: {
     config: {},
+    controls: [],
     editingControl: {},
     editingUser: {},
     editingProfileType: '',
@@ -35,6 +36,9 @@ export const store = new Vuex.Store({
     updateConfig(state, config) {
       state.config = config
     },
+    updateControls(state, controls) {
+      state.controls = controls
+    },
   },
   actions: {
     loadConfig({ commit }) {
@@ -44,12 +48,22 @@ export const store = new Vuex.Store({
     },
     fetchSessionUser({ commit }) {
       axios.get(backendUrls.currentUser()).then((response) => {
-        console.debug('Got current user', response.data)
+        console.debug('Store got current user', response.data)
         commit('updateSessionUser', response.data)
         commit('updateLoadStatus', loadStatuses.SUCCESS)
       }).catch(err => {
-        console.error('Error fetching current user', err)
+        console.error('Store got error fetching current user', err)
         commit('updateLoadStatus', loadStatuses.ERROR)
+      })
+    },
+    fetchControls({ commit }) {
+      axios.get(backendUrls.control()).then(response => {
+        console.debug('Store got controls', response.data)
+        commit('updateControls', response.data)
+        // todo update status
+      }).catch(err => {
+        console.error('Store got esrror fetching controls', err)
+        // todo update status
       })
     },
   },

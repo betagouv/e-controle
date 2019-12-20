@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>{{ storeQuestionnaire }}</div>
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
@@ -96,6 +97,7 @@ import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
 import moment from 'moment'
+import { mapFields } from 'vuex-map-fields'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
@@ -130,6 +132,28 @@ export default Vue.extend({
       state: '',
       message: '',
     }
+  },
+  computed: {
+    ...mapFields([
+      'controls',
+    ]),
+    storeQuestionnaire: function() {
+      const findQuestionnaire = (controls, questionnaireId) => {
+        for (let i = 0; i < controls.length; i++) {
+          const control = controls[i]
+          const foundQuestionnaires =
+            control.questionnaires.filter(questionnaire => questionnaire.id === questionnaireId)
+          if (foundQuestionnaires.length > 0) {
+            return foundQuestionnaires[0]
+          }
+        }
+      }
+      const storeQuestionnaire = findQuestionnaire(this.controls, this.questionnaireId)
+      console.debug('questionnaire from store:', storeQuestionnaire)
+      // Todo what if no questionnaire?
+      // Todo : What if not a draft?
+      return storeQuestionnaire
+    },
   },
   components: {
     EmptyModal,
