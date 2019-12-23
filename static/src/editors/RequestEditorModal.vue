@@ -5,7 +5,7 @@
           <div class="modal-header border-bottom-0">
             <i class="fa fa-exchange-alt mr-2 mt-3"></i>
             <div class="modal-title">
-            <h3 class="modal-title">Demander les droits de rédaction du questionnaire</h3>
+            <h3 class="modal-title">Obtenir les droits de rédaction du questionnaire</h3>
             </div>
             <button type="button"
                     class="close"
@@ -15,7 +15,7 @@
           </div>
 
           <div class="modal-body">
-            <div class="ml-6">
+            <div class="ml-2">
               Pour modifier ce questionnaire, votre collègue doit vous transférer les droits.
               <br/>Nous vous recommandons donc de contacter directement
               <strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong>

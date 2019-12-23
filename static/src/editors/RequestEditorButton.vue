@@ -10,11 +10,11 @@
       <div class="text-right">
         <button type="submit"
           class="btn btn-gray"
-          title="Demander les droits de rédaction..."
+          title="Obtenir les droits de rédaction..."
           data-toggle="modal"
           data-target="#requestEditorModal">
           <i class="fa fa-exchange-alt mr-1"></i>
-          <span>Demander les droits de rédaction...</span>
+          <span>Obtenir les droits de rédaction...</span>
         </button>
       </div>
     </div>
