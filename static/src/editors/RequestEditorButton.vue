@@ -5,7 +5,7 @@
         <i class="fe fe-users mr-1"></i>
         <span v-if="questionnaire.editor"><strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong></span>
         <span v-else>[INCONNU]</span>
-        est actuellement la seule personne qui peut modifier ce questionnaire
+        <span>est actuellement la seule personne qui peut modifier ce questionnaire</span>
       </div>
       <div class="text-right">
         <button type="submit"
@@ -14,7 +14,7 @@
           data-toggle="modal"
           data-target="#requestEditorModal">
           <i class="fa fa-exchange-alt mr-1"></i>
-          Demander les droits de rédaction...
+          <span>Demander les droits de rédaction...</span>
         </button>
       </div>
     </div>
