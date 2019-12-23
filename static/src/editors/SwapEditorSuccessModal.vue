@@ -15,7 +15,7 @@
       </p>
     </div>
     <div class="modal-footer border-top-0 d-flex justify-content-center">
-      <a  href="/accueil/" role="button" class="btn btn-primary">
+      <a  :href="homeUrl" role="button" class="btn btn-primary">
         < Revenir à l'accueil
       </a>
     </div>
@@ -25,9 +25,15 @@
 <script>
 import Vue from 'vue'
 import EmptyModal from '../utils/EmptyModal'
+import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
   props: [ 'questionnaire'],
+  data: function() {
+    return {
+      homeUrl: backendUrls.home(),
+    }
+  },
   components: {
     EmptyModal,
   },
