@@ -58,7 +58,7 @@
                 </help-tooltip>
                 <small>
                   {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
-                  <p class="text-muted">Le 30 novembre 2019 à 17h30</p>
+                  <div class="text-muted">Le 30 novembre 2019 à 17h30</div>
                 </small>
               </div>
             </td>
