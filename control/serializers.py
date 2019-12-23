@@ -62,7 +62,7 @@ class ControlDetailUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'id',)
+        fields = ('first_name', 'last_name', 'email', 'id',)
 
 
 class QuestionnaireSerializer(serializers.ModelSerializer):

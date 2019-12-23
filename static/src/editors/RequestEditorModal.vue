@@ -19,7 +19,7 @@
               Pour modifier ce questionnaire, votre collègue doit vous transférer les droits.
               <br/>Nous vous recommandons donc de contacter directement
               <strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong>
-              - <a href="mailto:demo@demo.com">utilisateur@demo.com</a>.
+              - <a :href="'mailto:' + questionnaire.editor.email">{{ questionnaire.editor.email }}</a>.
             </div>
 
             <div calss="card">
