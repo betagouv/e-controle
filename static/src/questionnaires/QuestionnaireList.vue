@@ -25,7 +25,6 @@
             <th>Date de réponse</th>
             <th v-if="user.is_inspector">
               Rédacteur
-              <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
             </th>
             <th></th>
           </tr>
