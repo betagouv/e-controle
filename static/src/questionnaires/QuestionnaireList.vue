@@ -75,23 +75,23 @@
               <template v-else>
                 <template v-if="questionnaire.is_draft">
                   <template v-if="!questionnaire.editor">
-                  <div class="flex-row justify-content-end">
-                  <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                     class="btn btn-primary"
-                     title="Modifier le brouillon de questionnaire"
-                     @click="becomeEditor(questionnaire.id)"
-                  >
-                    <i class="fe fe-edit"></i>
-                    Modifier
-                  </a>
-                  <a :href="questionnaire.url"
-                     class="btn btn-primary ml-2"
-                     title="Voir le brouillon de questionnaire"
-                  >
-                    <i class="fe fe-eye"></i>
-                    Consulter
-                  </a>
-                  <div>
+                    <div class="flex-row justify-content-end">
+                      <a :href="'/questionnaire/modifier/' + questionnaire.id "
+                        class="btn btn-primary"
+                        title="Modifier le brouillon de questionnaire"
+                        @click="becomeEditor(questionnaire.id)"
+                      >
+                        <i class="fe fe-edit"></i>
+                        Modifier
+                      </a>
+                      <a :href="questionnaire.url"
+                        class="btn btn-primary ml-2"
+                        title="Voir le brouillon de questionnaire"
+                      >
+                        <i class="fe fe-eye"></i>
+                        Consulter
+                      </a>
+                    <div>
                   </template>
                   <a v-else-if="user.id === questionnaire.editor.id"
                      :href="'/questionnaire/modifier/' + questionnaire.id "
@@ -105,6 +105,15 @@
                      :href="questionnaire.url"
                      class="btn btn-primary"
                      title="Voir le brouillon de questionnaire"
+                  >
+                    <i class="fe fe-eye"></i>
+                    Consulter
+                  </a>
+                </template>
+                <template v-else>
+                  <a :href="questionnaire.url"
+                     class="btn btn-primary"
+                     title="Voir le questionnaire"
                   >
                     <i class="fe fe-eye"></i>
                     Consulter
