@@ -52,7 +52,8 @@
             </td>
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
-                <help-tooltip text="Cette personne dispose des droits pour modifier ce questionnaire.
+                <help-tooltip v-if="questionnaire.editor.id != user.id"
+                              text="Cette personne dispose des droits pour modifier ce questionnaire.
                                     Vous pourrez modifier ce questionnaire en cliquant sur 'consulter',
                                     puis 'Obtenir les droits de rédaction'"
                               icon-class="fe fe-lock">
