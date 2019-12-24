@@ -60,7 +60,10 @@
                 </help-tooltip>
                 <small>
                   {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
-                  <div class="text-muted">Le 30 novembre 2019 à 17h30</div>
+                  <div v-if="questionnaire.modified_date" class="text-muted">
+                    {{ questionnaire.modified_date }} à
+                    {{  questionnaire.modified_time }}
+                  </div>
                 </small>
               </div>
             </td>

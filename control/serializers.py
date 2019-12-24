@@ -124,10 +124,13 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
 
 class ControlDetailQuestionnaireSerializer(serializers.ModelSerializer):
     editor = ControlDetailUserSerializer(read_only=True, required=False)
+    modified_date = DateTimeFieldWihTZ(source='modified', format='%a %d %B %Y')
+    modified_time = DateTimeFieldWihTZ(source='modified', format='%X')
 
     class Meta:
         model = Questionnaire
-        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'editor')
+        fields = ('id', 'title', 'numbering', 'url', 'is_draft', 'sent_date', 'end_date', 'editor',
+            'modified_date', 'modified_time')
 
 
 class ControlDetailControlSerializer(serializers.ModelSerializer):

@@ -154,6 +154,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     is_draft = models.BooleanField(
         verbose_name="brouillon", default=False,
         help_text="Ce questionnaire est-il encore au stade de brouillon?")
+    modified = models.DateTimeField('modifié', auto_now=True, null=True)
 
     class Meta:
         ordering = ('control', 'order')
