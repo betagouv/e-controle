@@ -28,7 +28,7 @@ import EmptyModal from '../utils/EmptyModal'
 import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
-  props: [ 'questionnaire'],
+  props: ['questionnaire'],
   data: function() {
     return {
       homeUrl: backendUrls.home(),

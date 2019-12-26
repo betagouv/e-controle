@@ -54,8 +54,8 @@ export default Vue.extend({
       this.callSwapEditorApi(user.id, this.questionnaireId)
       $('#swapEditorModal').modal('hide')
     },
-  }
-});
+  },
+})
 </script>
 
 <style></style>

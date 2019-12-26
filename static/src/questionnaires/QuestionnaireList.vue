@@ -52,7 +52,7 @@
             </td>
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
-                <help-tooltip v-if="questionnaire.editor.id != user.id"
+                <help-tooltip v-if="questionnaire.editor.id !== user.id"
                               text="Cette personne dispose des droits pour modifier ce questionnaire.
                                     Vous pourrez modifier ce questionnaire en cliquant sur 'consulter',
                                     puis 'Obtenir les droits de rédaction'"
@@ -106,7 +106,7 @@
                     <i class="fe fe-edit"></i>
                     Modifier
                   </a>
-                  <a v-else-if="user.id != questionnaire.editor"
+                  <a v-else-if="user.id !== questionnaire.editor"
                      :href="questionnaire.url"
                      class="btn btn-primary"
                      title="Voir le brouillon de questionnaire"

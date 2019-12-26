@@ -35,7 +35,7 @@
 
   export default Vue.extend({
     store,
-    data: () {
+    data: () => {
       return {
         postResult: {}
       }
@@ -47,8 +47,8 @@
     computed: {
       ...mapFields([
         'editingUser',
-        'editingControl'
-        'sessionUser'
+        'editingControl',
+        'sessionUser',
       ]),
     },
     methods: {

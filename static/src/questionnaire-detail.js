@@ -1,4 +1,4 @@
-import "@babel/polyfill"
+import '@babel/polyfill'
 import './utils/polyfills.js'
 
 import InfoBar from './utils/InfoBar'
@@ -26,5 +26,8 @@ let questionnaireDetailApp = new Vue({
   },
   methods: {
     ...mapActions(['fetchSessionUser']),
+  },
+  created() {
+    this.fetchSessionUser()
   },
 })
