@@ -64,8 +64,7 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
-import Vuex, { mapActions } from 'vuex'
-import { store } from '../store'
+import Vuex from 'vuex'
 import backendUrls from '../utils/backend.js'
 import EmptyModal from '../utils/EmptyModal'
 import Vue from 'vue'
@@ -73,18 +72,14 @@ import Vue from 'vue'
 Vue.use(Vuex)
 
 export default Vue.extend({
-  store,
   props: ['questionnaireId'],
   components: {
     EmptyModal,
   },
   computed: {
-    ...mapFields([
-      'sessionUser',
-    ]),
+    ...mapFields(['sessionUser']),
   },
   methods: {
-    ...mapActions(['fetchSessionUser']),
     callSwapEditorApi(editorUser, questionnaireId) {
       const url = '/api' + backendUrls['swap-editor'](questionnaireId)
       Vue.axios.put(url, {
@@ -97,9 +92,6 @@ export default Vue.extend({
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
       window.location.href = '/accueil'
     },
-  },
-  created() {
-    this.fetchSessionUser()
   },
 })
 </script>

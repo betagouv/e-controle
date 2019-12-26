@@ -8,8 +8,13 @@ import ResponseDropzone from './questions/ResponseDropzone'
 import ResponseFileList from './questions/ResponseFileList'
 import QuestionnaireDetailPage from './questionnaires/QuestionnaireDetailPage'
 import Vue from 'vue/dist/vue.js'
+import Vuex, { mapActions } from 'vuex'
+import { store } from './store'
 
-let question_app = new Vue({
+Vue.use(Vuex)
+
+let questionnaireDetailApp = new Vue({
+  store,
   el: '#questionnaire-detail-app',
   components: {
     InfoBar,
@@ -19,4 +24,7 @@ let question_app = new Vue({
     ResponseFileList,
     QuestionnaireDetailPage,
   },
-});
+  methods: {
+    ...mapActions(['fetchSessionUser']),
+  },
+})
