@@ -73,13 +73,16 @@
 </template>
 
 <script>
+import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import EditorList from './EditorList'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
+import Vuex from 'vuex'
 
 Vue.use(VueAxios, axios)
+Vue.use(Vuex)
 
 export default Vue.extend({
   props: [
@@ -90,6 +93,9 @@ export default Vue.extend({
     return {
       users: [],
     }
+  },
+  computed: {
+    ...mapFields(['sessionUser']),
   },
   methods: {
     getUsers() {
@@ -103,7 +109,7 @@ export default Vue.extend({
     },
     inspectorUsers() {
       return this.users.filter(item => {
-        return item.profile_type === 'inspector'
+        return item.profile_type === 'inspector' & item.id !== this.sessionUser.id
       })
     },
     callSwapEditorApi(editorUser, questionnaireId) {
@@ -124,7 +130,7 @@ export default Vue.extend({
   },
   mounted() {
     this.getUsers()
-},
+  },
 })
 </script>
 <style scoped>
