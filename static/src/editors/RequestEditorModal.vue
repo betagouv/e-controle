@@ -56,12 +56,10 @@
 </template>
 
 <script>
-import { store } from '../store'
 import backendUrls from '../utils/backend.js'
 import Vue from 'vue'
 
 export default Vue.extend({
-  store,
   props: ['questionnaire'],
   methods: {
     callSwapEditorApi(editorUser, questionnaireId) {
