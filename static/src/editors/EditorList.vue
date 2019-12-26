@@ -29,10 +29,7 @@
 
 <script>
 import Vue from 'vue'
-import Vuex from 'vuex'
 import backendUrls from '../utils/backend.js'
-
-Vue.use(Vuex);
 
 export default Vue.extend({
   data: () => {
