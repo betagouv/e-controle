@@ -30,12 +30,14 @@
                   <br />
                   <strong>Attention, dans ce cas toute modification non enregistrée par votre collègue sera perdue.
                 </div>
-                <button type="submit"
-                  class="btn btn-primary"
-                  title="Contacter le support e-contrôle">
+                <a role="button"
+                    type="submit"
+                    :href="'mailto:' + config.support_team_email"
+                    class="btn btn-primary"
+                    title="Contacter le support e.contrôle">
                   <i class="fe fe-mail mr-1"></i>
                   Contacter le support e.contrôle
-                </button>
+                </a>
                 <button type="submit"
                   class="btn btn-secondary ml-2"
                   title="Forcer le transfert des droits"
@@ -56,11 +58,18 @@
 </template>
 
 <script>
+import { mapFields } from 'vuex-map-fields'
 import backendUrls from '../utils/backend.js'
 import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
 
 export default Vue.extend({
   props: ['questionnaire'],
+  computed: {
+    ...mapFields(['config']),
+  },
   methods: {
     callSwapEditorApi(editorUser, questionnaireId) {
       const url = '/api' + backendUrls['swap-editor'](questionnaireId)
