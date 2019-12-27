@@ -16,19 +16,10 @@
 
           <div class="modal-body">
             <p class="ml-6">
-              Vous pouvez permettre à vos collègues de modiffier à leur tour le questionnaire.
-              <br/>Pour pouvoir le modifier, un de vos collègues devra à son tour vous transférer les droits.
-              </p>
+              <strong>À qui souhaitez-vous transférer les droits de rédaction de ce questionnaire ?</strong>
+            </p>
 
             <div class="card-body">
-              <div class="card">
-                <div class="card-header justify-content-between">
-                  <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
-                </div>
-
-                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
-              </div>
-
               <div class="card">
                 <div class="card-body">
                   <div class="flex-row align-items-center">
@@ -52,19 +43,14 @@
               </div>
 
               <div class="card">
-                  <div class="card-body alert alert-info" role="alert">
-                    <div class="mb-4">
-                    <h4><i class="fe fe-help-circle mr-1"></i>Un problème, une question ?</h4>
-                    Nous sommes là pour vous aider. N'hésitez pas à prendre contact avec l'équipe e.contrôle !
-                    </div>
-                    <button type="submit"
-                      class="btn btn-primary"
-                      title="Contacter le support e-contrôle">
-                      <i class="fe fe-mail mr-1"></i>
-                      Contacter le support e.contrôle
-                    </button>
-                  </div>
+                <div class="card-header justify-content-between">
+                  <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
+                </div>
+
+                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
               </div>
+
+              <contact-support></contact-support>
 
           </div>
         </div>
@@ -76,6 +62,7 @@
 import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backendUrls from '../utils/backend.js'
+import ContactSupport from '../utils/ContactSupport'
 import EditorList from './EditorList'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
@@ -126,6 +113,7 @@ export default Vue.extend({
     },
   },
   components: {
+    ContactSupport,
     EditorList,
   },
   mounted() {
