@@ -1,5 +1,9 @@
 <template>
   <div>
+    <swap-editor-button :control-id='controlId'
+                        :questionnaire-id='questionnaireId'>
+    </swap-editor-button>
+
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
@@ -14,9 +18,7 @@
     <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
       {{ errorMessage }}
     </div>
-    <info-bar>
-      Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
-    </info-bar>
+
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
             ref="createMetadataChild"
@@ -99,6 +101,7 @@ import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
+import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
 
 // State machine
@@ -133,10 +136,10 @@ export default Vue.extend({
   },
   components: {
     EmptyModal,
-    InfoBar,
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
+    SwapEditorButton,
   },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)

@@ -25,7 +25,6 @@
             <th>Date de réponse</th>
             <th v-if="user.is_inspector">
               Rédacteur
-              <help-tooltip text="Seule la personne affectée à la rédaction du questionnaire peut le modifier."></help-tooltip>
             </th>
             <th></th>
           </tr>
@@ -53,8 +52,18 @@
             </td>
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
+                <help-tooltip v-if="questionnaire.editor.id !== user.id"
+                              text="Cette personne dispose des droits pour modifier ce questionnaire.
+                                    Vous pourrez modifier ce questionnaire en cliquant sur 'consulter',
+                                    puis 'Obtenir les droits de rédaction'"
+                              icon-class="fe fe-lock">
+                </help-tooltip>
                 <small>
                   {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}
+                  <div v-if="questionnaire.modified_date" class="text-muted">
+                    {{ questionnaire.modified_date }} à
+                    {{  questionnaire.modified_time }}
+                  </div>
                 </small>
               </div>
             </td>
@@ -70,7 +79,26 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft">
-                  <a v-if="questionnaire.editor && (user.id === questionnaire.editor.id)"
+                  <template v-if="!questionnaire.editor">
+                    <div class="flex-row justify-content-end">
+                      <a :href="'/questionnaire/modifier/' + questionnaire.id "
+                        class="btn btn-primary"
+                        title="Modifier le brouillon de questionnaire"
+                        @click="becomeEditor(questionnaire.id)"
+                      >
+                        <i class="fe fe-edit"></i>
+                        Modifier
+                      </a>
+                      <a :href="questionnaire.url"
+                        class="btn btn-primary ml-2"
+                        title="Voir le brouillon de questionnaire"
+                      >
+                        <i class="fe fe-eye"></i>
+                        Consulter
+                      </a>
+                    <div>
+                  </template>
+                  <a v-else-if="user.id === questionnaire.editor.id"
                      :href="'/questionnaire/modifier/' + questionnaire.id "
                      class="btn btn-primary"
                      title="Modifier le brouillon de questionnaire"
@@ -78,7 +106,7 @@
                     <i class="fe fe-edit"></i>
                     Modifier
                   </a>
-                  <a v-else
+                  <a v-else-if="user.id !== questionnaire.editor"
                      :href="questionnaire.url"
                      class="btn btn-primary"
                      title="Voir le brouillon de questionnaire"
@@ -90,13 +118,12 @@
                 <template v-else>
                   <a :href="questionnaire.url"
                      class="btn btn-primary"
-                     title="Consulter les réponses sur E-contrôle"
+                     title="Voir le questionnaire"
                   >
                     <i class="fe fe-eye"></i>
                     Consulter
                   </a>
                 </template>
-              </template>
             </td>
           </tr>
         </tbody>
@@ -113,30 +140,47 @@
 </template>
 
 <script>
-  import DateFormat from '../utils/DateFormat.js';
-  import HelpTooltip from "../utils/HelpTooltip"
-  import Vue from 'vue'
+import backendUrls from '../utils/backend.js'
+import DateFormat from '../utils/DateFormat.js'
+import HelpTooltip from '../utils/HelpTooltip'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-  export default Vue.extend({
-    props: [
-      'control',
-      'user',
-    ],
-    filters: {
-      DateFormat
+Vue.use(Vuex)
+
+export default Vue.extend({
+  props: [
+    'control',
+    'user',
+  ],
+  filters: {
+    DateFormat,
+  },
+  components: {
+    HelpTooltip,
+  },
+  computed: {
+    accessibleQuestionnaires: function () {
+      if (this.user.is_inspector) {
+        return this.control.questionnaires
+      }
+      return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
     },
-    components: {
-      HelpTooltip,
+  },
+  methods: {
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
+      Vue.axios.put(url, {
+        editor: editorUser,
+      }).then((response) => {
+        this.postResult = response.data
+      })
     },
-    computed: {
-      accessibleQuestionnaires: function () {
-        if (this.user.is_inspector) {
-          return this.control.questionnaires
-        }
-        return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
-      },
+    becomeEditor(questionnaireId) {
+      this.callSwapEditorApi(this.user.id, questionnaireId)
     },
-  })
+  },
+})
 </script>
 
 <style scoped>
