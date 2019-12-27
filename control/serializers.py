@@ -68,11 +68,13 @@ class ControlDetailUserSerializer(serializers.ModelSerializer):
 class QuestionnaireSerializer(serializers.ModelSerializer):
     themes = ThemeSerializer(many=True, read_only=True)
     editor = ControlDetailUserSerializer(read_only=True, required=False)
+    modified_date = DateTimeFieldWihTZ(source='modified', format='%a %d %B %Y')
+    modified_time = DateTimeFieldWihTZ(source='modified', format='%X')
 
     class Meta:
         model = Questionnaire
         fields = ('id', 'title', 'sent_date', 'end_date', 'description', 'control', 'themes', 'is_draft', 'editor',
-                  'title_display', 'numbering')
+                  'title_display', 'numbering', 'modified_date', 'modified_time')
         extra_kwargs = {'control': {'required': True}}
         # not serialized (yet) : file, order
 
