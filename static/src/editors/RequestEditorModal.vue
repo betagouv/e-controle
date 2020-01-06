@@ -18,7 +18,7 @@
           <div class="row row-cards row-deck">
             <div class="col">
               <div class="card">
-                <div class="card-body">
+                <div class="card-body" v-if="questionnaire.editor">
                   <h4 class="mb-0">Contactez votre collègue {{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</h4>
                   (<a :href="'mailto:' + questionnaire.editor.email">{{ questionnaire.editor.email }}</a>)
                   <p class="mt-4">Pour modifier ce questionnaire, votre collègue doit vous transférer les droits.</p>
