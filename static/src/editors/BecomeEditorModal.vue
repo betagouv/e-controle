@@ -90,7 +90,7 @@ export default Vue.extend({
     },
     becomeEditor() {
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
-      window.location.href = backendUrls.home()
+      window.location.assign(backendUrls.home())
     },
   },
 })

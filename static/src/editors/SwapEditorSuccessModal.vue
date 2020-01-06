@@ -15,7 +15,7 @@
       </p>
     </div>
     <div class="modal-footer border-top-0 d-flex justify-content-center">
-      <a  :href="homeUrl" role="button" class="btn btn-primary">
+      <a :href="homeUrl" role="button" class="btn btn-primary">
         < Revenir à l'accueil
       </a>
     </div>
