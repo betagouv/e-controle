@@ -41,7 +41,7 @@
                     {{  questionnaire.modified_time }}
                   </div>
                   <button type="submit"
-                    class="btn btn-secondary"
+                    class="btn btn-primary"
                     title="Forcer le transfert des droits"
                     data-toggle="modal"
                     data-target="#becomeEditorModal"
