@@ -17,10 +17,11 @@
     </div>
 
     <swap-editor-modal id="swapEditorModal"
-                       :control-id='controlId'
-                       :questionnaire-id='questionnaireId'>
+                       :control-id="controlId"
+                       :questionnaire-id="questionnaireId">
     </swap-editor-modal>
-    <swap-editor-success-modal id="swapEditorSuccessModal"></swap-editor-success-modal>
+    <swap-editor-success-modal id="swapEditorSuccessModal"
+                               :control-id="controlId"></swap-editor-success-modal>
   </div>
 </template>
 

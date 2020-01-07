@@ -15,9 +15,9 @@
       </p>
     </div>
     <div class="modal-footer border-top-0 d-flex justify-content-center">
-      <a :href="homeUrl" role="button" class="btn btn-primary">
+      <button @click="goHome()" role="button" class="btn btn-primary">
         < Revenir à l'accueil
-      </a>
+      </button>
     </div>
   </empty-modal>
 </template>
@@ -28,11 +28,12 @@ import EmptyModal from '../utils/EmptyModal'
 import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
-  props: ['questionnaire'],
-  data: function() {
-    return {
-      homeUrl: backendUrls.home(),
-    }
+  props: ['controlId'],
+  methods: {
+    goHome() {
+      const url = backendUrls['control-detail'](this.controlId)
+      window.location.assign(url)
+    },
   },
   components: {
     EmptyModal,
