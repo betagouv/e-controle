@@ -33,8 +33,8 @@
           </button>
         </div>
       </div>
-      <error-bar class="mt-4">
-        bli
+      <error-bar v-if="errorMessage.length > 0" class="mt-4">
+        {{ errorMessage }}
       </error-bar>
     </div>
     <request-editor-modal id="requestEditorModal" :questionnaire='questionnaire'></request-editor-modal>
@@ -52,6 +52,11 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: ['questionnaire'],
+  data: function() {
+    return {
+      errorMessage: '',
+    }
+  },
   components: {
     BecomeEditorModal,
     ErrorBar,
@@ -68,6 +73,7 @@ export default Vue.extend({
       })
     },
     switchToEditorPage: function() {
+      this.errorMessage = ''
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaire.id)
         .then((response) => {
           console.debug('got editing rights', response)
@@ -75,7 +81,7 @@ export default Vue.extend({
         })
         .catch(error => {
           console.error(error)
-          // todo handle error
+          this.errorMessage = 'Erreur lors de l\'obtention des droits. Vous pouvez réessayer.'
         })
     },
   },
