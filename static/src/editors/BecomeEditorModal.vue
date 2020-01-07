@@ -72,7 +72,7 @@ import Vue from 'vue'
 Vue.use(Vuex)
 
 export default Vue.extend({
-  props: ['questionnaire'],
+  props: ['questionnaireId', 'controlId'],
   components: {
     EmptyModal,
   },
@@ -85,14 +85,16 @@ export default Vue.extend({
       Vue.axios.put(url, {
         editor: editorUserId,
       }).then((response) => {
-        this.postResult = response.data
+        this.goHome()
       })
     },
     becomeEditor() {
-      this.callSwapEditorApi(this.sessionUser.id, this.questionnaire.id)
-      const url = backendUrls['control-detail'](this.questionnaire.control)
-      window.location.assign(url)
+      this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
     },
+    goHome() {
+      const url = backendUrls['control-detail'](this.controlId)
+      window.location.assign(url)
+    }
   },
 })
 </script>
