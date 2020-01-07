@@ -1,7 +1,7 @@
 <template>
   <div>
-    <swap-editor-button :control-id='controlId'
-                        :questionnaire-id='questionnaireId'>
+    <swap-editor-button :control-id="controlId"
+                        :questionnaire-id="questionnaireId">
     </swap-editor-button>
 
     <div class="page-header">

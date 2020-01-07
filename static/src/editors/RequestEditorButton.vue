@@ -23,7 +23,7 @@
       </div>
     </div>
     <request-editor-modal id="requestEditorModal" :questionnaire='questionnaire'></request-editor-modal>
-    <become-editor-modal id="becomeEditorModal" :questionnaire-id='questionnaire.id'></become-editor-modal>
+    <become-editor-modal id="becomeEditorModal" :questionnaire='questionnaire'></become-editor-modal>
   </div>
 </template>
 
