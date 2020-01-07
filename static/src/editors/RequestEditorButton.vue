@@ -12,11 +12,21 @@
         </span>
       </div>
       <div class="text-right">
-        <button type="submit"
+        <button v-if="questionnaire.editor"
+          type="submit"
           class="btn btn-gray"
           title="Obtenir les droits de rédaction..."
           data-toggle="modal"
           data-target="#requestEditorModal">
+          <i class="fa fa-exchange-alt mr-1"></i>
+          <span>Obtenir les droits de rédaction...</span>
+        </button>
+        <button v-else
+          type="submit"
+          class="btn btn-gray"
+          title="Obtenir les droits de rédaction..."
+          @click="switchToEditorPage"
+          >
           <i class="fa fa-exchange-alt mr-1"></i>
           <span>Obtenir les droits de rédaction...</span>
         </button>
@@ -28,15 +38,39 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import backendUrls from '../utils/backend.js'
 import BecomeEditorModal from '../editors/BecomeEditorModal'
+import { mapFields } from 'vuex-map-fields'
 import RequestEditorModal from '../editors/RequestEditorModal'
+import Vue from 'vue'
 
 export default Vue.extend({
   props: ['questionnaire'],
   components: {
     RequestEditorModal,
     BecomeEditorModal,
+  },
+  computed: {
+    ...mapFields(['sessionUser']),
+  },
+  methods: {
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
+      return Vue.axios.put(url, {
+        editor: editorUser,
+      })
+    },
+    switchToEditorPage: function() {
+      this.callSwapEditorApi(this.sessionUser.id, this.questionnaire.id)
+        .then((response) => {
+          console.debug('got editing rights', response)
+          window.location.assign(backendUrls['questionnaire-edit'](this.questionnaire.id))
+        })
+        .catch(error => {
+          console.error(error)
+          // todo handle error
+        })
+    },
   },
 })
 </script>
