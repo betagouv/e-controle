@@ -333,7 +333,8 @@ export default Vue.extend({
         })
         .catch((error) => {
           console.error(error)
-          this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
+          const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
+          this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
         })
     },
     wait(timeMillis) {
