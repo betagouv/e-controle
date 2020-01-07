@@ -9,8 +9,7 @@
         <button type="submit"
           class="btn btn-primary"
           title="Transférer les droits de rédaction..."
-          data-toggle="modal"
-          data-target="#swapEditorModal">
+          @click="saveDraft">
           <i class="fa fa-exchange-alt mr-1"></i>
           Transférer les droits de rédaction...
         </button>
@@ -38,6 +37,16 @@ export default Vue.extend({
   components: {
     SwapEditorModal,
     SwapEditorSuccessModal,
+  },
+  mounted: function() {
+    this.$parent.$on('show-swap-editor-modal', function(data) {
+      $('#swapEditorModal').modal('show')
+    })
+  },
+  methods: {
+    saveDraft: function() {
+      this.$emit('save-draft')
+    },
   },
 })
 </script>

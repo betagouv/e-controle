@@ -1,7 +1,8 @@
 <template>
   <div>
     <swap-editor-button :control-id='controlId'
-                        :questionnaire-id='questionnaireId'>
+                        :questionnaire-id='questionnaireId'
+                        @save-draft="saveDraftBeforeEditorSwap">
     </swap-editor-button>
 
     <div class="page-header">
@@ -291,6 +292,34 @@ export default Vue.extend({
     saveDraftFromBody(data) {
       this._updateBody(data)
       this.saveDraft()
+    },
+    saveDraftBeforeEditorSwap() {
+      console.debug('save draft before editor swap')
+      const validateForm = () => {
+        if (this.state === STATES.PREVIEW) {
+          return true
+        }
+        if (this.state === STATES.START) {
+          return this.$refs.createMetadataChild.validateForm()
+        }
+        if (this.state === STATES.CREATING_BODY) {
+          return this.$refs.createBodyChild.validateForm()
+        }
+      }
+      const updateQuestionnaire = () => {
+        if (this.state === STATES.START) {
+          this._updateMetadata(this.$refs.createMetadataChild.metadata)
+        } else if (this.state === STATES.CREATING_BODY) {
+          this._updateBody(this.$refs.createBodyChild.body)
+        }
+      }
+
+      if (!validateForm()) {
+        return
+      }
+      updateQuestionnaire()
+      this.saveDraft()
+      this.$emit('show-swap-editor-modal')
     },
     saveDraft() {
       this.questionnaire.is_draft = true
