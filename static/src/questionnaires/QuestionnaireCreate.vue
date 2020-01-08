@@ -153,7 +153,7 @@ export default Vue.extend({
       this.displayErrors(errorMessage)
     })
 
-    if (typeof this.controlId !== 'undefined') {
+    if (typeof this.questionnaireId === 'undefined') {
       this._loadQuestionnaireCreate()
       return
     }
