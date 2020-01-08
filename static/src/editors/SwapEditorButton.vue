@@ -21,7 +21,7 @@
                        :questionnaire-id="questionnaireId">
     </swap-editor-modal>
     <swap-editor-success-modal id="swapEditorSuccessModal"
-                               :control-id="controlId"></swap-editor-success-modal>
+                               :questionnaire-id="questionnaireId"></swap-editor-success-modal>
   </div>
 </template>
 

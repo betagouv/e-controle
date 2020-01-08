@@ -15,8 +15,8 @@
       </p>
     </div>
     <div class="modal-footer border-top-0 d-flex justify-content-center">
-      <button @click="goHome()" role="button" class="btn btn-primary">
-        < Revenir à l'accueil
+      <button @click="goToReadonlyPage()" role="button" class="btn btn-primary">
+        OK
       </button>
     </div>
   </empty-modal>
@@ -28,10 +28,10 @@ import EmptyModal from '../utils/EmptyModal'
 import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
-  props: ['controlId'],
+  props: ['questionnaireId'],
   methods: {
-    goHome() {
-      const url = backendUrls['control-detail'](this.controlId)
+    goToReadonlyPage() {
+      const url = backendUrls['questionnaire-detail'](this.questionnaireId)
       window.location.assign(url)
     },
   },
