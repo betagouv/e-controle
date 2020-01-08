@@ -72,7 +72,7 @@ import Vue from 'vue'
 Vue.use(Vuex)
 
 export default Vue.extend({
-  props: ['questionnaireId', 'controlId'],
+  props: ['questionnaireId'],
   components: {
     EmptyModal,
   },
@@ -89,11 +89,11 @@ export default Vue.extend({
     becomeEditor() {
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
         .then((response) => {
-          this.goHome()
+          this.goToWriteablePage()
         })
     },
-    goHome() {
-      const url = backendUrls['control-detail'](this.controlId)
+    goToWriteablePage() {
+      const url = backendUrls['questionnaire-edit'](this.questionnaireId)
       window.location.assign(url)
     },
   },
