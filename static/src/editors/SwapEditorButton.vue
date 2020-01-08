@@ -33,16 +33,24 @@ import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
 export default Vue.extend({
   props: [
     'controlId',
-    'questionnaireId',
   ],
+  data: function() {
+    return {
+      questionnaireId: undefined,
+    }
+  },
   components: {
     SwapEditorModal,
     SwapEditorSuccessModal,
   },
   mounted: function() {
-    this.$parent.$on('show-swap-editor-modal', function(data) {
+    const showModal = (questionnaireId) => {
+      console.debug('got questionnaire id', questionnaireId)
+      this.questionnaireId = questionnaireId
       $('#swapEditorModal').modal('show')
-    })
+    }
+
+    this.$parent.$on('show-swap-editor-modal', showModal.bind(this))
   },
   methods: {
     saveDraft: function() {

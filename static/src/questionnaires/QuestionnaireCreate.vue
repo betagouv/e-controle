@@ -1,7 +1,6 @@
 <template>
   <div>
     <swap-editor-button :control-id="controlId"
-                        :questionnaire-id="questionnaireId"
                         @save-draft="saveDraftBeforeEditorSwap">
     </swap-editor-button>
 
@@ -319,17 +318,20 @@ export default Vue.extend({
       }
       updateQuestionnaire()
       this.saveDraft()
-      this.$emit('show-swap-editor-modal')
+        .then(savedQuestionnaire => {
+          this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
+        })
     },
     saveDraft() {
       this.questionnaire.is_draft = true
-      this._doSave()
+      return this._doSave()
         .then((response) => {
           this._updateQuestionnaire(response.data)
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
           this.message = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          return response.data
         })
         .catch((error) => {
           console.error(error)
