@@ -47,7 +47,7 @@
                   <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
 
-                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
+                <editor-list :users="inspectorUsers()" :questionnaireId='editingQuestionnaireId'></editor-list>
               </div>
 
               <contact-support></contact-support>
@@ -82,7 +82,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapFields(['sessionUser']),
+    ...mapFields(['sessionUser', 'editingQuestionnaireId']),
   },
   methods: {
     getUsers() {
@@ -108,7 +108,7 @@ export default Vue.extend({
       })
     },
     SetEditorNull() {
-      this.callSwapEditorApi(null, this.questionnaireId)
+      this.callSwapEditorApi(null, this.editingQuestionnaireId)
       $('#swapEditorModal').modal('hide')
     },
   },

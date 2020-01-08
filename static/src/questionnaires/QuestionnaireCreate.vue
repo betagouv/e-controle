@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
@@ -134,6 +135,9 @@ export default Vue.extend({
       state: '',
       message: '',
     }
+  },
+  computed: {
+    ...mapFields(['editingQuestionnaireId']),
   },
   components: {
     EmptyModal,
@@ -216,6 +220,7 @@ export default Vue.extend({
     },
     _updateQuestionnaire: function(questionnaire) {
       this.questionnaire.id = questionnaire.id
+      this.editingQuestionnaireId = questionnaire.id
       const metadata = {
         description: questionnaire.description,
         end_date: questionnaire.end_date,

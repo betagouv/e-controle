@@ -19,6 +19,7 @@ export const store = new Vuex.Store({
     editingUser: {},
     editingProfileType: '',
     sessionUser: {},
+    editingQuestionnaireId: null,
     loadStatus: loadStatuses.LOADING,
   },
   getters: {
