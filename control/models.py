@@ -116,6 +116,12 @@ class Control(models.Model):
             return 1
         return self.questionnaires.last().numbering + 1
 
+    @property
+    def has_multiple_inspectors(self):
+        users = self.user_profiles.all()
+        inspectors = [ user for user in users if user.is_inspector ]
+        return len(inspectors) > 1
+
     def __str__(self):
         if self.depositing_organization:
             return f'{self.title} - {self.depositing_organization}'
