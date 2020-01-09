@@ -218,9 +218,6 @@ export default Vue.extend({
       }
       console.error('Trying to go to "next", from state', this.state)
     },
-    _updateQuestionnaire: function(questionnaire) {
-      this.currentQuestionnaire = questionnaire // todo will this update or not?
-    },
     back: function(clickedStep) {
       console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
       if (this.state === STATES.CREATING_BODY) {
@@ -294,18 +291,10 @@ export default Vue.extend({
           return this.$refs.createBodyChild.validateForm()
         }
       }
-      const updateQuestionnaire = () => {
-        if (this.state === STATES.START) {
-          this._updateMetadata(this.$refs.createMetadataChild.metadata)
-        } else if (this.state === STATES.CREATING_BODY) {
-          this._updateBody(this.$refs.createBodyChild.body)
-        }
-      }
 
       if (!validateForm()) {
         return
       }
-      updateQuestionnaire()
       this.saveDraft()
         .then(savedQuestionnaire => {
           this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
@@ -316,7 +305,7 @@ export default Vue.extend({
       return this._doSave()
         .then((response) => {
           console.log('Successful draft save.')
-          this._updateQuestionnaire(response.data)
+          this.currentQuestionnaire = response.data
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
