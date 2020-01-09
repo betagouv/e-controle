@@ -7,16 +7,6 @@
       <div class="card-body pb-6">
         <questionnaire-detail-for-preview v-bind:questionnaire="currentQuestionnaire">
         </questionnaire-detail-for-preview>
-        <div class="text-right">
-          <button id="publishButton"
-                  ref="publishButton"
-                  @click="showPublishConfirmModal()"
-                  class="btn btn-primary ml-5"
-                  title="Publier le questionnaire à l'organisme interrogé">
-            <i class="fa fa-rocket mr-1"></i>
-            Publier
-          </button>
-        </div>
       </div>
     </div>
 
