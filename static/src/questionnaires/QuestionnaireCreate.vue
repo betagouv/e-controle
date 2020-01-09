@@ -4,7 +4,7 @@
     <div>{{ currentQuestionnaire }}</div>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
-                        @save-draft="saveDraftBeforeEditorSwap">
+                        @save-draft="saveDraftAndSwapEditor">
     </swap-editor-button>
     <div class="page-header">
       <div class="page-title flex-wrap">
@@ -110,9 +110,7 @@ import Vue from 'vue'
 // State machine
 const STATES = {
   START: 'start',
-  // Transition : metadata-created / back
   CREATING_BODY: 'creating_body',
-  // Transition : body-created / back
   PREVIEW: 'preview',
 }
 
@@ -145,6 +143,7 @@ export default Vue.extend({
     ]),
   },
   watch: {
+    // Watch change of loadStatus coming from the store, to know when the data is ready.
     controlsLoadStatus(newValue, oldValue) {
       if (newValue === loadStatuses.SUCCESS) {
         if (typeof this.questionnaireId === 'undefined') {
@@ -278,7 +277,7 @@ export default Vue.extend({
       }
       return saveMethod(this.currentQuestionnaire)
     },
-    saveDraftBeforeEditorSwap() {
+    saveDraftAndSwapEditor() {
       console.debug('save draft before editor swap')
       const validateForm = () => {
         if (this.state === STATES.PREVIEW) {
