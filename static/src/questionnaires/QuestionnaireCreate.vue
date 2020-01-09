@@ -2,7 +2,6 @@
   <div>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
-                        :questionnaire-id="questionnaireId"
                         @save-draft="saveDraftBeforeEditorSwap">
     </swap-editor-button>
 
@@ -98,7 +97,6 @@ import axios from 'axios'
 import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
-import InfoBar from '../utils/InfoBar'
 import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
@@ -321,17 +319,20 @@ export default Vue.extend({
       }
       updateQuestionnaire()
       this.saveDraft()
-      this.$emit('show-swap-editor-modal')
+        .then(savedQuestionnaire => {
+          this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
+        })
     },
     saveDraft() {
       this.questionnaire.is_draft = true
-      this._doSave()
+      return this._doSave()
         .then((response) => {
           this._updateQuestionnaire(response.data)
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
           this.message = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          return response.data
         })
         .catch((error) => {
           console.error(error)
