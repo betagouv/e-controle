@@ -14,6 +14,8 @@ from ordered_model.models import OrderedModel
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
 
+from user_profiles.models import UserProfile
+
 
 class WithNumberingMixin(object):
     """
@@ -118,9 +120,7 @@ class Control(models.Model):
 
     @property
     def has_multiple_inspectors(self):
-        users = self.user_profiles.all()
-        inspectors = [ user for user in users if user.is_inspector ]
-        return len(inspectors) > 1
+        return self.user_profiles.filter(profile_type=UserProfile.INSPECTOR).count() > 1
 
     def __str__(self):
         if self.depositing_organization:
