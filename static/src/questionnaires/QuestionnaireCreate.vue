@@ -21,6 +21,12 @@
       {{ errorMessage }}
     </div>
 
+    <wizard :active-step-number="this.state"
+            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
+            @next="next"
+            @previous="back">
+    </wizard>
+
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
             ref="createMetadataChild"
@@ -106,12 +112,13 @@ import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
 import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
+import Wizard from '../utils/Wizard'
 
 // State machine
 const STATES = {
-  START: 'start',
-  CREATING_BODY: 'creating_body',
-  PREVIEW: 'preview',
+  START: 1,
+  CREATING_BODY: 2,
+  PREVIEW: 3,
 }
 
 const PUBLISH_TIME_MILLIS = 3000
@@ -174,6 +181,7 @@ export default Vue.extend({
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
     SwapEditorButton,
+    Wizard,
   },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)

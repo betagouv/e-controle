@@ -4,10 +4,6 @@
     <div>{{ title }}</div>
     <div>{{ description }}</div>
     <div>{{ end_date }}</div>
-    <wizard :active-step-number="1"
-            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @next="next">
-    </wizard>
 
     <div class="card">
       <div class="card-header">
@@ -78,7 +74,6 @@
 import Vue from 'vue'
 import Datepicker from 'vuejs-datepicker'
 import { mapFields } from 'vuex-map-fields'
-import Wizard from '../utils/Wizard'
 import fr from '../utils/vuejs-datepicker-locale-fr'
 import reportValidity from 'report-validity'
 
@@ -128,7 +123,6 @@ const QuestionnaireMetadataCreate = Vue.extend({
   },
   components: {
     Datepicker,
-    Wizard,
   },
 })
 

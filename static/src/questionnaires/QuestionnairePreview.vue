@@ -1,11 +1,5 @@
 <template>
   <div>
-
-    <wizard :active-step-number="3"
-            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @previous="back">
-    </wizard>
-
     <div class="card">
       <div class="card-header">
         <div class="card-title">Etape 3 : Aperçu avant publication</div>
@@ -48,7 +42,6 @@ import Vue from 'vue'
 import { mapFields } from 'vuex-map-fields'
 import PublishConfirmModal from './PublishConfirmModal'
 import QuestionnaireDetailForPreview from './QuestionnaireDetailForPreview'
-import Wizard from '../utils/Wizard'
 
 export default Vue.extend({
   data: function() {
@@ -92,7 +85,6 @@ export default Vue.extend({
   components: {
     PublishConfirmModal,
     QuestionnaireDetailForPreview,
-    Wizard,
   },
 })
 </script>

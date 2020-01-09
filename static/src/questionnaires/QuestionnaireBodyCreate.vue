@@ -1,12 +1,5 @@
 <template>
   <div>
-
-    <wizard :active-step-number="2"
-            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @next="next"
-            @previous="back">
-    </wizard>
-
     <div class="card">
       <div class="card-header">
         <div class="card-title">Etape 2 : Ajouter des questions</div>
@@ -155,7 +148,6 @@ import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
-import Wizard from '../utils/Wizard'
 
 import reportValidity from 'report-validity'
 
@@ -175,7 +167,6 @@ export default Vue.extend({
     InfoBar,
     QuestionFileList,
     QuestionFileUpload,
-    Wizard,
   },
   mounted() {
     // Todo do we still need this? Can we avoid event? Can we use store loadStatus instead?
