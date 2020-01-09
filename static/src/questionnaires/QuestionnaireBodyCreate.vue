@@ -3,7 +3,7 @@
 
     <wizard :active-step-number="2"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @next="createBody"
+            @next="next"
             @previous="back">
     </wizard>
 
@@ -16,7 +16,7 @@
           A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
           des questions et des annexes à vos questions.
         </info-bar>
-        <form @submit.prevent="createBody" ref="form">
+        <form @submit.prevent="next" ref="form">
           <div class="card"
                v-for="(theme, themeIndex) in themes"
                :key="'theme-' + themeIndex"> <!-- Card for each theme-->
@@ -190,12 +190,11 @@ export default Vue.extend({
       }
       this.$emit('back', clickedStep)
     },
-    createBody: function() {
+    next: function() {
       if (!this.validateForm()) {
         return
       }
-      console.debug('QuestionnaireBodyCreate createBody')
-      this.$emit('body-created')
+      this.$emit('next')
     },
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)

@@ -1,11 +1,12 @@
 <template>
   <div>
+    <div>TODO REMOVE DEBUG OUTPUT</div>
     <div>{{ title }}</div>
     <div>{{ description }}</div>
     <div>{{ end_date }}</div>
     <wizard :active-step-number="1"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @next="createMetadata">
+            @next="next">
     </wizard>
 
     <div class="card">
@@ -13,7 +14,7 @@
         <div class="card-title">Etape 1 : Renseigner l'introduction</div>
       </div>
       <div class="card-body pb-6">
-        <form @submit.prevent="createMetadata" ref="form">
+        <form @submit.prevent="next" ref="form">
           <div class="form-group">
             <label class="form-label" id="questionnaireTitle">
               Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
@@ -111,12 +112,11 @@ const QuestionnaireMetadataCreate = Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
-    createMetadata: function () {
-      console.debug('metadata created')
+    next: function () {
       if (!this.validateForm()) {
         return
       }
-      this.$emit('metadata-created')
+      this.$emit('next')
     },
     saveDraft(event) {
       console.debug('save draft', event)

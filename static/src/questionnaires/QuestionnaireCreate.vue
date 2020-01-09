@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div>TODO REMOVE DEBUG OUTPUT</div>
     <div>{{ currentQuestionnaire }}</div>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
@@ -24,14 +25,14 @@
             id="questionnaire-metadata-create"
             ref="createMetadataChild"
             :questionnaire-numbering="questionnaireNumbering"
-            v-on:metadata-created="onMetadataCreated"
-            v-on:save-draft="saveDraftFromMetadata"
+            v-on:next="next"
+            v-on:save-draft="saveDraft"
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
             ref="createBodyChild"
-            v-on:body-created="onBodyCreated"
-            v-on:save-draft="saveDraftFromBody"
+            v-on:next="next"
+            v-on:save-draft="saveDraft"
             v-on:back="back"
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
@@ -204,19 +205,24 @@ export default Vue.extend({
       this.clearErrors()
       this.state = newState
     },
-    onBodyCreated: function() {
+    next: function() {
+      console.debug('Navigation "next" from', this.state)
       this.saveDraft()
-      this.moveToState(STATES.PREVIEW)
-    },
-    onMetadataCreated: function() {
-      this.saveDraft()
-      this.moveToState(STATES.CREATING_BODY)
+      if (this.state === STATES.START) {
+        this.moveToState(STATES.CREATING_BODY)
+        return
+      }
+      if (this.state === STATES.CREATING_BODY) {
+        this.moveToState(STATES.PREVIEW)
+        return
+      }
+      console.error('Trying to go to "next", from state', this.state)
     },
     _updateQuestionnaire: function(questionnaire) {
       this.currentQuestionnaire = questionnaire // todo will this update or not?
     },
     back: function(clickedStep) {
-      console.debug('back', clickedStep)
+      console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
       if (this.state === STATES.CREATING_BODY) {
         this.saveDraft()
         this.moveToState(STATES.START)
@@ -275,12 +281,6 @@ export default Vue.extend({
       }
       return saveMethod(this.currentQuestionnaire)
     },
-    saveDraftFromMetadata() {
-      this.saveDraft()
-    },
-    saveDraftFromBody() {
-      this.saveDraft()
-    },
     saveDraftBeforeEditorSwap() {
       console.debug('save draft before editor swap')
       const validateForm = () => {
@@ -315,6 +315,7 @@ export default Vue.extend({
       this.currentQuestionnaire.is_draft = true
       return this._doSave()
         .then((response) => {
+          console.log('Successful draft save.')
           this._updateQuestionnaire(response.data)
           this.emitQuestionnaireUpdated()
 
@@ -323,7 +324,7 @@ export default Vue.extend({
           return response.data
         })
         .catch((error) => {
-          console.error(error)
+          console.error('Error in draft save :', error)
           const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
           this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
         })
