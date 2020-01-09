@@ -9,7 +9,7 @@
           A cette étape, vous pouvez créer votre questionnaire en ajoutant des thèmes,
           des questions et des annexes à vos questions.
         </info-bar>
-        <form @submit.prevent="next" ref="form">
+        <form ref="form">
           <div class="card"
                v-for="(theme, themeIndex) in themes"
                :key="'theme-' + themeIndex"> <!-- Card for each theme-->
@@ -117,20 +117,6 @@
               </a>
             </div>
           </div>
-
-          <div class="text-right">
-            <button type="submit" @click.prevent="back" class="btn btn-secondary ml-auto">
-              < Retour
-            </button>
-            <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-              <i class="fe fe-save"></i>
-              Enregistrer le brouillon
-            </button>
-            <button type="submit" class="btn btn-secondary ml-auto">
-              Suivant >
-            </button>
-          </div>
-
         </form>
 
       </div>
@@ -175,18 +161,6 @@ export default Vue.extend({
     })
   },
   methods: {
-    back: function(clickedStep) {
-      if (!this.validateForm()) {
-        return
-      }
-      this.$emit('back', clickedStep)
-    },
-    next: function() {
-      if (!this.validateForm()) {
-        return
-      }
-      this.$emit('next')
-    },
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
       this.themes[themeIndex].questions.push({ description: '' })
@@ -201,13 +175,7 @@ export default Vue.extend({
     deleteTheme: function(themeIndex) {
       this.themes.splice(themeIndex, 1)
     },
-    saveDraft(event) {
-      console.debug('save draft', event)
-      if (!this.validateForm()) {
-        return
-      }
-      this.$emit('save-draft')
-    },
+    // Used in QuestionnaireCreate.
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)

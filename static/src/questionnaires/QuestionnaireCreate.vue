@@ -29,39 +29,51 @@
 
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
-            ref="createMetadataChild"
+            ref="questionnaireMetadataCreate"
             :questionnaire-numbering="questionnaireNumbering"
-            v-on:next="next"
-            v-on:save-draft="saveDraft"
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
-            ref="createBodyChild"
-            v-on:next="next"
-            v-on:save-draft="saveDraft"
-            v-on:back="back"
+            ref="questionnaireBodyCreate"
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
     <questionnaire-preview
-            ref="previewChild"
             v-on:publish-questionnaire="publish()"
             v-on:save-draft="saveDraft"
             v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
-    <div class="card-header border-0"
-         style="position:relative; bottom: 4.3rem;">
-      <div class="card-options">
+
+    <div class="flex-row justify-content-between">
+      <button type="button"
+              class="btn btn-secondary"
+              @click="goHome"
+      >
+        < Revenir à l'accueil
+      </button>
+      <div>
+        <button v-if="state !== STATES.START"
+                @click="back"
+                class="btn btn-secondary">
+          < Retour
+        </button>
+        <button @click="saveDraft"
+                class="btn btn-primary">
+          <i class="fe fe-save"></i>
+          Enregistrer le brouillon
+        </button>
+        <button v-if="state !== STATES.PREVIEW"
+                @click="next"
+                class="btn btn-secondary">
+          Suivant >
+        </button>
+      </div>
+    </div>
+    <div class="flex-row justify-content-end mt-2">
+      <div class="text-muted">
         {{ message }}
       </div>
     </div>
-    <button type="button"
-            class="btn btn-secondary"
-            style="position:relative; bottom: 151px; left: 2em;"
-            @click="goHome"
-    >
-      < Revenir à l'accueil
-    </button>
 
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
@@ -214,12 +226,19 @@ export default Vue.extend({
     },
     next: function() {
       console.debug('Navigation "next" from', this.state)
-      this.saveDraft()
       if (this.state === STATES.START) {
+        if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
+          return
+        }
+        this.saveDraft()
         this.moveToState(STATES.CREATING_BODY)
         return
       }
       if (this.state === STATES.CREATING_BODY) {
+        if (!this.$refs.questionnaireBodyCreate.validateForm()) {
+          return
+        }
+        this.saveDraft()
         this.moveToState(STATES.PREVIEW)
         return
       }
@@ -228,6 +247,9 @@ export default Vue.extend({
     back: function(clickedStep) {
       console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
       if (this.state === STATES.CREATING_BODY) {
+        if (!this.$refs.questionnaireBodyCreate.validateForm()) {
+          return
+        }
         this.saveDraft()
         this.moveToState(STATES.START)
         return
@@ -295,10 +317,10 @@ export default Vue.extend({
           return true
         }
         if (this.state === STATES.START) {
-          return this.$refs.createMetadataChild.validateForm()
+          return this.$refs.questionnaireMetadataCreate.validateForm()
         }
         if (this.state === STATES.CREATING_BODY) {
-          return this.$refs.createBodyChild.validateForm()
+          return this.$refs.questionnaireBodyCreate.validateForm()
         }
       }
 

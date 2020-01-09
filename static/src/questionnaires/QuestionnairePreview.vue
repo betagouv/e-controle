@@ -8,13 +8,6 @@
         <questionnaire-detail-for-preview v-bind:questionnaire="currentQuestionnaire">
         </questionnaire-detail-for-preview>
         <div class="text-right">
-          <button type="submit" @click.prevent="back" class="btn btn-secondary ml-auto">
-            < Retour
-          </button>
-          <button id="saveDraftFromPreviewButton" type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-            <i class="fe fe-save mr-1"></i>
-            Enregistrer le brouillon
-          </button>
           <button id="publishButton"
                   ref="publishButton"
                   @click="showPublishConfirmModal()"
@@ -70,16 +63,8 @@ export default Vue.extend({
     showPublishConfirmModal: function () {
       $(this.$refs.publishConfirmModal.$el).modal('show')
     },
-    back: function(clickedStep) {
-      this.$emit('back', clickedStep)
-    },
     publish: function() {
       this.$emit('publish-questionnaire')
-    },
-    saveDraft(event) {
-      console.debug('save draft', event)
-      this.publishError = undefined
-      this.$emit('save-draft')
     },
   },
   components: {

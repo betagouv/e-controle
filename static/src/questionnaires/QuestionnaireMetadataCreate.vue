@@ -10,7 +10,7 @@
         <div class="card-title">Etape 1 : Renseigner l'introduction</div>
       </div>
       <div class="card-body pb-6">
-        <form @submit.prevent="next" ref="form">
+        <form ref="form">
           <div class="form-group">
             <label class="form-label" id="questionnaireTitle">
               Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
@@ -54,15 +54,6 @@
                         :monday-first="true">
             </datepicker>
           </div>
-          <div class="text-right">
-            <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-              <i class="fe fe-save"></i>
-              Enregistrer le brouillon
-            </button>
-            <button type="submit" class="btn btn-secondary">
-              Suivant >
-            </button>
-          </div>
         </form>
 
       </div>
@@ -103,22 +94,10 @@ const QuestionnaireMetadataCreate = Vue.extend({
     ]),
   },
   methods: {
+    // Used in QuestionnaireCreate.
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)
-    },
-    next: function () {
-      if (!this.validateForm()) {
-        return
-      }
-      this.$emit('next')
-    },
-    saveDraft(event) {
-      console.debug('save draft', event)
-      if (!this.validateForm()) {
-        return
-      }
-      this.$emit('save-draft')
     },
   },
   components: {
