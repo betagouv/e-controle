@@ -1,6 +1,7 @@
 <template>
   <div>
-    <swap-editor-button :control-id="controlId"
+    <swap-editor-button v-if="controlHasMultipleInspectors"
+                        :control-id="controlId"
                         @save-draft="saveDraftBeforeEditorSwap">
     </swap-editor-button>
 
@@ -96,7 +97,6 @@ import axios from 'axios'
 import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
-import InfoBar from '../utils/InfoBar'
 import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
@@ -120,6 +120,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 export default Vue.extend({
   props: {
     controlId: Number,
+    controlHasMultipleInspectors: Boolean,
     questionnaireId: Number,
     questionnaireNumbering: Number,
   },
