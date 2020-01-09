@@ -6,10 +6,9 @@
         Nous sommes là pour vous aider. N'hésitez pas à prendre contact avec l'équipe e.contrôle !
       </div>
       <a role="button"
-          type="submit"
-          :href="'mailto:' + config.support_team_email"
-          class="btn btn-primary"
-          title="Contacter le support e.contrôle">
+         :href="'mailto:' + config.support_team_email"
+         class="btn btn-primary"
+         title="Contacter le support e.contrôle">
         <i class="fe fe-mail mr-1"></i>
         Contacter le support e.contrôle
       </a>
