@@ -178,7 +178,7 @@ export default Vue.extend({
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
-    if (!this.controlId && !this.questionnaireId) {
+    if (this.controlId === undefined && this.questionnaireId === undefined) {
       throw Error('QuestionnaireCreate needs a controlId or a questionnaireId')
     }
 
