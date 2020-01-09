@@ -97,7 +97,7 @@
       </div>
       <div class="modal-body text-center">
         <p>
-          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de notification dès le lendemain 8 heure.
+          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de notification dès le lendemain 8 heures.
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
@@ -218,7 +218,7 @@ export default Vue.extend({
       }
     },
     emitQuestionnaireUpdated: function() {
-      this.$emit('questionnaire-updated', this.questionnaire)
+      this.$emit('questionnaire-updated', this.currentQuestionnaire)
     },
     moveToState: function(newState) {
       this.clearErrors()
@@ -360,7 +360,7 @@ export default Vue.extend({
     },
     publish() {
       $(this.$refs.savingModal.$el).modal('show')
-      this.questionnaire.is_draft = false
+      this.currentQuestionnaire.is_draft = false
 
       // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
       // This is for the user to see the wait modal and be satisfied that the saving really happened.
@@ -382,7 +382,7 @@ export default Vue.extend({
       // has been registered.
       $(event.target).addClass('btn-loading')
 
-      window.location.href = backend['control-detail'](this.questionnaire.control)
+      window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
     },
   },
 })
