@@ -146,7 +146,7 @@ export default Vue.extend({
   watch: {
     controlsLoadStatus(newValue, oldValue) {
       if (newValue === loadStatuses.SUCCESS) {
-        if (typeof this.controlId !== 'undefined') {
+        if (typeof this.questionnaireId === 'undefined') {
           const newQuestionnaire = {
             control: this.controlId,
             description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
