@@ -14,6 +14,8 @@ from ordered_model.models import OrderedModel
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
 
+from user_profiles.models import UserProfile
+
 
 class WithNumberingMixin(object):
     """
@@ -116,6 +118,10 @@ class Control(models.Model):
             return 1
         return self.questionnaires.last().numbering + 1
 
+    @property
+    def has_multiple_inspectors(self):
+        return self.user_profiles.filter(profile_type=UserProfile.INSPECTOR).count() > 1
+
     def __str__(self):
         if self.depositing_organization:
             return f'{self.title} - {self.depositing_organization}'
@@ -154,6 +160,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     is_draft = models.BooleanField(
         verbose_name="brouillon", default=False,
         help_text="Ce questionnaire est-il encore au stade de brouillon?")
+    modified = models.DateTimeField('modifié', auto_now=True, null=True)
 
     class Meta:
         ordering = ('control', 'order')

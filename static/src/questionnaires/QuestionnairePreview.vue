@@ -14,7 +14,7 @@
         <questionnaire-detail-for-preview v-bind:questionnaire="currentQuestionnaire">
         </questionnaire-detail-for-preview>
         <div class="text-right">
-          <button type="submit" @click.prevent="back()" class="btn btn-secondary ml-auto">
+          <button type="submit" @click.prevent="back(2)" class="btn btn-secondary ml-auto">
             < Retour
           </button>
           <button id="saveDraftFromPreviewButton" type="submit" @click.prevent="saveDraft" class="btn btn-primary">
