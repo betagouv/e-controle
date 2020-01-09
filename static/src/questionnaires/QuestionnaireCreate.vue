@@ -241,6 +241,9 @@ export default Vue.extend({
           this.moveToState(STATES.CREATING_BODY)
           return
         }
+        // no step specified so, go to previous step by default
+        this.moveToState(STATES.CREATING_BODY)
+        return
       }
       console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep)
     },

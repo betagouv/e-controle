@@ -119,7 +119,7 @@
           </div>
 
           <div class="text-right">
-            <button type="submit" @click.prevent="back(1)" class="btn btn-secondary ml-auto">
+            <button type="submit" @click.prevent="back" class="btn btn-secondary ml-auto">
               < Retour
             </button>
             <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
