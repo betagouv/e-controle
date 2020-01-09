@@ -38,9 +38,6 @@
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
     <questionnaire-preview
-            v-on:publish-questionnaire="publish()"
-            v-on:save-draft="saveDraft"
-            v-on:back="back"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
@@ -67,6 +64,15 @@
                 class="btn btn-secondary">
           Suivant >
         </button>
+        <button v-if="state === STATES.PREVIEW"
+                id="publishButton"
+                ref="publishButton"
+                @click="showPublishConfirmModal()"
+                class="btn btn-primary ml-5"
+                title="Publier le questionnaire à l'organisme interrogé">
+          <i class="fa fa-rocket mr-1"></i>
+          Publier
+        </button>
       </div>
     </div>
     <div class="flex-row justify-content-end mt-2">
@@ -75,6 +81,12 @@
       </div>
     </div>
 
+    <publish-confirm-modal ref="publishConfirmModal"
+                            id="publishConfirmModal"
+                            :error="publishError"
+                            @confirm="publish()"
+    >
+    </publish-confirm-modal>
     <empty-modal id="savingModal" ref="savingModal" no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
         <div class="m-4">
@@ -119,6 +131,7 @@ import EventBus from '../events'
 import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
+import PublishConfirmModal from './PublishConfirmModal'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
@@ -152,6 +165,7 @@ export default Vue.extend({
       STATES: STATES,
       state: '',
       message: '',
+      publishError: undefined, // todo why not empty?
     }
   },
   computed: {
@@ -189,6 +203,7 @@ export default Vue.extend({
   },
   components: {
     EmptyModal,
+    PublishConfirmModal,
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
@@ -204,6 +219,10 @@ export default Vue.extend({
 
     EventBus.$on('display-error', (errorMessage) => {
       this.displayErrors(errorMessage)
+    })
+
+    $(this.$refs.publishConfirmModal.$el).on('hidden.bs.modal', () => {
+      this.publishError = undefined
     })
   },
   methods: {
@@ -358,6 +377,9 @@ export default Vue.extend({
         }, timeMillis)
       })
     },
+    showPublishConfirmModal: function () {
+      $(this.$refs.publishConfirmModal.$el).modal('show') // todo use jQuery selectors, simpler
+    },
     publish() {
       $(this.$refs.savingModal.$el).modal('show')
       this.currentQuestionnaire.is_draft = false
@@ -372,9 +394,9 @@ export default Vue.extend({
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
+          this.publishError = error
           $(this.$refs.savingModal.$el).modal('hide')
-          // Emettre un event pour QuestionnairePreview, pour reafficher le modal
-          this.$emit('publish-questionnaire-error', error)
+          this.showPublishConfirmModal()
         })
     },
     goHome(event) {

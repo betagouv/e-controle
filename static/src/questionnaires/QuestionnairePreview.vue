@@ -17,13 +17,6 @@
             Publier
           </button>
         </div>
-
-        <publish-confirm-modal ref="publishConfirmModal"
-                               id="publishConfirmModal"
-                               :error="publishError"
-                               @confirm="publish()"
-        >
-        </publish-confirm-modal>
       </div>
     </div>
 
@@ -33,42 +26,15 @@
 <script>
 import Vue from 'vue'
 import { mapFields } from 'vuex-map-fields'
-import PublishConfirmModal from './PublishConfirmModal'
 import QuestionnaireDetailForPreview from './QuestionnaireDetailForPreview'
 
 export default Vue.extend({
-  data: function() {
-    return {
-      questionnaire: {},
-      publishError: undefined,
-    }
-  },
   computed: {
     ...mapFields([
       'currentQuestionnaire',
     ]),
   },
-  mounted() {
-    this.$parent.$on('publish-questionnaire-error', error => {
-      console.debug('got publish-questionnaire-error', error)
-      this.showPublishConfirmModal()
-      this.publishError = error
-    })
-
-    $(this.$refs.publishConfirmModal.$el).on('hidden.bs.modal', () => {
-      this.publishError = undefined
-    })
-  },
-  methods: {
-    showPublishConfirmModal: function () {
-      $(this.$refs.publishConfirmModal.$el).modal('show')
-    },
-    publish: function() {
-      this.$emit('publish-questionnaire')
-    },
-  },
   components: {
-    PublishConfirmModal,
     QuestionnaireDetailForPreview,
   },
 })
