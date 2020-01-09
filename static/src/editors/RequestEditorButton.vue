@@ -6,7 +6,7 @@
           <i class="fe fe-users mr-1"></i>
           <span v-if="questionnaire.editor">
             <strong>{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</strong>
-            est actuellement la seule personne qui peut modifier ce questionnaire
+            est actuellement la seule personne qui peut modifier ce questionnaire.
           </span>
           <span v-else>
             Personne n'est actuellement affecté à la rédaction de ce questionnaire.

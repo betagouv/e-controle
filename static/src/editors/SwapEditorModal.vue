@@ -24,7 +24,7 @@
                 <div class="card-body">
                   <div class="flex-row align-items-center">
                     <div class="flex-column mr-4 flex-grow-1">
-                      <strong>Libérer les droits de rédaction pour toutes l'équipe</strong>
+                      <strong>Libérer les droits de rédaction pour toute l'équipe</strong>
                       <p>Chacun.e de vos collègues pourra à son tour les prendre pour rédiger.</p>
                     </div>
                     <div class="flex-column mr-4">

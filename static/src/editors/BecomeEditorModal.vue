@@ -23,7 +23,7 @@
                    id="become-editor-checkbox-1"
                    required>
             <label class="ml-2" for="become-editor-checkbox-1">
-              Les modifications non enregistrées de votre collègues seront perdues.
+              Les modifications non enregistrées de votre collègue seront perdues.
             </label>
           </div>
           <div class="flex-row">
