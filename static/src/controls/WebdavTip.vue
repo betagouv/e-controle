@@ -16,41 +16,54 @@
     </div>
 
     <div class="modal-body">
-      <div class="px-5 pt-3 pb-5">
-        <p>
-          Copiez puis collez ce lien dans la barre de navigation de votre explorateur de fichiers windows.
-        </p>
-
-        <div class="flex-row align-items-center">
-          <div id="link-text" class="mr-4">{{ webdavurl}}</div>
-          <div id="copy-success-message-parent">
-            <button class="btn btn-sm btn-primary"
-                    @click="copyLink">
-              <i class="fe fe-copy"></i>
-              Copier le lien
-            </button>
-            <transition name="fade" v-on:enter="enterFade">
-              <div id="copy-success-message" class="tag tag-success" v-if="showCopySuccess">C'est copié !</div>
-            </transition>
+      <div class="card">
+        <div class="card-body flex-row">
+          <div class="flex-column justify-content-around mr-6">
+            <p>
+              <strong>
+              Copiez puis collez ce lien dans la barre de navigation de votre explorateur de fichiers windows.
+              </strong>
+            </p>
+            <div>
+              <div id="link-text" class="mb-4">{{ webdavurl}}</div>
+              <div id="copy-success-message-parent">
+                <button class="btn btn-primary"
+                        @click="copyLink">
+                  <i class="fe fe-copy"></i>
+                  Copier le lien
+                </button>
+                <transition name="fade" v-on:enter="enterFade">
+                  <div id="copy-success-message" class="tag tag-success" v-if="showCopySuccess">C'est copié !</div>
+                </transition>
+              </div>
+            </div>
           </div>
+          <div class="flex-column">
+            <img :src="'/static/img/vpn.png'"
+                 class="vpn-img"
+                 alt="Je suis bien à mon poste de travail ou sur VPN"/>
+          </div>
+
         </div>
       </div>
 
       <div class="alert alert-icon alert-primary" role="alert">
         <i class="fe fe-help-circle mr-2" aria-hidden="true"></i>
         <h5 class="mt-1">Besoin d’aide ?</h5>
-        <p class="pt-4">
+        <p>
+          Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
+          à tous les membres de l’équipe de contrôle.
+        </p>
+        <div class="flex-row">
           <button id="videoModalButton"
                   type="submit"
                   data-toggle="modal"
                   data-target="#fileExplorerVideoModal"
-                  class="btn btn-primary"
+                  class="btn btn-primary mr-4"
                   title="Voir les instructions en vidéo">
             <i class="fa fa-play-circle mr-1"></i>
             Suivez les instructions en vidéo
           </button>
-        </p>
-        <p>
           <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf"
               class="btn btn-primary"
               title="Suivez les instructions en images."
@@ -58,14 +71,7 @@
             <i class="fe fe-image mr-1"></i>
             Suivez les instructions en images
           </a>
-        </p>
-        <p>
-          Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
-          à tous les membres de l’équipe de contrôle.
-        </p>
-        <p>
-          Il convient d'être connecté au réseau des juridictions financières depuis son lieu de travail ou par VPN.
-        </p>
+        </div>
 
       </div>
     </div>
@@ -142,6 +148,10 @@ export default Vue.extend({
 
   <style>
     .webdav-tip .modal-dialog {
-      max-width: 800px;
+      max-width: 1000px;
+    }
+
+    .webdav-tip .vpn-img {
+      max-height: 190px;
     }
   </style>
