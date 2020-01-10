@@ -31,7 +31,7 @@
       </h4>
       <p>
         Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
-        votre collègue transfère ou libère les droits de rédaction.
+        votre collègue vous transfère ou libère les droits de rédaction.
       </p>
     </swap-editor-success-modal>
     <swap-editor-success-modal id="unsetEditorSuccessModal"
@@ -40,7 +40,7 @@
         Les droits de rédaction ont été libérés pour toute l'équipe !
       </h4>
       <p>
-        Pour devenir rédacteur de ce questionnaire à nouveau, vous pourrez reprendre les droits.
+        Chaque membre de l'équipe peut maintenant prendre les droits pour devenir rédacteur.
       </p>
     </swap-editor-success-modal>
 
