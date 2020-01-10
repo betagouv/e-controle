@@ -17,8 +17,11 @@
     </div>
 
     <swap-editor-modal id="swapEditorModal"
+                       ref="swapEditorModal"
                        :control-id="controlId"
-                       :questionnaire-id="questionnaireId">
+                       :questionnaire-id="questionnaireId"
+                       @swap-editor="swapEditor"
+                       @unset-editor="unsetEditor">
     </swap-editor-modal>
     <swap-editor-success-modal id="swapEditorSuccessModal"
                                :questionnaire-id="questionnaireId">
@@ -45,9 +48,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import backendUrls from '../utils/backend.js'
 import SwapEditorModal from '../editors/SwapEditorModal'
 import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
+import Vue from 'vue'
 
 export default Vue.extend({
   props: [
@@ -74,6 +78,32 @@ export default Vue.extend({
   methods: {
     saveDraft: function() {
       this.$emit('save-draft')
+    },
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = backendUrls.swapEditor(questionnaireId)
+      return Vue.axios.put(url, {
+        editor: editorUser,
+      })
+    },
+    swapEditor(user) {
+      this.callSwapEditorApi(user.id, this.questionnaireId)
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          $('#swapEditorSuccessModal').modal('show')
+        })
+        .catch(error => {
+          this.$refs.swapEditorModal.showError('Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error)
+        })
+    },
+    unsetEditor() {
+      this.callSwapEditorApi(null, this.questionnaireId)
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          $('#unsetEditorSuccessModal').modal('show')
+        })
+        .catch(error => {
+          this.$refs.swapEditorModal.showError('Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error)
+        })
     },
   },
 })

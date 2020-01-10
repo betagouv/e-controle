@@ -107,33 +107,16 @@ export default Vue.extend({
         return item.profile_type === 'inspector' & item.id !== this.sessionUser.id
       })
     },
-    callSwapEditorApi(editorUser, questionnaireId) {
-      const url = backendUrls.swapEditor(questionnaireId)
-      return Vue.axios.put(url, {
-        editor: editorUser,
-      })
-    },
     swapEditor(user) {
       this.errorMessage = undefined
-      this.callSwapEditorApi(user.id, this.questionnaireId)
-        .then(result => {
-          $('#swapEditorModal').modal('hide')
-          $('#swapEditorSuccessModal').modal('show')
-        })
-        .catch(error => {
-          this.errorMessage = 'Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error
-        })
+      this.$emit('swap-editor', user)
     },
     unsetEditor() {
       this.errorMessage = undefined
-      this.callSwapEditorApi(null, this.questionnaireId)
-        .then(result => {
-          $('#swapEditorModal').modal('hide')
-          $('#unsetEditorSuccessModal').modal('show')
-        })
-        .catch(error => {
-          this.errorMessage = 'Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error
-        })
+      this.$emit('unset-editor')
+    },
+    showError(errorMessage) {
+      this.errorMessage = errorMessage
     },
   },
   components: {
