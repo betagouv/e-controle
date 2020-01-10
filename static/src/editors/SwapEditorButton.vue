@@ -21,7 +21,16 @@
                        :questionnaire-id="questionnaireId">
     </swap-editor-modal>
     <swap-editor-success-modal id="swapEditorSuccessModal"
-                               :questionnaire-id="questionnaireId"></swap-editor-success-modal>
+                               :questionnaire-id="questionnaireId">
+      <h4 class="mb-6">
+        Les droits de rédaction ont été transférés !
+      </h4>
+      <p>
+        Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
+        votre collègue transfère ou libère les droits de rédaction.
+      </p>
+    </swap-editor-success-modal>
+
   </div>
 </template>
 

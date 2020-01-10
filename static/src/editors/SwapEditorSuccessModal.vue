@@ -4,13 +4,10 @@
       <i class="fe fe-check-circle fg-success big-icon"></i>
     </div>
     <div class="modal-body text-center">
-      <h4 class="mb-6">
-        Les droits de rédaction ont été transférés !
-      </h4>
-      <p>
-        Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
-        votre collègue transfère ou libère les droits de rédaction.
-      </p>
+
+     <slot>
+     </slot>
+
     </div>
     <div class="modal-footer border-top-0 d-flex justify-content-center">
       <button @click="goToReadonlyPage()" role="button" class="btn btn-primary px-7">
