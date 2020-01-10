@@ -26,7 +26,8 @@
     <swap-editor-success-modal id="swapEditorSuccessModal"
                                :questionnaire-id="questionnaireId">
       <h4 class="mb-6">
-        Les droits de rédaction ont été transférés !
+        Les droits de rédaction ont été transférés à <br>
+        {{ newEditor.first_name }} {{ newEditor.last_name }} !
       </h4>
       <p>
         Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
@@ -60,6 +61,7 @@ export default Vue.extend({
   data: function() {
     return {
       questionnaireId: undefined,
+      newEditor: {},
     }
   },
   components: {
@@ -89,6 +91,7 @@ export default Vue.extend({
       this.callSwapEditorApi(user.id, this.questionnaireId)
         .then(result => {
           $('#swapEditorModal').modal('hide')
+          this.newEditor = user
           $('#swapEditorSuccessModal').modal('show')
         })
         .catch(error => {
