@@ -37,10 +37,16 @@
         {{ errorMessage }}
       </error-bar>
     </div>
-    <request-editor-modal id="requestEditorModal" :questionnaire="questionnaire"></request-editor-modal>
+
+    <request-editor-modal id="requestEditorModal"
+                          :questionnaire="questionnaire"
+                          @request-editor="requestEditor">
+    </request-editor-modal>
+
     <request-editor-confirm-modal id="requestEditorConfirmModal"
-                                  :questionnaire-id="questionnaire.id">
+                                  @confirm="takeEditorRights">
     </request-editor-confirm-modal>
+
   </div>
 </template>
 
@@ -85,6 +91,10 @@ export default Vue.extend({
           console.error(error)
           this.errorMessage = 'Erreur lors de l\'obtention des droits. Vous pouvez réessayer.'
         })
+    },
+    requestEditor: function() {
+      $('#requestEditorModal').modal('hide')
+      $('#requestEditorConfirmModal').modal('show')
     },
   },
 })

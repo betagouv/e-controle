@@ -1,7 +1,7 @@
 <template>
   <empty-modal>
     <div class="modal-body">
-      <form @submit.prevent="becomeEditor">
+      <form @submit.prevent="confirm">
 
         <div class="modal-header border-bottom-0">
           <h4 class="modal-title">
@@ -65,14 +65,12 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import Vuex from 'vuex'
-import backendUrls from '../utils/backend.js'
 import EmptyModal from '../utils/EmptyModal'
 import Vue from 'vue'
 
 Vue.use(Vuex)
 
 export default Vue.extend({
-  props: ['questionnaireId'],
   components: {
     EmptyModal,
   },
@@ -80,21 +78,8 @@ export default Vue.extend({
     ...mapFields(['sessionUser']),
   },
   methods: {
-    callSwapEditorApi(editorUserId, questionnaireId) {
-      const url = backendUrls.swapEditor(questionnaireId)
-      return Vue.axios.put(url, {
-        editor: editorUserId,
-      })
-    },
-    becomeEditor() {
-      this.callSwapEditorApi(this.sessionUser.id, this.questionnaireId)
-        .then((response) => {
-          this.goToWriteablePage()
-        })
-    },
-    goToWriteablePage() {
-      const url = backendUrls['questionnaire-edit'](this.questionnaireId)
-      window.location.assign(url)
+    confirm() {
+      this.$emit('confirm')
     },
   },
 })
