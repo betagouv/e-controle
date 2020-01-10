@@ -73,77 +73,75 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import EmptyModal from '../utils/EmptyModal'
-  import InfoBar from '../utils/InfoBar'
+import Vue from 'vue'
+import EmptyModal from '../utils/EmptyModal'
 
-  const SUCCESS_MESSAGE_FADE_SECONDS = 5
+const SUCCESS_MESSAGE_FADE_SECONDS = 5
 
-  export default Vue.extend({
-    props: [ 'webdavurl' ],
-    components: {
-      EmptyModal,
-      InfoBar,
-    },
-    data: function (){
-      return {
-        showCopySuccess: false
-      }
-    },
-    methods: {
-      copyLink() {
-        const copyElementContents = (el) => {
-          if (window.clipboardData) { // IE
-            console.debug('Copying for IE, user agent : ', window.navigator.userAgent)
-            window.clipboardData.setData('Text', el.innerText)
-          } else { // Other browsers
-            console.debug('Copying for non-IE browser, user agent : ', window.navigator.userAgent)
-            const range = document.createRange()
-            range.selectNodeContents(el)
-            const sel = window.getSelection()
-            sel.removeAllRanges()
-            sel.addRange(range)
-            document.execCommand("copy")
-          }
-        }
-        const linkEl = document.getElementById('link-text')
-        copyElementContents(linkEl)
-        this.showCopySuccess = true
-      },
-
-      enterFade: function(el, done) {
-        setTimeout(() => {
-          this.showCopySuccess = false;
-        }, SUCCESS_MESSAGE_FADE_SECONDS * 1000)
-      }
-
+export default Vue.extend({
+  props: ['webdavurl'],
+  components: {
+    EmptyModal,
+  },
+  data: function () {
+    return {
+      showCopySuccess: false,
     }
-  })
+  },
+  methods: {
+    copyLink() {
+      const copyElementContents = (el) => {
+        if (window.clipboardData) { // IE
+          console.debug('Copying for IE, user agent : ', window.navigator.userAgent)
+          window.clipboardData.setData('Text', el.innerText)
+        } else { // Other browsers
+          console.debug('Copying for non-IE browser, user agent : ', window.navigator.userAgent)
+          const range = document.createRange()
+          range.selectNodeContents(el)
+          const sel = window.getSelection()
+          sel.removeAllRanges()
+          sel.addRange(range)
+          document.execCommand('copy')
+        }
+      }
+      const linkEl = document.getElementById('link-text')
+      copyElementContents(linkEl)
+      this.showCopySuccess = true
+    },
+
+    enterFade: function(el, done) {
+      setTimeout(() => {
+        this.showCopySuccess = false
+      }, SUCCESS_MESSAGE_FADE_SECONDS * 1000)
+    },
+
+  },
+})
 </script>
 
-<style scoped>
-  .parent-fake-icon {
-    position: relative;
-  }
-  .fake-icon {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-  }
+  <style scoped>
+    .parent-fake-icon {
+      position: relative;
+    }
+    .fake-icon {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+    }
 
-  #copy-success-message-parent {
-    position: relative;
-  }
-  #copy-success-message {
-    position: absolute;
-    top: 2rem;
-    left: 1rem;
-    z-index: 100;
-  }
-</style>
+    #copy-success-message-parent {
+      position: relative;
+    }
+    #copy-success-message {
+      position: absolute;
+      top: 2rem;
+      left: 1rem;
+      z-index: 100;
+    }
+  </style>
 
-<style>
-  .webdav-tip .modal-dialog {
-    max-width: 800px;
-  }
-</style>
+  <style>
+    .webdav-tip .modal-dialog {
+      max-width: 800px;
+    }
+  </style>
