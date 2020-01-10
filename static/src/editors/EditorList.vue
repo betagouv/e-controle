@@ -27,7 +27,6 @@
 
 <script>
 import Vue from 'vue'
-import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
   props: {
@@ -35,19 +34,8 @@ export default Vue.extend({
     questionnaireId: Number,
   },
   methods: {
-    callSwapEditorApi(editorUser, questionnaireId) {
-      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
-      return Vue.axios.put(url, {
-        editor: editorUser,
-      })
-    },
     swapEditor(user) {
-      this.callSwapEditorApi(user.id, this.questionnaireId)
-        .then(result => {
-          $('#swapEditorModal').modal('hide')
-          $('#swapEditorSuccessModal').modal('show')
-        })
-        // Todo deal with error case
+      this.$emit('swap-editor', user)
     },
   },
 })

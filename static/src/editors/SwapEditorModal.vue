@@ -15,9 +15,13 @@
           </div>
 
           <div class="modal-body">
-            <p class="ml-6">
+            <p class="mx-5">
               <strong>À qui souhaitez-vous transférer les droits de rédaction de ce questionnaire ?</strong>
             </p>
+
+            <error-bar class="mx-5">
+              jlkjlkj
+            </error-bar>
 
             <div class="card-body">
               <div class="card">
@@ -45,7 +49,10 @@
                   <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
 
-                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
+                <editor-list :users="inspectorUsers()"
+                             :questionnaireId='questionnaireId'
+                             @swap-editor="swapEditor">
+                </editor-list>
               </div>
 
               <contact-support></contact-support>
@@ -62,6 +69,7 @@ import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import ContactSupport from '../utils/ContactSupport'
 import EditorList from './EditorList'
+import ErrorBar from '../utils/ErrorBar'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
@@ -103,6 +111,15 @@ export default Vue.extend({
         editor: editorUser,
       })
     },
+    swapEditor(user) {
+      this.$emit('swap-editor', user)
+      this.callSwapEditorApi(user.id, this.questionnaireId)
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          $('#swapEditorSuccessModal').modal('show')
+        })
+        // Todo deal with error case
+    },
     unsetEditor() {
       this.callSwapEditorApi(null, this.questionnaireId)
         .then(result => {
@@ -115,6 +132,7 @@ export default Vue.extend({
   components: {
     ContactSupport,
     EditorList,
+    ErrorBar,
   },
   mounted() {
     this.getUsers()
