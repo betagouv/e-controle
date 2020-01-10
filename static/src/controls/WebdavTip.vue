@@ -1,13 +1,13 @@
 <template>
   <empty-modal class="webdav-tip">
     <div class="modal-header parent-fake-icon">
-      <div class="modal-title">
+      <h4 class="modal-title">
         <i class="fe fe-folder mr-4"></i>
         <img :src="'/static/img/file-explorer.png'"
               alt="Explorateur Windows"
               class="fake-icon" />
         <span>Comment voir les réponses classées dans l’Explorateur Windows ?</span>
-      </div>
+      </h4>
       <button type="button"
               class="close"
               data-dismiss="modal"
@@ -16,30 +16,29 @@
     </div>
 
     <div class="modal-body">
-      <p>
-        - Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
-        à tous les membres de l’équipe de contrôle.
-        - Il convient d'être connecté au réseau des juridictions financières depuis son lieu de travail ou par VPN.
-        - Pour les consulter, veuillez copier puis coller ce lien dans la barre de navigation de votre explorateur de fichiers windows
-        et épinglez-le dans vos accès rapide.
-      </p>
+      <div class="px-5 pt-3 pb-5">
+        <p>
+          Copiez puis collez ce lien dans la barre de navigation de votre explorateur de fichiers windows.
+        </p>
 
-      <div class="flex-row mb-4">
-        <div id="link-text" class="mr-4">{{ webdavurl}}</div>
-        <div id="copy-success-message-parent">
-          <button class="btn btn-sm btn-secondary"
-                  @click="copyLink">
-            <i class="fe fe-copy"></i>
-            Copier le lien
-          </button>
-          <transition name="fade" v-on:enter="enterFade">
-            <div id="copy-success-message" class="tag tag-success" v-if="showCopySuccess">C'est copié !</div>
-          </transition>
+        <div class="flex-row align-items-center">
+          <div id="link-text" class="mr-4">{{ webdavurl}}</div>
+          <div id="copy-success-message-parent">
+            <button class="btn btn-sm btn-primary"
+                    @click="copyLink">
+              <i class="fe fe-copy"></i>
+              Copier le lien
+            </button>
+            <transition name="fade" v-on:enter="enterFade">
+              <div id="copy-success-message" class="tag tag-success" v-if="showCopySuccess">C'est copié !</div>
+            </transition>
+          </div>
         </div>
       </div>
 
       <div class="alert alert-icon alert-primary" role="alert">
-        <i class="fe fe-help-circle mr-2" aria-hidden="true"></i> Besoin d’aide ?
+        <i class="fe fe-help-circle mr-2" aria-hidden="true"></i>
+        <h5 class="mt-1">Besoin d’aide ?</h5>
         <p class="pt-4">
           <button id="videoModalButton"
                   type="submit"
@@ -59,6 +58,13 @@
             <i class="fe fe-image mr-1"></i>
             Suivez les instructions en images
           </a>
+        </p>
+        <p>
+          Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
+          à tous les membres de l’équipe de contrôle.
+        </p>
+        <p>
+          Il convient d'être connecté au réseau des juridictions financières depuis son lieu de travail ou par VPN.
         </p>
 
       </div>
@@ -121,7 +127,7 @@
   }
   .fake-icon {
     position: absolute;
-    top: 10px;
+    top: 14px;
     left: 14px;
   }
 
