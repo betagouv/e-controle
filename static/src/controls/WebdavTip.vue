@@ -140,8 +140,8 @@ export default Vue.extend({
     }
     #copy-success-message {
       position: absolute;
-      top: 2rem;
-      left: 1rem;
+      top: 0.5rem;
+      left: 8.5rem;
       z-index: 100;
     }
   </style>
