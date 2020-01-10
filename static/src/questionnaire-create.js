@@ -1,27 +1,24 @@
-import "@babel/polyfill"
+import '@babel/polyfill'
 import './utils/polyfills.js'
 
-import { mapActions } from 'vuex'
-import { store } from "./store"
+import { store } from './store'
 import QuestionnaireCreate from './questionnaires/QuestionnaireCreate.vue'
 import Vue from 'vue/dist/vue.js'
-import Vuex from 'vuex'
+import Vuex, { mapActions } from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
-
-new Vue({
+let questionnaireCreateApp = new Vue({
   store,
   el: '#questionnaire-create-vm',
-  data: {
-  },
   components: {
     QuestionnaireCreate,
   },
   methods: {
-    ...mapActions(['loadConfig']),
+    ...mapActions(['loadConfig', 'fetchSessionUser']),
   },
   created() {
     this.loadConfig()
+    this.fetchSessionUser()
   },
-});
+})

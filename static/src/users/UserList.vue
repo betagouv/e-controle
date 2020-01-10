@@ -10,12 +10,14 @@
           <div>{{ user.first_name }} {{ user.last_name }}</div>
           <small><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
-        <div class="flex-column mr-4">
-          <button v-if="sessionUser.is_inspector" class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
-        </div>
-        <div class="flex-column">
-          <button v-if="sessionUser.is_inspector" class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
-        </div>
+        <template v-if="sessionUser.is_inspector">
+          <div class="flex-column mr-4">
+            <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
+          </div>
+          <div class="flex-column">
+            <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
+          </div>
+        </template>
       </div>
     </li>
   </ul>
@@ -33,21 +35,20 @@
 
   export default Vue.extend({
     store,
-    data: () {
+    data: () => {
       return {
         postResult: {}
       }
     },
     props: {
       users: Array,
-      profileType: String,
       control: Object,
     },
     computed: {
       ...mapFields([
         'editingUser',
-        'editingControl'
-        'sessionUser'
+        'editingControl',
+        'sessionUser',
       ]),
     },
     methods: {
