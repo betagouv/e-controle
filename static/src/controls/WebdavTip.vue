@@ -6,7 +6,7 @@
         <img :src="'/static/img/file-explorer.png'"
               alt="Explorateur Windows"
               class="fake-icon" />
-        <span>Comment voir les réponses dans l’Explorateur Windows ?</span>
+        <span>Comment voir les réponses classées dans l’Explorateur Windows ?</span>
       </div>
       <button type="button"
               class="close"
@@ -17,9 +17,10 @@
 
     <div class="modal-body">
       <p>
-        Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
+        - Toutes les réponses déposées sont automatiquement classées et renommées dans un dossier accessible
         à tous les membres de l’équipe de contrôle.
-        Pour les consulter, veuillez copier puis coller ce lien dans la barre de navigation de votre explorateur de fichiers windows
+        - Il convient d'être connecté au réseau des juridictions financières depuis son lieu de travail ou par VPN.
+        - Pour les consulter, veuillez copier puis coller ce lien dans la barre de navigation de votre explorateur de fichiers windows
         et épinglez-le dans vos accès rapide.
       </p>
 
