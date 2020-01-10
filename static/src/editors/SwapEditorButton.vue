@@ -40,8 +40,7 @@
         Les droits de rédaction ont été libérés pour toute l'équipe !
       </h4>
       <p>
-        Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
-        votre collègue transfère ou libère les droits de rédaction.
+        Pour devenir rédacteur de ce questionnaire à nouveau, vous pourrez reprendre les droits.
       </p>
     </swap-editor-success-modal>
 
