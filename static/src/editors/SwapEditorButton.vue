@@ -30,6 +30,16 @@
         votre collègue transfère ou libère les droits de rédaction.
       </p>
     </swap-editor-success-modal>
+    <swap-editor-success-modal id="unsetEditorSuccessModal"
+                               :questionnaire-id="questionnaireId">
+      <h4 class="mb-6">
+        Les droits de rédaction ont été libérés pour toute l'équipe !
+      </h4>
+      <p>
+        Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
+        votre collègue transfère ou libère les droits de rédaction.
+      </p>
+    </swap-editor-success-modal>
 
   </div>
 </template>

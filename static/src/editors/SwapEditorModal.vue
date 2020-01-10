@@ -31,9 +31,7 @@
                       <button
                         class="btn btn-primary"
                         title="Transférer"
-                        data-toggle="modal"
-                        data-target="#swapEditorSuccessModal"
-                        @click="SetEditorNull()">
+                        @click="unsetEditor()">
                           <i class="fa fa-lock-open mr-2"></i>
                           Libérer les droits
                       </button>
@@ -101,15 +99,17 @@ export default Vue.extend({
     },
     callSwapEditorApi(editorUser, questionnaireId) {
       const url = '/api' + backendUrls['swap-editor'](questionnaireId)
-      Vue.axios.put(url, {
+      return Vue.axios.put(url, {
         editor: editorUser,
-      }).then((response) => {
-        this.postResult = response.data
       })
     },
-    SetEditorNull() {
+    unsetEditor() {
       this.callSwapEditorApi(null, this.questionnaireId)
-      $('#swapEditorModal').modal('hide')
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          $('#unsetEditorSuccessModal').modal('show')
+        })
+      // Todo deal with error case
     },
   },
   components: {
