@@ -19,8 +19,9 @@
               <strong>À qui souhaitez-vous transférer les droits de rédaction de ce questionnaire ?</strong>
             </p>
 
-            <error-bar class="mx-5">
-              jlkjlkj
+            <error-bar v-if="errorMessage"
+                       class="mx-5">
+              {{ errorMessage }}
             </error-bar>
 
             <div class="card-body">
@@ -85,6 +86,7 @@ export default Vue.extend({
   data() {
     return {
       users: [],
+      errorMessage: undefined,
     }
   },
   computed: {
@@ -112,21 +114,26 @@ export default Vue.extend({
       })
     },
     swapEditor(user) {
-      this.$emit('swap-editor', user)
+      this.errorMessage = undefined
       this.callSwapEditorApi(user.id, this.questionnaireId)
         .then(result => {
           $('#swapEditorModal').modal('hide')
           $('#swapEditorSuccessModal').modal('show')
         })
-        // Todo deal with error case
+        .catch(error => {
+          this.errorMessage = 'Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error
+        })
     },
     unsetEditor() {
+      this.errorMessage = undefined
       this.callSwapEditorApi(null, this.questionnaireId)
         .then(result => {
           $('#swapEditorModal').modal('hide')
           $('#unsetEditorSuccessModal').modal('show')
         })
-      // Todo deal with error case
+        .catch(error => {
+          this.errorMessage = 'Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error
+        })
     },
   },
   components: {
