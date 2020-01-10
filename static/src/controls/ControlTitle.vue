@@ -82,7 +82,7 @@
               <img :src="'/static/img/file-explorer.png'"
                    alt="Explorateur Windows"
                    class="fake-icon" />
-              Voir les réponses
+              Comment voir les réponses classées?
             </a>
           </div>
           <a href="javascript:void(0)"
