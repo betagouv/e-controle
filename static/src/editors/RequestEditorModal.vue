@@ -44,7 +44,7 @@
                     class="btn btn-primary"
                     title="Forcer le transfert des droits"
                     data-toggle="modal"
-                    data-target="#becomeEditorModal"
+                    data-target="#requestEditorConfirmModal"
                     @click="clickBecomeEditor()">
                     <i class="fa fa-exchange-alt mr-1"></i>
                     Forcer le transfert des droits
