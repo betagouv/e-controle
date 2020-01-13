@@ -79,13 +79,13 @@
       </div>
     </div>
 
-    <publish-confirm-modal ref="publishConfirmModal"
-                            id="publishConfirmModal"
-                            :error="publishError"
-                            @confirm="publish()"
+    <publish-confirm-modal id="publishConfirmModal"
+                           :error="publishError"
+                           @confirm="publish()"
     >
     </publish-confirm-modal>
-    <empty-modal id="savingModal" ref="savingModal" no-close="true">
+    <empty-modal id="savingModal"
+                 no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
         <div class="m-4">
           Questionnaire en cours de publication ...
@@ -95,7 +95,6 @@
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
-                 ref="savedModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -240,7 +239,7 @@ export default Vue.extend({
       this.displayErrors(errorMessage)
     })
 
-    $(this.$refs.publishConfirmModal.$el).on('hidden.bs.modal', () => {
+    $('#publishConfirmModal').on('hidden.bs.modal', () => {
       this.publishError = undefined
     })
   },
@@ -397,10 +396,10 @@ export default Vue.extend({
       })
     },
     showPublishConfirmModal: function () {
-      $(this.$refs.publishConfirmModal.$el).modal('show') // todo use jQuery selectors, simpler
+      $('#publishConfirmModal').modal('show')
     },
     publish() {
-      $(this.$refs.savingModal.$el).modal('show')
+      $('#savingModal').modal('show')
       this.currentQuestionnaire.is_draft = false
 
       // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
@@ -408,13 +407,13 @@ export default Vue.extend({
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
-          $(this.$refs.savingModal.$el).modal('hide')
-          $(this.$refs.savedModal.$el).modal('show')
+          $('#savingModal').modal('hide')
+          $('#savedModal').modal('show')
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
           this.publishError = error
-          $(this.$refs.savingModal.$el).modal('hide')
+          $('#savingModal').modal('hide')
           this.showPublishConfirmModal()
         })
     },
