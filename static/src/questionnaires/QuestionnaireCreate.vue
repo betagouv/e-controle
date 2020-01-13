@@ -178,18 +178,19 @@ export default Vue.extend({
   watch: {
     // Watch change of loadStatus coming from the store, to know when the data is ready.
     controlsLoadStatus(newValue, oldValue) {
-      if (newValue === loadStatuses.SUCCESS) {
-        if (typeof this.questionnaireId === 'undefined') {
-          const newQuestionnaire = {
-            control: this.controlId,
-            description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
-          }
-          console.debug('currentQuestionnaire is new', newQuestionnaire)
-          this.currentQuestionnaire = newQuestionnaire
-          this.emitQuestionnaireUpdated()
-          this.moveToState(STATES.START)
-          return
+      const loadNewQuestionnaire = () => {
+        const newQuestionnaire = {
+          control: this.controlId,
+          description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
         }
+        console.debug('currentQuestionnaire is new', newQuestionnaire)
+        this.currentQuestionnaire = newQuestionnaire
+        this.emitQuestionnaireUpdated()
+        this.moveToState(STATES.START)
+        return
+      }
+
+      const loadExistingQuestionnaire = () => {
         const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
         console.debug('currentQuestionnaire', currentQuestionnaire)
         if (!currentQuestionnaire) {
@@ -207,7 +208,18 @@ export default Vue.extend({
         this.emitQuestionnaireUpdated()
         this.moveToState(STATES.START)
       }
-      // todo do something on loadStatuses.ERROR
+
+      if (newValue === loadStatuses.ERROR) {
+        const errorMessage = 'Erreur lors du chargement des données. Le questionnaire ne peut être affiché.'
+        this.displayErrors(errorMessage)
+        throw new Error('Store status is ERROR. Not loading questionnaire.')
+      }
+      if (newValue === loadStatuses.SUCCESS) {
+        if (typeof this.questionnaireId === 'undefined') {
+          loadNewQuestionnaire()
+        }
+        loadExistingQuestionnaire()
+      }
     },
   },
   components: {
