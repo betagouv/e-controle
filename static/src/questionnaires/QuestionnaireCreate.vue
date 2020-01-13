@@ -192,8 +192,13 @@ export default Vue.extend({
         }
         const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
         // Todo : what if no questionnaire?
-        // Todo : What if not a draft?
         console.debug('currentQuestionnaire', currentQuestionnaire)
+        if (!currentQuestionnaire.is_draft) {
+          const errorMessage = 'Le questionnaire ' + this.questionnaireId +
+                ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
+          this.displayErrors(errorMessage)
+          throw new Error('Questionnaire ' + this.questionnaireId + ' is not a draft, you cannot edit it')
+        }
         this.currentQuestionnaire = currentQuestionnaire
         this.emitQuestionnaireUpdated()
         this.moveToState(STATES.START)
