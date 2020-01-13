@@ -19,7 +19,7 @@ class UserProfile(models.Model):
     profile_type = models.CharField(max_length=255, choices=PROFILE_TYPE)
     controls = models.ManyToManyField(
         to='control.Control', verbose_name='controles', related_name='user_profiles', blank=True)
-    organization = models.CharField("Organisme", max_length=255, blank=True)
+    organization = models.CharField("Organisme", max_length=255, blank=True, null=True)
     send_files_report = models.BooleanField(
         verbose_name="Envoie Rapport de Fichiers", default=False,
         help_text="Envoyer par email le rapport des fichiers uplodés ?")
