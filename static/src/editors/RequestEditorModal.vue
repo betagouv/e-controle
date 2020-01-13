@@ -43,9 +43,7 @@
                   <button type="submit"
                     class="btn btn-primary"
                     title="Forcer le transfert des droits"
-                    data-toggle="modal"
-                    data-target="#becomeEditorModal"
-                    @click="clickBecomeEditor()">
+                    @click="requestEditor()">
                     <i class="fa fa-exchange-alt mr-1"></i>
                     Forcer le transfert des droits
                   </button>
@@ -62,7 +60,6 @@
 </template>
 
 <script>
-import backendUrls from '../utils/backend.js'
 import ContactSupport from '../utils/ContactSupport'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -72,20 +69,8 @@ Vue.use(Vuex)
 export default Vue.extend({
   props: ['questionnaire'],
   methods: {
-    callSwapEditorApi(editorUser, questionnaireId) {
-      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
-      Vue.axios.put(url, {
-        editor: editorUser,
-      }).then((response) => {
-        this.postResult = response.data
-      })
-    },
-    SetEditorNull() {
-      this.callSwapEditorApi(null, this.questionnaire.id)
-      $('#swapEditorModal').modal('hide')
-    },
-    clickBecomeEditor() {
-      $('#requestEditorModal').modal('hide')
+    requestEditor() {
+      this.$emit('request-editor')
     },
   },
   components: {

@@ -15,9 +15,14 @@
           </div>
 
           <div class="modal-body">
-            <p class="ml-6">
+            <p class="mx-5">
               <strong>À qui souhaitez-vous transférer les droits de rédaction de ce questionnaire ?</strong>
             </p>
+
+            <error-bar v-if="errorMessage"
+                       class="mx-5">
+              {{ errorMessage }}
+            </error-bar>
 
             <div class="card-body">
               <div class="card">
@@ -31,9 +36,7 @@
                       <button
                         class="btn btn-primary"
                         title="Transférer"
-                        data-toggle="modal"
-                        data-target="#swapEditorSuccessModal"
-                        @click="SetEditorNull()">
+                        @click="unsetEditor()">
                           <i class="fa fa-lock-open mr-2"></i>
                           Libérer les droits
                       </button>
@@ -47,7 +50,10 @@
                   <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
                 </div>
 
-                <editor-list :users="inspectorUsers()" :questionnaireId='questionnaireId'></editor-list>
+                <editor-list :users="inspectorUsers()"
+                             :questionnaireId='questionnaireId'
+                             @swap-editor="swapEditor">
+                </editor-list>
               </div>
 
               <contact-support></contact-support>
@@ -64,6 +70,7 @@ import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import ContactSupport from '../utils/ContactSupport'
 import EditorList from './EditorList'
+import ErrorBar from '../utils/ErrorBar'
 import Vue from 'vue'
 import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
@@ -79,6 +86,7 @@ export default Vue.extend({
   data() {
     return {
       users: [],
+      errorMessage: undefined,
     }
   },
   computed: {
@@ -99,22 +107,22 @@ export default Vue.extend({
         return item.profile_type === 'inspector' & item.id !== this.sessionUser.id
       })
     },
-    callSwapEditorApi(editorUser, questionnaireId) {
-      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
-      Vue.axios.put(url, {
-        editor: editorUser,
-      }).then((response) => {
-        this.postResult = response.data
-      })
+    swapEditor(user) {
+      this.errorMessage = undefined
+      this.$emit('swap-editor', user)
     },
-    SetEditorNull() {
-      this.callSwapEditorApi(null, this.questionnaireId)
-      $('#swapEditorModal').modal('hide')
+    unsetEditor() {
+      this.errorMessage = undefined
+      this.$emit('unset-editor')
+    },
+    showError(errorMessage) {
+      this.errorMessage = errorMessage
     },
   },
   components: {
     ContactSupport,
     EditorList,
+    ErrorBar,
   },
   mounted() {
     this.getUsers()

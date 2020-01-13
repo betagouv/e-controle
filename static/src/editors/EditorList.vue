@@ -14,8 +14,6 @@
             <button
               class="btn btn-secondary"
               title="Transférer"
-              data-toggle="modal"
-              data-target="#swapEditorSuccessModal"
               @click="swapEditor(user)">
                 <i class="fa fa-exchange-alt mr-2"></i>
                 Transférer
@@ -29,30 +27,15 @@
 
 <script>
 import Vue from 'vue'
-import backendUrls from '../utils/backend.js'
 
 export default Vue.extend({
-  data: () => {
-    return {
-      postResult: {},
-    }
-  },
   props: {
     users: Array,
     questionnaireId: Number,
   },
   methods: {
-    callSwapEditorApi(editorUser, questionnaireId) {
-      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
-      Vue.axios.put(url, {
-        editor: editorUser,
-      }).then((response) => {
-        this.postResult = response.data
-      })
-    },
     swapEditor(user) {
-      this.callSwapEditorApi(user.id, this.questionnaireId)
-      $('#swapEditorModal').modal('hide')
+      this.$emit('swap-editor', user)
     },
   },
 })

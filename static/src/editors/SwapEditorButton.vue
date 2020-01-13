@@ -17,18 +17,41 @@
     </div>
 
     <swap-editor-modal id="swapEditorModal"
+                       ref="swapEditorModal"
                        :control-id="controlId"
-                       :questionnaire-id="questionnaireId">
+                       :questionnaire-id="questionnaireId"
+                       @swap-editor="swapEditor"
+                       @unset-editor="unsetEditor">
     </swap-editor-modal>
     <swap-editor-success-modal id="swapEditorSuccessModal"
-                               :questionnaire-id="questionnaireId"></swap-editor-success-modal>
+                               :questionnaire-id="questionnaireId">
+      <h4 class="mb-6">
+        Les droits de rédaction ont été transférés à <br>
+        {{ newEditor.first_name }} {{ newEditor.last_name }} !
+      </h4>
+      <p>
+        Pour devenir rédacteur de ce questionnaire à nouveau, il faudra que
+        votre collègue vous transfère ou libère les droits de rédaction.
+      </p>
+    </swap-editor-success-modal>
+    <swap-editor-success-modal id="unsetEditorSuccessModal"
+                               :questionnaire-id="questionnaireId">
+      <h4 class="mb-6">
+        Les droits de rédaction ont été libérés pour toute l'équipe !
+      </h4>
+      <p>
+        Chaque membre de l'équipe peut maintenant prendre les droits pour devenir rédacteur.
+      </p>
+    </swap-editor-success-modal>
+
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+import backendUrls from '../utils/backend.js'
 import SwapEditorModal from '../editors/SwapEditorModal'
 import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
+import Vue from 'vue'
 
 export default Vue.extend({
   props: [
@@ -37,6 +60,7 @@ export default Vue.extend({
   data: function() {
     return {
       questionnaireId: undefined,
+      newEditor: {},
     }
   },
   components: {
@@ -55,6 +79,33 @@ export default Vue.extend({
   methods: {
     saveDraft: function() {
       this.$emit('save-draft')
+    },
+    callSwapEditorApi(editorUser, questionnaireId) {
+      const url = backendUrls.swapEditor(questionnaireId)
+      return Vue.axios.put(url, {
+        editor: editorUser,
+      })
+    },
+    swapEditor(user) {
+      this.callSwapEditorApi(user.id, this.questionnaireId)
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          this.newEditor = user
+          $('#swapEditorSuccessModal').modal('show')
+        })
+        .catch(error => {
+          this.$refs.swapEditorModal.showError('Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error)
+        })
+    },
+    unsetEditor() {
+      this.callSwapEditorApi(null, this.questionnaireId)
+        .then(result => {
+          $('#swapEditorModal').modal('hide')
+          $('#unsetEditorSuccessModal').modal('show')
+        })
+        .catch(error => {
+          this.$refs.swapEditorModal.showError('Le transfert de droits n\'a pas fonctionné. Vous pouvez réessayer. ' + error)
+        })
     },
   },
 })

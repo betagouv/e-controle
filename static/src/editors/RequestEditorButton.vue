@@ -26,7 +26,7 @@
             type="submit"
             class="btn btn-gray"
             title="Obtenir les droits de rédaction..."
-            @click="switchToEditorPage"
+            @click="takeEditorRights"
             >
             <i class="fa fa-exchange-alt mr-1"></i>
             <span>Obtenir les droits de rédaction...</span>
@@ -37,16 +37,22 @@
         {{ errorMessage }}
       </error-bar>
     </div>
-    <request-editor-modal id="requestEditorModal" :questionnaire="questionnaire"></request-editor-modal>
-    <become-editor-modal id="becomeEditorModal"
-                         :questionnaire-id="questionnaire.id">
-    </become-editor-modal>
+
+    <request-editor-modal id="requestEditorModal"
+                          :questionnaire="questionnaire"
+                          @request-editor="requestEditor">
+    </request-editor-modal>
+
+    <request-editor-confirm-modal id="requestEditorConfirmModal"
+                                  @confirm="takeEditorRights">
+    </request-editor-confirm-modal>
+
   </div>
 </template>
 
 <script>
 import backendUrls from '../utils/backend.js'
-import BecomeEditorModal from '../editors/BecomeEditorModal'
+import RequestEditorConfirmModal from '../editors/RequestEditorConfirmModal'
 import ErrorBar from '../utils/ErrorBar'
 import { mapFields } from 'vuex-map-fields'
 import RequestEditorModal from '../editors/RequestEditorModal'
@@ -60,8 +66,8 @@ export default Vue.extend({
     }
   },
   components: {
-    BecomeEditorModal,
     ErrorBar,
+    RequestEditorConfirmModal,
     RequestEditorModal,
   },
   computed: {
@@ -69,12 +75,12 @@ export default Vue.extend({
   },
   methods: {
     callSwapEditorApi(editorUser, questionnaireId) {
-      const url = '/api' + backendUrls['swap-editor'](questionnaireId)
+      const url = backendUrls.swapEditor(questionnaireId)
       return Vue.axios.put(url, {
         editor: editorUser,
       })
     },
-    switchToEditorPage: function() {
+    takeEditorRights: function() {
       this.errorMessage = ''
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaire.id)
         .then((response) => {
@@ -85,6 +91,10 @@ export default Vue.extend({
           console.error(error)
           this.errorMessage = 'Erreur lors de l\'obtention des droits. Vous pouvez réessayer.'
         })
+    },
+    requestEditor: function() {
+      $('#requestEditorModal').modal('hide')
+      $('#requestEditorConfirmModal').modal('show')
     },
   },
 })
