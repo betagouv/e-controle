@@ -191,8 +191,12 @@ export default Vue.extend({
           return
         }
         const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
-        // Todo : what if no questionnaire?
         console.debug('currentQuestionnaire', currentQuestionnaire)
+        if (!currentQuestionnaire) {
+          const errorMessage = 'Le questionnaire ' + this.questionnaireId + ' n\'a pas été trouvé.'
+          this.displayErrors(errorMessage)
+          throw new Error('Questionnaire ' + this.questionnaireId + ' not found')
+        }
         if (!currentQuestionnaire.is_draft) {
           const errorMessage = 'Le questionnaire ' + this.questionnaireId +
                 ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
