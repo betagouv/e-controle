@@ -1,7 +1,5 @@
 <template>
   <div>
-    <div>TODO REMOVE DEBUG OUTPUT</div>
-    <div>{{ currentQuestionnaire }}</div>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
@@ -165,7 +163,7 @@ export default Vue.extend({
       STATES: STATES,
       state: '',
       message: '',
-      publishError: undefined, // todo why not empty?
+      publishError: undefined,
     }
   },
   computed: {

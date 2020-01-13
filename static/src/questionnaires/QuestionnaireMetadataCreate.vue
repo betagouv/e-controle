@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div>TODO REMOVE DEBUG OUTPUT</div>
-    <div>{{ title }}</div>
-    <div>{{ description }}</div>
-    <div>{{ end_date }}</div>
-
     <div class="card">
       <div class="card-header">
         <div class="card-title">Etape 1 : Renseigner l'introduction</div>
