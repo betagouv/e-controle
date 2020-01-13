@@ -8,7 +8,7 @@
       "runtimeArgs": [
         "--inspect",
         "${workspaceRoot}/node_modules/.bin/jest",
-        "--watch"
+        "--watch",
         "--runInBand"
       ],
       "console": "integratedTerminal",
