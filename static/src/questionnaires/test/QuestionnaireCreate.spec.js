@@ -29,6 +29,13 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
+  afterEach(() => {
+    // If we removed error output in previous test, set it back for next test.
+    if (console.error.mockRestore) {
+      console.error.mockRestore()
+    }
+  })
+
   test('is a Vue instance', () => {
     const wrapper = shallowMount(
       QuestionnaireCreate,
@@ -43,6 +50,10 @@ describe('QuestionnaireCreate.vue', () => {
   })
 
   test('crashes without a controlId or questionnaireId', () => {
+    // Remove error output, since we expect an error. Avoids clutter in test log.
+    jest.spyOn(console, 'error')
+    console.error.mockImplementation(() => {})
+
     expect(() => {
       shallowMount(
         QuestionnaireCreate,
