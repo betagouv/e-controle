@@ -2,7 +2,8 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { getField, updateField } from 'vuex-map-fields'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
 import Vuex from 'vuex'
-import loadStatuses from '../../store'
+import { loadStatuses } from '../../store'
+import flushPromises from 'flush-promises'
 
 jest.mock('axios')
 const localVue = createLocalVue()
@@ -84,13 +85,18 @@ describe('QuestionnaireCreate.vue', () => {
 
     test('moves to first State', async () => {
       const controlId = 1
+      // Todo : this is the "full" state, prune the vars we don't need
       store = new Vuex.Store({
         state: {
-          controls: [
-            {
-              id: controlId,
-            },
-          ],
+          config: {},
+          controls: [],
+          controlsLoadStatus: loadStatuses.LOADING,
+          currentQuestionnaire: {},
+          editingControl: {},
+          editingUser: {},
+          editingProfileType: '',
+          sessionUser: {},
+          sessionUserLoadStatus: loadStatuses.LOADING,
         },
         getters: {
           getField,
@@ -110,10 +116,18 @@ describe('QuestionnaireCreate.vue', () => {
           localVue,
         })
 
-      // await flushPromises() todo needed?
-      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+      store.controls = [
+        {
+          id: controlId,
+        },
+      ]
 
-      assert(wrapper.vm.state === 1)
+      store.updateControlsLoadStatus = loadStatuses.SUCCESS
+
+      await flushPromises() // todo is this needed?
+      // Todo : the watcher func is not being run, it's not logging to console.
+      // Maybe use store.commit?
+      expect(wrapper.vm.state).toEqual(1)
     })
 
   })
