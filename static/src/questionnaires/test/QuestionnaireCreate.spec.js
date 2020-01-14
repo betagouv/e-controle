@@ -1,10 +1,8 @@
-import axios from 'axios'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { getField, updateField } from 'vuex-map-fields'
-import flushPromises from 'flush-promises'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
-import testUtils from '../../utils/testUtils'
 import Vuex from 'vuex'
+import loadStatuses from '../../store'
 
 jest.mock('axios')
 const localVue = createLocalVue()
@@ -43,29 +41,90 @@ describe('QuestionnaireCreate.vue', () => {
       })
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
-/*
-  describe('Setup', () => {
-    test('crashes without a controlId or questionnaireId', () => {
+
+  test('crashes without a controlId or questionnaireId', () => {
+    expect(() => {
+      shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            // no controlId or questionnaireId
+          },
+          store,
+          localVue,
+        })
+    }).toThrow()
+  })
+
+  describe('create new questionnaire', () => {
+    test('sets up without crashing', () => {
       expect(() => {
-        shallowMount(QuestionnaireCreate)
-      }).toThrow()
+        shallowMount(
+          QuestionnaireCreate,
+          {
+            propsData: {
+              controlId: 1,
+            },
+            store,
+            localVue,
+          })
+      }).not.toThrow()
     })
 
-    describe('create new questionnaire', () => {
-      test('sets up without crashing', () => {
-        expect(() => {
-          shallowMount(QuestionnaireCreate, { propsData: { controlId: 1 } })
-        }).not.toThrow()
+    test('moves to first State', async () => {
+      const controlId = 1
+      store = new Vuex.Store({
+        state: {
+          controls: [
+            {
+              id: controlId,
+            },
+          ],
+        },
+        getters: {
+          getField,
+        },
+        mutations: {
+          updateField,
+        },
       })
 
-      test('moves to first step of wizard', async () => {
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1 } })
+      const wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: 1,
+          },
+          store,
+          localVue,
+        })
 
-        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
-        await flushPromises()
+      // await flushPromises() todo needed?
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
-        assert(wrapper.find('#questionnaire-metadata-create').isVisible())
-      })
+      assert(wrapper.vm.state === 1)
+    })
+
+  })
+
+/*
+    test('moves to first step of wizard', async () => {
+      const wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: 1,
+          },
+          store,
+          localVue,
+        })
+
+      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+      await flushPromises()
+
+      assert(wrapper.find('#questionnaire-metadata-create').isVisible())
+    })
+
 
       test('passes questionnaire to child components', async () => {
         const controlId = 6
