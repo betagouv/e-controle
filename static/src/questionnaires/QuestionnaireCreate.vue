@@ -214,6 +214,7 @@ export default Vue.extend({
       if (newValue === loadStatuses.SUCCESS) {
         if (typeof this.questionnaireId === 'undefined') {
           loadNewQuestionnaire()
+          return
         }
         loadExistingQuestionnaire()
       }
