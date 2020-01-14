@@ -176,6 +176,7 @@ export default Vue.extend({
     // Watch change of loadStatus coming from the store, to know when the data is ready.
     controlsLoadStatus(newValue, oldValue) {
       const loadNewQuestionnaire = () => {
+        console.debug('loadNewQuestionnaire')
         const newQuestionnaire = {
           control: this.controlId,
           description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
@@ -188,6 +189,7 @@ export default Vue.extend({
       }
 
       const loadExistingQuestionnaire = () => {
+        console.debug('loadExistingQuestionnaire')
         const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
         console.debug('currentQuestionnaire', currentQuestionnaire)
         if (!currentQuestionnaire) {
