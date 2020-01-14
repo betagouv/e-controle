@@ -10,7 +10,6 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('QuestionnairePreview.vue', () => {
-  // Todo move this mock store to separate file for reuse
   let store
   const currentQuestionnaire = { id: 12345 }
   beforeEach(() => {
