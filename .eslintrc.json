@@ -30,6 +30,7 @@
     "rules": {
         "comma-dangle": ["error", "always-multiline"],
         "no-useless-return": "off",
-        "space-before-function-paren": "off"
+        "space-before-function-paren": "off",
+        "jest/expect-expect": "off"
     }
 }

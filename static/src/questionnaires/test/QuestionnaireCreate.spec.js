@@ -3,7 +3,6 @@ import { getField, updateField } from 'vuex-map-fields'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
 import Vuex from 'vuex'
 import { loadStatuses } from '../../store'
-import flushPromises from 'flush-promises'
 
 jest.mock('axios')
 const localVue = createLocalVue()
@@ -132,19 +131,40 @@ describe('QuestionnaireCreate.vue', () => {
           })
       }).not.toThrow()
     })
+
+    test('sets currrentQuestionnaire into store', () => {
+      const questionnaireId = 1234
+      const controlId = 5678
+      const questionnaire = {
+        control: controlId,
+        id: questionnaireId,
+        is_draft: true,
+      }
+
+      shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            questionnaireId: questionnaireId,
+          },
+          store,
+          localVue,
+        })
+
+      store.commit('updateControls', [{
+        id: controlId,
+        questionnaires: [
+          questionnaire,
+        ],
+      }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      expect(store.state.currentQuestionnaire).toBe(questionnaire)
+    })
   })
 
   // eslint-disable-next-line jest/no-commented-out-tests
   /*
-      test('gets questionnaire from server', () => {
-        const questionnaire = { id: 4, is_draft: true }
-        axios.get.mockResolvedValue({ data: questionnaire })
-
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id } })
-
-        expect(axios.get).toBeCalledWith('/api/questionnaire/' + questionnaire.id)
-      })
-
       test('stores questionnaire in frontend', async () => {
         const questionnaire = { id: 4, is_draft: true }
         axios.get.mockResolvedValue({ data: questionnaire })
