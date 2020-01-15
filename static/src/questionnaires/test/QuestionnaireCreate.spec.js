@@ -191,18 +191,56 @@ describe('QuestionnaireCreate.vue', () => {
         assert(!wrapper.find('#questionnaire-body-create').isVisible())
         assert(!wrapper.find('#questionnaire-preview').isVisible())
       })
+
+      test('if questionnaire is not a draft', async () => {
+        jest.spyOn(console, 'error')
+        console.error.mockImplementation(() => {})
+
+        const questionnaireId = 1234
+        const controlId = 5678
+        const questionnaire = {
+          control: controlId,
+          id: questionnaireId,
+          is_draft: false,
+        }
+
+        const wrapper = shallowMount(
+          QuestionnaireCreate,
+          {
+            propsData: {
+              questionnaireId: questionnaireId,
+            },
+            store,
+            localVue,
+          })
+
+        store.commit('updateControls', [{
+          id: controlId,
+          questionnaires: [
+            questionnaire,
+          ],
+        }])
+        store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+        expect(store.state.currentQuestionnaire).toEqual({})
+
+        assert(wrapper.vm.errorMessage !== '')
+        assert(wrapper.vm.hasErrors)
+        assert(wrapper.find('#questionnaire-create-error').exists())
+
+        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+        assert(!wrapper.find('#questionnaire-body-create').isVisible())
+        assert(!wrapper.find('#questionnaire-preview').isVisible())
+      })
     })
 
-    test('if questionnaire is not a draft', async () => {
-      jest.spyOn(console, 'error')
-      console.error.mockImplementation(() => {})
-
+    test('moves to first step of wizard', async () => {
       const questionnaireId = 1234
       const controlId = 5678
       const questionnaire = {
         control: controlId,
         id: questionnaireId,
-        is_draft: false,
+        is_draft: true,
       }
 
       const wrapper = shallowMount(
@@ -223,45 +261,18 @@ describe('QuestionnaireCreate.vue', () => {
       }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
-      expect(store.state.currentQuestionnaire).toEqual({})
+      expect(wrapper.vm.state).toEqual(1)
 
-      assert(wrapper.vm.errorMessage !== '')
-      assert(wrapper.vm.hasErrors)
-      assert(wrapper.find('#questionnaire-create-error').exists())
-
-      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+      assert(wrapper.find('#questionnaire-metadata-create').isVisible())
       assert(!wrapper.find('#questionnaire-body-create').isVisible())
       assert(!wrapper.find('#questionnaire-preview').isVisible())
+
+      assert(wrapper.find('#wizard').props().activeStepNumber === 1)
     })
   })
 
   // eslint-disable-next-line jest/no-commented-out-tests
   /*
-
-      test('moves to first step of wizard', async () => {
-        const questionnaire = { id: 4, is_draft: true }
-        axios.get.mockResolvedValue({ data: questionnaire })
-
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id } })
-        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
-        await flushPromises()
-
-        assert(wrapper.find('#questionnaire-metadata-create').isVisible())
-      })
-
-      test('passes questionnaire to child components', async () => {
-        const questionnaire = { id: 4, is_draft: true }
-        axios.get.mockResolvedValue({ data: questionnaire })
-
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id } })
-        testUtils.assertNotEmitted(wrapper, 'questionnaire-updated')
-        await flushPromises()
-
-        testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
-        testUtils.assertLastEmit(wrapper, 'questionnaire-updated', questionnaire)
-      })
-    })
-  })
 
   describe('Publishing flow', () => {
     test('shows wait modal when child emits publish-questionnaire', () => {
