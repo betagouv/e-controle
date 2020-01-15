@@ -89,6 +89,26 @@ describe('QuestionnaireCreate.vue', () => {
       }).not.toThrow()
     })
 
+    test('sets currrentQuestionnaire into store', async () => {
+      const controlId = 1
+
+      const wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: 1,
+          },
+          store,
+          localVue,
+        })
+
+      store.commit('updateControls', [{ id: controlId }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      expect(store.state.currentQuestionnaire.control).toBe(controlId)
+      expect(store.state.currentQuestionnaire.description).not.toEqual('')
+    })
+
     test('moves to first step of wizard', async () => {
       const controlId = 1
 
