@@ -11,7 +11,6 @@ localVue.use(Vuex)
 
 describe('QuestionnaireCreate.vue', () => {
   let store
-  const currentQuestionnaire = { id: 12345 }
 
   beforeEach(() => {
     jest.resetModules()
@@ -19,13 +18,21 @@ describe('QuestionnaireCreate.vue', () => {
 
     store = new Vuex.Store({
       state: {
-        currentQuestionnaire: currentQuestionnaire,
+        controls: [],
+        controlsLoadStatus: loadStatuses.LOADING,
+        currentQuestionnaire: {},
       },
       getters: {
         getField,
       },
       mutations: {
         updateField,
+        updateControls(state, controls) {
+          state.controls = controls
+        },
+        updateControlsLoadStatus(state, newStatus) {
+          state.controlsLoadStatus = newStatus
+        },
       },
     })
   })
@@ -85,26 +92,6 @@ describe('QuestionnaireCreate.vue', () => {
 
     test('moves to first State', async () => {
       const controlId = 1
-      // Todo : this is the "full" state, prune the vars we don't need
-      store = new Vuex.Store({
-        state: {
-          config: {},
-          controls: [],
-          controlsLoadStatus: loadStatuses.LOADING,
-          currentQuestionnaire: {},
-          editingControl: {},
-          editingUser: {},
-          editingProfileType: '',
-          sessionUser: {},
-          sessionUserLoadStatus: loadStatuses.LOADING,
-        },
-        getters: {
-          getField,
-        },
-        mutations: {
-          updateField,
-        },
-      })
 
       const wrapper = shallowMount(
         QuestionnaireCreate,
@@ -116,17 +103,9 @@ describe('QuestionnaireCreate.vue', () => {
           localVue,
         })
 
-      store.controls = [
-        {
-          id: controlId,
-        },
-      ]
+      store.commit('updateControls', [{ id: controlId }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
-      store.updateControlsLoadStatus = loadStatuses.SUCCESS
-
-      await flushPromises() // todo is this needed?
-      // Todo : the watcher func is not being run, it's not logging to console.
-      // Maybe use store.commit?
       expect(wrapper.vm.state).toEqual(1)
     })
 
