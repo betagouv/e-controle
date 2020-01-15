@@ -161,19 +161,38 @@ describe('QuestionnaireCreate.vue', () => {
 
       expect(store.state.currentQuestionnaire).toBe(questionnaire)
     })
+
+    describe('displays error', () => {
+      test('if cannot get questionnaire from store', async () => {
+        const questionnaireId = 1234
+
+        const wrapper = shallowMount(
+          QuestionnaireCreate,
+          {
+            propsData: {
+              questionnaireId: questionnaireId,
+            },
+            store,
+            localVue,
+          })
+
+        store.commit('updateControlsLoadStatus', loadStatuses.ERROR)
+
+        expect(store.state.currentQuestionnaire).toEqual({})
+
+        assert(wrapper.vm.errorMessage !== '')
+        assert(wrapper.vm.hasErrors)
+        assert(wrapper.find('#questionnaire-create-error').exists())
+
+        assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+        assert(!wrapper.find('#questionnaire-body-create').isVisible())
+        assert(!wrapper.find('#questionnaire-preview').isVisible())
+      })
+    })
   })
 
   // eslint-disable-next-line jest/no-commented-out-tests
   /*
-      test('stores questionnaire in frontend', async () => {
-        const questionnaire = { id: 4, is_draft: true }
-        axios.get.mockResolvedValue({ data: questionnaire })
-
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaire.id } })
-        await flushPromises()
-
-        assert.deepEqual(wrapper.vm.questionnaire, questionnaire)
-      })
 
       describe('displays error', () => {
         test('if cannot get questionnaire from server', async () => {
