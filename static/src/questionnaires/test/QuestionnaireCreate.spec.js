@@ -116,25 +116,26 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
-  /*
-      test('passes questionnaire to child components', async () => {
-        const controlId = 6
-        const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })
-        testUtils.assertHasEmmitted(wrapper, 'questionnaire-updated', 1)
-        testUtils.assertLastEmit(wrapper, 'questionnaire-updated', { control: controlId })
-      })
+  describe('update existing questionnaire', () => {
+    test('sets up without crashing', () => {
+      const questionnaireId = 1
+
+      expect(() => {
+        shallowMount(
+          QuestionnaireCreate,
+          {
+            propsData: {
+              questionnaireId: questionnaireId,
+            },
+            store,
+            localVue,
+          })
+      }).not.toThrow()
     })
+  })
 
-    describe('update existing questionnaire', () => {
-      test('sets up without crashing', () => {
-        const questionnaireId = 1
-        axios.get.mockResolvedValue({ data: { id: questionnaireId } })
-
-        expect(() => {
-          shallowMount(QuestionnaireCreate, { propsData: { questionnaireId: questionnaireId } })
-        }).not.toThrow()
-      })
-
+  // eslint-disable-next-line jest/no-commented-out-tests
+  /*
       test('gets questionnaire from server', () => {
         const questionnaire = { id: 4, is_draft: true }
         axios.get.mockResolvedValue({ data: questionnaire })
