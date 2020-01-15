@@ -89,6 +89,7 @@
     >
     </publish-confirm-modal>
     <empty-modal id="savingModal"
+                 ref="savingModal"
                  no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
         <div class="m-4">
@@ -99,6 +100,7 @@
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
+                 ref="savedModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -406,7 +408,7 @@ export default Vue.extend({
       $(this.$refs.publishConfirmModal.$el).modal('show')
     },
     publish() {
-      $('#savingModal').modal('show')
+      $(this.$refs.savingModal.$el).modal('show')
       this.currentQuestionnaire.is_draft = false
 
       // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
@@ -414,13 +416,13 @@ export default Vue.extend({
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
-          $('#savingModal').modal('hide')
-          $('#savedModal').modal('show')
+          $(this.$refs.savingModal.$el).modal('hide')
+          $(this.$refs.savedModal.$el).modal('show')
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
           this.publishError = error
-          $('#savingModal').modal('hide')
+          $(this.$refs.savingModal.$el).modal('hide')
           this.showPublishConfirmModal()
         })
     },

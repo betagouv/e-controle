@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import { getField, updateField } from 'vuex-map-fields'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
@@ -294,11 +295,12 @@ describe('QuestionnaireCreate.vue', () => {
 
   describe('Publishing flow', () => {
     let wrapper
+    let questionnaire
     beforeEach(() => {
-      // Setup component
+      // Setup component to load existing questionnaire
       const questionnaireId = 1234
       const controlId = 5678
-      const questionnaire = {
+      questionnaire = {
         control: controlId,
         id: questionnaireId,
         is_draft: true,
@@ -330,10 +332,25 @@ describe('QuestionnaireCreate.vue', () => {
       assert(wrapper.find('#questionnaire-preview').isVisible())
     })
 
-    test('shows wait modal when Publish button is clicked', async () => {
+    test('shows publishConfirmModal when Publish button is clicked', async () => {
       wrapper.find('#publishButton').trigger('click')
 
       expect(testUtils.isModalShowing(wrapper, '#publishConfirmModal')).toBeTruthy()
+    })
+
+    test('shows savingModal when publishing is confirmed', async () => {
+      wrapper.vm.$refs.publishConfirmModal.$emit('confirm')
+
+      expect(testUtils.isModalShowing(wrapper, '#savingModal')).toBeTruthy()
+    })
+
+    test('calls publish api when publishing is confirmed', () => {
+      wrapper.vm.$refs.publishConfirmModal.$emit('confirm')
+
+      // PUT is called, because it's an update of an existing questionnaire.
+      expect(axios.put).toHaveBeenCalledWith(
+        '/api/questionnaire/' + questionnaire.id + '/',
+        questionnaire)
     })
   })
 
@@ -352,15 +369,6 @@ describe('QuestionnaireCreate.vue', () => {
       assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
     })
 
-    test('calls save api when child emits publish-questionnaire', () => {
-      const controlId = 1
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })
-
-      wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
-
-      // POST is called, because no questionnaire.id, so it's a creation.
-      expect(axios.post).toBeCalledWith('/api/questionnaire/', { control: controlId, is_draft: false })
-    })
 
     test('shows success modal when publish happened successfully', async () => {
       const controlId = 1
