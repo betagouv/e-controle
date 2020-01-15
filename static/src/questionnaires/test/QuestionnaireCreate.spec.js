@@ -369,6 +369,9 @@ describe('QuestionnaireCreate.vue', () => {
     })
 
     test('displays errors when publish api returned errors', async () => {
+      jest.spyOn(console, 'error')
+      console.error.mockImplementation(() => {})
+
       // Mock axios to return publish error
       const error = { error: 'I am not happpyyyy', details: ['stuff', 'more stuff'] }
       axios.put.mockRejectedValue(error)
@@ -390,4 +393,8 @@ describe('QuestionnaireCreate.vue', () => {
       expect(wrapper.find('#publishConfirmModal').props().error).toEqual(error)
     })
   })
+
+  // Todo : test the swapEditor flow
+  // Todo : test the navigation : back, next
+  // Todo : test the save button
 })
