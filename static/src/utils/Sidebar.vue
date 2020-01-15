@@ -109,6 +109,20 @@ export default Vue.extend({
       return this.areControlsLoaded && (this.userLoadStatus === loadStatuses.SUCCESS)
     },
   },
+  watch: {
+    userLoadStatus(newValue, oldValue) {
+      if (newValue === loadStatuses.ERROR) {
+        this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
+        return
+      }
+      if (newValue === loadStatuses.SUCCESS) {
+        this.getControls()
+          .then(this.buildMenu)
+          .catch(this.displayError)
+        return
+      }
+    },
+  },
   mounted: function() {
     if (window.location.pathname === backend.welcome()) {
       this.collapsed = true
@@ -119,8 +133,14 @@ export default Vue.extend({
       topBar.setAttribute('style', 'width: 100%;')
       return
     }
-
-    const getControls = () => {
+  },
+  methods: {
+    displayError(err) {
+      this.hasError = true
+      this.errorMessage = err.message ? err.message : err
+      this.error = err
+    },
+    getControls() {
       console.debug('sidebar getting controls...')
       return axios.get(backend.control()).then((response) => {
         console.debug('sidebar got controls', response)
@@ -130,33 +150,34 @@ export default Vue.extend({
         console.error('sidebar got error when getting controls', err)
         throw err
       })
-    }
-
-    const makeControlTitle = control => {
-      let title = control.reference_code + '\n'
-      if (control.depositing_organization) {
-        title += control.depositing_organization
-      } else {
-        title += control.title
+    },
+    buildMenu() {
+      const makeControlTitle = control => {
+        let title = control.reference_code + '\n'
+        if (control.depositing_organization) {
+          title += control.depositing_organization
+        } else {
+          title += control.title
+        }
+        return title
       }
-      return title
-    }
 
-    const makeQuestionnaireLink = questionnaire => {
-      if (!questionnaire.is_draft) {
+      const makeQuestionnaireLink = questionnaire => {
+        if (!questionnaire.is_draft) {
+          return backend['questionnaire-detail'](questionnaire.id)
+        }
+        if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
+          return backend['questionnaire-edit'](questionnaire.id)
+        }
         return backend['questionnaire-detail'](questionnaire.id)
       }
-      if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
-        return backend['questionnaire-edit'](questionnaire.id)
-      }
-      return backend['questionnaire-detail'](questionnaire.id)
-    }
 
-    const buildMenu = () => {
       // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
       const controlCreatingQuestionnaire = backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+
       // If we are on a trash page, find the control for which the trash folder is.
       const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
+
       const menu = this.controls.sort((a, b) => { return b.id - a.id })
         .map(control => {
           const controlMenu = {
@@ -198,19 +219,7 @@ export default Vue.extend({
         })
       this.isMenuBuilt = true
       this.menu = menu
-    }
-
-    const displayError = (err) => {
-      this.hasError = true
-      this.errorMessage = err.message ? err.message : err
-      this.error = err
-    }
-
-    getControls()
-      .then(buildMenu)
-      .catch(displayError)
-  },
-  methods: {
+    },
     moveBodyForCollapse () {
       const element = document.getElementById('page-main')
       element.classList.add('sidebar-collapsed')
