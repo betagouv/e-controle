@@ -83,6 +83,7 @@
     </div>
 
     <publish-confirm-modal id="publishConfirmModal"
+                           ref="publishConfirmModal"
                            :error="publishError"
                            @confirm="publish()"
     >
@@ -402,7 +403,7 @@ export default Vue.extend({
       })
     },
     showPublishConfirmModal: function () {
-      $('#publishConfirmModal').modal('show')
+      $(this.$refs.publishConfirmModal.$el).modal('show')
     },
     publish() {
       $('#savingModal').modal('show')

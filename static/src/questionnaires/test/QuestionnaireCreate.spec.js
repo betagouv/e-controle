@@ -3,6 +3,7 @@ import { getField, updateField } from 'vuex-map-fields'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
 import Vuex from 'vuex'
 import { loadStatuses } from '../../store'
+import testUtils from '../../utils/testUtils'
 
 jest.mock('axios')
 const localVue = createLocalVue()
@@ -92,7 +93,7 @@ describe('QuestionnaireCreate.vue', () => {
     test('sets currrentQuestionnaire into store', async () => {
       const controlId = 1
 
-      const wrapper = shallowMount(
+      shallowMount(
         QuestionnaireCreate,
         {
           propsData: {
@@ -291,10 +292,54 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
+  describe('Publishing flow', () => {
+    let wrapper
+    beforeEach(() => {
+      // Setup component
+      const questionnaireId = 1234
+      const controlId = 5678
+      const questionnaire = {
+        control: controlId,
+        id: questionnaireId,
+        is_draft: true,
+      }
+
+      wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            questionnaireId: questionnaireId,
+          },
+          store,
+          localVue,
+        })
+
+      store.commit('updateControls', [{
+        id: controlId,
+        questionnaires: [
+          questionnaire,
+        ],
+      }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      // Move to state 3 : ready to publish
+      wrapper.vm.state = 3
+
+      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
+      assert(!wrapper.find('#questionnaire-body-create').isVisible())
+      assert(wrapper.find('#questionnaire-preview').isVisible())
+    })
+
+    test('shows wait modal when Publish button is clicked', async () => {
+      wrapper.find('#publishButton').trigger('click')
+
+      expect(testUtils.isModalShowing(wrapper, '#publishConfirmModal')).toBeTruthy()
+    })
+  })
+
   // eslint-disable-next-line jest/no-commented-out-tests
   /*
 
-  describe('Publishing flow', () => {
     test('shows wait modal when child emits publish-questionnaire', () => {
       const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1 } })
       assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
