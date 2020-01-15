@@ -5,6 +5,7 @@ import QuestionnaireCreate from '../QuestionnaireCreate.vue'
 import Vuex from 'vuex'
 import { loadStatuses } from '../../store'
 import testUtils from '../../utils/testUtils'
+import flushPromises from 'flush-promises'
 
 jest.mock('axios')
 const localVue = createLocalVue()
@@ -352,44 +353,24 @@ describe('QuestionnaireCreate.vue', () => {
         '/api/questionnaire/' + questionnaire.id + '/',
         questionnaire)
     })
-  })
-
-  // eslint-disable-next-line jest/no-commented-out-tests
-  /*
-
-    test('shows wait modal when child emits publish-questionnaire', () => {
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: 1 } })
-      assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
-      assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
-
-      wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
-
-      assert(testUtils.isModalShowing(wrapper, '#savingModal'))
-      // Final modal not showing yet
-      assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
-    })
-
 
     test('shows success modal when publish happened successfully', async () => {
-      const controlId = 1
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })
-      assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
-      assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
-
       // Mock out wait function to resolve immediately without wait.
       wrapper.vm.wait = () => Promise.resolve()
+      // Mock out axios to return with sucess
       axios.post.mockResolvedValue({})
 
-      wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
+      wrapper.vm.$refs.publishConfirmModal.$emit('confirm')
 
       // Resolve all promises
       await flushPromises()
 
-      // Intermediate modal is gone
-      assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
       assert(testUtils.isModalShowing(wrapper, '#savedModal'))
     })
+  })
 
+  // eslint-disable-next-line jest/no-commented-out-tests
+  /*
     test('signals back to child when publish returned errors', async () => {
       const controlId = 1
       const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })
