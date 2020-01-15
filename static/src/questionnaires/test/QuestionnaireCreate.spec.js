@@ -367,31 +367,27 @@ describe('QuestionnaireCreate.vue', () => {
 
       assert(testUtils.isModalShowing(wrapper, '#savedModal'))
     })
-  })
 
-  // eslint-disable-next-line jest/no-commented-out-tests
-  /*
-    test('signals back to child when publish returned errors', async () => {
-      const controlId = 1
-      const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })
-      // Save returns error
+    test('displays errors when publish api returned errors', async () => {
+      // Mock axios to return publish error
       const error = { error: 'I am not happpyyyy', details: ['stuff', 'more stuff'] }
-      axios.post.mockRejectedValue(error)
-      testUtils.assertNotEmitted(wrapper, 'publish-questionnaire-error')
+      axios.put.mockRejectedValue(error)
 
-      wrapper.vm.$refs.previewChild.$emit('publish-questionnaire')
+      wrapper.vm.$refs.publishConfirmModal.$emit('confirm')
       // Resolve all promises
       await flushPromises()
 
-      // Intermediate modal is gone
-      assert(!testUtils.isModalShowing(wrapper, '#savingModal'))
-      // Success modal not displayed
-      assert(!testUtils.isModalShowing(wrapper, '#savedModal'))
+      expect(wrapper.vm.publishError).toEqual(error)
 
-      // Event sent for child
-      testUtils.assertHasEmmitted(wrapper, 'publish-questionnaire-error', 1)
-      assert.deepEqual(wrapper.emitted()['publish-questionnaire-error'][0][0], error)
+      // Intermediate modal is gone
+      expect(testUtils.isModalShowing(wrapper, '#savingModal')).toBeFalsy()
+      // Success modal not displayed
+      expect(testUtils.isModalShowing(wrapper, '#savedModal')).toBeFalsy()
+      // Initial modal is back
+      expect(testUtils.isModalShowing(wrapper, '#publishConfirmModal')).toBeTruthy()
+
+      // Modal has the error passed in props
+      expect(wrapper.find('#publishConfirmModal').props().error).toEqual(error)
     })
   })
-  */
 })
