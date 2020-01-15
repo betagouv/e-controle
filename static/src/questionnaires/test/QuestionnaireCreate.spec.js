@@ -90,7 +90,7 @@ describe('QuestionnaireCreate.vue', () => {
       }).not.toThrow()
     })
 
-    test('moves to first State', async () => {
+    test('moves to first step of wizard', async () => {
       const controlId = 1
 
       const wrapper = shallowMount(
@@ -107,29 +107,14 @@ describe('QuestionnaireCreate.vue', () => {
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
       expect(wrapper.vm.state).toEqual(1)
-    })
-
-  })
-
-/*
-    test('moves to first step of wizard', async () => {
-      const wrapper = shallowMount(
-        QuestionnaireCreate,
-        {
-          propsData: {
-            controlId: 1,
-          },
-          store,
-          localVue,
-        })
-
-      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
-      await flushPromises()
 
       assert(wrapper.find('#questionnaire-metadata-create').isVisible())
+      assert(!wrapper.find('#questionnaire-body-create').isVisible())
+      assert(!wrapper.find('#questionnaire-preview').isVisible())
     })
+  })
 
-
+  /*
       test('passes questionnaire to child components', async () => {
         const controlId = 6
         const wrapper = shallowMount(QuestionnaireCreate, { propsData: { controlId: controlId } })

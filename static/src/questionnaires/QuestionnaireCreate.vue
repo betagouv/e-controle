@@ -32,10 +32,12 @@
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
+            id="questionnaire-body-create"
             ref="questionnaireBodyCreate"
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
     <questionnaire-preview
+            id="questionnaire-preview"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
