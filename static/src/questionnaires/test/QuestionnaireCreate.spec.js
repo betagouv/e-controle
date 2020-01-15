@@ -111,6 +111,8 @@ describe('QuestionnaireCreate.vue', () => {
       assert(wrapper.find('#questionnaire-metadata-create').isVisible())
       assert(!wrapper.find('#questionnaire-body-create').isVisible())
       assert(!wrapper.find('#questionnaire-preview').isVisible())
+
+      assert(wrapper.find('#wizard').props().activeStepNumber === 1)
     })
   })
 

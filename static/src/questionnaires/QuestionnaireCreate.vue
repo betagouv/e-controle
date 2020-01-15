@@ -19,7 +19,8 @@
       {{ errorMessage }}
     </div>
 
-    <wizard :active-step-number="this.state"
+    <wizard id="wizard"
+            :active-step-number="this.state"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="next"
             @previous="back">
