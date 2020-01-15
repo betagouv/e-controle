@@ -266,3 +266,6 @@ Tester un fichier en particulier :
 Par exemple : `npm test Metadata` trouve le fichier `static/src/questionnaires/test/QuestionnaireMetadataCreate.spec.js`.
 
 Debugger un test : plusieurs debuggers sont possibles, dont Chrome Dev Tools et Webstorm/Pycharm. Voir https://jestjs.io/docs/en/troubleshooting
+
+Pour VScode, il y a une config pour debugger directement dans l'éditeur : `.vscode/launch.json`. La config s'appelle "Debug Jest Tests". Pour la lancer : ![image](https://user-images.githubusercontent.com/911434/72448689-ba28cb80-37b7-11ea-84b8-635040f8eaf1.png)
+Ou voir la doc plus complète de VScode : https://code.visualstudio.com/docs/editor/debugging
