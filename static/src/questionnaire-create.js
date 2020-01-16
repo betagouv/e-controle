@@ -16,10 +16,10 @@ new Vue({
     QuestionnaireCreate,
   },
   methods: {
-    ...mapActions(['loadConfig', 'fetchControls', 'fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchControls', 'fetchSessionUser']),
   },
   created() {
-    this.loadConfig()
+    this.fetchConfig()
     this.fetchControls()
     this.fetchSessionUser()
   },
