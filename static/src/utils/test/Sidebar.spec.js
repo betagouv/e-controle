@@ -111,6 +111,24 @@ describe('Sidebar.vue', () => {
       expect.stringContaining(wrapper.vm.errorMessage))
   })
 
+  test('shows error if user is not fetched', () => {
+    store.commit('updateSessionUserLoadStatus', loadStatuses.ERROR)
+
+    store.commit('updateControls', controls)
+    store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+    expect(wrapper.vm.isMenuBuilt).toBeFalsy()
+    expect(wrapper.vm.menu).toHaveLength(0)
+
+    expect(wrapper.vm.hasError).toBeTruthy()
+    expect(wrapper.vm.errorMessage).not.toBeUndefined()
+
+    // Error message is displayed in error-bar
+    expect(wrapper.find('#sidebar-error-bar').isVisible()).toBeTruthy()
+    expect(wrapper.find('#sidebar-error-bar').element.innerHTML).toEqual(
+      expect.stringContaining(wrapper.vm.errorMessage))
+  })
+
   test('does not display on welcome pages', () => {
     // Mock out window.location.pathname
     global.window = Object.create(window)
