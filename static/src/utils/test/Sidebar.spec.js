@@ -110,4 +110,43 @@ describe('Sidebar.vue', () => {
     expect(wrapper.find('#sidebar-error-bar').element.innerHTML).toEqual(
       expect.stringContaining(wrapper.vm.errorMessage))
   })
+
+  test('does not display on welcome pages', () => {
+    // Mock out window.location.pathname
+    global.window = Object.create(window)
+    const path = '/bienvenue/'
+    Object.defineProperty(window, 'location', {
+      value: {
+        pathname: path,
+      },
+    })
+    expect(window.location.pathname).toEqual(path)
+
+    // Mock out document.getElementsByClassName, used to fix sidebar width
+    const spy = jest.spyOn(document, 'getElementsByClassName')
+    document.getElementsByClassName.mockImplementation(() => {
+      return [{
+        setAttribute: () => {},
+      }]
+    })
+
+    const wrapper = shallowMount(
+      Sidebar,
+      {
+        store,
+        localVue,
+      })
+
+    store.commit('updateSessionUser', user)
+    store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
+
+    store.commit('updateControls', controls)
+    store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+    // Width has been fixed
+    expect(spy).toHaveBeenCalled()
+    // Menu is not built, even though the data was succesfully fetched from store.
+    expect(wrapper.vm.isMenuBuilt).toBeFalsy()
+    expect(wrapper.vm.menu).toHaveLength(0)
+  })
 })

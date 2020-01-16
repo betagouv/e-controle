@@ -115,22 +115,24 @@ export default Vue.extend({
   },
   watch: {
     controlsLoadStatus(newValue, oldValue) {
-      if (newValue === loadStatuses.ERROR) {
+      if (this.showSidebar && newValue === loadStatuses.ERROR) {
         this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
         return
       }
     },
     userLoadStatus(newValue, oldValue) {
-      if (newValue === loadStatuses.ERROR) {
+      if (this.showSidebar && newValue === loadStatuses.ERROR) {
         this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
         return
       }
     },
     isLoaded(newValue, oldValue) {
-      if (newValue === false) {
-        return
+      if (this.showSidebar) {
+        if (newValue === false) {
+          return
+        }
+        this.buildMenu()
       }
-      this.buildMenu()
     },
   },
   mounted: function() {
