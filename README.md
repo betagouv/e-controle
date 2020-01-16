@@ -1,5 +1,32 @@
 # e-controle
 Outil permettant de simplifier la relation entre un organisme de contrôle et des structures contrôlés.
+
+Les principaux gains pour les utilisateurs :
+- Des tâches pénibles en moins : les centaines ou milliers de fichiers de réponses aux questionnaires sont classés et renommés automatiquement. Plus aucun agent n’a besoin d’y passer des heures.
+- De l’autonomie : les équipes de contrôle ne sont dépendantes d’aucun autre service pour créer des espaces de dépôts ou des comptes utilisateurs. Elles n’ont plus besoin d’attendre 24 ou 48h.
+- Du stress en moins : l’interface simplifiée est compréhensible pour le plus grand nombre, quel que soit le niveau de familiarité avec l’informatique.
+
+## Rapide apperçu d'e.contrôle en vidéo :
+
+### Pour toutes les équipes de contrôle et les organismes interrogés:
+
+- ["Je me connecte"](https://drive.google.com/file/d/1QKhy3A6xJBDOoSWj8F-Qh9z9A0cJxx5K/view)
+
+### Pour les équipes de contrôle
+
+- ["Je crée un espace de dépôt"](https://drive.google.com/open?id=1h_jtT6hSwTNNgWfL7LFWZjRpPPmsvhah=)
+- ["J'ajoute un membre de mon équipe de contrôle à un espace de dépôt"](https://drive.google.com/open?id=1P3BT-ANF39P3k7fBkiz8RYwtUNo3rmKR)
+- ["Je crée un questionnaire"](https://drive.google.com/open?id=153O1s1O3SgilUwvXnZDY-v9t84pOOPUh)
+- ["Je modifie puis publie un questionnaire"](https://drive.google.com/open?id=1uNW5W1DHBkHKMzlM1Pt4SSxxxlP3Tc6v)
+- ["J'ajoute un accès à un agent d'un organisme interrogé"](https://drive.google.com/open?id=1rUlFlvT_4T-sxvwhb2-Q3Wdrw59ycvxW)
+- ["Je consulte les réponses déposées"](https://drive.google.com/open?id=1mvntyQ0TwET-ENb_xRbc32RiAKu2KnBn)
+- ["J'explore les réponses dans mon explorateur de fichiers windows"](https://drive.google.com/open?id=1rzZ5LqJnMkHTjmYajHxvZqDyqHafRQL9)
+
+### Pour les agents des organismes interrogés
+
+- ["Je dépose des documents de réponse à une question"](https://drive.google.com/open?id=1KPcRKKeS_HriJpciNE6GZmiuIF5OA-y2)
+
+
 Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/document/d/1ETBSoGE-oSOqgq-bR2M3v3SsRAJ6L_R1t0SMcwWSwsI/edit?usp=sharing).
 
 ## Architecture du code et du repo
