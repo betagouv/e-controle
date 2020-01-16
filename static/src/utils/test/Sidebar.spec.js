@@ -8,32 +8,54 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-describe('Sidebar.vue', () => {
-  const user = { id: 123, is_inspector: true, is_audited: false }
-  const controls = [{
-    id: 345,
-    title: 'Controle de Bloup',
-    reference_code: '2020_bloup',
-    depositing_organization: 'Mairie de Bloup',
-    questionnaires: [
-      {
-        id: 678,
-        is_draft: false,
-        numbering: 3,
-        title: 'On veut des réponses',
-      },
-      {
-        id: 679,
-        is_draft: true,
-        numbering: 5,
-        title: 'Sérieux on veut des réponses',
-      },
-    ],
-  }]
+let originalWindow
+const setPath = path => {
+  originalWindow = global.window
+  global.window = Object.create(window)
+  Object.defineProperty(window, 'location', {
+    value: {
+      pathName: path,
+    },
+  })
+}
+const resetPath = () => {
+  if (originalWindow !== undefined) {
+    global.window = originalWindow
+  }
+}
 
+describe('Sidebar.vue', () => {
   let store
   let wrapper
+  let user
+  let controls
   beforeEach(() => {
+    resetPath()
+    jest.resetModules()
+    jest.clearAllMocks()
+
+    user = { id: 123, is_inspector: true, is_audited: false }
+    controls = [{
+      id: 345,
+      title: 'Controle de Bloup',
+      reference_code: '2020_bloup',
+      depositing_organization: 'Mairie de Bloup',
+      questionnaires: [
+        {
+          id: 678,
+          is_draft: false,
+          numbering: 3,
+          title: 'On veut des réponses',
+        },
+        {
+          id: 679,
+          is_draft: true,
+          numbering: 5,
+          title: 'Sérieux on veut des réponses',
+        },
+      ],
+    }]
+
     store = new Vuex.Store({
       state: {
         controls: [],
@@ -69,8 +91,48 @@ describe('Sidebar.vue', () => {
       })
   })
 
+  afterEach(() => {
+    if (document.getElementsByClassName.mockRestore) {
+      document.getElementsByClassName.mockRestore()
+    }
+  })
+
   test('is a Vue instance', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
+  })
+
+  test('does not display on welcome pages', () => {
+    const path = '/bienvenue/'
+    // Mock out window.location.pathname
+    setPath(path)
+    expect(window.location.pathname).toEqual(path)
+
+    // Mock out document.getElementsByClassName, used to fix sidebar width
+    const getElementsSpy = jest.spyOn(document, 'getElementsByClassName')
+    document.getElementsByClassName.mockImplementation(() => {
+      return [{
+        setAttribute: () => {},
+      }]
+    })
+
+    const wrapper = shallowMount(
+      Sidebar,
+      {
+        store,
+        localVue,
+      })
+
+    store.commit('updateSessionUser', user)
+    store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
+
+    store.commit('updateControls', controls)
+    store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+    // Width has been fixed
+    expect(getElementsSpy).toHaveBeenCalled()
+    // Menu is not built, even though the data was succesfully fetched from store.
+    expect(wrapper.vm.isMenuBuilt).toBeFalsy()
+    expect(wrapper.vm.menu).toHaveLength(0)
   })
 
   test('shows menu', () => {
@@ -164,45 +226,76 @@ describe('Sidebar.vue', () => {
     expect(controlMenuItem.child).toHaveLength(1)
   })
 
-  test('uses appropriate href for questionnaire', () => {
-  })
-
-  test('does not display on welcome pages', () => {
-    // Mock out window.location.pathname
-    global.window = Object.create(window)
-    const path = '/bienvenue/'
-    Object.defineProperty(window, 'location', {
-      value: {
-        pathname: path,
-      },
-    })
-    expect(window.location.pathname).toEqual(path)
-
-    // Mock out document.getElementsByClassName, used to fix sidebar width
-    const spy = jest.spyOn(document, 'getElementsByClassName')
-    document.getElementsByClassName.mockImplementation(() => {
-      return [{
-        setAttribute: () => {},
-      }]
+  describe('uses appropriate href for questionnaires', () => {
+    beforeEach(() => {
+      store.commit('updateSessionUser', user)
+      store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
     })
 
-    const wrapper = shallowMount(
-      Sidebar,
-      {
-        store,
-        localVue,
-      })
+    test('href for non-draft questionnaire', () => {
+      const isDraft = false
+      const editorId = user.id + 1
+      const questionnaire = {
+        id: 678,
+        is_draft: isDraft,
+        numbering: 3,
+        title: 'On veut des réponses',
+        editor: { id: editorId },
+      }
+      controls[0].questionnaires = [questionnaire]
+      expect(controls[0].questionnaires[0].editor.id).not.toBe(user.id)
 
-    store.commit('updateSessionUser', user)
-    store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
+      store.commit('updateControls', controls)
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
-    store.commit('updateControls', controls)
-    store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+      expect(wrapper.vm.menu[0].child).toHaveLength(1)
+      expect(wrapper.vm.menu[0].child[0].href).toEqual(
+        expect.stringContaining('' + questionnaire.id))
+      expect(wrapper.vm.menu[0].child[0].href).not.toEqual(expect.stringContaining('modifier'))
+    })
 
-    // Width has been fixed
-    expect(spy).toHaveBeenCalled()
-    // Menu is not built, even though the data was succesfully fetched from store.
-    expect(wrapper.vm.isMenuBuilt).toBeFalsy()
-    expect(wrapper.vm.menu).toHaveLength(0)
+    test('href for draft questionnaire if current user is editor', () => {
+      const isDraft = true
+      const editorId = user.id
+      const questionnaire = {
+        id: 678,
+        is_draft: isDraft,
+        numbering: 3,
+        title: 'On veut des réponses',
+        editor: { id: editorId },
+      }
+      controls[0].questionnaires = [questionnaire]
+      expect(controls[0].questionnaires[0].editor.id).toBe(user.id)
+
+      store.commit('updateControls', controls)
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      expect(wrapper.vm.menu[0].child).toHaveLength(1)
+      expect(wrapper.vm.menu[0].child[0].href).toEqual(
+        expect.stringContaining('' + questionnaire.id))
+      expect(wrapper.vm.menu[0].child[0].href).toEqual(expect.stringContaining('modifier'))
+    })
+
+    test('href for draft questionnaire if current user is not editor', () => {
+      const isDraft = true
+      const editorId = user.id + 1
+      const questionnaire = {
+        id: 678,
+        is_draft: isDraft,
+        numbering: 3,
+        title: 'On veut des réponses',
+        editor: { id: editorId },
+      }
+      controls[0].questionnaires = [questionnaire]
+      expect(controls[0].questionnaires[0].editor.id).not.toBe(user.id)
+
+      store.commit('updateControls', controls)
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      expect(wrapper.vm.menu[0].child).toHaveLength(1)
+      expect(wrapper.vm.menu[0].child[0].href).toEqual(
+        expect.stringContaining('' + questionnaire.id))
+      expect(wrapper.vm.menu[0].child[0].href).not.toEqual(expect.stringContaining('modifier'))
+    })
   })
 })
