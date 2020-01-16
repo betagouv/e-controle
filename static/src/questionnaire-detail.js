@@ -25,10 +25,10 @@ let questionnaireDetailApp = new Vue({
     QuestionnaireDetailPage,
   },
   methods: {
-    ...mapActions(['loadConfig', 'fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchSessionUser']),
   },
   created() {
-    this.loadConfig()
+    this.fetchConfig()
     this.fetchSessionUser()
   },
 })

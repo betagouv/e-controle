@@ -46,7 +46,7 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    loadConfig({ commit }) {
+    fetchConfig({ commit }) {
       axios.get(backendUrls.config()).then((response) => {
         commit('updateConfig', response.data)
       })
