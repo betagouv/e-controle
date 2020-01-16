@@ -7,7 +7,10 @@ e.contrôle propose de répondre aux nombreux problèmes rencontrés par les aud
 
 La mise en place d’un outil dédié permet de simplifier la relation entre un organisme de contrôle et des structures contrôlées afin de leur permettre de se concentrer sur les activités ayant le plus d’impact pour leurs usagers.
 
-## Les principaux gains pour les utilisateurs :
+## Descriptions fonctionnelles :
+Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/document/d/1ETBSoGE-oSOqgq-bR2M3v3SsRAJ6L_R1t0SMcwWSwsI/edit?usp=sharing).
+
+### Les principaux gains pour les utilisateurs :
 - Des tâches pénibles en moins : les centaines ou milliers de fichiers de réponses aux questionnaires sont classés et renommés automatiquement. Plus aucun agent n’a besoin d’y passer des heures.
 - De l’autonomie : les équipes de contrôle ne sont dépendantes d’aucun autre service pour créer des espaces de dépôts ou des comptes utilisateurs. Elles n’ont plus besoin d’attendre 24 ou 48h.
 - Du stress en moins : l’interface simplifiée est compréhensible pour le plus grand nombre, quel que soit le niveau de familiarité avec l’informatique.
@@ -49,9 +52,6 @@ La mise en place d’un outil dédié permet de simplifier la relation entre un 
 #### Pour les agents des organismes interrogés
 
 - ["Je dépose des documents de réponse à une question"](https://drive.google.com/open?id=1KPcRKKeS_HriJpciNE6GZmiuIF5OA-y2)
-
-
-Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/document/d/1ETBSoGE-oSOqgq-bR2M3v3SsRAJ6L_R1t0SMcwWSwsI/edit?usp=sharing).
 
 ## Architecture du code et du repo
 Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
