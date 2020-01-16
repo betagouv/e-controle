@@ -34,7 +34,7 @@
       En attente de la liste d'espaces...
     </div>
 
-    <error-bar v-if="hasError" noclose=true>
+    <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
       <div>
         Nous n'avons pas pu obtenir vos espaces de dépôt.
       </div>
@@ -93,7 +93,7 @@ export default Vue.extend({
       collapsed: false,
       hasError: false,
       error: undefined,
-      errorMessage: '',
+      errorMessage: undefined,
       errorEmailLink: ERROR_EMAIL_TO + '?subject=' + ERROR_EMAIL_SUBJECT +
           '&body=' + ERROR_EMAIL_BODY,
       isMenuBuilt: false,

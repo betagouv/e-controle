@@ -9,7 +9,22 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 
 describe('Sidebar.vue', () => {
+  const user = { id: 123, is_inspector: true }
+  const controls = [{
+    id: 345,
+    title: 'Controle de Bloup',
+    reference_code: '2020_bloup',
+    depositing_organization: 'Mairie de Bloup',
+    questionnaires: [{
+      id: 678,
+      is_draft: false,
+      numbering: 3,
+      title: 'On veut des réponses',
+    }],
+  }]
+
   let store
+  let wrapper
   beforeEach(() => {
     store = new Vuex.Store({
       state: {
@@ -37,40 +52,20 @@ describe('Sidebar.vue', () => {
         },
       },
     })
-  })
 
-  test('is a Vue instance', () => {
-    const wrapper = shallowMount(
+    wrapper = shallowMount(
       Sidebar,
       {
         store,
         localVue,
       })
+  })
+
+  test('is a Vue instance', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
   test('shows menu', () => {
-    const user = { id: 123, is_inspector: true }
-    const controls = [{
-      id: 345,
-      title: 'Controle de Bloup',
-      reference_code: '2020_bloup',
-      depositing_organization: 'Mairie de Bloup',
-      questionnaires: [{
-        id: 678,
-        is_draft: false,
-        numbering: 3,
-        title: 'On veut des réponses',
-      }],
-    }]
-
-    const wrapper = shallowMount(
-      Sidebar,
-      {
-        store,
-        localVue,
-      })
-
     store.commit('updateSessionUser', user)
     store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
 
@@ -96,5 +91,23 @@ describe('Sidebar.vue', () => {
       expect.stringContaining('' + questionnaire.numbering))
     expect(questionnaireMenuItem.href).toEqual(
       expect.stringContaining('' + questionnaire.id))
+  })
+
+  test('shows error if controls are not fetched', () => {
+    store.commit('updateSessionUser', user)
+    store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
+
+    store.commit('updateControlsLoadStatus', loadStatuses.ERROR)
+
+    expect(wrapper.vm.isMenuBuilt).toBeFalsy()
+    expect(wrapper.vm.menu).toHaveLength(0)
+
+    expect(wrapper.vm.hasError).toBeTruthy()
+    expect(wrapper.vm.errorMessage).not.toBeUndefined()
+
+    // Error message is displayed in error-bar
+    expect(wrapper.find('#sidebar-error-bar').isVisible()).toBeTruthy()
+    expect(wrapper.find('#sidebar-error-bar').element.innerHTML).toEqual(
+      expect.stringContaining(wrapper.vm.errorMessage))
   })
 })
