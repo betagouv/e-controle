@@ -103,7 +103,7 @@ export default Vue.extend({
   computed: {
     ...mapState({
       user: 'sessionUser',
-      userLoadStatus: 'loadStatus',
+      userLoadStatus: 'sessionUserLoadStatus',
     }),
     isLoaded() {
       return this.areControlsLoaded && (this.userLoadStatus === loadStatuses.SUCCESS)

@@ -8,17 +8,19 @@ import Vuex, { mapActions } from 'vuex'
 
 Vue.use(Vuex)
 
-let questionnaireCreateApp = new Vue({
+// eslint-disable-next-line no-new
+new Vue({
   store,
   el: '#questionnaire-create-vm',
   components: {
     QuestionnaireCreate,
   },
   methods: {
-    ...mapActions(['loadConfig', 'fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchControls', 'fetchSessionUser']),
   },
   created() {
-    this.loadConfig()
+    this.fetchConfig()
+    this.fetchControls()
     this.fetchSessionUser()
   },
 })
