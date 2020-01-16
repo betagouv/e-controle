@@ -23,11 +23,13 @@
       </div>
     </div>
 
-    <div v-if="user && user.is_inspector" class="card-header flex-row justify-content-center border-0">
+    <div v-if="user && user.is_inspector"
+         class="card-header flex-row justify-content-center border-0">
       <control-create></control-create>
     </div>
 
-    <div v-if="!collapsed && !isLoaded && !hasError" class="sidebar-load-message card-header border-0 mt-4 mb-4">
+    <div v-if="!collapsed && !isLoaded && !hasError"
+         class="sidebar-load-message card-header border-0 mt-4 mb-4">
       <div class="loader mr-2"></div>
       En attente de la liste d'espaces...
     </div>
@@ -41,7 +43,7 @@
       </div>
       <div class="mt-2">
         Vous pouvez essayer de recharger la page, ou
-        <a :href="'mailto:' + errorEmailTo + '?subject=' + errorEmailSubject + '&body=' + errorEmailBody + JSON.stringify(error)"
+        <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
            target="_blank"
         >
           cliquez ici pour nous contacter
@@ -74,7 +76,9 @@ import { SidebarMenu } from 'vue-sidebar-menu'
 import Vue from 'vue'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
-const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
+const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0A' +
+    'Je voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu.' +
+    ' Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
 const ERROR_EMAIL_SUBJECT = 'Erreur de chargement des espaces de dépôt'
 const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr'
 
@@ -90,9 +94,8 @@ export default Vue.extend({
       hasError: false,
       error: undefined,
       errorMessage: '',
-      errorEmailBody: ERROR_EMAIL_BODY,
-      errorEmailSubject: ERROR_EMAIL_SUBJECT,
-      errorEmailTo: ERROR_EMAIL_TO,
+      errorEmailLink: ERROR_EMAIL_TO + '?subject=' + ERROR_EMAIL_SUBJECT +
+          '&body=' + ERROR_EMAIL_BODY,
       isMenuBuilt: false,
       menu: [],
     }
@@ -105,7 +108,8 @@ export default Vue.extend({
       controlsLoadStatus: 'controlsLoadStatus',
     }),
     isLoaded() {
-      return this.controlsLoadStatus === loadStatuses.SUCCESS && this.userLoadStatus === loadStatuses.SUCCESS
+      return this.controlsLoadStatus === loadStatuses.SUCCESS &&
+          this.userLoadStatus === loadStatuses.SUCCESS
     },
   },
   watch: {
@@ -166,8 +170,10 @@ export default Vue.extend({
         return backend['questionnaire-detail'](questionnaire.id)
       }
 
-      // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
-      const controlCreatingQuestionnaire = backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+      // If we are on a create-questionnaire page, find the control for which the questionnaire is
+      // being created.
+      const controlCreatingQuestionnaire =
+          backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
 
       // If we are on a trash page, find the control for which the trash folder is.
       const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
@@ -281,7 +287,8 @@ export default Vue.extend({
     color: #495057;
     background-color: white;
   }
-  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon, .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon,
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
     color: #495057;
     background-color: white;
   }
