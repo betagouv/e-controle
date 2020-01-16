@@ -1,15 +1,20 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jquery": true,
+        "jest/globals": true
     },
     "extends": [
         "plugin:vue/essential",
-        "standard"
+        "standard",
+        "plugin:jest/recommended",
+        "plugin:jest/style"
     ],
     "globals": {
         "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
+        "SharedArrayBuffer": "readonly",
+        "assert": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018,
@@ -19,11 +24,13 @@
     "plugins": [
         "vue",
         "@typescript-eslint",
-        "eslint-plugin-vue"
+        "eslint-plugin-vue",
+        "jest"
     ],
     "rules": {
         "comma-dangle": ["error", "always-multiline"],
         "no-useless-return": "off",
-        "space-before-function-paren": "off"
+        "space-before-function-paren": "off",
+        "jest/expect-expect": "off"
     }
 }
