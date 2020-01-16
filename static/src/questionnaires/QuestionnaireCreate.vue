@@ -19,7 +19,8 @@
       {{ errorMessage }}
     </div>
 
-    <wizard :active-step-number="this.state"
+    <wizard id="wizard"
+            :active-step-number="this.state"
             :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
             @next="next"
             @previous="back">
@@ -32,10 +33,12 @@
             v-show="state === STATES.START">
     </questionnaire-metadata-create>
     <questionnaire-body-create
+            id="questionnaire-body-create"
             ref="questionnaireBodyCreate"
             v-show="state === STATES.CREATING_BODY">
     </questionnaire-body-create>
     <questionnaire-preview
+            id="questionnaire-preview"
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
@@ -80,11 +83,13 @@
     </div>
 
     <publish-confirm-modal id="publishConfirmModal"
+                           ref="publishConfirmModal"
                            :error="publishError"
                            @confirm="publish()"
     >
     </publish-confirm-modal>
     <empty-modal id="savingModal"
+                 ref="savingModal"
                  no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
         <div class="m-4">
@@ -95,6 +100,7 @@
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
+                 ref="savedModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -399,10 +405,10 @@ export default Vue.extend({
       })
     },
     showPublishConfirmModal: function () {
-      $('#publishConfirmModal').modal('show')
+      $(this.$refs.publishConfirmModal.$el).modal('show')
     },
     publish() {
-      $('#savingModal').modal('show')
+      $(this.$refs.savingModal.$el).modal('show')
       this.currentQuestionnaire.is_draft = false
 
       // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
@@ -410,13 +416,13 @@ export default Vue.extend({
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
-          $('#savingModal').modal('hide')
-          $('#savedModal').modal('show')
+          $(this.$refs.savingModal.$el).modal('hide')
+          $(this.$refs.savedModal.$el).modal('show')
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
           this.publishError = error
-          $('#savingModal').modal('hide')
+          $(this.$refs.savingModal.$el).modal('hide')
           this.showPublishConfirmModal()
         })
     },
