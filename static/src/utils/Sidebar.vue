@@ -6,63 +6,63 @@
       </a>
     </div>
 
-    <div class="card-header flex-row justify-content-center border-top">
-      <div class="card-title">
-        Mes espaces de dépôt
-      </div>
-    </div>
-
-    <div v-if="isLoaded && controls.length === 0">
-      <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
-        <div v-if="user.is_inspector">
-          Vous n'avez pas encore créé d'espace de dépôt.
-        </div>
-        <div v-else>
-          Vous n'avez pas d'espace de dépôt.
+    <div v-if="showSidebar">
+      <div class="card-header flex-row justify-content-center border-top">
+        <div class="card-title">
+          Mes espaces de dépôt
         </div>
       </div>
-    </div>
 
-    <div v-if="user && user.is_inspector"
-         class="card-header flex-row justify-content-center border-0">
-      <control-create></control-create>
-    </div>
-
-    <div v-if="!collapsed && !isLoaded && !hasError"
-         class="sidebar-load-message card-header border-0 mt-4 mb-4">
-      <div class="loader mr-2"></div>
-      En attente de la liste d'espaces...
-    </div>
-
-    <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
-      <div>
-        Nous n'avons pas pu obtenir vos espaces de dépôt.
+      <div v-if="isLoaded && controls.length === 0">
+        <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
+          <div v-if="user.is_inspector">
+            Vous n'avez pas encore créé d'espace de dépôt.
+          </div>
+          <div v-else>
+            Vous n'avez pas d'espace de dépôt.
+          </div>
+        </div>
       </div>
-      <div class="mt-2">
-        Erreur : {{ errorMessage }}
-      </div>
-      <div class="mt-2">
-        Vous pouvez essayer de recharger la page, ou
-        <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
-           target="_blank"
-        >
-          cliquez ici pour nous contacter
-        </a>.
-      </div>
-    </error-bar>
 
-    <sidebar-menu class="sidebar-body"
-                  :menu="menu"
-                  :relative="true"
-                  :hideToggle="true"
-                  :show-one-child="true"
-                  theme="white-theme"
-                  :collapsed="collapsed"
-                  @toggle-collapse="onToggleCollapse"
-                  @item-click="onItemClick"
-    >
-    </sidebar-menu>
+      <div v-if="user && user.is_inspector"
+          class="card-header flex-row justify-content-center border-0">
+        <control-create></control-create>
+      </div>
 
+      <div v-if="!collapsed && !isLoaded && !hasError"
+          class="sidebar-load-message card-header border-0 mt-4 mb-4">
+        <div class="loader mr-2"></div>
+        En attente de la liste d'espaces...
+      </div>
+
+      <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
+        <div>
+          Nous n'avons pas pu obtenir vos espaces de dépôt.
+        </div>
+        <div class="mt-2">
+          Erreur : {{ errorMessage }}
+        </div>
+        <div class="mt-2">
+          Vous pouvez essayer de recharger la page, ou
+          <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
+            target="_blank"
+          >
+            cliquez ici pour nous contacter
+          </a>.
+        </div>
+      </error-bar>
+
+      <sidebar-menu class="sidebar-body"
+                    :menu="menu"
+                    :relative="true"
+                    :hideToggle="true"
+                    :show-one-child="true"
+                    theme="white-theme"
+                    :collapsed="collapsed"
+                    @item-click="onItemClick"
+      >
+      </sidebar-menu>
+    </div>
   </div>
 </template>
 
@@ -98,6 +98,7 @@ export default Vue.extend({
           '&body=' + ERROR_EMAIL_BODY,
       isMenuBuilt: false,
       menu: [],
+      showSidebar: true,
     }
   },
   computed: {
@@ -134,12 +135,11 @@ export default Vue.extend({
   },
   mounted: function() {
     if (window.location.pathname === backend.welcome()) {
-      this.collapsed = true
-      this.menu = []
-      this.moveBodyForCollapse()
-      // Hack for top bar to stay on top, until we figure out the layout for collapsed menu.
-      const topBar = document.getElementsByClassName('sidebar-header')[0]
-      topBar.setAttribute('style', 'width: 100%;')
+      this.showSidebar = false
+      // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
+      // ever do).
+      const sidebar = document.getElementsByClassName('sidebar')[0]
+      sidebar.setAttribute('style', 'width: 135px;')
       return
     }
   },
@@ -219,23 +219,6 @@ export default Vue.extend({
         })
       this.isMenuBuilt = true
       this.menu = menu
-    },
-    moveBodyForCollapse () {
-      const element = document.getElementById('page-main')
-      element.classList.add('sidebar-collapsed')
-    },
-    moveBodyForUncollapse () {
-      const element = document.getElementById('page-main')
-      element.classList.remove('sidebar-collapsed')
-    },
-    onToggleCollapse (collapsed) {
-      console.log(collapsed)
-      this.collapsed = collapsed
-      if (collapsed) {
-        this.moveBodyForCollapse()
-      } else {
-        this.moveBodyForUncollapse()
-      }
     },
     onItemClick (event, item) {
       console.debug('onItemClick', event, item)
