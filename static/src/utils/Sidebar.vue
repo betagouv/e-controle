@@ -65,7 +65,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import backend from '../utils/backend.js'
 import ControlCreate from '../controls/ControlCreate'
 import ErrorBar from '../utils/ErrorBar'
@@ -75,9 +74,9 @@ import { SidebarMenu } from 'vue-sidebar-menu'
 import Vue from 'vue'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
-const error_email_body = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
-const error_email_subject = 'Erreur de chargement des espaces de dépôt'
-const error_email_to = 'e-controle@beta.gouv.fr'
+const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
+const ERROR_EMAIL_SUBJECT = 'Erreur de chargement des espaces de dépôt'
+const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr'
 
 export default Vue.extend({
   components: {
@@ -87,15 +86,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      areControlsLoaded: false,
       collapsed: false,
-      controls: [],
       hasError: false,
       error: undefined,
       errorMessage: '',
-      errorEmailBody: error_email_body,
-      errorEmailSubject: error_email_subject,
-      errorEmailTo: error_email_to,
+      errorEmailBody: ERROR_EMAIL_BODY,
+      errorEmailSubject: ERROR_EMAIL_SUBJECT,
+      errorEmailTo: ERROR_EMAIL_TO,
       isMenuBuilt: false,
       menu: [],
     }
@@ -104,23 +101,31 @@ export default Vue.extend({
     ...mapState({
       user: 'sessionUser',
       userLoadStatus: 'sessionUserLoadStatus',
+      controls: 'controls',
+      controlsLoadStatus: 'controlsLoadStatus',
     }),
     isLoaded() {
-      return this.areControlsLoaded && (this.userLoadStatus === loadStatuses.SUCCESS)
+      return this.controlsLoadStatus === loadStatuses.SUCCESS && this.userLoadStatus === loadStatuses.SUCCESS
     },
   },
   watch: {
+    controlsLoadStatus(newValue, oldValue) {
+      if (newValue === loadStatuses.ERROR) {
+        this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
+        return
+      }
+    },
     userLoadStatus(newValue, oldValue) {
       if (newValue === loadStatuses.ERROR) {
         this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
         return
       }
-      if (newValue === loadStatuses.SUCCESS) {
-        this.getControls()
-          .then(this.buildMenu)
-          .catch(this.displayError)
+    },
+    isLoaded(newValue, oldValue) {
+      if (newValue === false) {
         return
       }
+      this.buildMenu()
     },
   },
   mounted: function() {
@@ -139,17 +144,6 @@ export default Vue.extend({
       this.hasError = true
       this.errorMessage = err.message ? err.message : err
       this.error = err
-    },
-    getControls() {
-      console.debug('sidebar getting controls...')
-      return axios.get(backend.control()).then((response) => {
-        console.debug('sidebar got controls', response)
-        this.controls = response.data
-        this.areControlsLoaded = true
-      }).catch(err => {
-        console.error('sidebar got error when getting controls', err)
-        throw err
-      })
     },
     buildMenu() {
       const makeControlTitle = control => {
