@@ -88,6 +88,14 @@ export default Vue.extend({
     ErrorBar,
     SidebarMenu,
   },
+  props: {
+    // Pass window object as prop, so that we can pass a mock for testing.
+    // Do not use "window" or "document" directly in this file, instead use "this.window" and
+    // "this.window.document"
+    window: {
+      default: () => window,
+    },
+  },
   data() {
     return {
       collapsed: false,
@@ -136,11 +144,11 @@ export default Vue.extend({
     },
   },
   mounted: function() {
-    if (window.location.pathname === backend.welcome()) {
+    if (this.window.location.pathname === backend.welcome()) {
       this.showSidebar = false
       // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
       // ever do).
-      const sidebar = document.getElementsByClassName('sidebar')[0]
+      const sidebar = this.window.document.getElementsByClassName('sidebar')[0]
       sidebar.setAttribute('style', 'width: 135px;')
       return
     }
@@ -175,10 +183,10 @@ export default Vue.extend({
       // If we are on a create-questionnaire page, find the control for which the questionnaire is
       // being created.
       const controlCreatingQuestionnaire =
-          backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+          backend.getIdFromViewUrl(this.window.location.pathname, 'questionnaire-create')
 
       // If we are on a trash page, find the control for which the trash folder is.
-      const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
+      const questionnaireForTrash = backend.getIdFromViewUrl(this.window.location.pathname, 'trash')
 
       const menu = this.controls.sort((a, b) => { return b.id - a.id })
         .map(control => {

@@ -8,29 +8,12 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-let originalWindow
-const setPath = path => {
-  originalWindow = global.window
-  global.window = Object.create(window)
-  Object.defineProperty(window, 'location', {
-    value: {
-      pathName: path,
-    },
-  })
-}
-const resetPath = () => {
-  if (originalWindow !== undefined) {
-    global.window = originalWindow
-  }
-}
-
 describe('Sidebar.vue', () => {
   let store
   let wrapper
   let user
   let controls
   beforeEach(() => {
-    resetPath()
     jest.resetModules()
     jest.clearAllMocks()
 
@@ -91,33 +74,36 @@ describe('Sidebar.vue', () => {
       })
   })
 
-  afterEach(() => {
-    if (document.getElementsByClassName.mockRestore) {
-      document.getElementsByClassName.mockRestore()
-    }
-  })
-
   test('is a Vue instance', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
   test('does not display on welcome pages', () => {
     const path = '/bienvenue/'
-    // Mock out window.location.pathname
-    setPath(path)
-    expect(window.location.pathname).toEqual(path)
-
-    // Mock out document.getElementsByClassName, used to fix sidebar width
-    const getElementsSpy = jest.spyOn(document, 'getElementsByClassName')
-    document.getElementsByClassName.mockImplementation(() => {
+    const mockSetAttribute = jest.fn(() => {
       return [{
         setAttribute: () => {},
       }]
     })
+    const mockWindow = {
+      location: {
+        pathname: path,
+      },
+      document: {
+        getElementsByClassName: () => {
+          return [{
+            setAttribute: mockSetAttribute,
+          }]
+        },
+      },
+    }
 
-    const wrapper = shallowMount(
+    wrapper = shallowMount(
       Sidebar,
       {
+        propsData: {
+          window: mockWindow,
+        },
         store,
         localVue,
       })
@@ -129,7 +115,7 @@ describe('Sidebar.vue', () => {
     store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
     // Width has been fixed
-    expect(getElementsSpy).toHaveBeenCalled()
+    expect(mockSetAttribute).toHaveBeenCalled()
     // Menu is not built, even though the data was succesfully fetched from store.
     expect(wrapper.vm.isMenuBuilt).toBeFalsy()
     expect(wrapper.vm.menu).toHaveLength(0)
