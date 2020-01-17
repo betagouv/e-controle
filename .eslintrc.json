@@ -31,6 +31,7 @@
         "comma-dangle": ["error", "always-multiline"],
         "no-useless-return": "off",
         "space-before-function-paren": "off",
-        "jest/expect-expect": "off"
+        "jest/expect-expect": "off",
+        "max-len": ["error", { "code": 100 }]
     }
 }

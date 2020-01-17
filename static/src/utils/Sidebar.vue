@@ -6,66 +6,67 @@
       </a>
     </div>
 
-    <div class="card-header flex-row justify-content-center border-top">
-      <div class="card-title">
-        Mes espaces de dépôt
-      </div>
-    </div>
-
-    <div v-if="isLoaded && controls.length === 0">
-      <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
-        <div v-if="user.is_inspector">
-          Vous n'avez pas encore créé d'espace de dépôt.
-        </div>
-        <div v-else>
-          Vous n'avez pas d'espace de dépôt.
+    <div v-if="showSidebar">
+      <div class="card-header flex-row justify-content-center border-top">
+        <div class="card-title">
+          Mes espaces de dépôt
         </div>
       </div>
-    </div>
 
-    <div v-if="user && user.is_inspector" class="card-header flex-row justify-content-center border-0">
-      <control-create></control-create>
-    </div>
-
-    <div v-if="!collapsed && !isLoaded && !hasError" class="sidebar-load-message card-header border-0 mt-4 mb-4">
-      <div class="loader mr-2"></div>
-      En attente de la liste d'espaces...
-    </div>
-
-    <error-bar v-if="hasError" noclose=true>
-      <div>
-        Nous n'avons pas pu obtenir vos espaces de dépôt.
+      <div v-if="isLoaded && controls.length === 0">
+        <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
+          <div v-if="user.is_inspector">
+            Vous n'avez pas encore créé d'espace de dépôt.
+          </div>
+          <div v-else>
+            Vous n'avez pas d'espace de dépôt.
+          </div>
+        </div>
       </div>
-      <div class="mt-2">
-        Erreur : {{ errorMessage }}
-      </div>
-      <div class="mt-2">
-        Vous pouvez essayer de recharger la page, ou
-        <a :href="'mailto:' + errorEmailTo + '?subject=' + errorEmailSubject + '&body=' + errorEmailBody + JSON.stringify(error)"
-           target="_blank"
-        >
-          cliquez ici pour nous contacter
-        </a>.
-      </div>
-    </error-bar>
 
-    <sidebar-menu class="sidebar-body"
-                  :menu="menu"
-                  :relative="true"
-                  :hideToggle="true"
-                  :show-one-child="true"
-                  theme="white-theme"
-                  :collapsed="collapsed"
-                  @toggle-collapse="onToggleCollapse"
-                  @item-click="onItemClick"
-    >
-    </sidebar-menu>
+      <div v-if="user && user.is_inspector"
+          class="card-header flex-row justify-content-center border-0">
+        <control-create></control-create>
+      </div>
 
+      <div v-if="!collapsed && !isLoaded && !hasError"
+          class="sidebar-load-message card-header border-0 mt-4 mb-4">
+        <div class="loader mr-2"></div>
+        En attente de la liste d'espaces...
+      </div>
+
+      <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
+        <div>
+          Nous n'avons pas pu obtenir vos espaces de dépôt.
+        </div>
+        <div class="mt-2">
+          Erreur : {{ errorMessage }}
+        </div>
+        <div class="mt-2">
+          Vous pouvez essayer de recharger la page, ou
+          <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
+            target="_blank"
+          >
+            cliquez ici pour nous contacter
+          </a>.
+        </div>
+      </error-bar>
+
+      <sidebar-menu class="sidebar-body"
+                    :menu="menu"
+                    :relative="true"
+                    :hideToggle="true"
+                    :show-one-child="true"
+                    theme="white-theme"
+                    :collapsed="collapsed"
+                    @item-click="onItemClick"
+      >
+      </sidebar-menu>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import backend from '../utils/backend.js'
 import ControlCreate from '../controls/ControlCreate'
 import ErrorBar from '../utils/ErrorBar'
@@ -75,9 +76,11 @@ import { SidebarMenu } from 'vue-sidebar-menu'
 import Vue from 'vue'
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
-const error_email_body = 'Bonjour,%0D%0A%0D%0AJe voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu. Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
-const error_email_subject = 'Erreur de chargement des espaces de dépôt'
-const error_email_to = 'e-controle@beta.gouv.fr'
+const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0A' +
+    'Je voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu.' +
+    ' Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
+const ERROR_EMAIL_SUBJECT = 'Erreur de chargement des espaces de dépôt'
+const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr'
 
 export default Vue.extend({
   components: {
@@ -85,78 +88,106 @@ export default Vue.extend({
     ErrorBar,
     SidebarMenu,
   },
+  props: {
+    // Pass window object as prop, so that we can pass a mock for testing.
+    // Do not use "window" or "document" directly in this file, instead use "this.window" and
+    // "this.window.document"
+    window: {
+      default: () => window,
+    },
+  },
   data() {
     return {
-      areControlsLoaded: false,
       collapsed: false,
-      controls: [],
       hasError: false,
       error: undefined,
-      errorMessage: '',
-      errorEmailBody: error_email_body,
-      errorEmailSubject: error_email_subject,
-      errorEmailTo: error_email_to,
+      errorMessage: undefined,
+      errorEmailLink: ERROR_EMAIL_TO + '?subject=' + ERROR_EMAIL_SUBJECT +
+          '&body=' + ERROR_EMAIL_BODY,
       isMenuBuilt: false,
       menu: [],
+      showSidebar: true,
     }
   },
   computed: {
     ...mapState({
       user: 'sessionUser',
       userLoadStatus: 'sessionUserLoadStatus',
+      controls: 'controls',
+      controlsLoadStatus: 'controlsLoadStatus',
     }),
     isLoaded() {
-      return this.areControlsLoaded && (this.userLoadStatus === loadStatuses.SUCCESS)
+      return this.controlsLoadStatus === loadStatuses.SUCCESS &&
+          this.userLoadStatus === loadStatuses.SUCCESS
+    },
+  },
+  watch: {
+    controlsLoadStatus(newValue, oldValue) {
+      if (this.showSidebar && newValue === loadStatuses.ERROR) {
+        this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
+        return
+      }
+    },
+    userLoadStatus(newValue, oldValue) {
+      if (this.showSidebar && newValue === loadStatuses.ERROR) {
+        this.displayError('Erreur lors du chargement des espaces. Essayez de recharger la page.')
+        return
+      }
+    },
+    isLoaded(newValue, oldValue) {
+      if (this.showSidebar) {
+        if (newValue === false) {
+          return
+        }
+        this.buildMenu()
+      }
     },
   },
   mounted: function() {
-    if (window.location.pathname === backend.welcome()) {
-      this.collapsed = true
-      this.menu = []
-      this.moveBodyForCollapse()
-      // Hack for top bar to stay on top, until we figure out the layout for collapsed menu.
-      const topBar = document.getElementsByClassName('sidebar-header')[0]
-      topBar.setAttribute('style', 'width: 100%;')
+    if (this.window.location.pathname === backend.welcome()) {
+      this.showSidebar = false
+      // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
+      // ever do).
+      const sidebar = this.window.document.getElementsByClassName('sidebar')[0]
+      sidebar.setAttribute('style', 'width: 135px;')
       return
     }
-
-    const getControls = () => {
-      console.debug('sidebar getting controls...')
-      return axios.get(backend.control()).then((response) => {
-        console.debug('sidebar got controls', response)
-        this.controls = response.data
-        this.areControlsLoaded = true
-      }).catch(err => {
-        console.error('sidebar got error when getting controls', err)
-        throw err
-      })
-    }
-
-    const makeControlTitle = control => {
-      let title = control.reference_code + '\n'
-      if (control.depositing_organization) {
-        title += control.depositing_organization
-      } else {
-        title += control.title
+  },
+  methods: {
+    displayError(err) {
+      this.hasError = true
+      this.errorMessage = err.message ? err.message : err
+      this.error = err
+    },
+    buildMenu() {
+      const makeControlTitle = control => {
+        let title = control.reference_code + '\n'
+        if (control.depositing_organization) {
+          title += control.depositing_organization
+        } else {
+          title += control.title
+        }
+        return title
       }
-      return title
-    }
 
-    const makeQuestionnaireLink = questionnaire => {
-      if (!questionnaire.is_draft) {
+      const makeQuestionnaireLink = questionnaire => {
+        if (!questionnaire.is_draft) {
+          return backend['questionnaire-detail'](questionnaire.id)
+        }
+        if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
+          return backend['questionnaire-edit'](questionnaire.id)
+        }
         return backend['questionnaire-detail'](questionnaire.id)
       }
-      if (questionnaire.editor && questionnaire.editor.id === this.user.id) {
-        return backend['questionnaire-edit'](questionnaire.id)
-      }
-      return backend['questionnaire-detail'](questionnaire.id)
-    }
 
-    const buildMenu = () => {
-      // If we are on a create-questionnaire page, find the control for which the questionnaire is being created.
-      const controlCreatingQuestionnaire = backend.getIdFromViewUrl(window.location.pathname, 'questionnaire-create')
+      // If we are on a create-questionnaire page, find the control for which the questionnaire is
+      // being created.
+      const controlCreatingQuestionnaire =
+          backend.getIdFromViewUrl(this.window.location.pathname, 'questionnaire-create')
+
       // If we are on a trash page, find the control for which the trash folder is.
-      const questionnaireForTrash = backend.getIdFromViewUrl(window.location.pathname, 'trash')
+      const questionnaireForTrash = backend.getIdFromViewUrl(this.window.location.pathname, 'trash')
+
       const menu = this.controls.sort((a, b) => { return b.id - a.id })
         .map(control => {
           const controlMenu = {
@@ -198,35 +229,6 @@ export default Vue.extend({
         })
       this.isMenuBuilt = true
       this.menu = menu
-    }
-
-    const displayError = (err) => {
-      this.hasError = true
-      this.errorMessage = err.message ? err.message : err
-      this.error = err
-    }
-
-    getControls()
-      .then(buildMenu)
-      .catch(displayError)
-  },
-  methods: {
-    moveBodyForCollapse () {
-      const element = document.getElementById('page-main')
-      element.classList.add('sidebar-collapsed')
-    },
-    moveBodyForUncollapse () {
-      const element = document.getElementById('page-main')
-      element.classList.remove('sidebar-collapsed')
-    },
-    onToggleCollapse (collapsed) {
-      console.log(collapsed)
-      this.collapsed = collapsed
-      if (collapsed) {
-        this.moveBodyForCollapse()
-      } else {
-        this.moveBodyForUncollapse()
-      }
     },
     onItemClick (event, item) {
       console.debug('onItemClick', event, item)
@@ -278,7 +280,8 @@ export default Vue.extend({
     color: #495057;
     background-color: white;
   }
-  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon, .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon,
+  .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
     color: #495057;
     background-color: white;
   }
