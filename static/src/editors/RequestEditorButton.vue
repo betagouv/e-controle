@@ -15,7 +15,7 @@
         <div class="text-right">
           <button v-if="questionnaire.editor"
             type="submit"
-            class="btn btn-gray"
+            class="btn btn-gray obtain-rights-button"
             title="Obtenir les droits de rédaction..."
             data-toggle="modal"
             data-target="#requestEditorModal">
@@ -24,7 +24,7 @@
           </button>
           <button v-else
             type="submit"
-            class="btn btn-gray"
+            class="btn btn-gray obtain-rights-button"
             title="Obtenir les droits de rédaction..."
             @click="takeEditorRights"
             >
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import RequestEditorConfirmModal from '../editors/RequestEditorConfirmModal'
 import ErrorBar from '../utils/ErrorBar'
@@ -59,7 +60,15 @@ import RequestEditorModal from '../editors/RequestEditorModal'
 import Vue from 'vue'
 
 export default Vue.extend({
-  props: ['questionnaire'],
+  props: {
+    questionnaire: {},
+    // Pass window object as prop, so that we can pass a mock for testing.
+    // Do not use "window" or "document" directly in this file, instead use "this.window" and
+    // "this.window.document"
+    window: {
+      default: () => window,
+    },
+  },
   data: function() {
     return {
       errorMessage: '',
@@ -76,7 +85,7 @@ export default Vue.extend({
   methods: {
     callSwapEditorApi(editorUser, questionnaireId) {
       const url = backendUrls.swapEditor(questionnaireId)
-      return Vue.axios.put(url, {
+      return axios.put(url, {
         editor: editorUser,
       })
     },
@@ -85,7 +94,7 @@ export default Vue.extend({
       this.callSwapEditorApi(this.sessionUser.id, this.questionnaire.id)
         .then((response) => {
           console.debug('got editing rights', response)
-          window.location.assign(backendUrls['questionnaire-edit'](this.questionnaire.id))
+          this.window.location.assign(backendUrls['questionnaire-edit'](this.questionnaire.id))
         })
         .catch(error => {
           console.error(error)
