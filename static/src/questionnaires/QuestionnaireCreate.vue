@@ -1,5 +1,10 @@
 <template>
   <div>
+    <swap-editor-button v-if="controlHasMultipleInspectors"
+                        :control-id="controlId"
+                        @save-draft="saveDraftBeforeEditorSwap">
+    </swap-editor-button>
+
     <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
@@ -14,9 +19,7 @@
     <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
       {{ errorMessage }}
     </div>
-    <info-bar>
-      Vous êtes le rédacteur de ce brouillon de questionnaire. Vos collègues de l'équipe de contrôle pourront le voir, mais pas le modifier.
-    </info-bar>
+
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
             ref="createMetadataChild"
@@ -94,11 +97,11 @@ import axios from 'axios'
 import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
 import EventBus from '../events'
-import InfoBar from '../utils/InfoBar'
 import moment from 'moment'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
+import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
 
 // State machine
@@ -117,6 +120,7 @@ axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 export default Vue.extend({
   props: {
     controlId: Number,
+    controlHasMultipleInspectors: Boolean,
     questionnaireId: Number,
     questionnaireNumbering: Number,
   },
@@ -133,10 +137,10 @@ export default Vue.extend({
   },
   components: {
     EmptyModal,
-    InfoBar,
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
+    SwapEditorButton,
   },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)
@@ -149,7 +153,7 @@ export default Vue.extend({
       this.displayErrors(errorMessage)
     })
 
-    if (typeof this.controlId !== 'undefined') {
+    if (typeof this.questionnaireId === 'undefined') {
       this._loadQuestionnaireCreate()
       return
     }
@@ -289,19 +293,51 @@ export default Vue.extend({
       this._updateBody(data)
       this.saveDraft()
     },
+    saveDraftBeforeEditorSwap() {
+      console.debug('save draft before editor swap')
+      const validateForm = () => {
+        if (this.state === STATES.PREVIEW) {
+          return true
+        }
+        if (this.state === STATES.START) {
+          return this.$refs.createMetadataChild.validateForm()
+        }
+        if (this.state === STATES.CREATING_BODY) {
+          return this.$refs.createBodyChild.validateForm()
+        }
+      }
+      const updateQuestionnaire = () => {
+        if (this.state === STATES.START) {
+          this._updateMetadata(this.$refs.createMetadataChild.metadata)
+        } else if (this.state === STATES.CREATING_BODY) {
+          this._updateBody(this.$refs.createBodyChild.body)
+        }
+      }
+
+      if (!validateForm()) {
+        return
+      }
+      updateQuestionnaire()
+      this.saveDraft()
+        .then(savedQuestionnaire => {
+          this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
+        })
+    },
     saveDraft() {
       this.questionnaire.is_draft = true
-      this._doSave()
+      return this._doSave()
         .then((response) => {
           this._updateQuestionnaire(response.data)
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
           this.message = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          return response.data
         })
         .catch((error) => {
           console.error(error)
-          this.displayErrors('Erreur lors de la sauvegarde du brouillon.', error.response.data)
+          const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
+          this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
         })
     },
     wait(timeMillis) {

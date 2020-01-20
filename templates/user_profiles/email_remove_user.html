@@ -2,7 +2,7 @@
 {% block email_content %}
 <p>Bonjour,</p>
 <p> {{ user.first_name }} {{ user.last_name }} vient de retirer une personne d'un espace de dépôt:</p>
- - {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}{% if target_user.profile.organization %}, {{ target_user.profile.organization}}{% endif %}
+ - {{ target_user.first_name }} {{ target_user.last_name }}, {{ target_user.email }}
 <br/>
  - Profil : {{ target_user.profile.get_profile_type_display }}
 <br/>

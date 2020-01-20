@@ -1,5 +1,12 @@
 <template>
   <div>
+    <template v-if="user.is_inspector">
+      <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft"></request-editor-button>
+      <success-bar v-else>
+        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
+      </success-bar>
+    </template>
+
     <div class="page-header">
       <div class="page-title">
         <i class="fe fe-list mr-2"></i>
@@ -10,16 +17,6 @@
         {{ questionnaire.title_display }}
       </div>
     </div>
-    <template v-if="user.is_inspector">
-      <info-bar v-if="questionnaire.is_draft">
-        <span v-if="questionnaire.editor">{{ questionnaire.editor.first_name }} {{ questionnaire.editor.last_name }}</span>
-        <span v-else>[INCONNU]</span>
-        est la personne affectée à la rédaction du questionnaire et la seule personne à pouvoir le modifier. Suggérez-lui vos modifications.
-      </info-bar>
-      <success-bar v-else>
-        Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus modifiable.
-      </success-bar>
-    </template>
     <div :class="{ preview: questionnaire.is_draft }">
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
@@ -59,6 +56,7 @@
   import QuestionBox from '../questions/QuestionBox'
   import QuestionFileList from '../questions/QuestionFileList'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
+  import RequestEditorButton from '../editors/RequestEditorButton'
   import ResponseDropzone from '../questions/ResponseDropzone'
   import ResponseFileList from '../questions/ResponseFileList'
   import SuccessBar from '../utils/SuccessBar'
@@ -90,6 +88,7 @@
       QuestionBox,
       QuestionFileList,
       QuestionnaireMetadata,
+      RequestEditorButton,
       ResponseDropzone,
       ResponseFileList,
       SuccessBar,

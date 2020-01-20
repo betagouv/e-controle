@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'config',
     'control',
     'demo',
+    'editor',
     'faq',
     'magicauth',
     'reporting',
