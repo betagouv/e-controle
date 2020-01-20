@@ -100,6 +100,7 @@
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
+                 ref="savedModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -415,8 +416,8 @@ export default Vue.extend({
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
-          $('#savingModal').modal('hide')
-          $('#savedModal').modal('show')
+          $(this.$refs.savingModal.$el).modal('hide')
+          $(this.$refs.savedModal.$el).modal('show')
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
