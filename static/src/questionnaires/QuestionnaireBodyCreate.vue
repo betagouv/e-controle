@@ -86,7 +86,7 @@
                       </span>
                     </label>
                   </div>
-                  <a role="button" href="javascript:;">
+                  <a role="button" href="javascript:;" @click="moveQuestionDown(themeIndex, qIndex)">
                     <i class="fe fe-chevron-down fa-3x text-muted"></i>
                   </a>
                 </div>
@@ -202,14 +202,25 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
-    moveQuestionUp(themeIndex, qIndex) {
-      console.debug('moveQuestionUp', themeIndex, qIndex)
-      if (qIndex === 0) {
-        console.error('Cannot move the first question up.')
+    move(array, fromIndex, toIndex) {
+      if (toIndex < 0 || toIndex > array.length - 1) {
+        console.error('Cannot move the element to position', toIndex)
         return
       }
-      const movingQuestion = this.themes[themeIndex].questions.splice(qIndex, 1)[0]
-      this.themes[themeIndex].questions.splice(qIndex - 1, 0, movingQuestion)
+      if (fromIndex < 0 || fromIndex > array.length - 1) {
+        console.error('Cannot move the element from position', fromIndex)
+        return
+      }
+      const movingElement = array.splice(fromIndex, 1)[0]
+      array.splice(toIndex, 0, movingElement)
+    },
+    moveQuestionUp(themeIndex, qIndex) {
+      console.debug('moveQuestionUp', themeIndex, qIndex)
+      this.move(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+    },
+    moveQuestionDown(themeIndex, qIndex) {
+      console.debug('moveQuestionDown', themeIndex, qIndex)
+      this.move(this.themes[themeIndex].questions, qIndex, qIndex + 1)
     },
   },
 })
