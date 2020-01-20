@@ -64,7 +64,8 @@
                     La question associée à ce thème sera également supprimée.
                   </span>
                   <span v-else>
-                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
+                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
+                    seront également supprimées.
                   </span>
                 </p>
               </confirm-modal>
@@ -90,19 +91,27 @@
                 </textarea>
 
                 <span>
-                  <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+                  <a href="javascript:void(0)"
+                     @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                     class="btn btn-link"
+                     title="Supprimer la question">
                     <i class="fe fe-trash-2"></i>
                   </a>
                 </span>
                 <question-file-upload :question-id="question.id"></question-file-upload>
               </div>
               <div class="card-body">
-                <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
+                <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)"
+                                    :question-id="question.id">
+                </question-file-list>
               </div>
             </div>
 
             <div class="card-footer">
-              <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
+              <a href="javascript:void(0)"
+                 @click.prevent="addQuestion(themeIndex)"
+                 class="btn btn-primary"
+                 title="Ajouter une question">
                 <i class="fe fe-plus"></i> Ajouter une question
               </a>
             </div>
@@ -112,7 +121,10 @@
             <div class="card-footer">
               <div class="card-status card-status-top bg-blue">
               </div>
-              <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
+              <a href="javascript:void(0)"
+                 @click="addTheme()"
+                 class="btn btn-primary"
+                 title="Ajouter un thème">
                 <i class="fe fe-plus"></i>Ajouter un thème
               </a>
             </div>
