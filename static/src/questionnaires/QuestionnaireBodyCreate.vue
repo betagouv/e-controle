@@ -75,11 +75,21 @@
                  class="card border-0 m-0 pt-2"
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
-                <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
-                  <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                    {{ themeIndex + 1 }}.{{ qIndex + 1 }}
-                  </span>
-                </label>
+                <div class="flex-column align-items-center mr-4">
+                  <a role="button" href="javascript:;" @click="moveQuestionUp(themeIndex, qIndex)">
+                    <i class="fe fe-chevron-up fa-3x text-muted"></i>
+                  </a>
+                  <div>
+                    <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
+                      <span class="stamp stamp-md bg-blue">
+                        {{ themeIndex + 1 }}.{{ qIndex + 1 }}
+                      </span>
+                    </label>
+                  </div>
+                  <a role="button" href="javascript:;">
+                    <i class="fe fe-chevron-down fa-3x text-muted"></i>
+                  </a>
+                </div>
                 <textarea class="form-control"
                           placeholder="Ecrivez une question ici"
                           rows="4"
@@ -191,6 +201,15 @@ export default Vue.extend({
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)
+    },
+    moveQuestionUp(themeIndex, qIndex) {
+      console.debug('moveQuestionUp', themeIndex, qIndex)
+      if (qIndex === 0) {
+        console.error('Cannot move the first question up.')
+        return
+      }
+      const movingQuestion = this.themes[themeIndex].questions.splice(qIndex, 1)[0]
+      this.themes[themeIndex].questions.splice(qIndex - 1, 0, movingQuestion)
     },
   },
 })
