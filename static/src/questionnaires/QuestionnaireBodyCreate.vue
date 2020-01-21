@@ -121,9 +121,8 @@
                 <question-file-upload :question-id="question.id"></question-file-upload>
               </div>
               <div class="card-body">
-                <question-file-list-without-vuex :question-number="(themeIndex + 1) + '.' + (qIndex + 1)"
-                                    :question-id="question.id">
-                </question-file-list-without-vuex>
+                <question-file-list :question-id="question.id">
+                </question-file-list>
               </div>
             </div>
 
@@ -164,7 +163,7 @@ import ConfirmModal from '../utils/ConfirmModal'
 import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
-import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
+import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
 
 import reportValidity from 'report-validity'
@@ -183,7 +182,7 @@ export default Vue.extend({
   components: {
     ConfirmModal,
     InfoBar,
-    QuestionFileListWithoutVuex,
+    QuestionFileList,
     QuestionFileUpload,
   },
   mounted() {
