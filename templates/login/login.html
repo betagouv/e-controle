@@ -21,7 +21,7 @@
           </a>
         </div>
         <div class="mt-8 mt-md-5 mt-lg-7 mt-xl-8 d-flex flex-column justify-content-center align-items-center">
-          <form action="{% url 'magicauth-login' %}" method="post">
+          <form method="post">
             {% csrf_token %}
             {% if user.is_authenticated %}
               <div class="alert alert-info text-center" role="alert">
