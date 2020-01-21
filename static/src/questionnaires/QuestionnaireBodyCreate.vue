@@ -239,6 +239,7 @@ export default Vue.extend({
           'animationend msAnimationEnd webkitAnimationEnd oanimationend',
           function() {
             $(this).removeClass(animationClass)
+            $(this).css('z-index', 'auto')
           },
         )
         // Add the animation class to start the animation
@@ -246,12 +247,16 @@ export default Vue.extend({
       }
 
       if (fromQIndex > toQIndex) {
+        // Selected question moves upwards
         runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-up')
         runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-down')
       } else {
+        // Selected question moves downwards
         runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-up')
         runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-down')
       }
+      // Display selected question on top during movement
+      $('#theme-' + themeIndex + '-question-' + toQIndex).css('z-index', '999')
     },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp', themeIndex, qIndex)
