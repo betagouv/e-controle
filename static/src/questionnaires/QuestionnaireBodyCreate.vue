@@ -72,6 +72,7 @@
             </div>
 
             <div v-for="(question, qIndex) in themes[themeIndex].questions"
+                 :id="'theme-' + themeIndex + '-question-' + qIndex"
                  class="card border-0 m-0 pt-2"
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
@@ -217,6 +218,8 @@ export default Vue.extend({
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp', themeIndex, qIndex)
       this.move(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      $('#theme-' + themeIndex + '-question-' + qIndex).addClass('move-up')
+      $('#theme-' + themeIndex + '-question-' + (qIndex - 1)).addClass('move-down')
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown', themeIndex, qIndex)
@@ -227,4 +230,25 @@ export default Vue.extend({
 </script>
 
 <style>
+  @keyframes slideUp {
+      from { transform : translateY(-184px) }
+      to   { transform : translateY(0px) }
+  }
+
+  @keyframes slideDown {
+      from { transform : translateY(184px) }
+      to   { transform : translateY(0px) }
+  }
+
+  .move-up {
+    animation-name            : slideUp;
+    animation-duration        : 2s;
+    animation-iteration-count : 1;
+  }
+
+  .move-down {
+    animation-name            : slideDown;
+    animation-duration        : 2s;
+    animation-iteration-count : 1;
+  }
 </style>
