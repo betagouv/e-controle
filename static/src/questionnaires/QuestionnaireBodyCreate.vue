@@ -252,24 +252,40 @@ export default Vue.extend({
 
 <style>
   @keyframes slideUp {
-      from { transform : translateY(-184px) }
-      to   { transform : translateY(0px) }
+    from { transform : translateY(-184px) }
+    to   { transform : translateY(0px) }
   }
 
   @keyframes slideDown {
-      from { transform : translateY(184px) }
-      to   { transform : translateY(0px) }
+    from { transform : translateY(184px) }
+    to   { transform : translateY(0px) }
+  }
+
+  .move-up, .move-down {
+    animation-duration : 2s;
+    animation-iteration-count : 1;
+
+    -webkit-animation-duration : 2s;
+    -webkit-animation-iteration-count : 1;
+
+    -moz-animation-duration : 2s;
+    -moz-animation-iteration-count : 1;
+
+    -o-animation-duration : 2s;
+    -o-animation-iteration-count : 1;
   }
 
   .move-up {
-    animation-name            : slideUp;
-    animation-duration        : 2s;
-    animation-iteration-count : 1;
+    animation-name : slideUp;
+    -webkit-animation-name : slideUp;
+    -moz-animation-name : slideUp;
+    -o-animation-name : slideUp;
   }
 
   .move-down {
-    animation-name            : slideDown;
-    animation-duration        : 2s;
-    animation-iteration-count : 1;
+    animation-name : slideDown;
+    -webkit-animation-name : slideDown;
+    -moz-animation-name : slideDown;
+    -o-animation-name : slideDown;
   }
 </style>
