@@ -203,7 +203,7 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
-    move(array, fromIndex, toIndex) {
+    moveArrayElement(array, fromIndex, toIndex) {
       if (toIndex < 0 || toIndex > array.length - 1) {
         console.error('Cannot move the element to position', toIndex)
         return
@@ -215,15 +215,27 @@ export default Vue.extend({
       const movingElement = array.splice(fromIndex, 1)[0]
       array.splice(toIndex, 0, movingElement)
     },
+    animatedQuestionSwap(themeIndex, fromQIndex, toQIndex) {
+      $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-up')
+      $('#theme-' + themeIndex + '-question-' + (toQIndex)).addClass('move-down')
+    },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp', themeIndex, qIndex)
-      this.move(this.themes[themeIndex].questions, qIndex, qIndex - 1)
-      $('#theme-' + themeIndex + '-question-' + qIndex).addClass('move-up')
-      $('#theme-' + themeIndex + '-question-' + (qIndex - 1)).addClass('move-down')
+      if (qIndex <= 0) {
+        console.error('Cannot moveQuestionUp from index', qIndex)
+        return
+      }
+      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      this.animatedQuestionSwap(themeIndex, qIndex, qIndex - 1)
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown', themeIndex, qIndex)
-      this.move(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      if (qIndex >= this.themes.length) {
+        console.error('Cannot moveQuestionDown from index', qIndex)
+        return
+      }
+      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      this.animatedQuestionSwap(themeIndex, qIndex + 1, qIndex)
     },
   },
 })
