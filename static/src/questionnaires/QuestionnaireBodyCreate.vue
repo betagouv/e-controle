@@ -77,7 +77,10 @@
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
-                  <a role="button" href="javascript:;" @click="moveQuestionUp(themeIndex, qIndex)">
+                  <a :class="{ invisible: qIndex === 0 }"
+                     role="button"
+                     href="javascript:;"
+                     @click="moveQuestionUp(themeIndex, qIndex)">
                     <i class="fe fe-chevron-up fa-3x text-muted"></i>
                   </a>
                   <div>
@@ -87,7 +90,10 @@
                       </span>
                     </label>
                   </div>
-                  <a role="button" href="javascript:;" @click="moveQuestionDown(themeIndex, qIndex)">
+                  <a :class="{ invisible: qIndex === (theme.questions.length - 1) }"
+                     role="button"
+                     href="javascript:;"
+                     @click="moveQuestionDown(themeIndex, qIndex)">
                     <i class="fe fe-chevron-down fa-3x text-muted"></i>
                   </a>
                 </div>
@@ -255,7 +261,7 @@ export default Vue.extend({
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown', themeIndex, qIndex)
-      if (qIndex >= this.themes.length) {
+      if (qIndex >= (this.themes[themeIndex].questions.length - 1)) {
         console.error('Cannot moveQuestionDown from index', qIndex)
         return
       }
