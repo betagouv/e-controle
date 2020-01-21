@@ -203,6 +203,7 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
+    // Move an element in an array from one index to the other.
     moveArrayElement(array, fromIndex, toIndex) {
       if (toIndex < 0 || toIndex > array.length - 1) {
         console.error('Cannot move the element to position', toIndex)
@@ -215,17 +216,32 @@ export default Vue.extend({
       const movingElement = array.splice(fromIndex, 1)[0]
       array.splice(toIndex, 0, movingElement)
     },
-    animatedQuestionSwap(themeIndex, fromQIndex, toQIndex) {
+    // Run the animation for when two questions have been swapped. This should be run after the
+    // state has been modified in vuex.
+    animateQuestionSwap(themeIndex, fromQIndex, toQIndex) {
       if (fromQIndex === toQIndex) {
         console.error('Cannot swap question with itself! ', fromQIndex)
         return
       }
+
+      const runAnimation = (jQuerySelector, animationClass) => {
+        // Setup listener to remove the animation class once the animation is done.
+        $(jQuerySelector).on(
+          'animationend msAnimationEnd webkitAnimationEnd oanimationend',
+          function() {
+            $(this).removeClass(animationClass)
+          },
+        )
+        // Add the animation class to start the animation
+        $(jQuerySelector).addClass(animationClass)
+      }
+
       if (fromQIndex > toQIndex) {
-        $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-up')
-        $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('move-down')
+        runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-up')
+        runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-down')
       } else {
-        $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('move-up')
-        $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-down')
+        runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-up')
+        runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-down')
       }
     },
     moveQuestionUp(themeIndex, qIndex) {
@@ -235,7 +251,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
-      this.animatedQuestionSwap(themeIndex, qIndex, qIndex - 1)
+      this.animateQuestionSwap(themeIndex, qIndex, qIndex - 1)
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown', themeIndex, qIndex)
@@ -244,7 +260,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
-      this.animatedQuestionSwap(themeIndex, qIndex, qIndex + 1)
+      this.animateQuestionSwap(themeIndex, qIndex, qIndex + 1)
     },
   },
 })
