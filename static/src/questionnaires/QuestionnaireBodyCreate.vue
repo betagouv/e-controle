@@ -216,8 +216,17 @@ export default Vue.extend({
       array.splice(toIndex, 0, movingElement)
     },
     animatedQuestionSwap(themeIndex, fromQIndex, toQIndex) {
-      $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-up')
-      $('#theme-' + themeIndex + '-question-' + (toQIndex)).addClass('move-down')
+      if (fromQIndex === toQIndex) {
+        console.error('Cannot swap question with itself! ', fromQIndex)
+        return
+      }
+      if (fromQIndex > toQIndex) {
+        $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-up')
+        $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('move-down')
+      } else {
+        $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('move-up')
+        $('#theme-' + themeIndex + '-question-' + fromQIndex).addClass('move-down')
+      }
     },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp', themeIndex, qIndex)
@@ -235,7 +244,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
-      this.animatedQuestionSwap(themeIndex, qIndex + 1, qIndex)
+      this.animatedQuestionSwap(themeIndex, qIndex, qIndex + 1)
     },
   },
 })
