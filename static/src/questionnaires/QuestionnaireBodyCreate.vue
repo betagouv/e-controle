@@ -77,24 +77,27 @@
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
-                  <a :class="{ invisible: qIndex === 0 }"
+                  <a :class="{ disabled: qIndex === 0 }"
+                     class="btn btn-secondary btn-sm"
                      role="button"
                      href="javascript:;"
                      @click="moveQuestionUp(themeIndex, qIndex)">
-                    <i class="fe fe-chevron-up fa-3x text-muted"></i>
+                    <i class="fa fa-chevron-up"></i>
                   </a>
-                  <div>
-                    <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
+                  <div class="my-1">
+                    <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                           class="mb-0">
                       <span class="stamp stamp-md bg-blue">
                         {{ themeIndex + 1 }}.{{ qIndex + 1 }}
                       </span>
                     </label>
                   </div>
-                  <a :class="{ invisible: qIndex === (theme.questions.length - 1) }"
+                  <a :class="{ disabled: qIndex === (theme.questions.length - 1) }"
+                     class="btn btn-secondary btn-sm"
                      role="button"
                      href="javascript:;"
                      @click="moveQuestionDown(themeIndex, qIndex)">
-                    <i class="fe fe-chevron-down fa-3x text-muted"></i>
+                    <i class="fa fa-chevron-down"></i>
                   </a>
                 </div>
                 <textarea class="form-control"
@@ -274,12 +277,12 @@ export default Vue.extend({
 
 <style>
   @keyframes slideUp {
-    from { transform : translateY(-184px) }
+    from { transform : translateY(-150px) }
     to   { transform : translateY(0px) }
   }
 
   @keyframes slideDown {
-    from { transform : translateY(184px) }
+    from { transform : translateY(150px) }
     to   { transform : translateY(0px) }
   }
 
