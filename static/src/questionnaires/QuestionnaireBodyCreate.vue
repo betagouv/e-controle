@@ -240,6 +240,7 @@ export default Vue.extend({
           function() {
             $(this).removeClass(animationClass)
             $(this).css('z-index', 'auto')
+            $(this).removeClass('bg-azure-lightest')
           },
         )
         // Add the animation class to start the animation
@@ -257,6 +258,7 @@ export default Vue.extend({
       }
       // Display selected question on top during movement
       $('#theme-' + themeIndex + '-question-' + toQIndex).css('z-index', '999')
+      $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('bg-azure-lightest')
     },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp', themeIndex, qIndex)
