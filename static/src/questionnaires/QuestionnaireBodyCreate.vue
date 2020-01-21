@@ -294,16 +294,16 @@ export default Vue.extend({
   }
 
   .move-up, .move-down {
-    animation-duration : 2s;
+    animation-duration : 1s;
     animation-iteration-count : 1;
 
-    -webkit-animation-duration : 2s;
+    -webkit-animation-duration : 1s;
     -webkit-animation-iteration-count : 1;
 
-    -moz-animation-duration : 2s;
+    -moz-animation-duration : 1s;
     -moz-animation-iteration-count : 1;
 
-    -o-animation-duration : 2s;
+    -o-animation-duration : 1s;
     -o-animation-iteration-count : 1;
   }
 
