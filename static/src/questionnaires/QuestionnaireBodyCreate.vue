@@ -186,10 +186,6 @@ export default Vue.extend({
     QuestionFileUpload,
   },
   mounted() {
-    // Todo do we still need this? Can we avoid event? Can we use store loadStatus instead?
-    this.$parent.$on('questionnaire-updated', function(data) {
-      EventBus.$emit('question-files-changed')
-    })
   },
   methods: {
     addQuestion: function(themeIndex) {

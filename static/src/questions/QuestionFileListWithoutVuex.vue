@@ -43,9 +43,6 @@ export default Vue.extend({
     },
   },
   mounted() {
-    EventBus.$on('question-files-changed', () => {
-      this.getFiles()
-    })
     this.getFiles()
   },
 })
