@@ -5,8 +5,6 @@
     <ul>
       <li v-for="(file, index) in files" :key="index">
         <a :href="file.url">{{ file.basename }}</a>
-          <question-file-delete v-if="withDelete" :question-file-id="file.id">
-          </question-file-delete>
       </li>
     </ul>
   </div>
@@ -15,25 +13,17 @@
 <script>
 import axios from 'axios'
 import EventBus from '../events'
-import QuestionFileDelete from './QuestionFileDelete'
 import Vue from 'vue'
 
 export default Vue.extend({
   props: {
     questionId: Number | String,
     questionNumber: String,
-    withDelete: {
-      type: Boolean,
-      default: true,
-    },
   },
   data() {
     return {
       files: [],
     }
-  },
-  components: {
-    QuestionFileDelete,
   },
   methods: {
     getFiles() {

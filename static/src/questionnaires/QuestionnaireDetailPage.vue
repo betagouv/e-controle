@@ -32,7 +32,7 @@
                         :question-numbering="qIndex + 1"
                         :question="question">
 
-            <question-file-list-without-vuex :question-id="question.id" :with-delete="false">
+            <question-file-list-without-vuex :question-id="question.id">
             </question-file-list-without-vuex>
             <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
             <response-dropzone :is-audited="user.is_audited"
