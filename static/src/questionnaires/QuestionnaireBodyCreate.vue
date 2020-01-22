@@ -186,6 +186,7 @@ export default Vue.extend({
     QuestionFileUpload,
   },
   mounted() {
+    this.setAnimationDistance({ slideUpDistancePx: 150, slideDownDistancePx: 428 })
   },
   methods: {
     addQuestion: function(themeIndex) {
@@ -219,6 +220,40 @@ export default Vue.extend({
       }
       const movingElement = array.splice(fromIndex, 1)[0]
       array.splice(toIndex, 0, movingElement)
+    },
+    // For the swapping animation, set the distance that each element should travel, in the CSS
+    // sheet.
+    setAnimationDistance({ slideUpDistancePx, slideDownDistancePx }) {
+      const getStyleSheet = () => {
+        for (let i = 0; i < document.styleSheets.length; i++) {
+          const sheet = document.styleSheets[i]
+          if (sheet.href && sheet.href.includes('questionnaire-create')) {
+            return sheet
+          }
+        }
+      }
+      const getAnimationRule = (sheet, ruleName) => {
+        for (let i = 0; i < sheet.rules.length; i++) {
+          if (sheet.rules[i].name && sheet.rules[i].name === ruleName) {
+            return sheet.rules[i]
+          }
+        }
+      }
+      const setDistanceFrom = (rule, distancePx) => {
+        const fromRule = rule.cssRules[0]
+        fromRule.style.setProperty('transform', 'translateY(' + distancePx + 'px)')
+      }
+      const setSlideUpDistance = (sheet, distancePx) => {
+        const rule = getAnimationRule(sheet, 'slideUp')
+        setDistanceFrom(rule, -1 * distancePx)
+      }
+      const setSlideDownDistance = (sheet, distancePx) => {
+        const rule = getAnimationRule(sheet, 'slideDown')
+        setDistanceFrom(rule, distancePx)
+      }
+      const sheet = getStyleSheet()
+      setSlideUpDistance(sheet, slideUpDistancePx)
+      setSlideDownDistance(sheet, slideDownDistancePx)
     },
     // Run the animation for when two questions have been swapped. This should be run after the
     // state has been modified in vuex.
