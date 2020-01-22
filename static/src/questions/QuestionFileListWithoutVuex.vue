@@ -5,60 +5,58 @@
     <ul>
       <li v-for="(file, index) in files" :key="index">
         <a :href="file.url">{{ file.basename }}</a>
-          <question-file-delete v-if="withDelete" :question-file-id="file.id"></question-file-delete>
+          <question-file-delete v-if="withDelete" :question-file-id="file.id">
+          </question-file-delete>
       </li>
     </ul>
   </div>
 </template>
 
-
 <script>
-  import axios from 'axios'
-  import EventBus from '../events'
-  import QuestionFileDelete from "./QuestionFileDelete"
-  import Vue from "vue"
-  import VueAxios from 'vue-axios'
+import axios from 'axios'
+import EventBus from '../events'
+import QuestionFileDelete from './QuestionFileDelete'
+import Vue from 'vue'
 
-  Vue.use(VueAxios, axios)
-
-  export default Vue.extend({
-    props: {
-      questionId: Number | String,
-      questionNumber: String,
-      withDelete: {
-        type: Boolean,
-        default: true
-      }
+export default Vue.extend({
+  props: {
+    questionId: Number | String,
+    questionNumber: String,
+    withDelete: {
+      type: Boolean,
+      default: true,
     },
-    data() {
-      return {
-        files: []
-      }
-    },
-    components: {
-      QuestionFileDelete
-    },
-    methods: {
-      getFiles() {
-        if (this.questionId === undefined) {
-          console.debug('No questionId for question', this.questionNumber, ', so cannot fetch file list.')
-          return
-        }
-        Vue.axios.get('/api/annexe/', {
-          params: {
-            question: this.questionId
-          }
-        }).then((response) => {
-          this.files = response.data
-          EventBus.$emit('question-file-count-changed-' + this.questionId, this.files.length)
-        })
-      }
-    },
-    mounted() {
-      EventBus.$on('question-files-changed', () => {
-        this.getFiles()
-      })
-      this.getFiles()
+  },
+  data() {
+    return {
+      files: [],
     }
-  })
+  },
+  components: {
+    QuestionFileDelete,
+  },
+  methods: {
+    getFiles() {
+      if (this.questionId === undefined) {
+        console.debug(
+          'No questionId for question', this.questionNumber, ', so cannot fetch file list.')
+        return
+      }
+      axios.get('/api/annexe/', {
+        params: {
+          question: this.questionId,
+        },
+      }).then((response) => {
+        this.files = response.data
+        EventBus.$emit('question-file-count-changed-' + this.questionId, this.files.length)
+      })
+    },
+  },
+  mounted() {
+    EventBus.$on('question-files-changed', () => {
+      this.getFiles()
+    })
+    this.getFiles()
+  },
+})
 </script>
