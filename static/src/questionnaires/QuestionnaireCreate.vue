@@ -243,10 +243,6 @@ export default Vue.extend({
       throw Error('QuestionnaireCreate needs a controlId or a questionnaireId')
     }
 
-    EventBus.$on('display-error', (errorMessage) => {
-      this.displayErrors(errorMessage)
-    })
-
     $('#publishConfirmModal').on('hidden.bs.modal', () => {
       this.publishError = undefined
     })

@@ -1,5 +1,8 @@
 <template>
 <div>
+  <error-bar v-if="errorMessage" @dismissed="clearError">
+    {{ errorMessage }}
+  </error-bar>
   <div v-if="questionId">
     <label class="btn btn-primary">
       <i class="fe fe-upload mr-2"></i>
@@ -28,6 +31,7 @@
 <script>
 import axios from 'axios'
 import backendUrls from '../utils/backend'
+import ErrorBar from '../utils/ErrorBar'
 import EventBus from '../events'
 import Vue from 'vue'
 
@@ -37,15 +41,23 @@ export default Vue.extend({
   },
   data () {
     return {
+      errorMessage: undefined,
       file: '',
     }
   },
+  components: {
+    ErrorBar,
+  },
   methods: {
+    clearError() {
+      this.errorMessage = undefined
+    },
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
       this.submitFile()
     },
     submitFile() {
+      this.clearError()
       const formData = new FormData()
       formData.append('file', this.file)
       formData.append('question', this.questionId)
@@ -57,13 +69,13 @@ export default Vue.extend({
             'Content-Type': 'multipart/form-data',
           },
         })
-        .then(function(response) {
+        .then(response => {
           console.debug('QuestionFileUpload response', response)
           EventBus.$emit('question-file-added', response.data)
         })
-        .catch(function(error) {
+        .catch(error => {
           console.log('Error when posting question file', error)
-          EventBus.$emit('display-error', 'L\'annexe n\'a pu être sauvée.')
+          this.errorMessage = 'L\'annexe n\'a pu être sauvée.'
         })
     },
   },
