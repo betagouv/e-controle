@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { getField, updateField } from 'vuex-map-fields'
+import flushPromises from 'flush-promises'
 
 import { loadStatuses } from '../../store'
 import Sidebar from '../Sidebar'
@@ -121,12 +122,14 @@ describe('Sidebar.vue', () => {
     expect(wrapper.vm.menu).toHaveLength(0)
   })
 
-  test('shows menu', () => {
+  test('shows menu', async () => {
     store.commit('updateSessionUser', user)
     store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
 
     store.commit('updateControls', controls)
     store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+    await flushPromises()
 
     expect(wrapper.vm.isMenuBuilt).toBeTruthy()
 
@@ -158,12 +161,14 @@ describe('Sidebar.vue', () => {
       expect.stringContaining('' + questionnaire.id))
   })
 
-  test('shows error if controls are not fetched', () => {
+  test('shows error if controls are not fetched', async () => {
     store.commit('updateSessionUser', user)
     store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
 
     store.commit('updateControlsLoadStatus', loadStatuses.ERROR)
 
+    await flushPromises()
+
     expect(wrapper.vm.isMenuBuilt).toBeFalsy()
     expect(wrapper.vm.menu).toHaveLength(0)
 
@@ -176,12 +181,14 @@ describe('Sidebar.vue', () => {
       expect.stringContaining(wrapper.vm.errorMessage))
   })
 
-  test('shows error if user is not fetched', () => {
+  test('shows error if user is not fetched', async () => {
     store.commit('updateSessionUserLoadStatus', loadStatuses.ERROR)
 
     store.commit('updateControls', controls)
     store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+    await flushPromises()
+
     expect(wrapper.vm.isMenuBuilt).toBeFalsy()
     expect(wrapper.vm.menu).toHaveLength(0)
 
@@ -194,7 +201,7 @@ describe('Sidebar.vue', () => {
       expect.stringContaining(wrapper.vm.errorMessage))
   })
 
-  test('does not show drafts for audited user', () => {
+  test('does not show drafts for audited user', async () => {
     user.is_inspector = false
     user.is_audited = true
     expect(controls[0].questionnaires).toHaveLength(2)
@@ -204,6 +211,8 @@ describe('Sidebar.vue', () => {
 
     store.commit('updateControls', controls)
     store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+    await flushPromises()
 
     expect(wrapper.vm.isMenuBuilt).toBeTruthy()
     expect(wrapper.vm.menu).toHaveLength(1)
@@ -218,7 +227,7 @@ describe('Sidebar.vue', () => {
       store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
     })
 
-    test('href for non-draft questionnaire', () => {
+    test('href for non-draft questionnaire', async () => {
       const isDraft = false
       const editorId = user.id + 1
       const questionnaire = {
@@ -234,13 +243,15 @@ describe('Sidebar.vue', () => {
       store.commit('updateControls', controls)
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       expect(wrapper.vm.menu[0].child).toHaveLength(1)
       expect(wrapper.vm.menu[0].child[0].href).toEqual(
         expect.stringContaining('' + questionnaire.id))
       expect(wrapper.vm.menu[0].child[0].href).not.toEqual(expect.stringContaining('modifier'))
     })
 
-    test('href for draft questionnaire if current user is editor', () => {
+    test('href for draft questionnaire if current user is editor', async () => {
       const isDraft = true
       const editorId = user.id
       const questionnaire = {
@@ -256,13 +267,15 @@ describe('Sidebar.vue', () => {
       store.commit('updateControls', controls)
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       expect(wrapper.vm.menu[0].child).toHaveLength(1)
       expect(wrapper.vm.menu[0].child[0].href).toEqual(
         expect.stringContaining('' + questionnaire.id))
       expect(wrapper.vm.menu[0].child[0].href).toEqual(expect.stringContaining('modifier'))
     })
 
-    test('href for draft questionnaire if current user is not editor', () => {
+    test('href for draft questionnaire if current user is not editor', async () => {
       const isDraft = true
       const editorId = user.id + 1
       const questionnaire = {
@@ -277,6 +290,8 @@ describe('Sidebar.vue', () => {
 
       store.commit('updateControls', controls)
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      await flushPromises()
 
       expect(wrapper.vm.menu[0].child).toHaveLength(1)
       expect(wrapper.vm.menu[0].child[0].href).toEqual(
