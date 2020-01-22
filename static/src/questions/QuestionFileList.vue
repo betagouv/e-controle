@@ -7,7 +7,7 @@
         <a :href="file.url">{{ file.basename }}</a>
           <span>
             <a href="javascript:void(0)"
-               @click.prevent=""
+               @click.prevent="deleteFile(file.id)"
                class="btn btn-link"
                title="Supprimer le fichier">
               <i class="fe fe-trash-2"></i>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import EventBus from '../events'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
 
@@ -53,6 +54,18 @@ export default Vue.extend({
         return []
       }
       return foundQuestion.question_files
+    },
+  },
+  methods: {
+    deleteFile(fileId) {
+      this.axios.delete('/api/annexe/' + fileId)
+        .then(function() {
+          EventBus.$emit('question-files-changed')
+        })
+        .catch(function(error) {
+          console.log('Error when deleting question file', error)
+          EventBus.$emit('display-error', 'Le fichier n\'a pu être supprimé.')
+        })
     },
   },
 })
