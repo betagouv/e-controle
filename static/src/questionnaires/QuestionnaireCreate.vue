@@ -55,7 +55,7 @@
                 class="btn btn-secondary">
           < Retour
         </button>
-        <button @click="saveDraft"
+        <button @click="validateFormAndSaveDraft"
                 class="btn btn-primary">
           <i class="fe fe-save"></i>
           Enregistrer le brouillon
@@ -355,27 +355,32 @@ export default Vue.extend({
       }
       return saveMethod(this.currentQuestionnaire)
     },
+    validateCurrentForm() {
+      if (this.state === STATES.PREVIEW) {
+        return true
+      }
+      if (this.state === STATES.START) {
+        return this.$refs.questionnaireMetadataCreate.validateForm()
+      }
+      if (this.state === STATES.CREATING_BODY) {
+        return this.$refs.questionnaireBodyCreate.validateForm()
+      }
+    },
     saveDraftAndSwapEditor() {
       console.debug('save draft before editor swap')
-      const validateForm = () => {
-        if (this.state === STATES.PREVIEW) {
-          return true
-        }
-        if (this.state === STATES.START) {
-          return this.$refs.questionnaireMetadataCreate.validateForm()
-        }
-        if (this.state === STATES.CREATING_BODY) {
-          return this.$refs.questionnaireBodyCreate.validateForm()
-        }
-      }
-
-      if (!validateForm()) {
+      if (!this.validateCurrentForm()) {
         return
       }
       this.saveDraft()
         .then(savedQuestionnaire => {
           this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
         })
+    },
+    validateFormAndSaveDraft() {
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      this.saveDraft()
     },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true
