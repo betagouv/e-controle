@@ -27,6 +27,7 @@
 
 <script>
 import axios from 'axios'
+import backendUrls from '../utils/backend'
 import EventBus from '../events'
 import Vue from 'vue'
 
@@ -48,15 +49,16 @@ export default Vue.extend({
       const formData = new FormData()
       formData.append('file', this.file)
       formData.append('question', this.questionId)
-      axios.post('/api/annexe/',
+      axios.post(backendUrls.annexe(),
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         },
-      ).then(function() {
+      ).then(function(response) {
         // todo send event for individual questions to avoid reloading all questions
+        console.debug('QuestionFileUpload response', response)
         EventBus.$emit('question-files-changed')
       })
         .catch(function(error) {

@@ -12,6 +12,7 @@
 
 <script>
 import axios from 'axios'
+import backendUrls from '../utils/backend'
 import EventBus from '../events'
 import Vue from 'vue'
 
@@ -32,7 +33,7 @@ export default Vue.extend({
           'No questionId for question', this.questionNumber, ', so cannot fetch file list.')
         return
       }
-      axios.get('/api/annexe/', {
+      axios.get(backendUrls.annexe(), {
         params: {
           question: this.questionId,
         },

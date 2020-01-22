@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import backendUrls from '../utils/backend'
 import EventBus from '../events'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
@@ -58,7 +60,7 @@ export default Vue.extend({
   },
   methods: {
     deleteFile(fileId) {
-      this.axios.delete('/api/annexe/' + fileId)
+      axios.delete(backendUrls.annexe(fileId))
         .then(function() {
           EventBus.$emit('question-files-changed')
         })
