@@ -27,6 +27,7 @@
 import axios from 'axios'
 import backendUrls from '../utils/backend'
 import ErrorBar from '../utils/ErrorBar'
+import EventBus from '../events'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
 
@@ -68,6 +69,13 @@ export default Vue.extend({
       }
       return foundQuestion.question_files
     },
+  },
+  mounted() {
+    EventBus.$on('question-file-added', questionFile => {
+      if (questionFile.question === this.questionId) {
+        this.files.push(questionFile)
+      }
+    })
   },
   methods: {
     clearError() {

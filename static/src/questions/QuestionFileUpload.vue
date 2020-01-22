@@ -49,18 +49,18 @@ export default Vue.extend({
       const formData = new FormData()
       formData.append('file', this.file)
       formData.append('question', this.questionId)
-      axios.post(backendUrls.annexe(),
+      axios.post(
+        backendUrls.annexe(),
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        },
-      ).then(function(response) {
-        // todo send event for individual questions to avoid reloading all questions
-        console.debug('QuestionFileUpload response', response)
-        EventBus.$emit('question-files-changed')
-      })
+        })
+        .then(function(response) {
+          console.debug('QuestionFileUpload response', response)
+          EventBus.$emit('question-file-added', response.data)
+        })
         .catch(function(error) {
           console.log('Error when posting question file', error)
           EventBus.$emit('display-error', 'L\'annexe n\'a pu être sauvée.')
