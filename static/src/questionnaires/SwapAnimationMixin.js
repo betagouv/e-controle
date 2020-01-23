@@ -64,26 +64,23 @@ const questionSwapMixin = {
       }
       return distances
     },
+    runAnimation(jQueryElement, animationClass) {
+      // Setup listener to remove the animation class once the animation is done.
+      jQueryElement.on(
+        'animationend msAnimationEnd webkitAnimationEnd oanimationend',
+        function() {
+          $(this).removeClass(animationClass)
+        },
+      )
+      // Add the animation class to start the animation
+      jQueryElement.addClass(animationClass)
+    },
     // Run the animation for when two questions have been swapped. This should be run after the
     // state has been modified in vuex.
     animateQuestionSwap(themeIndex, fromQIndex, toQIndex) {
       if (fromQIndex === toQIndex) {
         console.error('Cannot swap question with itself! ', fromQIndex)
         return
-      }
-
-      const runAnimation = (jQueryElement, animationClass) => {
-        // Setup listener to remove the animation class once the animation is done.
-        jQueryElement.on(
-          'animationend msAnimationEnd webkitAnimationEnd oanimationend',
-          function() {
-            $(this).removeClass(animationClass)
-            $(this).css('z-index', 'auto')
-            $(this).removeClass('bg-azure-lightest')
-          },
-        )
-        // Add the animation class to start the animation
-        jQueryElement.addClass(animationClass)
       }
 
       const fromElement = $('#theme-' + themeIndex + '-question-' + fromQIndex)
@@ -93,16 +90,13 @@ const questionSwapMixin = {
 
       if (fromQIndex > toQIndex) {
         // Selected question moves upwards
-        runAnimation(fromElement, 'move-up')
-        runAnimation(toElement, 'move-down')
+        this.runAnimation(fromElement, 'move-up move-selected')
+        this.runAnimation(toElement, 'move-down')
       } else {
         // Selected question moves downwards
-        runAnimation(toElement, 'move-up')
-        runAnimation(fromElement, 'move-down')
+        this.runAnimation(toElement, 'move-up')
+        this.runAnimation(fromElement, 'move-down move-selected')
       }
-      // Display selected question on top during movement
-      toElement.css('z-index', '999')
-      toElement.addClass('bg-azure-lightest')
     },
   },
 }

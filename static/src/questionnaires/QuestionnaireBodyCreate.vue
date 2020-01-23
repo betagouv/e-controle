@@ -268,4 +268,9 @@ export default Vue.extend({
     -moz-animation-name : slideDown;
     -o-animation-name : slideDown;
   }
+
+  .move-selected {
+    z-index: 999;
+    background-color: #ecf7fe; /* azure-lightest */
+  }
 </style>
