@@ -15,7 +15,7 @@ const questionSwapMixin = {
     },
     // For the swapping animation, set the distance that each element should travel, in the CSS
     // sheet.
-    setAnimationDistance({ slideUpDistancePx, slideDownDistancePx }) {
+    setAnimationDistances({ slideUpDistancePx, slideDownDistancePx }) {
       const getStyleSheet = () => {
         for (let i = 0; i < document.styleSheets.length; i++) {
           const sheet = document.styleSheets[i]
@@ -48,11 +48,21 @@ const questionSwapMixin = {
       setSlideDownDistance(sheet, slideDownDistancePx)
     },
     // Given two dom elements' jquery selectors, find the distances that they need to move for the
-    // swap.
+    // swap. (distance values in pixels, always positive)
     computeSwapDistances(fromSelector, toSelector) {
-      const fromElementTop = $(fromSelector)[0].getBoundingClientRect().top
-      const toElementTop = $(toSelector)[0].getBoundingClientRect().top
-      console.debug('Swap from', fromElementTop, 'to', toElementTop)
+      const from = {
+        top: $(fromSelector)[0].getBoundingClientRect().top + window.scrollY,
+        bottom: $(fromSelector)[0].getBoundingClientRect().bottom + window.scrollY,
+      }
+      const to = {
+        top: $(toSelector)[0].getBoundingClientRect().top + window.scrollY,
+        bottom: $(toSelector)[0].getBoundingClientRect().bottom + window.scrollY,
+      }
+      const distances = {
+        slideDownDistancePx: Math.abs(to.top - from.top),
+        slideUpDistancePx: Math.abs(to.bottom - from.bottom),
+      }
+      return distances
     },
     // Run the animation for when two questions have been swapped. This should be run after the
     // state has been modified in vuex.
@@ -78,7 +88,8 @@ const questionSwapMixin = {
 
       const fromSelector = '#theme-' + themeIndex + '-question-' + fromQIndex
       const toSelector = '#theme-' + themeIndex + '-question-' + toQIndex
-      this.computeSwapDistances(fromSelector, toSelector)
+      const distances = this.computeSwapDistances(fromSelector, toSelector)
+      this.setAnimationDistances(distances)
 
       if (fromQIndex > toQIndex) {
         // Selected question moves upwards
