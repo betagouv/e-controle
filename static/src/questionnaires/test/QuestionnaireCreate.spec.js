@@ -410,7 +410,83 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
+  describe('Navigation', () => {
+    let wrapper
+    const controlId = 1
+    let mockWindow
+    beforeEach(() => {
+      mockWindow = {
+        location: {
+          href: '',
+        },
+      }
+      wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: controlId,
+            window: mockWindow,
+          },
+          store,
+          localVue,
+        })
+      store.commit('updateControls', [{ id: controlId }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+    })
+
+    test('Saves draft before returning home', async () => {
+      // Spy on form validation to make it pass
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => true)
+      // Mock axios to return the questionnaire it got in argument
+      axios.post.mockImplementation((url, payload) => {
+        return Promise.resolve({ data: payload })
+      })
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalledWith(
+        '/api/questionnaire/',
+        expect.any(Object))
+      expect(mockWindow.location.href).not.toEqual('')
+    })
+
+    test('If draft save fails, return home anyway', async () => {
+      // Spy on form validation to make it pass
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => true)
+      // Mock axios to fail save
+      axios.post.mockRejectedValue({})
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalledWith(
+        '/api/questionnaire/',
+        expect.any(Object))
+      expect(mockWindow.location.href).not.toEqual('')
+    })
+
+    test('If form validation fails, don\'t save and don\'t go home', async () => {
+      // Spy on form validation to make it fail
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => false)
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).not.toHaveBeenCalled()
+      expect(mockWindow.location.href).toEqual('')
+    })
+    // Todo : test the navigation : back, next
+  })
   // Todo : test the swapEditor flow
-  // Todo : test the navigation : back, next
   // Todo : test the save button
 })
