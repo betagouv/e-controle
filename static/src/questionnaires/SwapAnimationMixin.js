@@ -1,4 +1,6 @@
 /**
+ * DON'T FORGET TO IMPORT THE CSS FILE : SwapAnimationMixin.js
+ *
  * Helper for handling the animation when swapping two elements.
  * We call "selected element" the element that has been clicked to trigger the move. It should stay
  * in front during the animation.
