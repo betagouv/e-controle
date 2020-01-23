@@ -410,7 +410,47 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
+  describe('Navigation', () => {
+    test('Saves draft before returning home', async () => {
+      const controlId = 1
+      const mockWindow = {
+        location: {
+          href: '',
+        },
+      }
+      const wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: 1,
+            window: mockWindow,
+          },
+          store,
+          localVue,
+        })
+      store.commit('updateControls', [{ id: controlId }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+      // Spy on form validation to make it pass
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => true)
+      // Mock axios to return the questionnaire it got in argument
+      axios.post.mockImplementation((url, payload) => {
+        return Promise.resolve({ data: payload })
+      })
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalledWith(
+        '/api/questionnaire/',
+        expect.any(Object))
+      expect(mockWindow.location.href).not.toEqual('')
+    })
+
+    // Todo : test the navigation : back, next
+  })
   // Todo : test the swapEditor flow
-  // Todo : test the navigation : back, next
   // Todo : test the save button
 })

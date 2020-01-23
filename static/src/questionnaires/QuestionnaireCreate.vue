@@ -116,7 +116,9 @@
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary"
+        <button id="go-home-button"
+                type="button"
+                class="btn btn-primary"
                 @click="goHome"
         >
           < Revenir à l'accueil
@@ -159,6 +161,10 @@ export default Vue.extend({
     controlHasMultipleInspectors: Boolean,
     questionnaireId: Number,
     questionnaireNumbering: Number,
+    // Pass window dependency for testing
+    window: {
+      default: () => window,
+    },
   },
   data() {
     return {
@@ -432,8 +438,11 @@ export default Vue.extend({
       // Display a "loading" spinner on clicked button, while the user is redirected, so that they
       // know their click has been registered.
       $(event.target).addClass('btn-loading')
-
-      window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+      this.saveDraft()
+        .then(() => {
+          this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+        })
+        // todo what happens if save fails?
     },
   },
 })
