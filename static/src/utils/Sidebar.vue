@@ -144,6 +144,7 @@ export default Vue.extend({
     },
   },
   mounted: function() {
+    console.debug('this.window.location.pathname', this.window.location.pathname)
     if (this.window.location.pathname === backend.welcome()) {
       this.showSidebar = false
       // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
@@ -160,6 +161,7 @@ export default Vue.extend({
       this.error = err
     },
     buildMenu() {
+      console.debug('build menu')
       const makeControlTitle = control => {
         let title = control.reference_code + '\n'
         if (control.depositing_organization) {

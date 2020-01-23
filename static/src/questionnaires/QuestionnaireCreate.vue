@@ -47,7 +47,7 @@
               class="btn btn-secondary"
               @click="goHome"
       >
-        < Revenir à l'accueil
+        < Revenir à l'espace de dépôt
       </button>
       <div>
         <button v-if="state !== STATES.START"
@@ -100,6 +100,7 @@
       </div>
     </empty-modal>
     <empty-modal id="savedModal"
+                 ref="savedModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -115,7 +116,9 @@
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary"
+        <button id="go-home-button"
+                type="button"
+                class="btn btn-primary"
                 @click="goHome"
         >
           < Revenir à l'accueil
@@ -158,6 +161,10 @@ export default Vue.extend({
     controlHasMultipleInspectors: Boolean,
     questionnaireId: Number,
     questionnaireNumbering: Number,
+    // Pass window dependency for testing
+    window: {
+      default: () => window,
+    },
   },
   data() {
     return {
@@ -416,8 +423,8 @@ export default Vue.extend({
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
-          $('#savingModal').modal('hide')
-          $('#savedModal').modal('show')
+          $(this.$refs.savingModal.$el).modal('hide')
+          $(this.$refs.savedModal.$el).modal('show')
         })
         .catch(error => {
           console.error('Error publishing questionnaire : ', error)
@@ -427,11 +434,17 @@ export default Vue.extend({
         })
     },
     goHome(event) {
-      // Display a "loading" spinner on clicked button, while the user is redirected, so that they know their click
-      // has been registered.
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      // Display a "loading" spinner on clicked button, while the user is redirected, so that they
+      // know their click has been registered.
       $(event.target).addClass('btn-loading')
-
-      window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+      this.saveDraft()
+        .then(() => {
+          // Whether or not save succeeds, navigate to home
+          this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+        })
     },
   },
 })

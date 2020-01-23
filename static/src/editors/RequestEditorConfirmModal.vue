@@ -1,5 +1,5 @@
 <template>
-  <empty-modal>
+  <empty-modal :no-close="true">
     <div class="modal-body">
       <form @submit.prevent="confirm">
 
@@ -8,11 +8,6 @@
             Vous êtes sur le point de forcer le transfert des droits
             de ce questionnaire, en conséquence :
           </h4>
-          <button type="button"
-                  class="close"
-                  data-dismiss="modal"
-                  aria-label="Close">
-          </button>
         </div>
 
         <div class="modal-body">

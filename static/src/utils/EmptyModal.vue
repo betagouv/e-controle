@@ -10,11 +10,11 @@
 </template>
 
 <script>
-  import Vue from "vue"
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: ['no-close'],
-  })
+export default Vue.extend({
+  props: ['no-close'],
+})
 
 </script>
 

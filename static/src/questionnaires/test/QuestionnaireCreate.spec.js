@@ -108,6 +108,8 @@ describe('QuestionnaireCreate.vue', () => {
       store.commit('updateControls', [{ id: controlId }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       expect(store.state.currentQuestionnaire.control).toBe(controlId)
       expect(store.state.currentQuestionnaire.description).not.toEqual('')
     })
@@ -127,6 +129,8 @@ describe('QuestionnaireCreate.vue', () => {
 
       store.commit('updateControls', [{ id: controlId }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+
+      await flushPromises()
 
       expect(wrapper.vm.state).toEqual(1)
 
@@ -155,7 +159,7 @@ describe('QuestionnaireCreate.vue', () => {
       }).not.toThrow()
     })
 
-    test('sets currrentQuestionnaire into store', () => {
+    test('sets currrentQuestionnaire into store', async () => {
       const questionnaireId = 1234
       const controlId = 5678
       const questionnaire = {
@@ -182,6 +186,8 @@ describe('QuestionnaireCreate.vue', () => {
       }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       expect(store.state.currentQuestionnaire).toBe(questionnaire)
     })
 
@@ -203,6 +209,8 @@ describe('QuestionnaireCreate.vue', () => {
           })
 
         store.commit('updateControlsLoadStatus', loadStatuses.ERROR)
+
+        await flushPromises()
 
         expect(store.state.currentQuestionnaire).toEqual({})
 
@@ -245,6 +253,8 @@ describe('QuestionnaireCreate.vue', () => {
         }])
         store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+        await flushPromises()
+
         expect(store.state.currentQuestionnaire).toEqual({})
 
         assert(wrapper.vm.errorMessage !== '')
@@ -284,6 +294,8 @@ describe('QuestionnaireCreate.vue', () => {
       }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       expect(wrapper.vm.state).toEqual(1)
 
       assert(wrapper.find('#questionnaire-metadata-create').isVisible())
@@ -297,7 +309,7 @@ describe('QuestionnaireCreate.vue', () => {
   describe('Publishing flow', () => {
     let wrapper
     let questionnaire
-    beforeEach(() => {
+    beforeEach(async () => {
       // Setup component to load existing questionnaire
       const questionnaireId = 1234
       const controlId = 5678
@@ -325,12 +337,16 @@ describe('QuestionnaireCreate.vue', () => {
       }])
       store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
 
+      await flushPromises()
+
       // Move to state 3 : ready to publish
       wrapper.vm.state = 3
+    })
 
-      assert(!wrapper.find('#questionnaire-metadata-create').isVisible())
-      assert(!wrapper.find('#questionnaire-body-create').isVisible())
-      assert(wrapper.find('#questionnaire-preview').isVisible())
+    test('Displays the questionnaire-preview component', () => {
+      expect(wrapper.find('#questionnaire-metadata-create').isVisible()).toBeFalsy()
+      expect(wrapper.find('#questionnaire-body-create').isVisible()).toBeFalsy()
+      expect(wrapper.find('#questionnaire-preview').isVisible()).toBeTruthy()
     })
 
     test('shows publishConfirmModal when Publish button is clicked', async () => {
@@ -394,7 +410,83 @@ describe('QuestionnaireCreate.vue', () => {
     })
   })
 
+  describe('Navigation', () => {
+    let wrapper
+    const controlId = 1
+    let mockWindow
+    beforeEach(() => {
+      mockWindow = {
+        location: {
+          href: '',
+        },
+      }
+      wrapper = shallowMount(
+        QuestionnaireCreate,
+        {
+          propsData: {
+            controlId: controlId,
+            window: mockWindow,
+          },
+          store,
+          localVue,
+        })
+      store.commit('updateControls', [{ id: controlId }])
+      store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+    })
+
+    test('Saves draft before returning home', async () => {
+      // Spy on form validation to make it pass
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => true)
+      // Mock axios to return the questionnaire it got in argument
+      axios.post.mockImplementation((url, payload) => {
+        return Promise.resolve({ data: payload })
+      })
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalledWith(
+        '/api/questionnaire/',
+        expect.any(Object))
+      expect(mockWindow.location.href).not.toEqual('')
+    })
+
+    test('If draft save fails, return home anyway', async () => {
+      // Spy on form validation to make it pass
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => true)
+      // Mock axios to fail save
+      axios.post.mockRejectedValue({})
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).toHaveBeenCalledWith(
+        '/api/questionnaire/',
+        expect.any(Object))
+      expect(mockWindow.location.href).not.toEqual('')
+    })
+
+    test('If form validation fails, don\'t save and don\'t go home', async () => {
+      // Spy on form validation to make it fail
+      jest.spyOn(wrapper.vm, 'validateCurrentForm')
+      wrapper.vm.validateCurrentForm.mockImplementation(() => false)
+      await flushPromises()
+
+      wrapper.find('#go-home-button').trigger('click')
+      await flushPromises()
+
+      expect(wrapper.vm.validateCurrentForm).toHaveBeenCalled()
+      expect(axios.post).not.toHaveBeenCalled()
+      expect(mockWindow.location.href).toEqual('')
+    })
+    // Todo : test the navigation : back, next
+  })
   // Todo : test the swapEditor flow
-  // Todo : test the navigation : back, next
   // Todo : test the save button
 })
