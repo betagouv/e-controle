@@ -1,3 +1,20 @@
+/**
+ * Helper for handling the animation when swapping two elements.
+ * We call "selected element" the element that has been clicked to trigger the move. It should stay
+ * in front during the animation.
+ *
+ * Step 0 : elements are originally like this :
+ * <element 1>
+ * <element 2>
+ *
+ * Step 1 : one element gets clicked. The positions are swapped by changing the underlying vuex
+ * array, without any animation : (This step happens too fast to be seen by the user)
+ * <element 2>
+ * <element 1>
+ *
+ * Step 2 : the CSS animation is played : it changes the positions to the original ones (from step
+ * 0), then slides them gradually to the new positions (from step 1).
+ */
 const questionSwapMixin = {
   methods: {
     // Move an element in an array from one index to the other.
@@ -15,7 +32,7 @@ const questionSwapMixin = {
     },
     // For the swapping animation, set the distance that each element should travel, in the CSS
     // sheet.
-    _setAnimationDistances({ slideUpDistancePx, slideDownDistancePx }) {
+    _setAnimationDistances({ selectedElementDistancePx, neighborElementDistancePx }) {
       const getStyleSheet = () => {
         for (let i = 0; i < document.styleSheets.length; i++) {
           const sheet = document.styleSheets[i]
@@ -31,24 +48,16 @@ const questionSwapMixin = {
           }
         }
       }
-      const setDistanceFrom = (rule, distancePx) => {
-        const fromRule = rule.cssRules[0]
-        fromRule.style.setProperty('transform', 'translateY(' + distancePx + 'px)')
+      const setSelectedElementDistance = (sheet, ruleName, distancePx) => {
+        const rule = getAnimationRule(sheet, ruleName)
+        rule.cssRules[0].style.setProperty('transform', 'translateY(' + distancePx + 'px)')
       }
-      const setSlideUpDistance = (sheet, distancePx) => {
-        const rule = getAnimationRule(sheet, 'slideUp')
-        setDistanceFrom(rule, -1 * distancePx)
-      }
-      const setSlideDownDistance = (sheet, distancePx) => {
-        const rule = getAnimationRule(sheet, 'slideDown')
-        setDistanceFrom(rule, distancePx)
-      }
+
       const sheet = getStyleSheet()
-      setSlideUpDistance(sheet, slideUpDistancePx)
-      setSlideDownDistance(sheet, slideDownDistancePx)
+      setSelectedElementDistance(sheet, 'moveSelectedElement', selectedElementDistancePx)
+      setSelectedElementDistance(sheet, 'moveNeighborElement', neighborElementDistancePx)
     },
     // Given two jquery dom elements', find the distances that they need to move for the swap.
-    // (distance values in pixels, always positive)
     _computeSwapDistances(fromElement, toElement) {
       const from = {
         top: fromElement[0].getBoundingClientRect().top + window.scrollY,
@@ -58,11 +67,19 @@ const questionSwapMixin = {
         top: toElement[0].getBoundingClientRect().top + window.scrollY,
         bottom: toElement[0].getBoundingClientRect().bottom + window.scrollY,
       }
-      const distances = {
-        slideDownDistancePx: Math.abs(to.top - from.top),
-        slideUpDistancePx: Math.abs(to.bottom - from.bottom),
+      if (from.top < to.top) {
+        // Selected element is moving down
+        return {
+          selectedElementDistancePx: from.bottom - to.bottom,
+          neighborElementDistancePx: to.top - from.top,
+        }
+      } else {
+        // Selected element is moving up
+        return {
+          selectedElementDistancePx: from.top - to.top,
+          neighborElementDistancePx: to.bottom - from.bottom,
+        }
       }
-      return distances
     },
     _runAnimation(jQueryElement, animationClass) {
       // Setup listener to remove the animation class once the animation is done.
@@ -81,15 +98,8 @@ const questionSwapMixin = {
       const distances = this._computeSwapDistances(fromElement, toElement)
       this._setAnimationDistances(distances)
 
-      if (isMoveUp) {
-        // Selected question moves upwards
-        this._runAnimation(fromElement, 'move-up move-selected')
-        this._runAnimation(toElement, 'move-down')
-      } else {
-        // Selected question moves downwards
-        this._runAnimation(toElement, 'move-up')
-        this._runAnimation(fromElement, 'move-down move-selected')
-      }
+      this._runAnimation(fromElement, 'move-neighbor')
+      this._runAnimation(toElement, 'move-selected')
     },
   },
 }

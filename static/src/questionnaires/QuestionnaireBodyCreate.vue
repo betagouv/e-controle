@@ -241,17 +241,17 @@ export default Vue.extend({
 </script>
 
 <style>
-  @keyframes slideUp {
+  @keyframes moveSelectedElement {
     from { transform : translateY(-150px) } /* distance will vary depending on elements moved */
     to   { transform : translateY(0px) }
   }
 
-  @keyframes slideDown {
+  @keyframes moveNeighborElement {
     from { transform : translateY(150px) } /* distance will vary depending on elements moved */
     to   { transform : translateY(0px) }
   }
 
-  .move-up, .move-down {
+  .move-selected, .move-neighbor {
     animation-duration : 1s;
     animation-iteration-count : 1;
 
@@ -265,22 +265,20 @@ export default Vue.extend({
     -o-animation-iteration-count : 1;
   }
 
-  .move-up {
-    animation-name : slideUp;
-    -webkit-animation-name : slideUp;
-    -moz-animation-name : slideUp;
-    -o-animation-name : slideUp;
-  }
-
-  .move-down {
-    animation-name : slideDown;
-    -webkit-animation-name : slideDown;
-    -moz-animation-name : slideDown;
-    -o-animation-name : slideDown;
-  }
-
   .move-selected {
+    animation-name : moveSelectedElement;
+    -webkit-animation-name : moveSelectedElement;
+    -moz-animation-name : moveSelectedElement;
+    -o-animation-name : moveSelectedElement;
+
     z-index: 999;
     background-color: #ecf7fe; /* azure-lightest */
+  }
+
+  .move-neighbor {
+    animation-name : moveNeighborElement;
+    -webkit-animation-name : moveNeighborElement;
+    -moz-animation-name : moveNeighborElement;
+    -o-animation-name : moveNeighborElement;
   }
 </style>
