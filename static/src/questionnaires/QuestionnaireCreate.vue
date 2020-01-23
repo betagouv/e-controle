@@ -47,7 +47,7 @@
               class="btn btn-secondary"
               @click="goHome"
       >
-        < Revenir à l'accueil
+        < Revenir à l'espace de dépôt
       </button>
       <div>
         <button v-if="state !== STATES.START"
