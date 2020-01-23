@@ -440,9 +440,9 @@ export default Vue.extend({
       $(event.target).addClass('btn-loading')
       this.saveDraft()
         .then(() => {
+          // Whether or not save succeeds, navigate to home
           this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
         })
-        // todo what happens if save fails?
     },
   },
 })
