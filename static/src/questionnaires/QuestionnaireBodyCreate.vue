@@ -188,9 +188,6 @@ export default Vue.extend({
   mixins: [
     SwapAnimationMixin,
   ],
-  mounted() {
-    this.setAnimationDistance({ slideUpDistancePx: 150, slideDownDistancePx: 428 })
-  },
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
@@ -212,7 +209,7 @@ export default Vue.extend({
       return reportValidity(form)
     },
     moveQuestionUp(themeIndex, qIndex) {
-      console.debug('moveQuestionUp', themeIndex, qIndex)
+      console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
       if (qIndex <= 0) {
         console.error('Cannot moveQuestionUp from index', qIndex)
         return
@@ -221,7 +218,7 @@ export default Vue.extend({
       this.animateQuestionSwap(themeIndex, qIndex, qIndex - 1)
     },
     moveQuestionDown(themeIndex, qIndex) {
-      console.debug('moveQuestionDown', themeIndex, qIndex)
+      console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
       if (qIndex >= (this.themes[themeIndex].questions.length - 1)) {
         console.error('Cannot moveQuestionDown from index', qIndex)
         return

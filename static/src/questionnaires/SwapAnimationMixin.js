@@ -47,6 +47,13 @@ const questionSwapMixin = {
       setSlideUpDistance(sheet, slideUpDistancePx)
       setSlideDownDistance(sheet, slideDownDistancePx)
     },
+    // Given two dom elements' jquery selectors, find the distances that they need to move for the
+    // swap.
+    computeSwapDistances(fromSelector, toSelector) {
+      const fromElementTop = $(fromSelector)[0].getBoundingClientRect().top
+      const toElementTop = $(toSelector)[0].getBoundingClientRect().top
+      console.debug('Swap from', fromElementTop, 'to', toElementTop)
+    },
     // Run the animation for when two questions have been swapped. This should be run after the
     // state has been modified in vuex.
     animateQuestionSwap(themeIndex, fromQIndex, toQIndex) {
@@ -69,14 +76,18 @@ const questionSwapMixin = {
         $(jQuerySelector).addClass(animationClass)
       }
 
+      const fromSelector = '#theme-' + themeIndex + '-question-' + fromQIndex
+      const toSelector = '#theme-' + themeIndex + '-question-' + toQIndex
+      this.computeSwapDistances(fromSelector, toSelector)
+
       if (fromQIndex > toQIndex) {
         // Selected question moves upwards
-        runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-up')
-        runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-down')
+        runAnimation(fromSelector, 'move-up')
+        runAnimation(toSelector, 'move-down')
       } else {
         // Selected question moves downwards
-        runAnimation('#theme-' + themeIndex + '-question-' + toQIndex, 'move-up')
-        runAnimation('#theme-' + themeIndex + '-question-' + fromQIndex, 'move-down')
+        runAnimation(toSelector, 'move-up')
+        runAnimation(fromSelector, 'move-down')
       }
       // Display selected question on top during movement
       $('#theme-' + themeIndex + '-question-' + toQIndex).css('z-index', '999')
