@@ -47,16 +47,16 @@ const questionSwapMixin = {
       setSlideUpDistance(sheet, slideUpDistancePx)
       setSlideDownDistance(sheet, slideDownDistancePx)
     },
-    // Given two dom elements' jquery selectors, find the distances that they need to move for the
-    // swap. (distance values in pixels, always positive)
-    computeSwapDistances(fromSelector, toSelector) {
+    // Given two jquery dom elements', find the distances that they need to move for the swap.
+    // (distance values in pixels, always positive)
+    computeSwapDistances(fromElement, toElement) {
       const from = {
-        top: $(fromSelector)[0].getBoundingClientRect().top + window.scrollY,
-        bottom: $(fromSelector)[0].getBoundingClientRect().bottom + window.scrollY,
+        top: fromElement[0].getBoundingClientRect().top + window.scrollY,
+        bottom: fromElement[0].getBoundingClientRect().bottom + window.scrollY,
       }
       const to = {
-        top: $(toSelector)[0].getBoundingClientRect().top + window.scrollY,
-        bottom: $(toSelector)[0].getBoundingClientRect().bottom + window.scrollY,
+        top: toElement[0].getBoundingClientRect().top + window.scrollY,
+        bottom: toElement[0].getBoundingClientRect().bottom + window.scrollY,
       }
       const distances = {
         slideDownDistancePx: Math.abs(to.top - from.top),
@@ -72,9 +72,9 @@ const questionSwapMixin = {
         return
       }
 
-      const runAnimation = (jQuerySelector, animationClass) => {
+      const runAnimation = (jQueryElement, animationClass) => {
         // Setup listener to remove the animation class once the animation is done.
-        $(jQuerySelector).on(
+        jQueryElement.on(
           'animationend msAnimationEnd webkitAnimationEnd oanimationend',
           function() {
             $(this).removeClass(animationClass)
@@ -83,26 +83,26 @@ const questionSwapMixin = {
           },
         )
         // Add the animation class to start the animation
-        $(jQuerySelector).addClass(animationClass)
+        jQueryElement.addClass(animationClass)
       }
 
-      const fromSelector = '#theme-' + themeIndex + '-question-' + fromQIndex
-      const toSelector = '#theme-' + themeIndex + '-question-' + toQIndex
-      const distances = this.computeSwapDistances(fromSelector, toSelector)
+      const fromElement = $('#theme-' + themeIndex + '-question-' + fromQIndex)
+      const toElement = $('#theme-' + themeIndex + '-question-' + toQIndex)
+      const distances = this.computeSwapDistances(fromElement, toElement)
       this.setAnimationDistances(distances)
 
       if (fromQIndex > toQIndex) {
         // Selected question moves upwards
-        runAnimation(fromSelector, 'move-up')
-        runAnimation(toSelector, 'move-down')
+        runAnimation(fromElement, 'move-up')
+        runAnimation(toElement, 'move-down')
       } else {
         // Selected question moves downwards
-        runAnimation(toSelector, 'move-up')
-        runAnimation(fromSelector, 'move-down')
+        runAnimation(toElement, 'move-up')
+        runAnimation(fromElement, 'move-down')
       }
       // Display selected question on top during movement
-      $('#theme-' + themeIndex + '-question-' + toQIndex).css('z-index', '999')
-      $('#theme-' + themeIndex + '-question-' + toQIndex).addClass('bg-azure-lightest')
+      toElement.css('z-index', '999')
+      toElement.addClass('bg-azure-lightest')
     },
   },
 }
