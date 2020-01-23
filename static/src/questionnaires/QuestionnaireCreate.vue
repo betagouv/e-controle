@@ -356,21 +356,20 @@ export default Vue.extend({
       }
       return saveMethod(this.currentQuestionnaire)
     },
+    validateCurrentForm() {
+      if (this.state === STATES.PREVIEW) {
+        return true
+      }
+      if (this.state === STATES.START) {
+        return this.$refs.questionnaireMetadataCreate.validateForm()
+      }
+      if (this.state === STATES.CREATING_BODY) {
+        return this.$refs.questionnaireBodyCreate.validateForm()
+      }
+    },
     saveDraftAndSwapEditor() {
       console.debug('save draft before editor swap')
-      const validateForm = () => {
-        if (this.state === STATES.PREVIEW) {
-          return true
-        }
-        if (this.state === STATES.START) {
-          return this.$refs.questionnaireMetadataCreate.validateForm()
-        }
-        if (this.state === STATES.CREATING_BODY) {
-          return this.$refs.questionnaireBodyCreate.validateForm()
-        }
-      }
-
-      if (!validateForm()) {
+      if (!this.validateCurrentForm()) {
         return
       }
       this.saveDraft()
@@ -427,8 +426,11 @@ export default Vue.extend({
         })
     },
     goHome(event) {
-      // Display a "loading" spinner on clicked button, while the user is redirected, so that they know their click
-      // has been registered.
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      // Display a "loading" spinner on clicked button, while the user is redirected, so that they
+      // know their click has been registered.
       $(event.target).addClass('btn-loading')
 
       window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
