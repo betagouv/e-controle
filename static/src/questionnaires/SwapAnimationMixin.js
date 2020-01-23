@@ -77,19 +77,11 @@ const questionSwapMixin = {
     },
     // Run the animation for when two questions have been swapped. This should be run after the
     // state has been modified in vuex.
-    animateQuestionSwap(themeIndex, fromQIndex, toQIndex) {
-      if (fromQIndex === toQIndex) {
-        console.error('Cannot swap question with itself! ', fromQIndex)
-        return
-      }
-
-      const fromElement = $('#theme-' + themeIndex + '-question-' + fromQIndex)
-      const toElement = $('#theme-' + themeIndex + '-question-' + toQIndex)
-
+    animateQuestionSwap(fromElement, toElement, isMoveUp) {
       const distances = this._computeSwapDistances(fromElement, toElement)
       this._setAnimationDistances(distances)
 
-      if (fromQIndex > toQIndex) {
+      if (isMoveUp) {
         // Selected question moves upwards
         this._runAnimation(fromElement, 'move-up move-selected')
         this._runAnimation(toElement, 'move-down')

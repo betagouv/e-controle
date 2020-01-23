@@ -215,7 +215,12 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
-      this.animateQuestionSwap(themeIndex, qIndex, qIndex - 1)
+      const isMoveUp = true
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex + '-question-' + qIndex),
+        $('#theme-' + themeIndex + '-question-' + (qIndex - 1)),
+        isMoveUp,
+      )
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
@@ -224,7 +229,12 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
-      this.animateQuestionSwap(themeIndex, qIndex, qIndex + 1)
+      const isMoveUp = false
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex + '-question-' + qIndex),
+        $('#theme-' + themeIndex + '-question-' + (qIndex + 1)),
+        isMoveUp,
+      )
     },
   },
 })
