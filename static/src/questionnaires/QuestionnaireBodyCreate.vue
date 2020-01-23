@@ -232,12 +232,12 @@ export default Vue.extend({
 
 <style>
   @keyframes slideUp {
-    from { transform : translateY(-150px) }
+    from { transform : translateY(-150px) } /* distance will vary depending on elements moved */
     to   { transform : translateY(0px) }
   }
 
   @keyframes slideDown {
-    from { transform : translateY(150px) }
+    from { transform : translateY(150px) } /* distance will vary depending on elements moved */
     to   { transform : translateY(0px) }
   }
 

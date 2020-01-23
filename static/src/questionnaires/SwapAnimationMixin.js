@@ -15,7 +15,7 @@ const questionSwapMixin = {
     },
     // For the swapping animation, set the distance that each element should travel, in the CSS
     // sheet.
-    setAnimationDistances({ slideUpDistancePx, slideDownDistancePx }) {
+    _setAnimationDistances({ slideUpDistancePx, slideDownDistancePx }) {
       const getStyleSheet = () => {
         for (let i = 0; i < document.styleSheets.length; i++) {
           const sheet = document.styleSheets[i]
@@ -49,7 +49,7 @@ const questionSwapMixin = {
     },
     // Given two jquery dom elements', find the distances that they need to move for the swap.
     // (distance values in pixels, always positive)
-    computeSwapDistances(fromElement, toElement) {
+    _computeSwapDistances(fromElement, toElement) {
       const from = {
         top: fromElement[0].getBoundingClientRect().top + window.scrollY,
         bottom: fromElement[0].getBoundingClientRect().bottom + window.scrollY,
@@ -64,7 +64,7 @@ const questionSwapMixin = {
       }
       return distances
     },
-    runAnimation(jQueryElement, animationClass) {
+    _runAnimation(jQueryElement, animationClass) {
       // Setup listener to remove the animation class once the animation is done.
       jQueryElement.on(
         'animationend msAnimationEnd webkitAnimationEnd oanimationend',
@@ -85,17 +85,18 @@ const questionSwapMixin = {
 
       const fromElement = $('#theme-' + themeIndex + '-question-' + fromQIndex)
       const toElement = $('#theme-' + themeIndex + '-question-' + toQIndex)
-      const distances = this.computeSwapDistances(fromElement, toElement)
-      this.setAnimationDistances(distances)
+
+      const distances = this._computeSwapDistances(fromElement, toElement)
+      this._setAnimationDistances(distances)
 
       if (fromQIndex > toQIndex) {
         // Selected question moves upwards
-        this.runAnimation(fromElement, 'move-up move-selected')
-        this.runAnimation(toElement, 'move-down')
+        this._runAnimation(fromElement, 'move-up move-selected')
+        this._runAnimation(toElement, 'move-down')
       } else {
         // Selected question moves downwards
-        this.runAnimation(toElement, 'move-up')
-        this.runAnimation(fromElement, 'move-down move-selected')
+        this._runAnimation(toElement, 'move-up')
+        this._runAnimation(fromElement, 'move-down move-selected')
       }
     },
   },
