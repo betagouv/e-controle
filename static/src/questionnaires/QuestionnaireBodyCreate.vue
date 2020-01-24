@@ -191,7 +191,10 @@ export default Vue.extend({
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
-      this.themes[themeIndex].questions.push({ description: '' })
+      this.themes[themeIndex].questions.push({
+        description: '',
+        order: this.themes[themeIndex].questions.length,
+      })
     },
     addTheme: function() {
       console.debug('addTheme')
