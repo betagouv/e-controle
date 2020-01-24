@@ -109,7 +109,7 @@
                           oninput="this.setCustomValidity('')"
                           required>
                 </textarea>
-
+                Order : {{ question.order }}
                 <span>
                   <a href="javascript:void(0)"
                      @click.prevent="deleteQuestion(themeIndex, qIndex)"
