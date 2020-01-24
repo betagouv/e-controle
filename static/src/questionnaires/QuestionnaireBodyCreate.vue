@@ -78,7 +78,7 @@
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
                   <a :class="{ disabled: qIndex === 0 }"
-                     class="btn btn-secondary btn-sm"
+                     class="btn btn-secondary btn-sm move-up-button"
                      role="button"
                      href="javascript:;"
                      @click="moveQuestionUp(themeIndex, qIndex)">
@@ -93,7 +93,7 @@
                     </label>
                   </div>
                   <a :class="{ disabled: qIndex === (theme.questions.length - 1) }"
-                     class="btn btn-secondary btn-sm"
+                     class="btn btn-secondary btn-sm move-down-button"
                      role="button"
                      href="javascript:;"
                      @click="moveQuestionDown(themeIndex, qIndex)">
