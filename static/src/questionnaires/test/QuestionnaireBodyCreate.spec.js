@@ -1,5 +1,4 @@
 import { mount, createLocalVue, shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 import { getField, updateField } from 'vuex-map-fields'
 
 import QuestionnaireBodyCreate from '../QuestionnaireBodyCreate.vue'
@@ -40,6 +39,13 @@ describe('QuestionnaireBodyCreate.vue', () => {
     })
   })
 
+  afterEach(() => {
+    // If we removed error output in previous test, set it back for next test.
+    if (console.error.mockRestore) {
+      console.error.mockRestore()
+    }
+  })
+
   test('is a Vue instance', () => {
     const wrapper = mount(QuestionnaireBodyCreate, { store, localVue })
     expect(wrapper.isVueInstance()).toBeTruthy()
@@ -47,15 +53,17 @@ describe('QuestionnaireBodyCreate.vue', () => {
   })
 
   describe('Swapping questions', () => {
-    test('moving question down changes question order', async () => {
-      const wrapper = shallowMount(
+    let wrapper
+    beforeEach(() => {
+      wrapper = shallowMount(
         QuestionnaireBodyCreate,
         { store, localVue },
       )
       // Mock out the animation.
       jest.spyOn(wrapper.vm, 'animateQuestionSwap')
       wrapper.vm.animateQuestionSwap.mockImplementation(() => true)
-
+    })
+    test('moving question down changes question order', async () => {
       const question0 = themes[0].questions[0]
       const question1 = themes[0].questions[1]
 
@@ -70,14 +78,6 @@ describe('QuestionnaireBodyCreate.vue', () => {
     })
 
     test('moving question up changes question order', async () => {
-      const wrapper = shallowMount(
-        QuestionnaireBodyCreate,
-        { store, localVue },
-      )
-      // Mock out the animation.
-      jest.spyOn(wrapper.vm, 'animateQuestionSwap')
-      wrapper.vm.animateQuestionSwap.mockImplementation(() => true)
-
       const question0 = themes[0].questions[0]
       const question1 = themes[0].questions[1]
 
@@ -92,13 +92,9 @@ describe('QuestionnaireBodyCreate.vue', () => {
     })
 
     test('cannot move first question up', async () => {
-      const wrapper = shallowMount(
-        QuestionnaireBodyCreate,
-        { store, localVue },
-      )
-      // Mock out the animation.
-      jest.spyOn(wrapper.vm, 'animateQuestionSwap')
-      wrapper.vm.animateQuestionSwap.mockImplementation(() => true)
+      // Disable error logging since we expect it in this test
+      jest.spyOn(console, 'error')
+      console.error.mockImplementation(() => {})
 
       const question0 = themes[0].questions[0]
       const question1 = themes[0].questions[1]
@@ -118,13 +114,9 @@ describe('QuestionnaireBodyCreate.vue', () => {
     })
 
     test('cannot move last question down', async () => {
-      const wrapper = shallowMount(
-        QuestionnaireBodyCreate,
-        { store, localVue },
-      )
-      // Mock out the animation.
-      jest.spyOn(wrapper.vm, 'animateQuestionSwap')
-      wrapper.vm.animateQuestionSwap.mockImplementation(() => true)
+      // Disable error logging since we expect it in this test
+      jest.spyOn(console, 'error')
+      console.error.mockImplementation(() => {})
 
       const question0 = themes[0].questions[0]
       const question1 = themes[0].questions[1]
