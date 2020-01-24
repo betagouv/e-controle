@@ -208,6 +208,13 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
+    // For all questions in vuex, set the 'order' field to match with the
+    // order in the array.
+    updateOrderFields(questionArray) {
+      questionArray.map((question, qIndex) => {
+        question.order = qIndex
+      })
+    },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
       if (qIndex <= 0) {
@@ -215,6 +222,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = true
       this.animateQuestionSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
@@ -229,6 +237,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = false
       this.animateQuestionSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
