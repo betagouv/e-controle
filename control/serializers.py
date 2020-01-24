@@ -97,10 +97,11 @@ class ControlUpdateSerializer(serializers.ModelSerializer):
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    order = serializers.CharField(required=False)
 
     class Meta:
         model = Question
-        fields = ('id', 'description')
+        fields = ('id', 'order', 'description')
 
 
 class ThemeUpdateSerializer(serializers.ModelSerializer):
