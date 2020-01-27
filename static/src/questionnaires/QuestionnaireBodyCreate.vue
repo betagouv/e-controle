@@ -81,6 +81,7 @@
                      class="btn btn-secondary btn-sm move-up-button"
                      role="button"
                      href="javascript:;"
+                     title="Déplacer la question vers le haut"
                      @click="moveQuestionUp(themeIndex, qIndex)">
                     <i class="fa fa-chevron-up"></i>
                   </a>
@@ -96,6 +97,7 @@
                      class="btn btn-secondary btn-sm move-down-button"
                      role="button"
                      href="javascript:;"
+                     title="Déplacer la question vers le bas"
                      @click="moveQuestionDown(themeIndex, qIndex)">
                     <i class="fa fa-chevron-down"></i>
                   </a>
