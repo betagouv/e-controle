@@ -3,7 +3,27 @@
   to   { transform : translateY(0px) }
 }
 
+@-webkit-keyframes moveSelectedElement {
+  from { transform : translateY(-150px) } /* distance will vary depending on elements moved */
+  to   { transform : translateY(0px) }
+}
+
+@-moz-keyframes moveSelectedElement {
+  from { transform : translateY(-150px) } /* distance will vary depending on elements moved */
+  to   { transform : translateY(0px) }
+}
+
 @keyframes moveNeighborElement {
+  from { transform : translateY(150px) } /* distance will vary depending on elements moved */
+  to   { transform : translateY(0px) }
+}
+
+@-webkit-keyframes moveNeighborElement {
+  from { transform : translateY(150px) } /* distance will vary depending on elements moved */
+  to   { transform : translateY(0px) }
+}
+
+@-moz-keyframes moveNeighborElement {
   from { transform : translateY(150px) } /* distance will vary depending on elements moved */
   to   { transform : translateY(0px) }
 }

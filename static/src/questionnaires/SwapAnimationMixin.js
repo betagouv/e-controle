@@ -44,9 +44,9 @@ const questionSwapMixin = {
         }
       }
       const getAnimationRule = (sheet, ruleName) => {
-        for (let i = 0; i < sheet.rules.length; i++) {
-          if (sheet.rules[i].name && sheet.rules[i].name === ruleName) {
-            return sheet.rules[i]
+        for (let i = 0; i < sheet.cssRules.length; i++) {
+          if (sheet.cssRules[i].name && sheet.cssRules[i].name === ruleName) {
+            return sheet.cssRules[i]
           }
         }
       }
