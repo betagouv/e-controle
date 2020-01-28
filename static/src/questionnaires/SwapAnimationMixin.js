@@ -62,12 +62,12 @@ const questionSwapMixin = {
     // Given two jquery dom elements', find the distances that they need to move for the swap.
     _computeSwapDistances(fromElement, toElement) {
       const from = {
-        top: fromElement[0].getBoundingClientRect().top + window.scrollY,
-        bottom: fromElement[0].getBoundingClientRect().bottom + window.scrollY,
+        top: fromElement[0].getBoundingClientRect().top + window.pageYOffset,
+        bottom: fromElement[0].getBoundingClientRect().bottom + window.pageYOffset,
       }
       const to = {
-        top: toElement[0].getBoundingClientRect().top + window.scrollY,
-        bottom: toElement[0].getBoundingClientRect().bottom + window.scrollY,
+        top: toElement[0].getBoundingClientRect().top + window.pageYOffset,
+        bottom: toElement[0].getBoundingClientRect().bottom + window.pageYOffset,
       }
       if (from.top < to.top) {
         // Selected element is moving down
