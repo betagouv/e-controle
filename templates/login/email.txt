@@ -2,7 +2,11 @@ Bonjour {{ user.first_name }} {{ user.last_name }},
 
 Pour accéder à votre espace e-contrôle, vous avez juste à cliquer sur ce lien de connexion:  https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
 
-Si vous rencontrez des difficultés pour vous connecter, répondez directement à cet email.
+Des difficultés pour vous connecter ?
+Nous vous recommandons de copier-coller ce lien dans les navigateurs internets suivant : Mozila Firefox, Chrome, Microsoft Edge.
+Lien à copier : https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
+
+Si vous rencontrez toujours des difficultés pour vous connecter, répondez directement à cet email.
 
 Merci beaucoup,
 
