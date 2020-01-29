@@ -52,8 +52,8 @@ export const options = {
   iterations: 4,
 }
 
-const username = 'admin'
-const password = 'faleco2019'
+const username = 'admin@demo.com'
+const password = 'demo12345'
 
 const serverUrl = 'http://127.0.0.1:8080/'
 const adminPath = 'nonocat/'
@@ -137,6 +137,11 @@ const visitPage = (url) => {
 // Setup is run only once, for all VUs. So you cannot do the login in setup, you need to login each user.
 export function setup() {
   console.log('Running setup')
+
+  group('login', () => {
+    login()
+  })
+  sleep(1 + Math.random())
 }
 
 export default function(data) {
@@ -144,10 +149,6 @@ export default function(data) {
   // (to avoid DDOSing our own server!)
   sleep(0.1 + Math.random())
 
-  group('login', () => {
-    login()
-  })
-  sleep(1 + Math.random())
 
   group('visit /accueil', function() {
     visitPage(serverUrl + 'accueil/')
