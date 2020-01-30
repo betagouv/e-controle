@@ -16,7 +16,7 @@
                       :question-numbering="qIndex + 1"
                       :question="question">
 
-          <question-file-list :question-id="question.id">
+          <question-file-list :files="question.question_files">
           </question-file-list>
 
         </question-box>

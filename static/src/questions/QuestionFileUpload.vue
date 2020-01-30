@@ -3,7 +3,7 @@
   <error-bar v-if="errorMessage" @dismissed="clearError">
     {{ errorMessage }}
   </error-bar>
-  <div v-if="question">
+  <div v-if="question.id">
     <label class="btn btn-primary">
       <i class="fe fe-upload mr-2"></i>
       Ajouter un fichier annexe

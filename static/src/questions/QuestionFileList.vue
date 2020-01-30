@@ -35,7 +35,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-    questionId: Number,
+    files: Array,
     withDelete: Boolean,
   },
   data() {
@@ -45,33 +45,6 @@ export default Vue.extend({
   },
   components: {
     ErrorBar,
-  },
-  computed: {
-    ...mapFields([
-      'currentQuestionnaire.themes',
-    ]),
-    files: function() {
-      const findQuestion = (themes, questionId) => {
-        for (let i = 0; i < themes.length; i++) {
-          const theme = themes[i]
-          if (!theme.questions) {
-            continue
-          }
-          for (let j = 0; j < theme.questions.length; j++) {
-            const question = theme.questions[j]
-            if (question.id === questionId) {
-              return question
-            }
-          }
-        }
-      }
-      const foundQuestion = findQuestion(this.themes, this.questionId)
-      if (foundQuestion === undefined) {
-        console.error('QuestionFileList did not find question', this.questionId)
-        return []
-      }
-      return foundQuestion.question_files
-    },
   },
   methods: {
     clearError() {

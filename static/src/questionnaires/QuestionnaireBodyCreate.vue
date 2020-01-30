@@ -122,7 +122,7 @@
                 <question-file-upload :question="question"></question-file-upload>
               </div>
               <div class="card-body">
-                <question-file-list :question-id="question.id" :with-delete="true">
+                <question-file-list :files="question.question_files" :with-delete="true">
                 </question-file-list>
               </div>
             </div>
