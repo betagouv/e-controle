@@ -255,7 +255,7 @@ export default Vue.extend({
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
       this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = true
-      this.animateQuestionSwap(
+      this.animateSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
         $('#theme-' + themeIndex + '-question-' + (qIndex - 1)),
         isMoveUp,
@@ -270,7 +270,7 @@ export default Vue.extend({
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
       this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = false
-      this.animateQuestionSwap(
+      this.animateSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
         $('#theme-' + themeIndex + '-question-' + (qIndex + 1)),
         isMoveUp,
@@ -285,7 +285,7 @@ export default Vue.extend({
       this.moveArrayElement(this.themes, themeIndex, themeIndex - 1)
       this.updateOrderFields(this.themes)
       const isMoveUp = true
-      this.animateQuestionSwap(
+      this.animateSwap(
         $('#theme-' + themeIndex),
         $('#theme-' + (themeIndex - 1)),
         isMoveUp,
@@ -300,7 +300,7 @@ export default Vue.extend({
       this.moveArrayElement(this.themes, themeIndex, themeIndex + 1)
       this.updateOrderFields(this.themes)
       const isMoveUp = false
-      this.animateQuestionSwap(
+      this.animateSwap(
         $('#theme-' + themeIndex),
         $('#theme-' + (themeIndex + 1)),
         isMoveUp,

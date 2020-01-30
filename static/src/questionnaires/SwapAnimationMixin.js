@@ -94,9 +94,9 @@ const questionSwapMixin = {
       // Add the animation class to start the animation
       jQueryElement.addClass(animationClass)
     },
-    // Run the animation for when two questions have been swapped. This should be run after the
-    // state has been modified in vuex.
-    animateQuestionSwap(fromElement, toElement, isMoveUp) {
+    // Run the animation for when two elements have been swapped (questions or themes).
+    // This should be run after the state has been modified in vuex.
+    animateSwap(fromElement, toElement, isMoveUp) {
       const distances = this._computeSwapDistances(fromElement, toElement)
       this._setAnimationDistances(distances)
 
