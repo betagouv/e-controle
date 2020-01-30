@@ -238,11 +238,12 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
-    // For all questions in vuex, set the 'order' field to match with the
+    // For all elements in array, set the 'order' field to match with the
     // order in the array.
-    updateOrderFields(questionArray) {
-      questionArray.map((question, qIndex) => {
-        question.order = qIndex
+    // Elements are either themes or questions.
+    updateOrderFields(array) {
+      array.map((element, index) => {
+        element.order = index
       })
     },
     moveQuestionUp(themeIndex, qIndex) {
@@ -272,6 +273,36 @@ export default Vue.extend({
       this.animateQuestionSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
         $('#theme-' + themeIndex + '-question-' + (qIndex + 1)),
+        isMoveUp,
+      )
+    },
+    moveThemeUp(themeIndex) {
+      console.debug('themeIndex, theme', themeIndex)
+      if (themeIndex <= 0) {
+        console.error('Cannot moveThemeUp from index', themeIndex)
+        return
+      }
+      this.moveArrayElement(this.themes, themeIndex, themeIndex - 1)
+      this.updateOrderFields(this.themes)
+      const isMoveUp = true
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex),
+        $('#theme-' + (themeIndex - 1)),
+        isMoveUp,
+      )
+    },
+    moveThemeDown(themeIndex) {
+      console.debug('moveThemeDown, theme', themeIndex)
+      if (themeIndex >= (this.themes.length - 1)) {
+        console.error('Cannot moveThemeDown from index', themeIndex)
+        return
+      }
+      this.moveArrayElement(this.themes, themeIndex, themeIndex + 1)
+      this.updateOrderFields(this.themes)
+      const isMoveUp = false
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex),
+        $('#theme-' + (themeIndex + 1)),
         isMoveUp,
       )
     },
