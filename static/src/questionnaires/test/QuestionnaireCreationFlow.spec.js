@@ -69,7 +69,7 @@ describe('Questionnaire creation flow', () => {
       QuestionnaireCreate,
       {
         propsData: {
-          questionnaireId: questionnaireId,
+          questionnaireId: questionnaire.id,
         },
         store,
         localVue,
@@ -77,7 +77,7 @@ describe('Questionnaire creation flow', () => {
 
     // Simulate store getting data from backend on app load.
     store.commit('updateControls', [{
-      id: controlId,
+      id: questionnaire.control,
       questionnaires: [
         questionnaire,
       ],
@@ -92,28 +92,21 @@ describe('Questionnaire creation flow', () => {
     }
   })
 
-  test('When annexe is added, it appears in the list of annexes', async () => {
-    // Finish load by executing all the promises.
-    await flushPromises
-
-    // Before test : no files in annexe list.
-    const question = wrapper.find('#theme-0-question-0')
-    expect(question.findAll('.question-file').length).toBe(0)
-
+  const uploadFile = (wrapper, filename) => {
     // Do file upload. We push the file object directly in the component's data (too complicated to
     // simulate real file upload)
-    axios.post.mockImplementation((url, payload) => {
-      return Promise.resolve({ data: payload })
-    })
     const questionId = questionnaire.themes[0].questions[0].id
     const newFileId = 4987
     const file = {
       "id" : newFileId,
       "url" : "/fichier-question/" + newFileId + "/",
-      "basename" : "2018-05-23_reponse_agence.png",
-      "file" : "/media/JUG_2018_CNE_PARYS/Q03/ANNEXES-AUX-QUESTIONS/2018-05-23_reponse_agence.png",
+      "basename" : filename,
+      "file" : "/media/JUG_2018_CNE_PARYS/Q03/ANNEXES-AUX-QUESTIONS/" + filename,
       "question" : questionId,
     }
+    axios.post.mockImplementation((url, payload) => {
+      return Promise.resolve({ data: file })
+    })
     expect(wrapper.find(QuestionFileUpload).exists()).toBe(true)
     const questionFileUpload = wrapper.find(QuestionFileUpload)
     questionFileUpload.vm.file = file
@@ -122,10 +115,24 @@ describe('Questionnaire creation flow', () => {
       '/api/annexe/',
       expect.any(FormData),
       expect.any(Object))
+  }
+
+  test('When annexe is added, it appears in the list of annexes', async () => {
+    // Finish load by executing all the promises.
+    await flushPromises
+
+    // Before test : no files in annexe list.
+    const question = wrapper.find('#theme-0-question-0')
+    expect(question.findAll('.question-file').length).toBe(0)
+
+    const filename = 'myfile.xls'
+    uploadFile(wrapper, filename)
     await flushPromises
 
     // Check the file appears in the annexe list.
     const questionAfter = wrapper.find('#theme-0-question-0')
-    expect(questionAfter.findAll('.question-file').length).toBe(1)
+    const annexes = questionAfter.findAll('.question-file')
+    expect(annexes.length).toBe(1)
+    expect(annexes.at(0).html()).toEqual(expect.stringContaining(filename))
   })
 })
