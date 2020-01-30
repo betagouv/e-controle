@@ -3,7 +3,7 @@
   <error-bar v-if="errorMessage" @dismissed="clearError">
     {{ errorMessage }}
   </error-bar>
-  <div v-if="questionId">
+  <div v-if="question">
     <label class="btn btn-primary">
       <i class="fe fe-upload mr-2"></i>
       Ajouter un fichier annexe
@@ -37,7 +37,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-    questionId: Number,
+    question: Object,
   },
   data () {
     return {
@@ -60,7 +60,7 @@ export default Vue.extend({
       this.clearError()
       const formData = new FormData()
       formData.append('file', this.file)
-      formData.append('question', this.questionId)
+      formData.append('question', this.question.id)
       axios.post(
         backendUrls.annexe(),
         formData,
@@ -71,7 +71,8 @@ export default Vue.extend({
         })
         .then(response => {
           console.debug('QuestionFileUpload response', response)
-          EventBus.$emit('question-file-added', response.data)
+          const newFile = response.data
+          this.question.question_files.push(newFile)
         })
         .catch(error => {
           console.log('Error when posting question file', error)

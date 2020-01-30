@@ -119,7 +119,7 @@
                     <i class="fe fe-trash-2"></i>
                   </a>
                 </span>
-                <question-file-upload :question-id="question.id"></question-file-upload>
+                <question-file-upload :question="question"></question-file-upload>
               </div>
               <div class="card-body">
                 <question-file-list :question-id="question.id" :with-delete="true">

@@ -73,13 +73,6 @@ export default Vue.extend({
       return foundQuestion.question_files
     },
   },
-  mounted() {
-    EventBus.$on('question-file-added', questionFile => {
-      if (questionFile.question === this.questionId) {
-        this.files.push(questionFile)
-      }
-    })
-  },
   methods: {
     clearError() {
       this.errorMessage = undefined
