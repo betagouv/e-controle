@@ -12,15 +12,36 @@
         <form ref="form">
           <div class="card"
                v-for="(theme, themeIndex) in themes"
+               :id="'theme-' + themeIndex"
                :key="'theme-' + themeIndex"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
 
             <div class="border-bottom">
               <div class="card-header border-0 pb-0">
-                <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
-                  <h3 class="card-title">{{themeIndex + 1}}.</h3>
-                </label>
+                <div class="flex-column align-items-center mr-4">
+                  <a :class="{ disabled: themeIndex === 0 }"
+                     class="btn btn-secondary btn-sm move-up-button"
+                     role="button"
+                     href="javascript:;"
+                     title="Déplacer le thème vers le haut"
+                     @click="moveThemeUp(themeIndex)">
+                    <i class="fa fa-chevron-up"></i>
+                  </a>
+                  <div class="my-3">
+                    <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
+                      <h3 class="card-title">{{themeIndex + 1}}.</h3>
+                    </label>
+                  </div>
+                  <a :class="{ disabled: themeIndex === (themes.length - 1) }"
+                     class="btn btn-secondary btn-sm move-down-button"
+                     role="button"
+                     href="javascript:;"
+                     title="Déplacer le thème vers le bas"
+                     @click="moveThemeDown(themeIndex)">
+                    <i class="fa fa-chevron-down"></i>
+                  </a>
+                </div>
                 <input class="form-control form-control-h3"
                        placeholder="Ecrivez un thème ici"
                        type="text"
