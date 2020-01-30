@@ -186,6 +186,8 @@
 <script>
 import Vue from 'vue'
 
+import axios from 'axios'
+import backendUrls from '../utils/backend'
 import ConfirmModal from '../utils/ConfirmModal'
 import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
@@ -290,6 +292,8 @@ export default Vue.extend({
         $('#theme-' + (themeIndex - 1)),
         isMoveUp,
       )
+      this.saveThemeOrder(themeIndex)
+      this.saveThemeOrder(themeIndex - 1)
     },
     moveThemeDown(themeIndex) {
       console.debug('moveThemeDown, theme', themeIndex)
@@ -305,7 +309,22 @@ export default Vue.extend({
         $('#theme-' + (themeIndex + 1)),
         isMoveUp,
       )
+      // Todo : should it be QuestionnaireCreate doing the backend call?
+      // Todo concurrency problems : make sure the values haven't changed
+      this.saveThemeOrder(themeIndex)
+      this.saveThemeOrder(themeIndex + 1)
+      // Todo update last saved date in UI
     },
+    saveThemeOrder(themeIndex) {
+      const theme = this.themes[themeIndex]
+      return axios.put(
+        backendUrls.theme(theme.id),
+        {
+          title: theme.title, // title is required, so add it even though we're not changing it
+          order: theme.order,
+        })
+      // Todo deal with errors
+    }
   },
 })
 </script>
