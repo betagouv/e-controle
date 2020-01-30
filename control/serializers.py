@@ -54,8 +54,7 @@ class ThemeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Theme
-        fields = ('id', 'title', 'questionnaire', 'questions')
-        # not serialized : order
+        fields = ('id', 'title', 'order', 'questionnaire', 'questions')
 
 
 # Serializers for displaying control_detail.html
