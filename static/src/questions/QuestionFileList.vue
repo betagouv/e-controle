@@ -7,7 +7,9 @@
       <div v-if="files.length > 1" class="form-label">Fichiers annexes à la question:</div>
       <div v-else class="form-label">Fichier annexe à la question:</div>
       <ul>
-        <li v-for="(file, index) in files" :key="index">
+        <li v-for="(file, index) in files"
+            :key="index"
+            class="question-file">
           <a :href="file.url">
             {{ file.basename }}
           </a>
