@@ -51,6 +51,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class ThemeSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
+    order = serializers.CharField(required=False)
 
     class Meta:
         model = Theme
