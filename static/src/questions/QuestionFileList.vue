@@ -8,15 +8,17 @@
       <div v-else class="form-label">Fichier annexe à la question:</div>
       <ul>
         <li v-for="(file, index) in files" :key="index">
-          <a :href="file.url">{{ file.basename }}</a>
-            <span>
-              <a href="javascript:void(0)"
-                @click.prevent="deleteFile(file.id)"
-                class="btn btn-link"
-                title="Supprimer le fichier">
-                <i class="fe fe-trash-2"></i>
-              </a>
-            </span>
+          <a :href="file.url">
+            {{ file.basename }}
+          </a>
+          <span v-if="withDelete">
+            <a href="javascript:void(0)"
+              @click.prevent="deleteFile(file.id)"
+              class="btn btn-link"
+              title="Supprimer le fichier">
+              <i class="fe fe-trash-2"></i>
+            </a>
+          </span>
         </li>
       </ul>
     </div>
@@ -34,6 +36,7 @@ import Vue from 'vue'
 export default Vue.extend({
   props: {
     questionId: Number,
+    withDelete: Boolean,
   },
   data() {
     return {
