@@ -1,11 +1,13 @@
 // Tests for the whole flow of questionnaire creation. These are not unit tests.
 
-import { shallowMount, createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
+import { when, resetAllWhenMocks } from 'jest-when'
 
 import axios from 'axios'
 import { getField, updateField } from 'vuex-map-fields'
 import { loadStatuses } from '../../store'
 import QuestionnaireCreate from '../QuestionnaireCreate.vue'
+import QuestionFileList from '../../questions/QuestionFileList'
 import QuestionFileUpload from '../../questions/QuestionFileUpload'
 import Vuex from 'vuex'
 import flushPromises from 'flush-promises'
@@ -23,6 +25,7 @@ describe('Questionnaire creation flow', () => {
     // Setup the questionnaire creation page.
     jest.resetModules()
     jest.clearAllMocks()
+    resetAllWhenMocks()
 
     store = new Vuex.Store({
       state: {
@@ -47,6 +50,8 @@ describe('Questionnaire creation flow', () => {
     questionnaire = {
       control: 5678,
       id: 1234,
+      title: 'Le questionnaire, c\'est super',
+      description: 'Répondez aux questions pom pom',
       themes: [
         {
           id: 30948,
@@ -62,6 +67,12 @@ describe('Questionnaire creation flow', () => {
       ],
       is_draft: true,
     }
+
+    // Mock axios : save questionnaire
+    when(axios.put).calledWith('/api/questionnaire/' + questionnaire.id + '/')
+      .mockImplementation((url, payload) => {
+        return Promise.resolve({ data: payload })
+      })
 
     // Mount, not shallowMount : this is not a unit test, so we want child components to be really
     // instantiated, not mocked out.
@@ -98,15 +109,20 @@ describe('Questionnaire creation flow', () => {
     const questionId = questionnaire.themes[0].questions[0].id
     const newFileId = 4987
     const file = {
-      "id" : newFileId,
-      "url" : "/fichier-question/" + newFileId + "/",
-      "basename" : filename,
-      "file" : "/media/JUG_2018_CNE_PARYS/Q03/ANNEXES-AUX-QUESTIONS/" + filename,
-      "question" : questionId,
+      id: newFileId,
+      url: '/fichier-question/' + newFileId + '/',
+      basename: filename,
+      file: '/media/JUG_2018_CNE_PARYS/Q03/ANNEXES-AUX-QUESTIONS/' + filename,
+      question: questionId,
     }
-    axios.post.mockImplementation((url, payload) => {
+    when(axios.post).calledWith(
+      '/api/annexe/',
+      expect.any(FormData),
+      expect.any(Object),
+    ).mockImplementation((url, payload) => {
       return Promise.resolve({ data: file })
     })
+
     expect(wrapper.find(QuestionFileUpload).exists()).toBe(true)
     const questionFileUpload = wrapper.find(QuestionFileUpload)
     questionFileUpload.vm.file = file
@@ -120,19 +136,44 @@ describe('Questionnaire creation flow', () => {
   test('When annexe is added, it appears in the list of annexes', async () => {
     // Finish load by executing all the promises.
     await flushPromises
+    expect(wrapper.find('#questionnaire-metadata-create').isVisible()).toBeTruthy()
+
+    // Move to body create page.
+    wrapper.find('#next-button').trigger('click')
+    await flushPromises
+    expect(wrapper.find('#questionnaire-body-create').isVisible()).toBeTruthy()
 
     // Before test : no files in annexe list.
-    const question = wrapper.find('#theme-0-question-0')
-    expect(question.findAll('.question-file').length).toBe(0)
+    const bodyCreatePage = wrapper.find('#questionnaire-body-create')
+    const question = bodyCreatePage.find('#theme-0-question-0')
+    expect(question.findAll('.question-file')).toHaveLength(0)
 
     const filename = 'myfile.xls'
     uploadFile(wrapper, filename)
     await flushPromises
 
     // Check the file appears in the annexe list.
-    const questionAfter = wrapper.find('#theme-0-question-0')
+    const bodyCreatePageAfter = wrapper.find('#questionnaire-body-create')
+    const questionAfter = bodyCreatePageAfter.find('#theme-0-question-0')
     const annexes = questionAfter.findAll('.question-file')
-    expect(annexes.length).toBe(1)
+    expect(annexes).toHaveLength(1) // 0! Yet the currentQuestionnaire object contains the new annex
+    expect(annexes.at(0).html()).toEqual(expect.stringContaining(filename))
+  })
+
+  test('When annexe is added, it appears in the Preview page (3rd step of wizard)', async () => {
+    // Finish load by executing all the promises.
+    await flushPromises
+
+    // Upload the file
+    const filename = 'myfile.xls'
+    uploadFile(wrapper, filename)
+    await flushPromises
+
+    // Check the file appears in the annexe list in Preview.
+    const previewPage = wrapper.find('#questionnaire-preview')
+    const questionAfter = previewPage.find('#question1-1')
+    const annexes = questionAfter.findAll('.question-file')
+    expect(annexes).toHaveLength(1)
     expect(annexes.at(0).html()).toEqual(expect.stringContaining(filename))
   })
 })

@@ -51,6 +51,7 @@
       </button>
       <div>
         <button v-if="state !== STATES.START"
+                id="back-button"
                 @click="back"
                 class="btn btn-secondary">
           < Retour
@@ -61,6 +62,7 @@
           Enregistrer le brouillon
         </button>
         <button v-if="state !== STATES.PREVIEW"
+                id="next-button"
                 @click="next"
                 class="btn btn-secondary">
           Suivant >

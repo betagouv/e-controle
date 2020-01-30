@@ -86,7 +86,7 @@
                     <i class="fa fa-chevron-up"></i>
                   </a>
                   <div class="my-1">
-                    <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                    <label v-bind:for="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
                            class="mb-0">
                       <span class="stamp stamp-md bg-blue">
                         {{ themeIndex + 1 }}.{{ qIndex + 1 }}
@@ -105,7 +105,7 @@
                 <textarea class="form-control"
                           placeholder="Ecrivez une question ici"
                           rows="4"
-                          v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                          v-bind:id="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
                           v-model="themes[themeIndex].questions[qIndex].description"
                           oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
                           oninput="this.setCustomValidity('')"
