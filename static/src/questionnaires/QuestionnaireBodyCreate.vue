@@ -12,7 +12,7 @@
         <form ref="form">
           <div class="card"
                v-for="(theme, themeIndex) in themes"
-               :key="'theme-' + themeIndex"> <!-- Card for each theme-->
+               :key="'theme-' + theme.id"> <!-- Card for each theme-->
             <div class="card-status card-status-top bg-blue">
             </div>
 
@@ -73,62 +73,65 @@
               </confirm-modal>
             </div>
 
-            <div v-for="(question, qIndex) in themes[themeIndex].questions"
-                 :id="'theme-' + themeIndex + '-question-' + qIndex"
-                 class="card border-0 m-0 pt-2"
-                 :key="'question-' + qIndex"> <!-- Card for each question -->
-              <div class="card-header border-0">
-                <div class="flex-column align-items-center mr-4">
-                  <button :class="{ disabled: qIndex === 0 }"
-                     class="btn btn-secondary btn-sm move-up-button"
-                     role="button"
-                     type="button"
-                     title="Déplacer la question vers le haut"
-                     @click="moveQuestionUp(themeIndex, qIndex)">
-                    <i class="fa fa-chevron-up"></i>
-                  </button>
-                  <div class="my-1">
-                    <label v-bind:for="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
-                           class="mb-0">
-                      <span class="stamp stamp-md bg-blue">
-                        {{ themeIndex + 1 }}.{{ qIndex + 1 }}
-                      </span>
-                    </label>
+            <transition-group name="question-list" tag="div">
+              <div v-for="(question, qIndex) in themes[themeIndex].questions"
+                  :id="'theme-' + themeIndex + '-question-' + qIndex"
+                  class="card border-0 m-0 pt-2"
+                  :key="'question-' + question.id"> <!-- Card for each question -->
+                <div class="card-header border-0">
+                  <div class="flex-column align-items-center mr-4">
+                    <button :class="{ disabled: qIndex === 0 }"
+                      class="btn btn-secondary btn-sm move-up-button"
+                      role="button"
+                      type="button"
+                      title="Déplacer la question vers le haut"
+                      @click="moveQuestionUp(themeIndex, qIndex)">
+                      <i class="fa fa-chevron-up"></i>
+                    </button>
+                    <div class="my-1">
+                      <label v-bind:for="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
+                            class="mb-0">
+                        <span class="stamp stamp-md bg-blue">
+                          {{ themeIndex + 1 }}.{{ qIndex + 1 }}
+                        </span>
+                      </label>
+                    </div>
+                    <button :class="{ disabled: qIndex === (theme.questions.length - 1) }"
+                      class="btn btn-secondary btn-sm move-down-button"
+                      role="button"
+                      type="button"
+                      title="Déplacer la question vers le bas"
+                      @click="moveQuestionDown(themeIndex, qIndex)">
+                      <i class="fa fa-chevron-down"></i>
+                    </button>
                   </div>
-                  <button :class="{ disabled: qIndex === (theme.questions.length - 1) }"
-                     class="btn btn-secondary btn-sm move-down-button"
-                     role="button"
-                     type="button"
-                     title="Déplacer la question vers le bas"
-                     @click="moveQuestionDown(themeIndex, qIndex)">
-                    <i class="fa fa-chevron-down"></i>
-                  </button>
+                  <textarea class="form-control"
+                            placeholder="Ecrivez une question ici"
+                            rows="4"
+                            v-bind:id="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
+                            v-model="themes[themeIndex].questions[qIndex].description"
+                            oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
+                            oninput="this.setCustomValidity('')"
+                            required>
+                  </textarea>
+
+                  <span>
+                    <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                            class="btn btn-link"
+                            role="button"
+                            type="button"
+                            title="Supprimer la question">
+                      <i class="fe fe-trash-2"></i>
+                    </button>
+                  </span>
+                  <question-file-upload :question="question"></question-file-upload>
                 </div>
-                <textarea class="form-control"
-                          placeholder="Ecrivez une question ici"
-                          rows="4"
-                          v-bind:id="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
-                          v-model="themes[themeIndex].questions[qIndex].description"
-                          oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
-                          oninput="this.setCustomValidity('')"
-                          required>
-                </textarea>
-                <span>
-                  <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
-                          class="btn btn-link"
-                          role="button"
-                          type="button"
-                          title="Supprimer la question">
-                    <i class="fe fe-trash-2"></i>
-                  </button>
-                </span>
-                <question-file-upload :question="question"></question-file-upload>
+                <div class="card-body">
+                  <question-file-list :files="question.question_files" :with-delete="true">
+                  </question-file-list>
+                </div>
               </div>
-              <div class="card-body">
-                <question-file-list :files="question.question_files" :with-delete="true">
-                </question-file-list>
-              </div>
-            </div>
+            </transition-group>
 
             <div class="card-footer">
               <button @click.prevent="addQuestion(themeIndex)"
@@ -151,7 +154,7 @@
                       type="button"
                       title="Ajouter un thème">
                 <i class="fe fe-plus"></i>Ajouter un thème
-              </a>
+              </button>
             </div>
           </div>
         </form>
@@ -231,13 +234,6 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
-      this.updateOrderFields(this.themes[themeIndex].questions)
-      const isMoveUp = true
-      this.animateQuestionSwap(
-        $('#theme-' + themeIndex + '-question-' + qIndex),
-        $('#theme-' + themeIndex + '-question-' + (qIndex - 1)),
-        isMoveUp,
-      )
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
@@ -246,18 +242,13 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
-      this.updateOrderFields(this.themes[themeIndex].questions)
-      const isMoveUp = false
-      this.animateQuestionSwap(
-        $('#theme-' + themeIndex + '-question-' + qIndex),
-        $('#theme-' + themeIndex + '-question-' + (qIndex + 1)),
-        isMoveUp,
-      )
     },
   },
 })
 </script>
 
 <style>
-@import './SwapAnimationMixin.css';
+.question-list-move {
+  transition: transform 1s;
+}
 </style>
