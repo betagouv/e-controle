@@ -435,18 +435,6 @@ def test_questionnaire_update__question_create():
     run_test_questionnaire_update__question_create(added_question)
 
 
-def test_questionnaire_update__question_create_if_bad_id():
-    added_question = {
-        'id': 123,  # id is bad. It should be ignored, so that this question is considered new.
-        'description': 'this is a great question.'
-    }
-    run_test_questionnaire_update__question_create(added_question)
-
-    # Id in payload was ignored and new id was assigned to the new question
-    new_question = Question.objects.last()
-    assert new_question.id != added_question['id']
-
-
 def test_questionnaire_delete():
     increment_ids()
     question = factories.QuestionFactory()
@@ -557,20 +545,6 @@ def test_questionnaire_update__question_recreated_if_no_id():
     run_test_questionnaire_update__question_recreated(modify_payload)
 
 
-def test_questionnaire_update__question_recreated_if_bad_id():
-    bad_id = 123456
-
-    def modify_payload(payload):
-        good_id = payload['themes'][0]['questions'][0]['id']
-        assert good_id != bad_id
-        payload['themes'][0]['questions'][0]['id'] = bad_id
-
-    run_test_questionnaire_update__question_recreated(modify_payload)
-
-    # The new question has a new id.
-    assert Question.objects.all().last().id != bad_id
-
-
 def run_test_questionnaire_update__theme_recreated(modify_payload_func):
     increment_ids()
     question = factories.QuestionFactory()
@@ -580,7 +554,6 @@ def run_test_questionnaire_update__theme_recreated(modify_payload_func):
     payload = make_update_payload(questionnaire)
 
     original_id = payload['themes'][0]['id']
-    original_question_id = payload['themes'][0]['questions'][0]['id']
     modify_payload_func(payload)
 
     assert Questionnaire.objects.all().count() == 1
@@ -595,9 +568,8 @@ def run_test_questionnaire_update__theme_recreated(modify_payload_func):
     assert Theme.objects.all().count() == 1
     assert Question.objects.all().count() == 1
 
-    # Original theme and question were deleted
+    # Original theme was deleted
     assert Theme.objects.all().last().id != original_id
-    assert Question.objects.all().last().id != original_question_id
 
     # Response data is filled in
     assert len(response.data.get('themes', [])) == 1

@@ -83,6 +83,7 @@
                      class="btn btn-secondary btn-sm"
                      role="button"
                      type="button"
+                     title="Déplacer la question vers le haut"
                      @click="moveQuestionUp(themeIndex, qIndex)">
                     <i class="fa fa-chevron-up"></i>
                   </button>
@@ -98,6 +99,7 @@
                      class="btn btn-secondary btn-sm"
                      role="button"
                      type="button"
+                     title="Déplacer la question vers le bas"
                      @click="moveQuestionDown(themeIndex, qIndex)">
                     <i class="fa fa-chevron-down"></i>
                   </button>
@@ -111,7 +113,6 @@
                           oninput="this.setCustomValidity('')"
                           required>
                 </textarea>
-
                 <span>
                   <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
                           class="btn btn-link"
@@ -196,7 +197,10 @@ export default Vue.extend({
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
-      this.themes[themeIndex].questions.push({ description: '' })
+      this.themes[themeIndex].questions.push({
+        description: '',
+        order: this.themes[themeIndex].questions.length,
+      })
     },
     addTheme: function() {
       console.debug('addTheme')
@@ -213,6 +217,13 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
+    // For all questions in vuex, set the 'order' field to match with the
+    // order in the array.
+    updateOrderFields(questionArray) {
+      questionArray.map((question, qIndex) => {
+        question.order = qIndex
+      })
+    },
     moveQuestionUp(themeIndex, qIndex) {
       console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
       if (qIndex <= 0) {
@@ -220,6 +231,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = true
       this.animateQuestionSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
@@ -234,6 +246,7 @@ export default Vue.extend({
         return
       }
       this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
       const isMoveUp = false
       this.animateQuestionSwap(
         $('#theme-' + themeIndex + '-question-' + qIndex),
