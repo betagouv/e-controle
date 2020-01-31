@@ -177,6 +177,8 @@ import SwapAnimationMixin from './SwapAnimationMixin'
 
 import reportValidity from 'report-validity'
 
+const ANIMATION_DURATION_SECONDS = 1
+
 export default Vue.extend({
   data() {
     return {
@@ -233,7 +235,7 @@ export default Vue.extend({
         console.error('Cannot moveQuestionUp from index', qIndex)
         return
       }
-      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      this._swapQuestions(themeIndex, qIndex, qIndex - 1)
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
@@ -241,7 +243,17 @@ export default Vue.extend({
         console.error('Cannot moveQuestionDown from index', qIndex)
         return
       }
-      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      this._swapQuestions(themeIndex, qIndex, qIndex + 1)
+    },
+    _swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
+      const selectedElement = $('#theme-' + themeIndex + '-question-' + qIndexFrom)
+      selectedElement.addClass('selected')
+      setTimeout(
+        () => {
+          selectedElement.removeClass('selected')
+        },
+        ANIMATION_DURATION_SECONDS * 1000)
+      this.moveArrayElement(this.themes[themeIndex].questions, qIndexFrom, qIndexTo)
     },
   },
 })
@@ -249,6 +261,11 @@ export default Vue.extend({
 
 <style>
 .question-list-move {
-  transition: transform 1s;
+  transition: transform 1s; /* same as ANIMATION_DURATION_SECONDS */
 }
+.question-list-move.selected {
+  z-index: 999;
+  background-color: #ecf7fe; /* azure-lightest */
+}
+
 </style>
