@@ -35,36 +35,20 @@
   import EventBus from '../events'
 
   export default Vue.extend({
-    data() {
-      return {
-          questionFileCount: 0,
-          responseFileCount: 0,
-      };
-    },
-    mounted() {
-      const numNotDeleted = files => files.filter(file => !file.is_deleted).length
-      this.responseFileCount = 0
-      if (this.question.response_files) {
-        this.responseFileCount = numNotDeleted(this.question.response_files)
-      }
-      EventBus.$on('response-files-updated-' + this.question.id, responseFiles => {
-        this.responseFileCount = numNotDeleted(responseFiles);
-      })
-
-      EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {
-        this.questionFileCount = questionFileCount;
-      })
-
-    },
-    components: {
-    },
-    props: {
-      themeNumbering: String|Number,
-      questionNumbering: String|Number,
+    props : {
+      themeNumbering: String | Number,
+      questionNumbering: String | Number,
       question: Object,
     },
-    methods: {},
-  });
+    computed: {
+      questionFileCount() {
+        return this.question.question_files ? this.question.question_files.length : 0
+      },
+      responseFileCount() {
+        return this.question.response_files ? this.question.response_files.length : 0
+      },
+    },
+  })
 </script>
 
 <style>

@@ -7,16 +7,20 @@
       <div v-if="files.length > 1" class="form-label">Fichiers annexes à la question:</div>
       <div v-else class="form-label">Fichier annexe à la question:</div>
       <ul>
-        <li v-for="(file, index) in files" :key="index">
-          <a :href="file.url">{{ file.basename }}</a>
-            <span>
-              <a href="javascript:void(0)"
-                @click.prevent="deleteFile(file.id)"
-                class="btn btn-link"
-                title="Supprimer le fichier">
-                <i class="fe fe-trash-2"></i>
-              </a>
-            </span>
+        <li v-for="(file, index) in files"
+            :key="index"
+            class="question-file">
+          <a :href="file.url">
+            {{ file.basename }}
+          </a>
+          <span v-if="withDelete">
+            <a href="javascript:void(0)"
+              @click.prevent="deleteFile(file.id)"
+              class="btn btn-link"
+              title="Supprimer le fichier">
+              <i class="fe fe-trash-2"></i>
+            </a>
+          </span>
         </li>
       </ul>
     </div>
@@ -33,7 +37,8 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-    questionId: Number,
+    files: Array,
+    withDelete: Boolean,
   },
   data() {
     return {
@@ -42,40 +47,6 @@ export default Vue.extend({
   },
   components: {
     ErrorBar,
-  },
-  computed: {
-    ...mapFields([
-      'currentQuestionnaire.themes',
-    ]),
-    files: function() {
-      const findQuestion = (themes, questionId) => {
-        for (let i = 0; i < themes.length; i++) {
-          const theme = themes[i]
-          if (!theme.questions) {
-            continue
-          }
-          for (let j = 0; j < theme.questions.length; j++) {
-            const question = theme.questions[j]
-            if (question.id === questionId) {
-              return question
-            }
-          }
-        }
-      }
-      const foundQuestion = findQuestion(this.themes, this.questionId)
-      if (foundQuestion === undefined) {
-        console.error('QuestionFileList did not find question', this.questionId)
-        return []
-      }
-      return foundQuestion.question_files
-    },
-  },
-  mounted() {
-    EventBus.$on('question-file-added', questionFile => {
-      if (questionFile.question === this.questionId) {
-        this.files.push(questionFile)
-      }
-    })
   },
   methods: {
     clearError() {

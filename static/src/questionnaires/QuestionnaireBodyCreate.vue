@@ -80,7 +80,7 @@
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
                   <button :class="{ disabled: qIndex === 0 }"
-                     class="btn btn-secondary btn-sm"
+                     class="btn btn-secondary btn-sm move-up-button"
                      role="button"
                      type="button"
                      title="Déplacer la question vers le haut"
@@ -88,7 +88,7 @@
                     <i class="fa fa-chevron-up"></i>
                   </button>
                   <div class="my-1">
-                    <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                    <label v-bind:for="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
                            class="mb-0">
                       <span class="stamp stamp-md bg-blue">
                         {{ themeIndex + 1 }}.{{ qIndex + 1 }}
@@ -96,7 +96,7 @@
                     </label>
                   </div>
                   <button :class="{ disabled: qIndex === (theme.questions.length - 1) }"
-                     class="btn btn-secondary btn-sm"
+                     class="btn btn-secondary btn-sm move-down-button"
                      role="button"
                      type="button"
                      title="Déplacer la question vers le bas"
@@ -107,7 +107,7 @@
                 <textarea class="form-control"
                           placeholder="Ecrivez une question ici"
                           rows="4"
-                          v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                          v-bind:id="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
                           v-model="themes[themeIndex].questions[qIndex].description"
                           oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
                           oninput="this.setCustomValidity('')"
@@ -122,10 +122,10 @@
                     <i class="fe fe-trash-2"></i>
                   </button>
                 </span>
-                <question-file-upload :question-id="question.id"></question-file-upload>
+                <question-file-upload :question="question"></question-file-upload>
               </div>
               <div class="card-body">
-                <question-file-list :question-id="question.id">
+                <question-file-list :files="question.question_files" :with-delete="true">
                 </question-file-list>
               </div>
             </div>
