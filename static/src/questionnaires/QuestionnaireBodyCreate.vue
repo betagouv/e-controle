@@ -242,6 +242,7 @@ export default Vue.extend({
       this._swapQuestions(themeIndex, qIndex, qIndex + 1)
     },
     _swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
+      // Set CSS class on the moving element
       const selectedElement = $('#theme-' + themeIndex + '-question-' + qIndexFrom)
       selectedElement.addClass('selected')
       setTimeout(
@@ -250,9 +251,12 @@ export default Vue.extend({
         },
         ANIMATION_DURATION_SECONDS * 1000)
 
+      // Move the elements in the vuex array
       const array = this.themes[themeIndex].questions
       const movingElement = array.splice(qIndexFrom, 1)[0]
       array.splice(qIndexTo, 0, movingElement)
+
+      this.updateOrderFields(this.themes[themeIndex].questions)
     },
   },
 })
