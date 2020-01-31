@@ -173,7 +173,6 @@ import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
-import SwapAnimationMixin from './SwapAnimationMixin'
 
 import reportValidity from 'report-validity'
 
@@ -196,9 +195,6 @@ export default Vue.extend({
     QuestionFileList,
     QuestionFileUpload,
   },
-  mixins: [
-    SwapAnimationMixin,
-  ],
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
@@ -253,7 +249,10 @@ export default Vue.extend({
           selectedElement.removeClass('selected')
         },
         ANIMATION_DURATION_SECONDS * 1000)
-      this.moveArrayElement(this.themes[themeIndex].questions, qIndexFrom, qIndexTo)
+
+      const array = this.themes[themeIndex].questions
+      const movingElement = array.splice(qIndexFrom, 1)[0]
+      array.splice(qIndexTo, 0, movingElement)
     },
   },
 })
