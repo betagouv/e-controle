@@ -32,22 +32,24 @@
                        :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
                        required>
                 <span>
-                  <a v-if="themes[themeIndex].questions.length === 0"
-                     href="javascript:void(0)"
-                     @click.prevent="deleteTheme(themeIndex)"
-                     class="btn btn-link"
-                     title="Supprimer le thème"
+                  <button v-if="themes[themeIndex].questions.length === 0"
+                          @click.prevent="deleteTheme(themeIndex)"
+                          role="button"
+                          type="button"
+                          class="btn btn-link"
+                          title="Supprimer le thème"
                   >
                     <i class="fe fe-trash-2"></i>
-                  </a>
-                  <a v-else
-                     href="javascript:void(0)"
-                     class="btn btn-link"
-                     data-toggle="modal"
-                     :data-target="'#deleteThemeConfirmModal' + themeIndex"
+                  </button>
+                  <button v-else
+                          class="btn btn-link"
+                          role="button"
+                          type="button"
+                          data-toggle="modal"
+                          :data-target="'#deleteThemeConfirmModal' + themeIndex"
                   >
                     <i class="fe fe-trash-2"></i>
-                  </a>
+                  </button>
                 </span>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
@@ -77,14 +79,14 @@
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
-                  <a :class="{ disabled: qIndex === 0 }"
-                     class="btn btn-secondary btn-sm move-up-button"
+                  <button :class="{ disabled: qIndex === 0 }"
+                     class="btn btn-secondary btn-sm"
                      role="button"
-                     href="javascript:;"
+                     type="button"
                      title="Déplacer la question vers le haut"
                      @click="moveQuestionUp(themeIndex, qIndex)">
                     <i class="fa fa-chevron-up"></i>
-                  </a>
+                  </button>
                   <div class="my-1">
                     <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
                            class="mb-0">
@@ -93,14 +95,14 @@
                       </span>
                     </label>
                   </div>
-                  <a :class="{ disabled: qIndex === (theme.questions.length - 1) }"
-                     class="btn btn-secondary btn-sm move-down-button"
+                  <button :class="{ disabled: qIndex === (theme.questions.length - 1) }"
+                     class="btn btn-secondary btn-sm"
                      role="button"
-                     href="javascript:;"
+                     type="button"
                      title="Déplacer la question vers le bas"
                      @click="moveQuestionDown(themeIndex, qIndex)">
                     <i class="fa fa-chevron-down"></i>
-                  </a>
+                  </button>
                 </div>
                 <textarea class="form-control"
                           placeholder="Ecrivez une question ici"
@@ -112,12 +114,13 @@
                           required>
                 </textarea>
                 <span>
-                  <a href="javascript:void(0)"
-                     @click.prevent="deleteQuestion(themeIndex, qIndex)"
-                     class="btn btn-link"
-                     title="Supprimer la question">
+                  <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                          class="btn btn-link"
+                          role="button"
+                          type="button"
+                          title="Supprimer la question">
                     <i class="fe fe-trash-2"></i>
-                  </a>
+                  </button>
                 </span>
                 <question-file-upload :question-id="question.id"></question-file-upload>
               </div>
@@ -128,12 +131,13 @@
             </div>
 
             <div class="card-footer">
-              <a href="javascript:void(0)"
-                 @click.prevent="addQuestion(themeIndex)"
-                 class="btn btn-primary"
-                 title="Ajouter une question">
+              <button @click.prevent="addQuestion(themeIndex)"
+                      class="btn btn-primary"
+                      role="button"
+                      type="button"
+                      title="Ajouter une question">
                 <i class="fe fe-plus"></i> Ajouter une question
-              </a>
+              </button>
             </div>
           </div>
 
@@ -141,10 +145,11 @@
             <div class="card-footer">
               <div class="card-status card-status-top bg-blue">
               </div>
-              <a href="javascript:void(0)"
-                 @click="addTheme()"
-                 class="btn btn-primary"
-                 title="Ajouter un thème">
+              <button @click="addTheme()"
+                      class="btn btn-primary"
+                      role="button"
+                      type="button"
+                      title="Ajouter un thème">
                 <i class="fe fe-plus"></i>Ajouter un thème
               </a>
             </div>

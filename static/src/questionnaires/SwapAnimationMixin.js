@@ -44,9 +44,9 @@ const questionSwapMixin = {
         }
       }
       const getAnimationRule = (sheet, ruleName) => {
-        for (let i = 0; i < sheet.rules.length; i++) {
-          if (sheet.rules[i].name && sheet.rules[i].name === ruleName) {
-            return sheet.rules[i]
+        for (let i = 0; i < sheet.cssRules.length; i++) {
+          if (sheet.cssRules[i].name && sheet.cssRules[i].name === ruleName) {
+            return sheet.cssRules[i]
           }
         }
       }
@@ -62,12 +62,12 @@ const questionSwapMixin = {
     // Given two jquery dom elements', find the distances that they need to move for the swap.
     _computeSwapDistances(fromElement, toElement) {
       const from = {
-        top: fromElement[0].getBoundingClientRect().top + window.scrollY,
-        bottom: fromElement[0].getBoundingClientRect().bottom + window.scrollY,
+        top: fromElement[0].getBoundingClientRect().top + window.pageYOffset,
+        bottom: fromElement[0].getBoundingClientRect().bottom + window.pageYOffset,
       }
       const to = {
-        top: toElement[0].getBoundingClientRect().top + window.scrollY,
-        bottom: toElement[0].getBoundingClientRect().bottom + window.scrollY,
+        top: toElement[0].getBoundingClientRect().top + window.pageYOffset,
+        bottom: toElement[0].getBoundingClientRect().bottom + window.pageYOffset,
       }
       if (from.top < to.top) {
         // Selected element is moving down
