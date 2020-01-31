@@ -14,7 +14,8 @@
                       :question-numbering="qIndex + 1"
                       :question="question">
 
-          <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+          <question-file-list-without-vuex :question-id="question.id">
+          </question-file-list-without-vuex>
 
         </question-box>
 
@@ -27,7 +28,7 @@
 <script>
   import Vue from "vue";
   import QuestionBox from '../questions/QuestionBox.vue';
-  import QuestionFileList from "../questions/QuestionFileList"
+  import QuestionFileListWithoutVuex from "../questions/QuestionFileListWithoutVuex"
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import ThemeBox from '../themes/ThemeBox'
 
@@ -38,7 +39,7 @@
     },
     components: {
       QuestionBox,
-      QuestionFileList,
+      QuestionFileListWithoutVuex,
       QuestionnaireMetadata,
       ThemeBox,
     }
