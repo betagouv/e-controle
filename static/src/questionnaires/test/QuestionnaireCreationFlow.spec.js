@@ -55,7 +55,7 @@ describe('Questionnaire creation flow', () => {
       themes: [
         {
           id: 30948,
-          description: 'my theme',
+          title: 'my theme',
           questions: [
             {
               id: 20947,
@@ -136,6 +136,7 @@ describe('Questionnaire creation flow', () => {
   test('When annexe is added, it appears in the list of annexes', async () => {
     // Finish load by executing all the promises.
     await flushPromises
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
     expect(wrapper.find('#questionnaire-metadata-create').isVisible()).toBeTruthy()
 
     // Move to body create page.
@@ -150,7 +151,8 @@ describe('Questionnaire creation flow', () => {
 
     const filename = 'myfile.xls'
     uploadFile(wrapper, filename)
-    await flushPromises
+    await flushPromises // Make sure the axios call has returned
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
 
     // Check the file appears in the annexe list.
     const bodyCreatePageAfter = wrapper.find('#questionnaire-body-create')
@@ -161,17 +163,33 @@ describe('Questionnaire creation flow', () => {
   })
 
   test('When annexe is added, it appears in the Preview page (3rd step of wizard)', async () => {
-    // Finish load by executing all the promises.
+    // Finish load by executing all the promises and force-refreshing the html.
     await flushPromises
+
+    // Move to body create page.
+    wrapper.find('#next-button').trigger('click')
+    await flushPromises
+    expect(wrapper.find('#questionnaire-body-create').isVisible()).toBeTruthy()
+
+    // Before test : no files in annexe list in Preview page.
+    const previewPage = wrapper.find('#questionnaire-preview')
+    const question = previewPage.find('#question1-1')
+    expect(question.findAll('.question-file')).toHaveLength(0)
 
     // Upload the file
     const filename = 'myfile.xls'
     uploadFile(wrapper, filename)
     await flushPromises
 
+    // Move to preview page.
+    wrapper.find('#next-button').trigger('click')
+    await flushPromises
+    expect(wrapper.find('#questionnaire-preview').isVisible()).toBeTruthy()
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
+
     // Check the file appears in the annexe list in Preview.
-    const previewPage = wrapper.find('#questionnaire-preview')
-    const questionAfter = previewPage.find('#question1-1')
+    const previewPageAfter = wrapper.find('#questionnaire-preview')
+    const questionAfter = previewPageAfter.find('#question1-1')
     const annexes = questionAfter.findAll('.question-file')
     expect(annexes).toHaveLength(1)
     expect(annexes.at(0).html()).toEqual(expect.stringContaining(filename))
