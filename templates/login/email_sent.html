@@ -5,11 +5,20 @@
   <div class="flex-column justify-content-center align-items-center">
     <div class="card-body mt-7 mb-7 col-login">
       <div class="alert text-center btn-info">
-        <i class="fe fe-mail" ></i> <i class="fe fe-check" ></i>
-            <h1>Un email vous a été envoyé pour vous connecter.</h1> 
-            <i class="fe fe-alert-circle" ></i>
-            <h8>Vous n'avez pas reçu cet email ? 
-            Pensez à consulter votre dossier "Courrier indésirable" ou "Spam"</h8>
+        <i class="fe fe-mail" ></i>
+        <i class="fe fe-check" ></i>
+        <h1>Un email vous a été envoyé pour vous connecter.</h1>
+
+        <div class="alert alert-icon"
+             style="padding-left: 1rem;">
+          <i class="fe fe-alert-circle"></i>
+          <div>
+            Vous n'avez pas reçu cet email ?
+          </div>
+          <div>
+            Pensez à consulter votre dossier "Courrier indésirable" ou "Spam"
+          </div>
+        </div>
       </div>
       <div class="text-center">
         <a href="{% url 'login' %}" class="btn btn-secondary">Réessayer</a>
