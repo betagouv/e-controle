@@ -51,16 +51,18 @@
       </button>
       <div>
         <button v-if="state !== STATES.START"
+                id="back-button"
                 @click="back"
                 class="btn btn-secondary">
           < Retour
         </button>
-        <button @click="saveDraft"
+        <button @click="validateFormAndSaveDraft"
                 class="btn btn-primary">
           <i class="fe fe-save"></i>
           Enregistrer le brouillon
         </button>
         <button v-if="state !== STATES.PREVIEW"
+                id="next-button"
                 @click="next"
                 class="btn btn-secondary">
           Suivant >
@@ -250,10 +252,6 @@ export default Vue.extend({
       throw Error('QuestionnaireCreate needs a controlId or a questionnaireId')
     }
 
-    EventBus.$on('display-error', (errorMessage) => {
-      this.displayErrors(errorMessage)
-    })
-
     $('#publishConfirmModal').on('hidden.bs.modal', () => {
       this.publishError = undefined
     })
@@ -382,6 +380,12 @@ export default Vue.extend({
         .then(savedQuestionnaire => {
           this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
         })
+    },
+    validateFormAndSaveDraft() {
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      this.saveDraft()
     },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true

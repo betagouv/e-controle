@@ -41,6 +41,13 @@
     color: #5EBB00;
 }
 
+/* Secondary button : you can't see it's disabled */
+.btn-secondary.disabled {
+    color: #aab0b6; /* gray-light */
+    background-color: #F3F4FE; /* gray-lightest */
+    border: none;
+}
+
 /* Extend margin system to one more size (tabler stops at 9) */
 .m-10 {
     margin: 10rem !important;

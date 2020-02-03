@@ -6,15 +6,18 @@
     <div>
 
       <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
+                 :key="theme.id"
                  :theme="theme"
                  :theme-numbering="themeIndex + 1">
 
         <question-box v-for="(question, qIndex) in theme.questions"
+                      :key="question.id"
                       :theme-numbering="themeIndex + 1"
                       :question-numbering="qIndex + 1"
                       :question="question">
 
-          <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+          <question-file-list :files="question.question_files">
+          </question-file-list>
 
         </question-box>
 

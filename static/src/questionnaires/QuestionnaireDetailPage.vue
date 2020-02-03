@@ -32,7 +32,8 @@
                         :question-numbering="qIndex + 1"
                         :question="question">
 
-            <question-file-list :question-id="question.id" :with-delete="false"></question-file-list>
+            <question-file-list-without-vuex :question-id="question.id">
+            </question-file-list-without-vuex>
             <response-file-list :question="question" :questionnaire-id="questionnaire.id" :is-audited="user.is_audited"></response-file-list>
             <response-dropzone :is-audited="user.is_audited"
                                :question-id="question.id">
@@ -54,7 +55,7 @@
   import axios from 'axios'
   import InfoBar from '../utils/InfoBar'
   import QuestionBox from '../questions/QuestionBox'
-  import QuestionFileList from '../questions/QuestionFileList'
+  import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
   import RequestEditorButton from '../editors/RequestEditorButton'
   import ResponseDropzone from '../questions/ResponseDropzone'
@@ -86,7 +87,7 @@
     components: {
       InfoBar,
       QuestionBox,
-      QuestionFileList,
+      QuestionFileListWithoutVuex,
       QuestionnaireMetadata,
       RequestEditorButton,
       ResponseDropzone,

@@ -32,22 +32,24 @@
                        :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
                        required>
                 <span>
-                  <a v-if="themes[themeIndex].questions.length === 0"
-                     href="javascript:void(0)"
-                     @click.prevent="deleteTheme(themeIndex)"
-                     class="btn btn-link"
-                     title="Supprimer le thème"
+                  <button v-if="themes[themeIndex].questions.length === 0"
+                          @click.prevent="deleteTheme(themeIndex)"
+                          role="button"
+                          type="button"
+                          class="btn btn-link"
+                          title="Supprimer le thème"
                   >
                     <i class="fe fe-trash-2"></i>
-                  </a>
-                  <a v-else
-                     href="javascript:void(0)"
-                     class="btn btn-link"
-                     data-toggle="modal"
-                     :data-target="'#deleteThemeConfirmModal' + themeIndex"
+                  </button>
+                  <button v-else
+                          class="btn btn-link"
+                          role="button"
+                          type="button"
+                          data-toggle="modal"
+                          :data-target="'#deleteThemeConfirmModal' + themeIndex"
                   >
                     <i class="fe fe-trash-2"></i>
-                  </a>
+                  </button>
                 </span>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
@@ -64,47 +66,78 @@
                     La question associée à ce thème sera également supprimée.
                   </span>
                   <span v-else>
-                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème seront également supprimées.
+                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
+                    seront également supprimées.
                   </span>
                 </p>
               </confirm-modal>
             </div>
 
             <div v-for="(question, qIndex) in themes[themeIndex].questions"
+                 :id="'theme-' + themeIndex + '-question-' + qIndex"
                  class="card border-0 m-0 pt-2"
                  :key="'question-' + qIndex"> <!-- Card for each question -->
               <div class="card-header border-0">
-                <label v-bind:for="'question' + (themeIndex + 1) + '.' + (qIndex + 1)">
-                  <span class="stamp stamp-md bg-blue mr-3" style="cursor: pointer">
-                    {{ themeIndex + 1 }}.{{ qIndex + 1 }}
-                  </span>
-                </label>
+                <div class="flex-column align-items-center mr-4">
+                  <button :class="{ disabled: qIndex === 0 }"
+                     class="btn btn-secondary btn-sm move-up-button"
+                     role="button"
+                     type="button"
+                     title="Déplacer la question vers le haut"
+                     @click="moveQuestionUp(themeIndex, qIndex)">
+                    <i class="fa fa-chevron-up"></i>
+                  </button>
+                  <div class="my-1">
+                    <label v-bind:for="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
+                           class="mb-0">
+                      <span class="stamp stamp-md bg-blue">
+                        {{ themeIndex + 1 }}.{{ qIndex + 1 }}
+                      </span>
+                    </label>
+                  </div>
+                  <button :class="{ disabled: qIndex === (theme.questions.length - 1) }"
+                     class="btn btn-secondary btn-sm move-down-button"
+                     role="button"
+                     type="button"
+                     title="Déplacer la question vers le bas"
+                     @click="moveQuestionDown(themeIndex, qIndex)">
+                    <i class="fa fa-chevron-down"></i>
+                  </button>
+                </div>
                 <textarea class="form-control"
                           placeholder="Ecrivez une question ici"
                           rows="4"
-                          v-bind:id="'question' + (themeIndex + 1) + '.' + (qIndex + 1)"
+                          v-bind:id="'question' + (themeIndex + 1) + '-' + (qIndex + 1)"
                           v-model="themes[themeIndex].questions[qIndex].description"
                           oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les questions vides.')"
                           oninput="this.setCustomValidity('')"
                           required>
                 </textarea>
-
                 <span>
-                  <a href="javascript:void(0)" @click.prevent="deleteQuestion(themeIndex, qIndex)" class="btn btn-link" title="Supprimer la question">
+                  <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                          class="btn btn-link"
+                          role="button"
+                          type="button"
+                          title="Supprimer la question">
                     <i class="fe fe-trash-2"></i>
-                  </a>
+                  </button>
                 </span>
-                <question-file-upload :question-id="question.id"></question-file-upload>
+                <question-file-upload :question="question"></question-file-upload>
               </div>
               <div class="card-body">
-                <question-file-list :question-number="(themeIndex + 1) + '.' + (qIndex + 1)" :question-id="question.id"></question-file-list>
+                <question-file-list :files="question.question_files" :with-delete="true">
+                </question-file-list>
               </div>
             </div>
 
             <div class="card-footer">
-              <a href="javascript:void(0)" @click.prevent="addQuestion(themeIndex)" class="btn btn-primary" title="Ajouter une question">
+              <button @click.prevent="addQuestion(themeIndex)"
+                      class="btn btn-primary"
+                      role="button"
+                      type="button"
+                      title="Ajouter une question">
                 <i class="fe fe-plus"></i> Ajouter une question
-              </a>
+              </button>
             </div>
           </div>
 
@@ -112,7 +145,11 @@
             <div class="card-footer">
               <div class="card-status card-status-top bg-blue">
               </div>
-              <a href="javascript:void(0)" @click="addTheme()" class="btn btn-primary" title="Ajouter un thème">
+              <button @click="addTheme()"
+                      class="btn btn-primary"
+                      role="button"
+                      type="button"
+                      title="Ajouter un thème">
                 <i class="fe fe-plus"></i>Ajouter un thème
               </a>
             </div>
@@ -129,11 +166,11 @@
 import Vue from 'vue'
 
 import ConfirmModal from '../utils/ConfirmModal'
-import EventBus from '../events'
 import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
+import SwapAnimationMixin from './SwapAnimationMixin'
 
 import reportValidity from 'report-validity'
 
@@ -154,16 +191,16 @@ export default Vue.extend({
     QuestionFileList,
     QuestionFileUpload,
   },
-  mounted() {
-    // Todo do we still need this? Can we avoid event? Can we use store loadStatus instead?
-    this.$parent.$on('questionnaire-updated', function(data) {
-      EventBus.$emit('question-files-changed')
-    })
-  },
+  mixins: [
+    SwapAnimationMixin,
+  ],
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
-      this.themes[themeIndex].questions.push({ description: '' })
+      this.themes[themeIndex].questions.push({
+        description: '',
+        order: this.themes[themeIndex].questions.length,
+      })
     },
     addTheme: function() {
       console.debug('addTheme')
@@ -180,9 +217,47 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
+    // For all questions in vuex, set the 'order' field to match with the
+    // order in the array.
+    updateOrderFields(questionArray) {
+      questionArray.map((question, qIndex) => {
+        question.order = qIndex
+      })
+    },
+    moveQuestionUp(themeIndex, qIndex) {
+      console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
+      if (qIndex <= 0) {
+        console.error('Cannot moveQuestionUp from index', qIndex)
+        return
+      }
+      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex - 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
+      const isMoveUp = true
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex + '-question-' + qIndex),
+        $('#theme-' + themeIndex + '-question-' + (qIndex - 1)),
+        isMoveUp,
+      )
+    },
+    moveQuestionDown(themeIndex, qIndex) {
+      console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
+      if (qIndex >= (this.themes[themeIndex].questions.length - 1)) {
+        console.error('Cannot moveQuestionDown from index', qIndex)
+        return
+      }
+      this.moveArrayElement(this.themes[themeIndex].questions, qIndex, qIndex + 1)
+      this.updateOrderFields(this.themes[themeIndex].questions)
+      const isMoveUp = false
+      this.animateQuestionSwap(
+        $('#theme-' + themeIndex + '-question-' + qIndex),
+        $('#theme-' + themeIndex + '-question-' + (qIndex + 1)),
+        isMoveUp,
+      )
+    },
   },
 })
 </script>
 
 <style>
+@import './SwapAnimationMixin.css';
 </style>

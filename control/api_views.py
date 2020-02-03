@@ -12,7 +12,7 @@ import os
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
-from .serializers import QuestionSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
+from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
 
@@ -319,7 +319,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
             questions_data = theme_request_data.get('questions', [])
             for question_data in questions_data:
                 question_in_db = self.__find_child_obj_by_id(saved_theme, question_data.get('id'), Question)
-                question_serializer = QuestionSerializer(question_in_db, data=question_data)
+                question_serializer = QuestionUpdateSerializer(question_in_db, data=question_data)
                 question_serializer.is_valid(raise_exception=True)
                 saved_question = question_serializer.save(theme=saved_theme)
                 log_func(saved_question)
