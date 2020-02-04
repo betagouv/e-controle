@@ -194,6 +194,7 @@ export default Vue.extend({
         const newQuestionnaire = {
           control: this.controlId,
           description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
+          title: '',
         }
         console.debug('currentQuestionnaire is new', newQuestionnaire)
         this.currentQuestionnaire = newQuestionnaire
