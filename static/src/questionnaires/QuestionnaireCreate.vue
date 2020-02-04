@@ -121,7 +121,7 @@
         <button id="go-home-button"
                 type="button"
                 class="btn btn-primary"
-                @click="goHome"
+                @click="goHome($event, saveBeforeRedirect=false)"
         >
           < Revenir à l'accueil
         </button>
@@ -435,18 +435,24 @@ export default Vue.extend({
           this.showPublishConfirmModal()
         })
     },
-    goHome(event) {
+    goHome(event, saveBeforeRedirect=true) {
       if (!this.validateCurrentForm()) {
         return
       }
       // Display a "loading" spinner on clicked button, while the user is redirected, so that they
       // know their click has been registered.
       $(event.target).addClass('btn-loading')
-      this.saveDraft()
-        .then(() => {
-          // Whether or not save succeeds, navigate to home
-          this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
-        })
+      if (saveBeforeRedirect) {
+        this.saveDraft()
+          .then(() => {
+            // Whether or not save succeeds, navigate to home
+            this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+          })
+      }
+      else {
+        this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+      }
+
     },
   },
 })
