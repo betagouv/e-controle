@@ -55,12 +55,15 @@
 
   import Vue from "vue";
 
-  import axios from 'axios'
   import { clearCache } from '../utils/utils'
+  import axios from 'axios'
   import ConfirmModal from '../utils/ConfirmModal'
   import ErrorBar from '../utils/ErrorBar'
   import EventBus from '../events'
   import SuccessBar from '../utils/SuccessBar'
+  import VueAxios from 'vue-axios'
+
+  Vue.use(VueAxios, axios)
 
   axios.defaults.xsrfCookieName = 'csrftoken'
   axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
