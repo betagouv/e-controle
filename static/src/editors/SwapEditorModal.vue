@@ -5,7 +5,9 @@
           <div class="modal-header border-bottom-0">
             <i class="fa fa-exchange-alt mr-2 mt-3"></i>
             <div class="modal-title">
-            <h3 class="modal-title">Transférer les droits de rédaction du questionnaire</h3>
+              <h3 class="modal-title">
+                Transférer les droits de rédaction du questionnaire
+              </h3>
             </div>
             <button type="button"
                     class="close"
@@ -62,6 +64,7 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>

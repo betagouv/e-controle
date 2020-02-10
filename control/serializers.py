@@ -42,10 +42,11 @@ class QuestionFileSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     response_files = ResponseFileSerializer(many=True, read_only=True)
+    question_files = QuestionFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
-        fields = ('id', 'description', 'response_files', 'theme')
+        fields = ('id', 'description', 'order', 'question_files', 'response_files', 'theme')
 
 
 class ThemeSerializer(serializers.ModelSerializer):
@@ -96,10 +97,11 @@ class ControlUpdateSerializer(serializers.ModelSerializer):
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+    order = serializers.CharField(required=False)
 
     class Meta:
         model = Question
-        fields = ('id', 'description')
+        fields = ('id', 'order', 'description')
 
 
 class ThemeUpdateSerializer(serializers.ModelSerializer):

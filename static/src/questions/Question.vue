@@ -35,6 +35,11 @@
   import EventBus from '../events'
 
   export default Vue.extend({
+    props : {
+      themeNumbering: String | Number,
+      questionNumbering: String | Number,
+      question: Object,
+    },
     data() {
       return {
           questionFileCount: 0,
@@ -50,21 +55,11 @@
       EventBus.$on('response-files-updated-' + this.question.id, responseFiles => {
         this.responseFileCount = numNotDeleted(responseFiles);
       })
-
       EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {
         this.questionFileCount = questionFileCount;
       })
-
     },
-    components: {
-    },
-    props: {
-      themeNumbering: String|Number,
-      questionNumbering: String|Number,
-      question: Object,
-    },
-    methods: {},
-  });
+  })
 </script>
 
 <style>

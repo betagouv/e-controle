@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="alert alert-info flex-row justify-content-between" role="alert">
-        <div class="mt-2">
+      <div class="mt-2">
         <i class="fe fe-users mr-1"></i>
         <strong>Vous</strong> êtes actuellement le rédacteur de ce questionnaire.
-        </div>
-        <div class="text-right">
+      </div>
+      <div class="text-right">
         <button type="submit"
           class="btn btn-primary"
           title="Transférer les droits de rédaction..."
@@ -13,7 +13,7 @@
           <i class="fa fa-exchange-alt mr-1"></i>
           Transférer les droits de rédaction...
         </button>
-        </div>
+      </div>
     </div>
 
     <swap-editor-modal id="swapEditorModal"

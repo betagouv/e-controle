@@ -15,11 +15,14 @@ export const loadStatuses = {
 export const store = new Vuex.Store({
   state: {
     config: {},
+    controls: [],
+    controlsLoadStatus: loadStatuses.LOADING,
+    currentQuestionnaire: {},
     editingControl: {},
     editingUser: {},
     editingProfileType: '',
     sessionUser: {},
-    loadStatus: loadStatuses.LOADING,
+    sessionUserLoadStatus: loadStatuses.LOADING,
   },
   getters: {
     getField,
@@ -29,27 +32,43 @@ export const store = new Vuex.Store({
     updateSessionUser(state, user) {
       state.sessionUser = user
     },
-    updateLoadStatus(state, newStatus) {
-      state.loadStatus = newStatus
+    updateSessionUserLoadStatus(state, newStatus) {
+      state.sessionUserLoadStatus = newStatus
     },
     updateConfig(state, config) {
       state.config = config
     },
+    updateControls(state, controls) {
+      state.controls = controls
+    },
+    updateControlsLoadStatus(state, newStatus) {
+      state.controlsLoadStatus = newStatus
+    },
   },
   actions: {
-    loadConfig({ commit }) {
+    fetchConfig({ commit }) {
       axios.get(backendUrls.config()).then((response) => {
         commit('updateConfig', response.data)
       })
     },
     fetchSessionUser({ commit }) {
       axios.get(backendUrls.currentUser()).then((response) => {
-        console.debug('Got current user', response.data)
+        console.debug('Store got current user', response.data)
         commit('updateSessionUser', response.data)
-        commit('updateLoadStatus', loadStatuses.SUCCESS)
+        commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
       }).catch(err => {
-        console.error('Error fetching current user', err)
-        commit('updateLoadStatus', loadStatuses.ERROR)
+        console.error('Store got error fetching current user', err)
+        commit('updateSessionUserLoadStatus', loadStatuses.ERROR)
+      })
+    },
+    fetchControls({ commit }) {
+      axios.get(backendUrls.control()).then(response => {
+        console.debug('Store got controls', response.data)
+        commit('updateControls', response.data)
+        commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+      }).catch(err => {
+        console.error('Store got esrror fetching controls', err)
+        commit('updateControlsLoadStatus', loadStatuses.ERROR)
       })
     },
   },

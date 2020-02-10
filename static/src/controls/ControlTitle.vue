@@ -82,7 +82,7 @@
               <img :src="'/static/img/file-explorer.png'"
                    alt="Explorateur Windows"
                    class="fake-icon" />
-              Voir les réponses
+              Comment voir les réponses ?
             </a>
           </div>
           <a href="javascript:void(0)"
@@ -106,91 +106,91 @@
 </template>
 
 <script>
-  import { mapFields } from 'vuex-map-fields'
-  import axios from 'axios'
-  import Vue from "vue"
-  import WebdavTip from '../controls/WebdavTip'
+import { mapFields } from 'vuex-map-fields'
+import axios from 'axios'
+import backendUrls from '../utils/backend'
+import Vue from 'vue'
+import WebdavTip from '../controls/WebdavTip'
 
-  import ErrorBar from "../utils/ErrorBar"
+import ErrorBar from '../utils/ErrorBar'
 
-  axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
-  export default Vue.extend({
-    props: {
-      control: Object,
-      webdavurl: String,
-    },
-    data: function() {
-      return {
-        editMode: false,
-        title: "",
-        organization: "",
-        errors: "",
-        hasErrors: false
-      }
-    },
-    computed: {
-      ...mapFields([
-        'sessionUser'
-      ]),
-    },
-    components: {
-      ErrorBar,
-      WebdavTip,
-    },
-    mounted() {
-      this.restoreForm()
-    },
-    methods: {
-      restoreForm() {
-        this.title = this.control.title
-        this.organization = this.control.depositing_organization
-      },
-      clearErrors() {
-        this.errors = ""
-        this.hasErrors = false
-      },
-      enterEditMode() {
-        this.clearErrors()
-        this.editMode = true
-      },
-      quitEditMode() {
-        this.clearErrors()
-        this.editMode = false
-      },
-      cancel() {
-        this.restoreForm()
-        this.quitEditMode()
-      },
-      updateControl: function() {
-        const update_control_url = `/api/control/${this.control.id}/`
-        const payload = {
-          title: this.title,
-          depositing_organization: this.organization
-        }
-        axios.put(update_control_url, payload)
-          .then(response => {
-            console.debug(response)
-            this.title = response.data.title
-            this.organization = response.data.depositing_organization
-
-            // Display a "loading" spinner on clicked button, while the page reloads, so that they know their click
-            // has been registered.
-            $('#control-title-submit-button').addClass('btn-loading')
-            window.location.reload()
-          })
-          .catch((error) => {
-            console.error(error)
-            this.errors = error.response.data
-            this.hasErrors = true
-          })
-      },
-      showWebdavTip() {
-        $('#webdav-tip-' + this.control.id).modal('show')
-      },
+export default Vue.extend({
+  props: {
+    control: Object,
+    webdavurl: String,
+  },
+  data: function() {
+    return {
+      editMode: false,
+      title: '',
+      organization: '',
+      errors: '',
+      hasErrors: false,
     }
-  })
+  },
+  computed: {
+    ...mapFields([
+      'sessionUser',
+    ]),
+  },
+  components: {
+    ErrorBar,
+    WebdavTip,
+  },
+  mounted() {
+    this.restoreForm()
+  },
+  methods: {
+    restoreForm() {
+      this.title = this.control.title
+      this.organization = this.control.depositing_organization
+    },
+    clearErrors() {
+      this.errors = ''
+      this.hasErrors = false
+    },
+    enterEditMode() {
+      this.clearErrors()
+      this.editMode = true
+    },
+    quitEditMode() {
+      this.clearErrors()
+      this.editMode = false
+    },
+    cancel() {
+      this.restoreForm()
+      this.quitEditMode()
+    },
+    updateControl: function() {
+      const payload = {
+        title: this.title,
+        depositing_organization: this.organization,
+      }
+      axios.put(backendUrls.control(this.control.id), payload)
+        .then(response => {
+          console.debug(response)
+          this.title = response.data.title
+          this.organization = response.data.depositing_organization
+
+          // Display a "loading" spinner on clicked button, while the page reloads, so that they know their click
+          // has been registered.
+          $('#control-title-submit-button').addClass('btn-loading')
+          window.location.reload()
+        })
+        .catch((error) => {
+          console.error(error)
+          this.errors = error.response.data
+          this.hasErrors = true
+        })
+    },
+    showWebdavTip() {
+      $('#webdav-tip-' + this.control.id).modal('show')
+    },
+  },
+})
 
 </script>
 

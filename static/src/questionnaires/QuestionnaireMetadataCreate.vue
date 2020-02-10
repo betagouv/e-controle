@@ -1,17 +1,11 @@
 <template>
   <div>
-
-    <wizard :active-step-number="1"
-            :step-titles="['Renseigner l\'introduction', 'Ajouter des questions', 'Aperçu avant publication']"
-            @next="createMetadata">
-    </wizard>
-
     <div class="card">
       <div class="card-header">
         <div class="card-title">Etape 1 : Renseigner l'introduction</div>
       </div>
       <div class="card-body pb-6">
-        <form @submit.prevent="createMetadata" ref="form">
+        <form ref="form">
           <div class="form-group">
             <label class="form-label" id="questionnaireTitle">
               Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
@@ -27,7 +21,7 @@
                    aria-labelledby="questionnaireTitle"
                    aria-describedby="questionnaireTitleHelp"
                    class="form-control"
-                   v-model="metadata.title"
+                   v-model="title"
                    maxlength="255"
                    required>
           </div>
@@ -40,7 +34,7 @@
                       placeholder="Si nécessaire, décrivez votre questionnaire ici"
                       rows="6"
                       v-bind:class="{ 'state-invalid': errors.description }"
-                      v-model="metadata.description">
+                      v-model="description">
             </textarea>
             <p class="text-muted pl-2" v-if="errors.description">
               <i class="fa fa-warning"></i> {{ errors.description.join(' / ')}}
@@ -50,19 +44,10 @@
             <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
             <datepicker class="blue"
                         aria-labelledby="questionnaireEndDate"
-                        v-model="metadata.end_date"
+                        v-model="end_date"
                         :language="fr"
                         :monday-first="true">
             </datepicker>
-          </div>
-          <div class="text-right">
-            <button type="submit" @click.prevent="saveDraft" class="btn btn-primary">
-              <i class="fe fe-save"></i>
-              Enregistrer le brouillon
-            </button>
-            <button type="submit" class="btn btn-secondary">
-              Suivant >
-            </button>
           </div>
         </form>
 
@@ -72,76 +57,51 @@
 </template>
 
 <script>
-  import Vue from "vue"
-  import Datepicker from 'vuejs-datepicker'
-  import Wizard from "../utils/Wizard"
-  import fr from "../utils/vuejs-datepicker-locale-fr"
-  import reportValidity from 'report-validity'
+import Vue from 'vue'
+import Datepicker from 'vuejs-datepicker'
+import { mapFields } from 'vuex-map-fields'
+import fr from '../utils/vuejs-datepicker-locale-fr'
+import reportValidity from 'report-validity'
 
-  const DESCRIPTION_DEFAULT = "À l’occasion de ce contrôle, \
+// eslint-disable-next-line no-multi-str
+const DESCRIPTION_DEFAULT = 'À l’occasion de ce contrôle, \
 je vous demande de me transmettre des renseignements et des justifications \
 sur les points énumérés dans ce questionnaire.\nVous voudrez bien me faire \
 parvenir au fur et à mesure votre réponse. \
 \nJe reste à votre disposition ainsi qu’à celle de vos \
-services pour toute information complémentaire qu’appellerait ce questionnaire."
+services pour toute information complémentaire qu’appellerait ce questionnaire.'
 
-  const QuestionnaireMetadataCreate = Vue.extend({
-    props: {
-      questionnaireNumbering: Number,
+const QuestionnaireMetadataCreate = Vue.extend({
+  props: {
+    questionnaireNumbering: Number,
+  },
+  data() {
+    return {
+      errors: [],
+      fr: fr, // locale for datepicker
+    }
+  },
+  computed: {
+    ...mapFields([
+      'currentQuestionnaire.description',
+      'currentQuestionnaire.end_date',
+      'currentQuestionnaire.title',
+    ]),
+  },
+  methods: {
+    // Used in QuestionnaireCreate.
+    validateForm: function() {
+      const form = this.$refs.form
+      return reportValidity(form)
     },
-    data() {
-      return {
-        metadata: {
-          description: '',
-          end_date: '',
-          title: '',
-        },
-        errors: [],
-        fr: fr, // locale for datepicker
-      }
-    },
-    mounted() {
-      let loadMetadata = function(data) {
-        // Use Vue's $set to make the properties reactive.
-        for (const key of Object.keys(this.metadata)) {
-          console.debug('key', key)
-          this.$set(this.metadata, key, data[key])
-        }
-      }.bind(this)
+  },
+  components: {
+    Datepicker,
+  },
+})
 
-      this.$parent.$on('questionnaire-updated', function(data) {
-        console.debug('new metadata', data)
-        loadMetadata(data)
-      })
-    },
-    methods: {
-      validateForm: function() {
-        let form = this.$refs.form
-        return reportValidity(form)
-      },
-      createMetadata: function () {
-        console.debug('metadata created', this.metadata)
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('metadata-created', this.metadata)
-      },
-      saveDraft(event) {
-        console.debug('save draft', event)
-        if (!this.validateForm()) {
-          return
-        }
-        this.$emit('save-draft', this.metadata)
-      },
-    },
-    components: {
-      Datepicker,
-      Wizard,
-    },
-  })
-
-  QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT = DESCRIPTION_DEFAULT
-  export default QuestionnaireMetadataCreate
+QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT = DESCRIPTION_DEFAULT
+export default QuestionnaireMetadataCreate
 
 </script>
 

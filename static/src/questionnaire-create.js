@@ -8,17 +8,22 @@ import Vuex, { mapActions } from 'vuex'
 
 Vue.use(Vuex)
 
-let questionnaireCreateApp = new Vue({
+// Note : the parcel builds (build-questionnaire-create and watch-questionnaire-create) use
+// --no-source-maps, because vuejs-datepicker breaks parcel without it.
+
+// eslint-disable-next-line no-new
+new Vue({
   store,
   el: '#questionnaire-create-vm',
   components: {
     QuestionnaireCreate,
   },
   methods: {
-    ...mapActions(['loadConfig', 'fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchControls', 'fetchSessionUser']),
   },
   created() {
-    this.loadConfig()
+    this.fetchConfig()
+    this.fetchControls()
     this.fetchSessionUser()
   },
 })

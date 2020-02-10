@@ -42,10 +42,10 @@
                   </div>
                   <button type="submit"
                     class="btn btn-primary"
-                    title="Forcer le transfert des droits"
+                    title="Forcer le transfert des droits..."
                     @click="requestEditor()">
                     <i class="fa fa-exchange-alt mr-1"></i>
-                    Forcer le transfert des droits
+                    Forcer le transfert des droits...
                   </button>
                 </div>
               </div>
