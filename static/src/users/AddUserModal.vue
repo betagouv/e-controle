@@ -22,18 +22,37 @@
             <h4><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h4>
         </div>
 
-        <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
+        <form ref="form1" @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
           <fieldset class="form-fieldset">
             <div class="form-group">
-              <label class="form-label">Email<span class="form-required"></span></label>
+              <label class="form-label">Email<span class="form-required">*</span></label>
               <input type="email"
                      class="form-control"
                      v-bind:class="{ 'state-invalid': errors.email }"
                      v-model="formData.email"
+                     multiple="false"
                      required>
               <p class="text-muted pl-2" v-if="errors.email">
                 <i class="fa fa-warning"></i>
                 {{ errors.email.join(' / ')}}
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                Confirmez l'email<span class="form-required">*</span>
+              </label>
+              <input :id="'email-repeat-' + editingControl.id"
+                     type="email"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.emailRepeat }"
+                     v-model="formData.emailRepeat"
+                     oninput="this.setCustomValidity('')"
+                     autocomplete="off"
+                     multiple="false"
+                     required>
+              <p class="text-muted pl-2" v-if="errors.emailRepeat">
+                <i class="fa fa-warning"></i>
+                {{ errors.emailRepeat.join(' / ')}}
               </p>
             </div>
           </fieldset>
@@ -109,6 +128,7 @@ import VueAxios from 'vue-axios'
 
 import { store } from '../store'
 import EventBus from '../events'
+import reportValidity from 'report-validity'
 
 Vue.use(VueAxios, axios)
 
@@ -174,7 +194,20 @@ export default Vue.extend({
           this.errors = error.response.data
         })
     },
+    validateEmailRepeat() {
+      if (this.formData.email === this.formData.emailRepeat) {
+        return true
+      }
+      const emailRepeatField = document.getElementById('email-repeat-' + this.editingControl.id)
+      emailRepeatField.setCustomValidity('Les deux emails doivent être identiques.')
+      const form1 = this.$refs.form1
+      return reportValidity(form1)
+    },
     findUser() {
+      if (!this.validateEmailRepeat()) {
+        return
+      }
+
       this.axios.get(backend.user(), {
         params: {
           search: this.formData.email,
