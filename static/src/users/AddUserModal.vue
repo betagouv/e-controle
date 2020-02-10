@@ -143,13 +143,12 @@ export default Vue.extend({
         first_name: '',
         last_name: '',
         email: '',
+        emailRepeat: '',
         control: '',
         profile_type: '',
       },
-      postResult: [],
       errors: [],
       hasErrors: false,
-      searchResult: {},
       foundUser: false,
       showStep1: true,
       showStep2: false,
@@ -171,22 +170,22 @@ export default Vue.extend({
         first_name: '',
         last_name: '',
         email: '',
+        emailRepeat: '',
         control: '',
         profile_type: '',
       }
+      this.errors = []
+      this.hasErrors = false
+      this.foundUser = false
       this.showStep1 = true
       this.showStep2 = false
-      this.foundUser = false
-      this.hasErrors = false
-      this.errors = []
     },
     addUser() {
       this.formData.control = this.editingControl.id
       this.formData.profile_type = this.editingProfileType
       this.axios.post(backend.user(), this.formData)
         .then(response => {
-          this.postResult = response.data
-          EventBus.$emit('users-changed', this.postResult)
+          EventBus.$emit('users-changed', response.data)
           this.hideThisModal()
         })
         .catch((error) => {
@@ -214,7 +213,6 @@ export default Vue.extend({
         },
       })
         .then(response => {
-          this.searchResult = response.data
           if (response.data.length) {
             this.foundUser = true
             Object.assign(this.formData, response.data[0])
