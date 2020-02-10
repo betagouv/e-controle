@@ -1,6 +1,11 @@
 <template>
 
-<div class="modal fade add-user-modal" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModal" aria-hidden="true">
+<div class="modal fade add-user-modal"
+     id="addUserModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="addUserModal"
+     aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -21,8 +26,15 @@
           <fieldset class="form-fieldset">
             <div class="form-group">
               <label class="form-label">Email<span class="form-required"></span></label>
-              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="formData.email" required>
-              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
+              <input type="email"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.email }"
+                     v-model="formData.email"
+                     required>
+              <p class="text-muted pl-2" v-if="errors.email">
+                <i class="fa fa-warning"></i>
+                {{ errors.email.join(' / ')}}
+              </p>
             </div>
           </fieldset>
           <div class="text-right">
@@ -42,13 +54,27 @@
           <fieldset v-else class="form-fieldset">
             <div class="form-group">
               <label class="form-label">Prénom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="formData.first_name" required>
-              <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
+              <input type="text"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.first_name }"
+                     v-model="formData.first_name"
+                     required>
+              <p class="text-muted pl-2" v-if="errors.first_name">
+                <i class="fa fa-warning"></i>
+                {{ errors.first_name.join(' / ')}}
+              </p>
             </div>
             <div class="form-group">
               <label class="form-label">Nom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="formData.last_name" required>
-              <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
+              <input type="text"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.last_name }"
+                     v-model="formData.last_name"
+                     required>
+              <p class="text-muted pl-2" v-if="errors.last_name">
+                <i class="fa fa-warning"></i>
+                {{ errors.last_name.join(' / ')}}
+              </p>
             </div>
           </fieldset>
           <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
