@@ -31,6 +31,8 @@
                      v-bind:class="{ 'state-invalid': errors.email }"
                      v-model="formData.email"
                      multiple="false"
+                     :placeholder="editingProfileType === 'inspector' ?
+                       inspectorPlaceHolder : auditedPlaceHolder"
                      required>
               <p class="text-muted pl-2" v-if="errors.email">
                 <i class="fa fa-warning"></i>
@@ -49,6 +51,8 @@
                      oninput="this.setCustomValidity('')"
                      autocomplete="off"
                      multiple="false"
+                     :placeholder="editingProfileType === 'inspector' ?
+                       inspectorPlaceHolder : auditedPlaceHolder"
                      required>
               <p class="text-muted pl-2" v-if="errors.emailRepeat">
                 <i class="fa fa-warning"></i>
@@ -152,6 +156,8 @@ export default Vue.extend({
       foundUser: false,
       showStep1: true,
       showStep2: false,
+      auditedPlaceHolder: 'chloe.henry@abcde.fr',
+      inspectorPlaceHolder: 'julie.ballard@ccomptes.fr',
     }
   },
   computed: {
