@@ -20,14 +20,15 @@
             <div class="border-bottom">
               <div class="card-header border-0">
                 <div class="flex-column align-items-center mr-4">
-                  <a :class="{ disabled: themeIndex === 0 }"
-                     class="btn btn-secondary btn-sm move-up-button"
-                     role="button"
-                     href="javascript:;"
-                     title="Déplacer le thème vers le haut"
-                     @click="moveThemeUp(themeIndex)">
+                  <button :class="{ disabled: themeIndex === 0 }"
+                          class="btn btn-secondary btn-sm move-up-button"
+                          role="button"
+                          type="button"
+                          href="javascript:;"
+                          title="Déplacer le thème vers le haut"
+                          @click="moveThemeUp(themeIndex)">
                     <i class="fa fa-chevron-up"></i>
-                  </a>
+                  </button>
                   <div class="my-3">
                     <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
                       <h3 class="card-title stamp stamp-md bg-white border border-primary text-body">
@@ -35,14 +36,15 @@
                       </h3>
                     </label>
                   </div>
-                  <a :class="{ disabled: themeIndex === (themes.length - 1) }"
-                     class="btn btn-secondary btn-sm move-down-button"
-                     role="button"
-                     href="javascript:;"
-                     title="Déplacer le thème vers le bas"
-                     @click="moveThemeDown(themeIndex)">
+                  <button :class="{ disabled: themeIndex === (themes.length - 1) }"
+                          class="btn btn-secondary btn-sm move-down-button"
+                          role="button"
+                          type="button"
+                          href="javascript:;"
+                          title="Déplacer le thème vers le bas"
+                          @click="moveThemeDown(themeIndex)">
                     <i class="fa fa-chevron-down"></i>
-                  </a>
+                  </button>
                 </div>
                 <div class="flex-column">
                   <div class="invisible">invisible placeholder, necessary for the layout</div>
