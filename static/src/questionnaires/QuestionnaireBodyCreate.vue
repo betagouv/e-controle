@@ -30,7 +30,9 @@
                   </a>
                   <div class="my-3">
                     <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
-                      <h3 class="card-title">{{themeIndex + 1}}.</h3>
+                      <h3 class="card-title stamp stamp-md bg-white border border-primary text-body">
+                        {{themeIndex + 1}}
+                      </h3>
                     </label>
                   </div>
                   <a :class="{ disabled: themeIndex === (themes.length - 1) }"
