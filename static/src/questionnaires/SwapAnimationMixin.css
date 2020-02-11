@@ -29,11 +29,11 @@
   -o-animation-name : moveSelectedElement;
 
   z-index: 999;
-  background-color: #ecf7fe; /* azure-lightest */
+  background-color: var(--azure-lightest);
 }
 
 .move-selected .card {
-  background-color: #ecf7fe; /* azure-lightest */
+  background-color: var(--azure-lightest);
 }
 
 .move-neighbor {

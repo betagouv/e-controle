@@ -41,6 +41,10 @@
     color: #5EBB00;
 }
 
+:root {
+    --azure-lightest: #ecf7fe;
+}
+
 /* Secondary button : you can't see it's disabled */
 .btn-secondary.disabled {
     color: #aab0b6; /* gray-light */
