@@ -45,7 +45,7 @@
                   <i class="fa fa-chevron-down"></i>
                 </button>
               </div>
-              <div class="flex-column">
+              <div class="flex-column flex-grow-1">
                 <div class="invisible">invisible placeholder, necessary for the layout</div>
                 <div class="flex-row">
                   <input class="form-control form-control-h3"
