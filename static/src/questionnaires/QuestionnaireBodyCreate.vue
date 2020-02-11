@@ -17,89 +17,87 @@
             <div class="card-status card-status-top bg-blue">
             </div>
 
-            <div class="border-bottom">
-              <div class="card-header border-0">
-                <div class="flex-column align-items-center mr-4">
-                  <button :class="{ disabled: themeIndex === 0 }"
-                          class="btn btn-secondary btn-sm move-up-button"
+            <div class="card-header">
+              <div class="flex-column align-items-center mr-4">
+                <button :class="{ disabled: themeIndex === 0 }"
+                        class="btn btn-secondary btn-sm move-up-button"
+                        role="button"
+                        type="button"
+                        href="javascript:;"
+                        title="Déplacer le thème vers le haut"
+                        @click="moveThemeUp(themeIndex)">
+                  <i class="fa fa-chevron-up"></i>
+                </button>
+                <div class="my-3">
+                  <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
+                    <h3 class="card-title stamp stamp-md bg-white border border-primary text-body">
+                      {{themeIndex + 1}}
+                    </h3>
+                  </label>
+                </div>
+                <button :class="{ disabled: themeIndex === (themes.length - 1) }"
+                        class="btn btn-secondary btn-sm move-down-button"
+                        role="button"
+                        type="button"
+                        href="javascript:;"
+                        title="Déplacer le thème vers le bas"
+                        @click="moveThemeDown(themeIndex)">
+                  <i class="fa fa-chevron-down"></i>
+                </button>
+              </div>
+              <div class="flex-column">
+                <div class="invisible">invisible placeholder, necessary for the layout</div>
+                <div class="flex-row">
+                  <input class="form-control form-control-h3"
+                        placeholder="Ecrivez un thème ici"
+                        type="text"
+                        maxlength="255"
+                        v-bind:id="'theme' + (themeIndex + 1)"
+                        v-model="themes[themeIndex].title"
+                        oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
+                        oninput="this.setCustomValidity('')"
+                        :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
+                        required>
+                  <button v-if="themes[themeIndex].questions.length === 0"
+                          @click.prevent="deleteTheme(themeIndex)"
                           role="button"
                           type="button"
-                          href="javascript:;"
-                          title="Déplacer le thème vers le haut"
-                          @click="moveThemeUp(themeIndex)">
-                    <i class="fa fa-chevron-up"></i>
+                          class="btn btn-link"
+                          title="Supprimer le thème"
+                  >
+                    <i class="fe fe-trash-2"></i>
                   </button>
-                  <div class="my-3">
-                    <label v-bind:for="'theme' + (themeIndex + 1)" class="form-label-h3">
-                      <h3 class="card-title stamp stamp-md bg-white border border-primary text-body">
-                        {{themeIndex + 1}}
-                      </h3>
-                    </label>
-                  </div>
-                  <button :class="{ disabled: themeIndex === (themes.length - 1) }"
-                          class="btn btn-secondary btn-sm move-down-button"
+                  <button v-else
+                          class="btn btn-link"
                           role="button"
                           type="button"
-                          href="javascript:;"
-                          title="Déplacer le thème vers le bas"
-                          @click="moveThemeDown(themeIndex)">
-                    <i class="fa fa-chevron-down"></i>
+                          data-toggle="modal"
+                          :data-target="'#deleteThemeConfirmModal' + themeIndex"
+                  >
+                    <i class="fe fe-trash-2"></i>
                   </button>
                 </div>
-                <div class="flex-column">
-                  <div class="invisible">invisible placeholder, necessary for the layout</div>
-                  <div class="flex-row">
-                    <input class="form-control form-control-h3"
-                          placeholder="Ecrivez un thème ici"
-                          type="text"
-                          maxlength="255"
-                          v-bind:id="'theme' + (themeIndex + 1)"
-                          v-model="themes[themeIndex].title"
-                          oninvalid="this.setCustomValidity('Veuillez remplir ou supprimer les thèmes vides.')"
-                          oninput="this.setCustomValidity('')"
-                          :aria-describedby="'theme' + (themeIndex + 1) + 'Help'"
-                          required>
-                    <button v-if="themes[themeIndex].questions.length === 0"
-                            @click.prevent="deleteTheme(themeIndex)"
-                            role="button"
-                            type="button"
-                            class="btn btn-link"
-                            title="Supprimer le thème"
-                    >
-                      <i class="fe fe-trash-2"></i>
-                    </button>
-                    <button v-else
-                            class="btn btn-link"
-                            role="button"
-                            type="button"
-                            data-toggle="modal"
-                            :data-target="'#deleteThemeConfirmModal' + themeIndex"
-                    >
-                      <i class="fe fe-trash-2"></i>
-                    </button>
-                  </div>
-                  <div class="text-muted" :id="'theme' + (themeIndex + 1) + 'Help'">
-                    Exemple : "Ressources Humaines". 255 caractères maximum.
-                  </div>
+                <div class="text-muted" :id="'theme' + (themeIndex + 1) + 'Help'">
+                  Exemple : "Ressources Humaines". 255 caractères maximum.
                 </div>
               </div>
-              <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
-                             title="Confirmer la suppression de ce thème"
-                             confirm-button="Oui, supprimer"
-                             cancel-button="Non, retour"
-                             @confirm="deleteTheme(themeIndex)"
-              >
-                <p>
-                  <span v-if="themes[themeIndex].questions.length === 1">
-                    La question associée à ce thème sera également supprimée.
-                  </span>
-                  <span v-else>
-                    Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
-                    seront également supprimées.
-                  </span>
-                </p>
-              </confirm-modal>
             </div>
+            <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
+                            title="Confirmer la suppression de ce thème"
+                            confirm-button="Oui, supprimer"
+                            cancel-button="Non, retour"
+                            @confirm="deleteTheme(themeIndex)"
+            >
+              <p>
+                <span v-if="themes[themeIndex].questions.length === 1">
+                  La question associée à ce thème sera également supprimée.
+                </span>
+                <span v-else>
+                  Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
+                  seront également supprimées.
+                </span>
+              </p>
+            </confirm-modal>
 
             <div v-for="(question, qIndex) in themes[themeIndex].questions"
                  :id="'theme-' + themeIndex + '-question-' + qIndex"
