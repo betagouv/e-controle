@@ -32,6 +32,10 @@
   background-color: #ecf7fe; /* azure-lightest */
 }
 
+.move-selected .card {
+  background-color: #ecf7fe; /* azure-lightest */
+}
+
 .move-neighbor {
   animation-name : moveNeighborElement;
   -webkit-animation-name : moveNeighborElement;
