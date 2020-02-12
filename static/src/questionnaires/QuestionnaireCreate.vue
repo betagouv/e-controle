@@ -12,7 +12,9 @@
           Brouillon
         </span>
         <span>Rédaction du Questionnaire n°{{ questionnaireNumbering }}</span>
-        <span v-if="currentQuestionnaire.title" class="ml-1"> - {{ currentQuestionnaire.title }}</span>
+        <span v-if="currentQuestionnaire.title" class="ml-1">
+          - {{ currentQuestionnaire.title }}
+        </span>
       </div>
     </div>
     <div v-if="hasErrors" class="alert alert-danger" id="questionnaire-create-error">
@@ -114,7 +116,8 @@
       </div>
       <div class="modal-body text-center">
         <p>
-          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de notification dès le lendemain 8 heures.
+          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
+          notification dès le lendemain 8 heures.
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
@@ -134,7 +137,6 @@
 import axios from 'axios'
 import backend from '../utils/backend'
 import EmptyModal from '../utils/EmptyModal'
-import EventBus from '../events'
 import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
@@ -195,6 +197,7 @@ export default Vue.extend({
           control: this.controlId,
           description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
           title: '',
+          themes: [],
         }
         console.debug('currentQuestionnaire is new', newQuestionnaire)
         this.currentQuestionnaire = newQuestionnaire
@@ -205,7 +208,8 @@ export default Vue.extend({
 
       const loadExistingQuestionnaire = () => {
         console.debug('loadExistingQuestionnaire')
-        const currentQuestionnaire = this.findCurrentQuestionnaire(this.controls, this.questionnaireId)
+        const currentQuestionnaire = this.findCurrentQuestionnaire(
+          this.controls, this.questionnaireId)
         console.debug('currentQuestionnaire', currentQuestionnaire)
         if (!currentQuestionnaire) {
           const errorMessage = 'Le questionnaire ' + this.questionnaireId + ' n\'a pas été trouvé.'
@@ -216,7 +220,8 @@ export default Vue.extend({
           const errorMessage = 'Le questionnaire ' + this.questionnaireId +
                 ' n\'est pas un brouillon. Vous ne pouvez pas le modifier.'
           this.displayErrors(errorMessage)
-          throw new Error('Questionnaire ' + this.questionnaireId + ' is not a draft, you cannot edit it')
+          throw new Error(
+            'Questionnaire ' + this.questionnaireId + ' is not a draft, you cannot edit it')
         }
         this.currentQuestionnaire = currentQuestionnaire
         this.emitQuestionnaireUpdated()
@@ -224,7 +229,8 @@ export default Vue.extend({
       }
 
       if (newValue === loadStatuses.ERROR) {
-        const errorMessage = 'Erreur lors du chargement des données. Le questionnaire ne peut être affiché.'
+        const errorMessage =
+          'Erreur lors du chargement des données. Le questionnaire ne peut être affiché.'
         this.displayErrors(errorMessage)
         throw new Error('Store status is ERROR. Not loading questionnaire.')
       }
@@ -341,9 +347,11 @@ export default Vue.extend({
     _doSave() {
       const cleanPreSave = () => {
         if (this.currentQuestionnaire.end_date) {
-          this.currentQuestionnaire.end_date = moment(String(this.currentQuestionnaire.end_date)).format('YYYY-MM-DD')
+          this.currentQuestionnaire.end_date =
+            moment(String(this.currentQuestionnaire.end_date)).format('YYYY-MM-DD')
         } else {
-          delete this.currentQuestionnaire.end_date // remove empty strings, it throws date format error.
+          // remove empty strings, it throws date format error.
+          delete this.currentQuestionnaire.end_date
         }
       }
       const getCreateMethod = () => axios.post.bind(this, backend.questionnaire())
@@ -402,7 +410,8 @@ export default Vue.extend({
         })
         .catch((error) => {
           console.error('Error in draft save :', error)
-          const errorToDisplay = (error.response && error.response.data) ? error.response.data : error
+          const errorToDisplay =
+            (error.response && error.response.data) ? error.response.data : error
           this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
         })
     },
@@ -422,7 +431,8 @@ export default Vue.extend({
       this.currentQuestionnaire.is_draft = false
 
       // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
-      // This is for the user to see the wait modal and be satisfied that the saving really happened.
+      // This is for the user to see the wait modal and be satisfied that the saving really
+      // happened.
       return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
         .then(() => {
           console.debug('Done publishing questionnaire.')
@@ -436,7 +446,7 @@ export default Vue.extend({
           this.showPublishConfirmModal()
         })
     },
-    goHome(event, saveBeforeRedirect=true) {
+    goHome(event, saveBeforeRedirect = true) {
       if (!this.validateCurrentForm()) {
         return
       }
@@ -449,11 +459,9 @@ export default Vue.extend({
             // Whether or not save succeeds, navigate to home
             this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
           })
-      }
-      else {
+      } else {
         this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
       }
-
     },
   },
 })
