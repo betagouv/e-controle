@@ -220,7 +220,7 @@ export default Vue.extend({
     },
     // For all questions in vuex, set the 'order' field to match with the
     // order in the array.
-    updateOrderFields(questionArray) {
+    $_updateOrderFields(questionArray) {
       questionArray.map((question, qIndex) => {
         question.order = qIndex
       })
@@ -231,7 +231,7 @@ export default Vue.extend({
         console.error('Cannot moveQuestionUp from index', qIndex)
         return
       }
-      this._swapQuestions(themeIndex, qIndex, qIndex - 1)
+      this.$_swapQuestions(themeIndex, qIndex, qIndex - 1)
     },
     moveQuestionDown(themeIndex, qIndex) {
       console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
@@ -239,9 +239,9 @@ export default Vue.extend({
         console.error('Cannot moveQuestionDown from index', qIndex)
         return
       }
-      this._swapQuestions(themeIndex, qIndex, qIndex + 1)
+      this.$_swapQuestions(themeIndex, qIndex, qIndex + 1)
     },
-    _swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
+    $_swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
       // Set CSS class on the moving element
       const selectedElement = $('#theme-' + themeIndex + '-question-' + qIndexFrom)
       selectedElement.addClass('selected')
@@ -256,7 +256,7 @@ export default Vue.extend({
       const movingElement = array.splice(qIndexFrom, 1)[0]
       array.splice(qIndexTo, 0, movingElement)
 
-      this.updateOrderFields(this.themes[themeIndex].questions)
+      this.$_updateOrderFields(this.themes[themeIndex].questions)
     },
   },
 })
