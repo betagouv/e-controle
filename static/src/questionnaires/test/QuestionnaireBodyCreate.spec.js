@@ -59,9 +59,6 @@ describe('QuestionnaireBodyCreate.vue', () => {
         QuestionnaireBodyCreate,
         { store, localVue },
       )
-      // Mock out the animation.
-      jest.spyOn(wrapper.vm, 'animateQuestionSwap')
-      wrapper.vm.animateQuestionSwap.mockImplementation(() => true)
     })
     test('moving question down changes question order', async () => {
       const question0 = themes[0].questions[0]
