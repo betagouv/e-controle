@@ -49,9 +49,10 @@
     </questionnaire-preview>
 
     <div class="flex-row justify-content-between">
-      <button type="button"
+      <button id="go-home-button"
+              type="button"
               class="btn btn-secondary"
-              @click="goHome"
+              @click="saveDraftAndGoHome"
       >
         < Revenir à l'espace de dépôt
       </button>
@@ -125,10 +126,9 @@
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">
-        <button id="go-home-button"
-                type="button"
+        <button type="button"
                 class="btn btn-primary"
-                @click="goHome($event, saveBeforeRedirect=false)"
+                @click="goHome"
         >
           < Revenir à l'accueil
         </button>
@@ -449,22 +449,22 @@ export default Vue.extend({
           this.showPublishConfirmModal()
         })
     },
-    goHome(event, saveBeforeRedirect = true) {
+    saveDraftAndGoHome(event) {
       if (!this.validateCurrentForm()) {
         return
       }
       // Display a "loading" spinner on clicked button, while the user is redirected, so that they
       // know their click has been registered.
       $(event.target).addClass('btn-loading')
-      if (saveBeforeRedirect) {
-        this.saveDraft()
-          .then(() => {
-            // Whether or not save succeeds, navigate to home
-            this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
-          })
-      } else {
-        this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
-      }
+
+      this.saveDraft()
+        .then(() => {
+          // Whether or not save succeeds, navigate to home
+          this.goHome()
+        })
+    },
+    goHome() {
+      this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
     },
   },
 })
