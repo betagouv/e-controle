@@ -201,6 +201,7 @@ export default Vue.extend({
           control: this.controlId,
           description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
           title: '',
+          themes: [],
         }
         console.debug('currentQuestionnaire is new', newQuestionnaire)
         this.currentQuestionnaire = newQuestionnaire
@@ -290,8 +291,15 @@ export default Vue.extend({
         if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
           return
         }
-        this.saveDraft()
-        this.moveToState(STATES.CREATING_BODY)
+        this.saveDraft().then(() => {
+          // If there are no themes, add an empty theme and question, to prompt the user to add
+          // more.
+          if (this.currentQuestionnaire.themes.length === 0) {
+            this.currentQuestionnaire.themes.push({ questions: [{}] })
+          }
+          this.moveToState(STATES.CREATING_BODY)
+          return
+        })
         return
       }
       if (this.state === STATES.CREATING_BODY) {
@@ -456,7 +464,6 @@ export default Vue.extend({
       // Display a "loading" spinner on clicked button, while the user is redirected, so that they
       // know their click has been registered.
       $(event.target).addClass('btn-loading')
-
       this.saveDraft()
         .then(() => {
           // Whether or not save succeeds, navigate to home
