@@ -165,32 +165,8 @@
           </div>
         </form>
 
-        <confirm-modal id="move-themes-modal"
-                       ref="moveThemesModal"
-                       title="Réorganiser les thèmes du questionnaire"
-                       confirm-button="Ok">
-          <div class="table-responsive border">
-            <table class="table card-table">
-              <tbody>
-
-                <tr v-for="theme in themes"
-                    :key="theme.id"
-                    class="flex-row">
-                  <td>
-                    {{ theme.order + 1 }}
-                  </td>
-                  <td>
-                    <i class="fa fa-grip-lines"></i>
-                  </td>
-                  <td class="flex-grow-1">
-                    {{ theme.title }}
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
-          </div>
-        </confirm-modal>
+        <move-themes-modal ref="moveThemesModal">
+        </move-themes-modal>
 
       </div>
     </div>
@@ -204,6 +180,7 @@ import Vue from 'vue'
 import ConfirmModal from '../utils/ConfirmModal'
 import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
+import MoveThemesModal from '../themes/MoveThemesModal'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
 
@@ -225,6 +202,7 @@ export default Vue.extend({
   components: {
     ConfirmModal,
     InfoBar,
+    MoveThemesModal,
     QuestionFileList,
     QuestionFileUpload,
   },
