@@ -55,7 +55,7 @@
                         type="button"
                         class="btn btn-secondary"
                         @click="showMoveThemesModal">
-                  Réorganiser les thèmes
+                  <i class="fa fa-exchange-alt fa-rotate-90"></i>
                 </button>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
