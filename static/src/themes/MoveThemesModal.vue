@@ -5,16 +5,33 @@
       <table class="table card-table">
         <tbody>
 
-          <tr v-for="theme in themes"
+          <tr v-for="(theme, themeIndex) in themes"
               :key="theme.id"
               class="flex-row">
             <td>
-              {{ theme.order + 1 }}
+              <div class="flex-column align-items-center">
+                <button :class="{ disabled: themeIndex === 0 }"
+                  class="btn btn-secondary btn-sm move-up-button"
+                  role="button"
+                  type="button"
+                  title="Déplacer le thème vers le haut"
+                  @click="moveThemeUp(themeIndex)">
+                  <i class="fa fa-chevron-up"></i>
+                </button>
+                <div>
+                  {{ themeIndex + 1 }}
+                </div>
+                <button :class="{ disabled: themeIndex === (themes.length - 1) }"
+                  class="btn btn-secondary btn-sm move-down-button"
+                  role="button"
+                  type="button"
+                  title="Déplacer le thème vers le bas"
+                  @click="moveThemeDown(themeIndex)">
+                  <i class="fa fa-chevron-down"></i>
+                </button>
+              <div>
             </td>
-            <td>
-              <i class="fa fa-grip-lines"></i>
-            </td>
-            <td class="flex-grow-1">
+            <td class="flex-grow-1 flex-column justify-content-center">
               {{ theme.title }}
             </td>
           </tr>
