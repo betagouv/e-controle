@@ -51,7 +51,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class ThemeSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
-    order = serializers.CharField(required=False)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Theme
@@ -97,7 +97,7 @@ class ControlUpdateSerializer(serializers.ModelSerializer):
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-    order = serializers.CharField(required=False)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Question

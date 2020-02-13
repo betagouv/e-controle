@@ -31,31 +31,31 @@
 </template>
 
 <script>
-  import EmptyModal from './EmptyModal'
-  import Vue from "vue"
+import EmptyModal from './EmptyModal'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: [
-        'cancel-button',
-        'confirm-button',
-        'no-close',
-        'title',
-    ],
-    components: {
-      EmptyModal,
+export default Vue.extend({
+  props: [
+    'cancel-button',
+    'confirm-button',
+    'no-close',
+    'title',
+  ],
+  components: {
+    EmptyModal,
+  },
+  methods: {
+    confirmClicked () {
+      this.$emit('confirm')
     },
-    methods: {
-      confirmClicked () {
-        this.$emit('confirm')
-      },
-      cancelClicked () {
-        this.$emit('cancel')
-      },
-      closeModal () {
-        this.$emit('close')
-      },
-    }
-  })
+    cancelClicked () {
+      this.$emit('cancel')
+    },
+    closeModal () {
+      this.$emit('close')
+    },
+  },
+})
 
 </script>
 

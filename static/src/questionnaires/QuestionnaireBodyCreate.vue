@@ -51,6 +51,12 @@
                     <i class="fe fe-trash-2"></i>
                   </button>
                 </span>
+                <button role="button"
+                        type="button"
+                        class="btn btn-secondary"
+                        @click="showMoveThemesModal">
+                  Pouet
+                </button>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
                 Exemple : "Ressources Humaines". 255 caractères maximum.
@@ -159,6 +165,33 @@
           </div>
         </form>
 
+        <confirm-modal id="move-themes-modal"
+                       ref="moveThemesModal"
+                       title="Réorganiser les thèmes du questionnaire"
+                       confirm-button="Ok">
+          <div class="table-responsive border">
+            <table class="table card-table">
+              <tbody>
+
+                <tr v-for="theme in themes"
+                    :key="theme.id"
+                    class="flex-row">
+                  <td>
+                    {{ theme.order + 1 }}
+                  </td>
+                  <td>
+                    <i class="fa fa-grip-lines"></i>
+                  </td>
+                  <td class="flex-grow-1">
+                    {{ theme.title }}
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </confirm-modal>
+
       </div>
     </div>
 
@@ -257,6 +290,9 @@ export default Vue.extend({
       array.splice(qIndexTo, 0, movingElement)
 
       this.$_updateOrderFields(this.themes[themeIndex].questions)
+    },
+    showMoveThemesModal() {
+      $(this.$refs.moveThemesModal.$el).modal('show')
     },
   },
 })
