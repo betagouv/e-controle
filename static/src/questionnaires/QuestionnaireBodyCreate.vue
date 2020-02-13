@@ -55,7 +55,7 @@
                         type="button"
                         class="btn btn-secondary"
                         @click="showMoveThemesModal">
-                  Pouet
+                  Réorganiser les thèmes
                 </button>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
@@ -185,8 +185,6 @@ import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
 import reportValidity from 'report-validity'
 import SwapMixin from '../utils/SwapMixin'
-
-const ANIMATION_DURATION_SECONDS = 1
 
 export default Vue.extend({
   data() {
