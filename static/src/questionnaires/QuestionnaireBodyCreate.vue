@@ -232,22 +232,15 @@ export default Vue.extend({
       const form = this.$refs.form
       return reportValidity(form)
     },
-    // For all questions in vuex, set the 'order' field to match with the
-    // order in the array.
-    $_updateOrderFields(questionArray) {
-      questionArray.map((question, qIndex) => {
-        question.order = qIndex
-      })
-    },
     moveQuestionUp(themeIndex, qIndex) {
+      const array = this.themes[themeIndex].questions
       const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
-      this.swapMixin_moveItemUp(this.themes[themeIndex].questions, qIndex, selectedJqueryElement)
-      this.$_updateOrderFields(this.themes[themeIndex].questions)
+      this.swapMixin_moveItemUp(array, qIndex, selectedJqueryElement)
     },
     moveQuestionDown(themeIndex, qIndex) {
+      const array = this.themes[themeIndex].questions
       const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
-      this.swapMixin_moveItemDown(this.themes[themeIndex].questions, qIndex, selectedJqueryElement)
-      this.$_updateOrderFields(this.themes[themeIndex].questions)
+      this.swapMixin_moveItemDown(array, qIndex, selectedJqueryElement)
     },
     showMoveThemesModal() {
       $(this.$refs.moveThemesModal.$el).modal('show')
