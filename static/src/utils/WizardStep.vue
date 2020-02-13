@@ -49,7 +49,7 @@ export default Vue.extend({
 }
 
 .wizard-step-thread {
-    background-color: #dbdde0;
+    background-color: var(--gray-lighter);
     height: 0.3em;
     width: 100%;
     position: relative;
@@ -58,8 +58,8 @@ export default Vue.extend({
 }
 
 .wizard-step-bubble {
-    background-color: #dbdde0;
-    color: #495057;
+    background-color: var(--gray-lighter);
+    color: var(--text-default);
     border-radius: 50%;
     height: 2rem;
     width: 2rem;
@@ -78,24 +78,24 @@ export default Vue.extend({
     text-decoration-line: none;
 }
 .wizard-step a:hover .wizard-step-bubble, .wizard-step a:hover .wizard-step-thread {
-    background-color: #45aaf2;
-    color: white;
+    background-color: var(--info);
+    color: var(--white);
 }
 
 /* Active step */
 .active .wizard-step-thread {
-    background-color: #45aaf2;
-    color: #fff;
+    background-color: var(--info);
+    color: var(--white);
 }
 .active .wizard-step-bubble {
-    background-color: #45aaf2;
-    color: #fff;
+    background-color: var(--info);
+    color: var(--white);
 }
 
 /* Done step */
 .done .wizard-step-thread, .done .wizard-step-bubble {
-    background-color: #5eba00;
-    color: #fff;
+    background-color: var(--success);
+    color: var(--white);
 }
 .done .wizard-step-bubble .number {
     display: none;

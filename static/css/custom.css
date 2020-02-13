@@ -38,13 +38,22 @@
 }
 
 .fg-success {
-    color: #5EBB00;
+    color: var(--success);
+}
+
+/* Add tabler colors as vars. Only the main ones are in tabler. */
+:root {
+    --azure-lightest: #ecf7fe;
+    --gray-light: #aab0b6;
+    --gray-lighter: #dbdde0;
+    --gray-lightest: #F3F4FE;
+    --text-default: #495057;
 }
 
 /* Secondary button : you can't see it's disabled */
 .btn-secondary.disabled {
-    color: #aab0b6; /* gray-light */
-    background-color: #F3F4FE; /* gray-lightest */
+    color: var(--gray-light);
+    background-color: var(--gray-lightest);
     border: none;
 }
 
@@ -136,14 +145,14 @@
 .blue .vdp-datepicker__calendar .cell.selected,
 .blue .vdp-datepicker__calendar .cell.selected.highlighted,
 .blue .vdp-datepicker__calendar .cell.selected:hover {
-    background: #467fcf;
-    color: #fff;
+    background: var(--primary);
+    color: var(--white);
 }
 
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {
-    border: 1px solid #467fcf;
+    border: 1px solid var(--primary);
 }
 
 /* ResponseFileList.vue */
@@ -200,10 +209,6 @@ table.trash-list {
 
 .text-large-paragraph {
     font-size: 1.25em;
-}
-
-.white {
-    background-color: white;
 }
 
 .resize-bug {

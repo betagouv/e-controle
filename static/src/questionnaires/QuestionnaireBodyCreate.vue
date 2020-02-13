@@ -282,7 +282,7 @@ export default Vue.extend({
 }
 .question-list-move.selected {
   z-index: 999;
-  background-color: #ecf7fe; /* azure-lightest */
+  background-color: var(--azure-lightest);
 }
 
 </style>

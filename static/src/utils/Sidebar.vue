@@ -253,7 +253,7 @@ export default Vue.extend({
 
 <style>
   #sidebar-vm {
-    background-color: white;
+    background-color: var(--white);
   }
 
   /* Add borders to items */
@@ -279,12 +279,12 @@ export default Vue.extend({
   /* Style icons */
   .v-sidebar-menu.vsm_white-theme .vsm--icon,
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1 .vsm--icon {
-    color: #495057;
+    color: var(--text-default);
     background-color: white;
   }
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_exact-active .vsm--icon,
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
-    color: #495057;
+    color: var(--text-default);
     background-color: white;
   }
 
