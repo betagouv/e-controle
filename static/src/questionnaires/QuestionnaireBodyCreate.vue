@@ -183,8 +183,8 @@ import { mapFields } from 'vuex-map-fields'
 import MoveThemesModal from '../themes/MoveThemesModal'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
-
 import reportValidity from 'report-validity'
+import SwapMixin from '../utils/SwapMixin'
 
 const ANIMATION_DURATION_SECONDS = 1
 
@@ -206,6 +206,9 @@ export default Vue.extend({
     QuestionFileList,
     QuestionFileUpload,
   },
+  mixins: [
+    SwapMixin,
+  ],
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
@@ -237,36 +240,13 @@ export default Vue.extend({
       })
     },
     moveQuestionUp(themeIndex, qIndex) {
-      console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
-      if (qIndex <= 0) {
-        console.error('Cannot moveQuestionUp from index', qIndex)
-        return
-      }
-      this.$_swapQuestions(themeIndex, qIndex, qIndex - 1)
+      const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
+      this.swapMixin_moveItemUp(this.themes[themeIndex].questions, qIndex, selectedJqueryElement)
+      this.$_updateOrderFields(this.themes[themeIndex].questions)
     },
     moveQuestionDown(themeIndex, qIndex) {
-      console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
-      if (qIndex >= (this.themes[themeIndex].questions.length - 1)) {
-        console.error('Cannot moveQuestionDown from index', qIndex)
-        return
-      }
-      this.$_swapQuestions(themeIndex, qIndex, qIndex + 1)
-    },
-    $_swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
-      // Set CSS class on the moving element
-      const selectedElement = $('#theme-' + themeIndex + '-question-' + qIndexFrom)
-      selectedElement.addClass('selected')
-      setTimeout(
-        () => {
-          selectedElement.removeClass('selected')
-        },
-        ANIMATION_DURATION_SECONDS * 1000)
-
-      // Move the elements in the vuex array
-      const array = this.themes[themeIndex].questions
-      const movingElement = array.splice(qIndexFrom, 1)[0]
-      array.splice(qIndexTo, 0, movingElement)
-
+      const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
+      this.swapMixin_moveItemDown(this.themes[themeIndex].questions, qIndex, selectedJqueryElement)
       this.$_updateOrderFields(this.themes[themeIndex].questions)
     },
     showMoveThemesModal() {
@@ -278,7 +258,7 @@ export default Vue.extend({
 
 <style>
 .question-list-move {
-  transition: transform 1s; /* same as ANIMATION_DURATION_SECONDS */
+  transition: transform 1s; /* same as SwapMixin.ANIMATION_DURATION_SECONDS */
 }
 .question-list-move.selected {
   z-index: 999;

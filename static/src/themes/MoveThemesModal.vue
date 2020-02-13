@@ -3,7 +3,7 @@
                  confirm-button="Ok">
     <div class="table-responsive border">
       <table class="table card-table">
-        <tbody>
+        <transition-group name="theme-list" tag="tbody">
 
           <tr v-for="(theme, themeIndex) in themes"
               :key="theme.id"
@@ -36,7 +36,7 @@
             </td>
           </tr>
 
-        </tbody>
+        </transition-group>
       </table>
     </div>
   </confirm-modal>
@@ -55,6 +55,14 @@ export default Vue.extend({
     ...mapFields([
       'currentQuestionnaire.themes',
     ]),
+  },
+  methods: {
+    moveThemeUp() {
+
+    },
+    moveThemeDown() {
+
+    },
   },
 })
 </script>
