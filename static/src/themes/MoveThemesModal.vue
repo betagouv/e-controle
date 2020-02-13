@@ -6,6 +6,7 @@
         <transition-group name="theme-list" tag="tbody">
 
           <tr v-for="(theme, themeIndex) in themes"
+              :id="'move-themes-modal-theme-' + themeIndex"
               :key="theme.id"
               class="flex-row">
             <td>
@@ -46,23 +47,41 @@
 import ConfirmModal from '../utils/ConfirmModal'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
+import SwapMixin from '../utils/SwapMixin'
 
 export default Vue.extend({
   components: {
     ConfirmModal,
   },
+  mixins: [
+    SwapMixin,
+  ],
   computed: {
     ...mapFields([
       'currentQuestionnaire.themes',
     ]),
   },
   methods: {
-    moveThemeUp() {
-
+    moveThemeUp(themeIndex) {
+      const array = this.themes
+      const selectedJqueryElement = $('#move-themes-modal-theme-' + themeIndex)
+      this.swapMixin_moveItemUp(array, themeIndex, selectedJqueryElement)
     },
-    moveThemeDown() {
-
+    moveThemeDown(themeIndex) {
+      const array = this.themes
+      const selectedJqueryElement = $('#move-themes-modal-theme-' + themeIndex)
+      this.swapMixin_moveItemDown(array, themeIndex, selectedJqueryElement)
     },
   },
 })
 </script>
+
+<style>
+.theme-list-move {
+  transition: transform 1s; /* same as SwapMixin.ANIMATION_DURATION_SECONDS */
+}
+.theme-list-move.selected {
+  z-index: 999;
+  background-color: var(--azure-lightest);
+}
+</style>
