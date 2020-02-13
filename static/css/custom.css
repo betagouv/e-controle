@@ -26,6 +26,10 @@
     .ie-flex-column-fix {
         display: block;
     }
+
+    .ie-margin-for-footer {
+        margin-bottom: 30em !important;
+    }
 }
 
 /* Non-IE styles here. Should work for Edge. */
