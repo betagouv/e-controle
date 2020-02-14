@@ -274,6 +274,27 @@ export default Vue.extend({
     moveToState: function(newState) {
       this.clearErrors()
       this.state = newState
+
+      switch (newState) {
+        case STATES.START:
+          this.$router.push({
+            name: 'questionnaire-metadata-create',
+            params: { questionnaireId: this.currentQuestionnaire.id },
+          })
+          break
+        case STATES.CREATING_BODY:
+          this.$router.push({
+            name: 'questionnaire-body-create',
+            params: { questionnaireId: this.currentQuestionnaire.id },
+          })
+          break
+        case STATES.PREVIEW:
+          this.$router.push({
+            name: 'questionnaire-preview',
+            params: { questionnaireId: this.currentQuestionnaire.id },
+          })
+          break
+      }
     },
     next: function() {
       console.debug('Navigation "next" from', this.state)
@@ -376,6 +397,7 @@ export default Vue.extend({
       }
       return saveMethod(this.currentQuestionnaire)
     },
+    /* todo put it back
     validateCurrentForm() {
       if (this.state === STATES.PREVIEW) {
         return true
@@ -387,6 +409,7 @@ export default Vue.extend({
         return this.$refs.questionnaireBodyCreate.validateForm()
       }
     },
+    */
     saveDraftAndSwapEditor() {
       console.debug('save draft before editor swap')
       /* todo put it back
