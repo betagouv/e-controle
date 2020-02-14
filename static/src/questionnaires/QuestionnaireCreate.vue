@@ -43,7 +43,7 @@
         < Revenir à l'espace de dépôt
       </button>
       <div>
-        <button v-if="state !== STATES.START"
+        <button v-if="$route.name !== 'questionnaire-metadata-create'"
                 id="back-button"
                 @click="back"
                 class="btn btn-secondary">
@@ -54,13 +54,13 @@
           <i class="fe fe-save"></i>
           Enregistrer le brouillon
         </button>
-        <button v-if="state !== STATES.PREVIEW"
+        <button v-if="$route.name !== 'questionnaire-preview'"
                 id="next-button"
                 @click="next"
                 class="btn btn-secondary">
           Suivant >
         </button>
-        <button v-if="state === STATES.PREVIEW"
+        <button v-if="$route.name === 'questionnaire-preview'"
                 id="publishButton"
                 ref="publishButton"
                 @click="showPublishConfirmModal()"
@@ -131,9 +131,7 @@ import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
 import PublishConfirmModal from './PublishConfirmModal'
-import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
-import QuestionnairePreview from './QuestionnairePreview'
 import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
 import Wizard from '../utils/Wizard'
@@ -240,9 +238,6 @@ export default Vue.extend({
   components: {
     EmptyModal,
     PublishConfirmModal,
-    QuestionnaireBodyCreate,
-    QuestionnaireMetadataCreate,
-    QuestionnairePreview,
     SwapEditorButton,
     Wizard,
   },
