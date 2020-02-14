@@ -289,65 +289,80 @@ export default Vue.extend({
             params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
+        default:
+          console.error('moveToState: state does not exist', newState)
       }
     },
     next: function() {
       console.debug('Navigation "next" from', this.state)
-      if (this.state === STATES.START) {
-        /* todo put it back
-        if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
-          return
-        }
-        */
-        this.saveDraft().then(() => {
-          // If there are no themes, add an empty theme and question, to prompt the user to add
-          // more.
-          if (this.currentQuestionnaire.themes.length === 0) {
-            this.currentQuestionnaire.themes.push({ questions: [{}] })
+      console.debug('Navigation "next" from', this.$route.name, this.$route.meta.stepNumber)
+      switch (this.$route.meta.stepNumber) {
+        case (1):
+          /* todo put it back
+          if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
+            return
           }
-          this.moveToState(STATES.CREATING_BODY)
-          return
-        })
-        return
+          */
+          this.saveDraft().then(() => {
+            console.debug('save done, now doing state change')
+            // If there are no themes, add an empty theme and question, to prompt the user to add
+            // more.
+            if (this.currentQuestionnaire.themes.length === 0) {
+              this.currentQuestionnaire.themes.push({ questions: [{}] })
+            }
+            this.moveToState(STATES.CREATING_BODY)
+          })
+          break
+        case (2):
+          /* todo put it back
+          if (!this.$refs.questionnaireBodyCreate.validateForm()) {
+            return
+          }
+          */
+          this.saveDraft()
+          this.moveToState(STATES.PREVIEW)
+          break
+        default:
+          console.error(
+            'Trying to go to "next", from state', this.$route.name, this.$route.meta.stepNumber)
+          console.error('Trying to go to "next", from state', this.state)
       }
-      if (this.state === STATES.CREATING_BODY) {
-        /* todo put it back
-        if (!this.$refs.questionnaireBodyCreate.validateForm()) {
-          return
-        }
-        */
-        this.saveDraft()
-        this.moveToState(STATES.PREVIEW)
-        return
-      }
-      console.error('Trying to go to "next", from state', this.state)
     },
     back: function(clickedStep) {
       console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
-      if (this.state === STATES.CREATING_BODY) {
-        /* todo put it back
-        if (!this.$refs.questionnaireBodyCreate.validateForm()) {
-          return
-        }
-        */
-        this.saveDraft()
-        this.moveToState(STATES.START)
-        return
-      }
-      if (this.state === STATES.PREVIEW) {
-        if (clickedStep === 1) {
+      console.debug(
+        'Navigation "back" from',
+        this.$route.name, this.$route.meta.stepNumber,
+        'going to step', clickedStep)
+      switch (this.$route.meta.stepNumber) {
+        case (2):
+          /* todo put it back
+          if (!this.$refs.questionnaireBodyCreate.validateForm()) {
+            return
+          }
+          */
+          this.saveDraft()
           this.moveToState(STATES.START)
-          return
-        }
-        if (clickedStep === 2) {
+          break
+        case (3):
+          if (clickedStep === 1) {
+            this.moveToState(STATES.START)
+            return
+          }
+          if (clickedStep === 2) {
+            this.moveToState(STATES.CREATING_BODY)
+            return
+          }
+          // no step specified so, go to previous step by default
           this.moveToState(STATES.CREATING_BODY)
-          return
-        }
-        // no step specified so, go to previous step by default
-        this.moveToState(STATES.CREATING_BODY)
-        return
+          break
+        default:
+          console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep)
+          console.error(
+            'Trying to go back from state',
+            this.$route.name, this.$route.meta.stepNumber,
+            'with clickedStep', clickedStep)
       }
-      console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep)
     },
     displayErrors: function(errorMessage, errors) {
       this.hasErrors = true
