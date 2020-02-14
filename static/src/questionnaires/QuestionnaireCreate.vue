@@ -32,6 +32,8 @@
             @previous="back">
     </wizard>
 
+    <router-view></router-view>
+
     <questionnaire-metadata-create
             id="questionnaire-metadata-create"
             ref="questionnaireMetadataCreate"
@@ -151,6 +153,10 @@ import QuestionnairePreview from './QuestionnairePreview'
 import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
 import Wizard from '../utils/Wizard'
+import VueRouter from 'vue-router'
+
+// Needed here because of the <router-view> tag.
+Vue.use(VueRouter)
 
 // State machine
 const STATES = {
