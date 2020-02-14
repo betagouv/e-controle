@@ -24,7 +24,7 @@
     </div>
 
     <wizard id="wizard"
-            :active-step-number="this.state"
+            :active-step-number="this.$route.meta.stepNumber"
             :step-titles="['Renseigner l\'introduction',
                            'Ajouter des questions',
                            'Aperçu avant publication']"

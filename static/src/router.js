@@ -10,18 +10,21 @@ const routes = [
   },
   {
     name: 'questionnaire-metadata-create',
-    path: '/1-intro',
+    path: '/1-introduction',
     component: QuestionnaireMetadataCreate,
+    meta: { stepNumber: 1 },
   },
   {
     name: 'questionnaire-body-create',
     path: '/2-questions',
     component: QuestionnaireBodyCreate,
+    meta: { stepNumber: 2 },
   },
   {
     name: 'questionnaire-preview',
     path: '/3-apercu',
     component: QuestionnairePreview,
+    meta: { stepNumber: 3 },
   },
 ]
 
