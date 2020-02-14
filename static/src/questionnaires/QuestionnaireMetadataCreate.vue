@@ -104,10 +104,8 @@ const QuestionnaireMetadataCreate = Vue.extend({
       return
     }
     console.debug('Saving draft beforeRouteLeave')
-    this.saveDraft().then(() => {
-      console.debug('Draft saved, moving to next')
-      next()
-    })
+    this.saveDraft()
+    next()
   },
   components: {
     Datepicker,

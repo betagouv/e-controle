@@ -204,18 +204,25 @@ export default Vue.extend({
       next(false)
       return
     }
-    this.saveDraft().then(() => {
-      next()
-    })
+    this.saveDraft()
+    next()
   },
   beforeRouteEnter (to, from, next) {
-    console.debug('QuestionnaireBodyCreate beforeRouteEnter')
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
     // because it has not been created yet when this guard is called!
     next(vm => {
       // If there are no themes, add an empty theme and question, to prompt the user to add others.
-      console.debug('QuestionnaireBodyCreate beforeRouteEnter in next')
+      /*
+      Note : there is a known race condition here.
+      When arriving from QuestionnaireMetadataCreate, we have called saveDraft in beforeRouteLeave,
+      and not waited for the return. So that if the empty theme is added first, and the saveDraft
+      returns (thus updating the currentQuestionnaire) after, the empty theme will be overridden and
+      disappear.
+      To fix it, we would need to do saveDraft.then(... next() ...) but it doesn't work.
+      Since the race condition doesn't seem to happen much, and the "add empty theme" feature is
+      not critical, I'm just crossing fingers for now.
+      */
       if (vm.themes && vm.themes.length === 0) {
         vm.themes.push({ questions: [{}] })
       }
