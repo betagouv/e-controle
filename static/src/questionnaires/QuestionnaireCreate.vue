@@ -23,7 +23,14 @@
       {{ errorMessage }}
     </div>
 
-    <wizard id="wizard"
+    <div v-if="!isDataLoaded"
+         class="card py-8 flex-column align-items-center">
+      <div class="loader mb-5"></div>
+      <div>Questionnaire en chargement...</div>
+    </div>
+
+    <wizard v-if="isDataLoaded"
+            id="wizard"
             :active-step-number="this.$route.meta.stepNumber"
             :step-titles="['Renseigner l\'introduction',
                            'Ajouter des questions',
@@ -32,9 +39,11 @@
             @previous="back">
     </wizard>
 
-    <router-view></router-view>
+    <router-view v-if="isDataLoaded">
+    </router-view>
 
-    <div class="flex-row justify-content-between">
+    <div v-if="isDataLoaded"
+         class="flex-row justify-content-between">
       <button id="go-home-button"
               type="button"
               class="btn btn-secondary"
@@ -161,6 +170,7 @@ export default Vue.extend({
       errorMessage: '',
       errors: [],
       hasErrors: false,
+      isDataLoaded: false,
       message: '',
       publishError: undefined,
     }
@@ -222,9 +232,10 @@ export default Vue.extend({
       if (newValue === loadStatuses.SUCCESS) {
         if (typeof this.questionnaireId === 'undefined') {
           loadNewQuestionnaire()
-          return
+        } else {
+          loadExistingQuestionnaire()
         }
-        loadExistingQuestionnaire()
+        this.isDataLoaded = true
       }
     },
   },
