@@ -1,6 +1,7 @@
 import QuestionnaireBodyCreate from './questionnaires/QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './questionnaires/QuestionnaireMetadataCreate'
 import QuestionnairePreview from './questionnaires/QuestionnairePreview'
+import VueRouter from 'vue-router'
 
 const routes = [
   {
@@ -9,19 +10,23 @@ const routes = [
   },
   {
     name: 'questionnaire-metadata-create',
-    path: '/questionnaire/modifier/:questionnaireId/#1-intro',
+    path: '/1-intro',
     component: QuestionnaireMetadataCreate,
   },
   {
     name: 'questionnaire-body-create',
-    path: '/questionnaire/modifier/:questionnaireId/#2-questions',
+    path: '/2-questions',
     component: QuestionnaireBodyCreate,
   },
   {
     name: 'questionnaire-preview',
-    path: '/questionnaire/modifier/:questionnaireId/#3-apercu',
+    path: '/3-apercu',
     component: QuestionnairePreview,
   },
 ]
 
-export default routes
+const router = new VueRouter({
+  routes,
+})
+
+export default router

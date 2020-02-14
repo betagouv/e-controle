@@ -3,17 +3,13 @@ import './utils/polyfills.js'
 
 import { store } from './store'
 import QuestionnaireCreate from './questionnaires/QuestionnaireCreate.vue'
-import routes from './routes'
+import router from './router'
 import Vue from 'vue/dist/vue.js'
 import VueRouter from 'vue-router'
 import Vuex, { mapActions } from 'vuex'
 
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
-const router = new VueRouter({
-  routes,
-})
 
 // Note : the parcel builds (build-questionnaire-create and watch-questionnaire-create) use
 // --no-source-maps, because vuejs-datepicker breaks parcel without it.
