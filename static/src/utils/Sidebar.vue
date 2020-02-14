@@ -29,6 +29,11 @@
         <control-create></control-create>
       </div>
 
+      <div v-if="isLoaded && controls.length === 0"
+           class="ie-margin-for-footer">
+        <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
+      </div>
+
       <div v-if="!collapsed && !isLoaded && !hasError"
           class="sidebar-load-message card-header border-0 mt-4 mb-4">
         <div class="loader mr-2"></div>
