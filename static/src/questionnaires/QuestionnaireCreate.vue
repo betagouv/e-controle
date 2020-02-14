@@ -176,6 +176,9 @@ export default Vue.extend({
     controlsLoadStatus(newValue, oldValue) {
       const loadNewQuestionnaire = () => {
         console.debug('loadNewQuestionnaire')
+        if (this.$route.meta.stepNumber !== '1') {
+          this.moveToState(1)
+        }
         const newQuestionnaire = {
           control: this.controlId,
           description: QuestionnaireMetadataCreate.DESCRIPTION_DEFAULT,
@@ -185,7 +188,6 @@ export default Vue.extend({
         console.debug('currentQuestionnaire is new', newQuestionnaire)
         this.currentQuestionnaire = newQuestionnaire
         this.emitQuestionnaireUpdated()
-        // Todo move to a state?
         return
       }
 
@@ -208,7 +210,6 @@ export default Vue.extend({
         }
         this.currentQuestionnaire = currentQuestionnaire
         this.emitQuestionnaireUpdated()
-        // Todo move to a state?
       }
 
       if (newValue === loadStatuses.ERROR) {
