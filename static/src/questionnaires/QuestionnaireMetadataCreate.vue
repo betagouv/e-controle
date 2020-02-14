@@ -8,7 +8,7 @@
         <form ref="form">
           <div class="form-group">
             <label class="form-label" id="questionnaireTitle">
-              Quel titre souhaitez vous donner au questionnaire n°{{ questionnaireNumbering }} ?
+              Quel titre souhaitez vous donner au questionnaire n°{{ numbering }} ?
               <span class="form-required">*</span>
             </label>
             <span class="text-muted" id="questionnaireTitleHelp">
@@ -27,7 +27,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" id="questionnaireDescription">
-              Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
+              Vous pouvez modifier le texte d'introduction du questionnaire n°{{ numbering }}, si vous le souhaitez :
             </label>
             <textarea class="form-control"
                       aria-labelledby="questionnaireDescription"
@@ -72,9 +72,6 @@ parvenir au fur et à mesure votre réponse. \
 services pour toute information complémentaire qu’appellerait ce questionnaire.'
 
 const QuestionnaireMetadataCreate = Vue.extend({
-  props: {
-    questionnaireNumbering: Number,
-  },
   data() {
     return {
       errors: [],
@@ -85,6 +82,7 @@ const QuestionnaireMetadataCreate = Vue.extend({
     ...mapFields([
       'currentQuestionnaire.description',
       'currentQuestionnaire.end_date',
+      'currentQuestionnaire.numbering',
       'currentQuestionnaire.title',
     ]),
   },
