@@ -34,22 +34,6 @@
 
     <router-view></router-view>
 
-    <questionnaire-metadata-create
-            id="questionnaire-metadata-create"
-            ref="questionnaireMetadataCreate"
-            :questionnaire-numbering="questionnaireNumbering"
-            v-show="state === STATES.START">
-    </questionnaire-metadata-create>
-    <questionnaire-body-create
-            id="questionnaire-body-create"
-            ref="questionnaireBodyCreate"
-            v-show="state === STATES.CREATING_BODY">
-    </questionnaire-body-create>
-    <questionnaire-preview
-            id="questionnaire-preview"
-            v-show="state === STATES.PREVIEW">
-    </questionnaire-preview>
-
     <div class="flex-row justify-content-between">
       <button id="go-home-button"
               type="button"
@@ -294,9 +278,11 @@ export default Vue.extend({
     next: function() {
       console.debug('Navigation "next" from', this.state)
       if (this.state === STATES.START) {
+        /* todo put it back
         if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
           return
         }
+        */
         this.saveDraft().then(() => {
           // If there are no themes, add an empty theme and question, to prompt the user to add
           // more.
@@ -309,9 +295,11 @@ export default Vue.extend({
         return
       }
       if (this.state === STATES.CREATING_BODY) {
+        /* todo put it back
         if (!this.$refs.questionnaireBodyCreate.validateForm()) {
           return
         }
+        */
         this.saveDraft()
         this.moveToState(STATES.PREVIEW)
         return
@@ -321,9 +309,11 @@ export default Vue.extend({
     back: function(clickedStep) {
       console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
       if (this.state === STATES.CREATING_BODY) {
+        /* todo put it back
         if (!this.$refs.questionnaireBodyCreate.validateForm()) {
           return
         }
+        */
         this.saveDraft()
         this.moveToState(STATES.START)
         return
@@ -399,18 +389,22 @@ export default Vue.extend({
     },
     saveDraftAndSwapEditor() {
       console.debug('save draft before editor swap')
+      /* todo put it back
       if (!this.validateCurrentForm()) {
         return
       }
+      */
       this.saveDraft()
         .then(savedQuestionnaire => {
           this.$emit('show-swap-editor-modal', savedQuestionnaire.id)
         })
     },
     validateFormAndSaveDraft() {
+      /* todo put it back
       if (!this.validateCurrentForm()) {
         return
       }
+      */
       this.saveDraft()
     },
     saveDraft() {
@@ -464,9 +458,11 @@ export default Vue.extend({
         })
     },
     saveDraftAndGoHome(event) {
+      /* todo put it back
       if (!this.validateCurrentForm()) {
         return
       }
+      */
       // Display a "loading" spinner on clicked button, while the user is redirected, so that they
       // know their click has been registered.
       $(event.target).addClass('btn-loading')
