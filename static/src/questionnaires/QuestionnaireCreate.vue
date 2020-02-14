@@ -140,13 +140,6 @@ import VueRouter from 'vue-router'
 // Needed here because of the <router-view> tag.
 Vue.use(VueRouter)
 
-// State machine
-const STATES = {
-  START: 1,
-  CREATING_BODY: 2,
-  PREVIEW: 3,
-}
-
 const PUBLISH_TIME_MILLIS = 3000
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -167,8 +160,6 @@ export default Vue.extend({
       errorMessage: '',
       errors: [],
       hasErrors: false,
-      STATES: STATES,
-      state: '',
       message: '',
       publishError: undefined,
     }
@@ -194,7 +185,7 @@ export default Vue.extend({
         console.debug('currentQuestionnaire is new', newQuestionnaire)
         this.currentQuestionnaire = newQuestionnaire
         this.emitQuestionnaireUpdated()
-        this.moveToState(STATES.START)
+        // Todo move to a state?
         return
       }
 
@@ -217,7 +208,7 @@ export default Vue.extend({
         }
         this.currentQuestionnaire = currentQuestionnaire
         this.emitQuestionnaireUpdated()
-        this.moveToState(STATES.START)
+        // Todo move to a state?
       }
 
       if (newValue === loadStatuses.ERROR) {
@@ -266,35 +257,33 @@ export default Vue.extend({
     emitQuestionnaireUpdated: function() {
       this.$emit('questionnaire-updated', this.currentQuestionnaire)
     },
-    moveToState: function(newState) {
+    moveToState: function(stepNumber) {
       this.clearErrors()
-      this.state = newState
 
-      switch (newState) {
-        case STATES.START:
+      switch (stepNumber) {
+        case 1:
           this.$router.push({
             name: 'questionnaire-metadata-create',
             params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
-        case STATES.CREATING_BODY:
+        case 2:
           this.$router.push({
             name: 'questionnaire-body-create',
             params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
-        case STATES.PREVIEW:
+        case 3:
           this.$router.push({
             name: 'questionnaire-preview',
             params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
         default:
-          console.error('moveToState: state does not exist', newState)
+          console.error('moveToState: state does not exist', stepNumber)
       }
     },
     next: function() {
-      console.debug('Navigation "next" from', this.state)
       console.debug('Navigation "next" from', this.$route.name, this.$route.meta.stepNumber)
       switch (this.$route.meta.stepNumber) {
         case (1):
@@ -310,7 +299,7 @@ export default Vue.extend({
             if (this.currentQuestionnaire.themes.length === 0) {
               this.currentQuestionnaire.themes.push({ questions: [{}] })
             }
-            this.moveToState(STATES.CREATING_BODY)
+            this.moveToState(2)
           })
           break
         case (2):
@@ -320,16 +309,14 @@ export default Vue.extend({
           }
           */
           this.saveDraft()
-          this.moveToState(STATES.PREVIEW)
+          this.moveToState(3)
           break
         default:
           console.error(
             'Trying to go to "next", from state', this.$route.name, this.$route.meta.stepNumber)
-          console.error('Trying to go to "next", from state', this.state)
       }
     },
     back: function(clickedStep) {
-      console.debug('Navigation "back" from', this.state, 'going to step', clickedStep)
       console.debug(
         'Navigation "back" from',
         this.$route.name, this.$route.meta.stepNumber,
@@ -342,22 +329,21 @@ export default Vue.extend({
           }
           */
           this.saveDraft()
-          this.moveToState(STATES.START)
+          this.moveToState(1)
           break
         case (3):
           if (clickedStep === 1) {
-            this.moveToState(STATES.START)
+            this.moveToState(1)
             return
           }
           if (clickedStep === 2) {
-            this.moveToState(STATES.CREATING_BODY)
+            this.moveToState(2)
             return
           }
           // no step specified so, go to previous step by default
-          this.moveToState(STATES.CREATING_BODY)
+          this.moveToState(2)
           break
         default:
-          console.error('Trying to go back from state', this.state, 'with clickedStep', clickedStep)
           console.error(
             'Trying to go back from state',
             this.$route.name, this.$route.meta.stepNumber,
