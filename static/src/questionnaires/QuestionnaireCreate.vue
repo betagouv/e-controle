@@ -278,25 +278,23 @@ export default Vue.extend({
     },
     moveToState: function(stepNumber) {
       this.clearErrors()
+      console.debug('moveToState', stepNumber)
 
       // todo simplify this by searching by stepNumber in the routes.
       switch (stepNumber) {
         case 1:
           this.$router.push({
             name: 'questionnaire-metadata-create',
-            params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
         case 2:
           this.$router.push({
             name: 'questionnaire-body-create',
-            params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
         case 3:
           this.$router.push({
             name: 'questionnaire-preview',
-            params: { questionnaireId: this.currentQuestionnaire.id },
           })
           break
         default:
