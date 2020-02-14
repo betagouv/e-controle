@@ -195,6 +195,30 @@ export default Vue.extend({
     QuestionFileList,
     QuestionFileUpload,
   },
+  beforeRouteLeave (to, from, next) {
+    // called when the route that renders this component is about to
+    // be navigated away from.
+    // Block navigation to next if form is not valid.
+    if (!this.validateForm()) {
+      next(false)
+      return
+    }
+    this.saveDraft().then(() => {
+      next()
+    })
+  },
+  beforeRouteEnter (to, from, next) {
+    // called before the route that renders this component is confirmed.
+    // does NOT have access to `this` component instance,
+    // because it has not been created yet when this guard is called!
+    next(vm => {
+      // If there are no themes, add an empty theme and question, to prompt the user to add others.
+      if (vm.themes && vm.themes.length === 0) {
+        vm.themes.push({ questions: [{}] })
+      }
+    })
+  },
+  inject: ['saveDraft'],
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)

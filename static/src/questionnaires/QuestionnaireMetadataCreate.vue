@@ -86,12 +86,25 @@ const QuestionnaireMetadataCreate = Vue.extend({
       'currentQuestionnaire.title',
     ]),
   },
+  inject: ['saveDraft'],
   methods: {
     // Used in QuestionnaireCreate.
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)
     },
+  },
+  beforeRouteLeave (to, from, next) {
+    // called when the route that renders this component is about to
+    // be navigated away from.
+    // Block navigation to next if form is not valid.
+    if (!this.validateForm()) {
+      next(false)
+      return
+    }
+    this.saveDraft().then(() => {
+      next()
+    })
   },
   components: {
     Datepicker,

@@ -233,6 +233,12 @@ export default Vue.extend({
     SwapEditorButton,
     Wizard,
   },
+  // Functions that can be used by child components, using "inject".
+  provide: function () {
+    return {
+      saveDraft: this.saveDraft,
+    }
+  },
   mounted() {
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
@@ -261,6 +267,7 @@ export default Vue.extend({
     moveToState: function(stepNumber) {
       this.clearErrors()
 
+      // todo simplify this by searching by stepNumber in the routes.
       switch (stepNumber) {
         case 1:
           this.$router.push({
@@ -286,30 +293,12 @@ export default Vue.extend({
     },
     next: function() {
       console.debug('Navigation "next" from', this.$route.name, this.$route.meta.stepNumber)
+      // todo simplify this : just moveToState(current + 1)
       switch (this.$route.meta.stepNumber) {
         case (1):
-          /* todo put it back
-          if (!this.$refs.questionnaireMetadataCreate.validateForm()) {
-            return
-          }
-          */
-          this.saveDraft().then(() => {
-            console.debug('save done, now doing state change')
-            // If there are no themes, add an empty theme and question, to prompt the user to add
-            // more.
-            if (this.currentQuestionnaire.themes.length === 0) {
-              this.currentQuestionnaire.themes.push({ questions: [{}] })
-            }
-            this.moveToState(2)
-          })
+          this.moveToState(2)
           break
         case (2):
-          /* todo put it back
-          if (!this.$refs.questionnaireBodyCreate.validateForm()) {
-            return
-          }
-          */
-          this.saveDraft()
           this.moveToState(3)
           break
         default:
@@ -322,14 +311,9 @@ export default Vue.extend({
         'Navigation "back" from',
         this.$route.name, this.$route.meta.stepNumber,
         'going to step', clickedStep)
+      // todo simplify this : just moveToState(current - 1) unless jumping states
       switch (this.$route.meta.stepNumber) {
         case (2):
-          /* todo put it back
-          if (!this.$refs.questionnaireBodyCreate.validateForm()) {
-            return
-          }
-          */
-          this.saveDraft()
           this.moveToState(1)
           break
         case (3):
