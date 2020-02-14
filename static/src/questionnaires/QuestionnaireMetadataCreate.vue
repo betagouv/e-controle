@@ -72,6 +72,7 @@ parvenir au fur et à mesure votre réponse. \
 services pour toute information complémentaire qu’appellerait ce questionnaire.'
 
 const QuestionnaireMetadataCreate = Vue.extend({
+  name: 'QuestionnaireMetadataCreate',
   data() {
     return {
       errors: [],
@@ -102,7 +103,9 @@ const QuestionnaireMetadataCreate = Vue.extend({
       next(false)
       return
     }
+    console.debug('Saving draft beforeRouteLeave')
     this.saveDraft().then(() => {
+      console.debug('Draft saved, moving to next')
       next()
     })
   },

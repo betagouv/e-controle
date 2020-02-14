@@ -145,6 +145,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
 export default Vue.extend({
+  name: 'QuestionnaireCreate',
   props: {
     controlId: Number,
     controlHasMultipleInspectors: Boolean,

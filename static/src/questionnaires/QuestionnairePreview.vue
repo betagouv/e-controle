@@ -19,6 +19,7 @@ import { mapFields } from 'vuex-map-fields'
 import QuestionnaireDetailForPreview from './QuestionnaireDetailForPreview'
 
 export default Vue.extend({
+  name: 'QuestionnairePreview',
   computed: {
     ...mapFields([
       'currentQuestionnaire',

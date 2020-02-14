@@ -179,6 +179,7 @@ import reportValidity from 'report-validity'
 const ANIMATION_DURATION_SECONDS = 1
 
 export default Vue.extend({
+  name: 'QuestionnaireBodyCreate',
   data() {
     return {
       errors: [],
@@ -208,11 +209,13 @@ export default Vue.extend({
     })
   },
   beforeRouteEnter (to, from, next) {
+    console.debug('QuestionnaireBodyCreate beforeRouteEnter')
     // called before the route that renders this component is confirmed.
     // does NOT have access to `this` component instance,
     // because it has not been created yet when this guard is called!
     next(vm => {
       // If there are no themes, add an empty theme and question, to prompt the user to add others.
+      console.debug('QuestionnaireBodyCreate beforeRouteEnter in next')
       if (vm.themes && vm.themes.length === 0) {
         vm.themes.push({ questions: [{}] })
       }
