@@ -29,6 +29,7 @@
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.1.5",
     "vue-sidebar-menu": "^4.4.7",
     "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.1.2",
