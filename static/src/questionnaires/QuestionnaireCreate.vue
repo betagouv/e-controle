@@ -4,7 +4,7 @@
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
     </swap-editor-button>
-    <div class="page-header">
+    <div class="page-header bg-success sticky-top-ie" style="z-index: 999;">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
         <span v-if="currentQuestionnaire.is_draft || currentQuestionnaire.id === undefined"
@@ -49,7 +49,7 @@
     </questionnaire-preview>
 
     <div id="bottom-bar"
-         class="flex-column sticky-bottom bg-white border-top p-4 gutters-md">
+         class="flex-column bg-white border-top p-4 gutters-md">
       <div id="button-bar" class="flex-row justify-content-between">
         <button id="go-home-button"
                 type="button"
@@ -269,6 +269,53 @@ export default Vue.extend({
     Wizard,
   },
   mounted() {
+    // Take first element with classname and makes it sticky-top.
+    const makeStickyTop = (className, marginTopPx) => {
+      const element = document.getElementsByClassName(className)[0]
+      const topPx = element.getBoundingClientRect().top
+      const leftPx = element.getBoundingClientRect().left
+      console.log('sticky-top-ie', topPx, leftPx, marginTopPx)
+
+      $(document).scroll(function() {
+        var scrollDistance = $(document).scrollTop()
+        var stickyMenu = $('.' + className)
+        if (scrollDistance >= (topPx - marginTopPx)) {
+          stickyMenu.css({
+            position: 'fixed',
+            top: '0',
+            left: '' + leftPx,
+          })
+        } else {
+          stickyMenu.css('position', 'relative')
+        }
+      })
+    }
+
+    const makeStickyBottom = (elementId, marginTopPx) => {
+      const element = document.getElementById(elementId)
+      const bottomPx = element.getBoundingClientRect().bottom
+      const leftPx = element.getBoundingClientRect().left
+      console.log('makeStickyBottom', bottomPx, leftPx, marginTopPx)
+
+      $(document).scroll(function() {
+        var scrollDistance = $(document).scrollTop()
+        var viewPortHeight = $(window).height()
+        var stickyMenu = $('#' + elementId)
+        if ((scrollDistance + viewPortHeight) <= (bottomPx - marginTopPx)) {
+          stickyMenu.css({
+            position: 'fixed',
+            bottom: '0',
+            left: '' + leftPx,
+          })
+        } else {
+          stickyMenu.css('position', 'relative')
+        }
+      })
+    }
+
+    makeStickyTop('sticky-top-ie', 24)
+    makeStickyBottom('bottom-bar', 0)
+
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
     if (this.controlId === undefined && this.questionnaireId === undefined) {
