@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+import backendUrls from '../utils/backend'
 import ConfirmModal from '../utils/ConfirmModal'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
@@ -66,11 +68,25 @@ export default Vue.extend({
       const array = this.themes
       const selectedJqueryElement = $('#move-themes-modal-theme-' + themeIndex)
       this.swapMixin_moveItemUp(array, themeIndex, selectedJqueryElement)
+      this.saveThemeOrder(themeIndex)
+      this.saveThemeOrder(themeIndex - 1)
     },
     moveThemeDown(themeIndex) {
       const array = this.themes
       const selectedJqueryElement = $('#move-themes-modal-theme-' + themeIndex)
       this.swapMixin_moveItemDown(array, themeIndex, selectedJqueryElement)
+      this.saveThemeOrder(themeIndex)
+      this.saveThemeOrder(themeIndex + 1)
+    },
+    saveThemeOrder(themeIndex) {
+      const theme = this.themes[themeIndex]
+      return axios.put(
+        backendUrls.theme(theme.id),
+        {
+          title: theme.title, // title is required, so add it even though we're not changing it
+          order: theme.order,
+        })
+      // Todo deal with errors
     },
   },
 })
