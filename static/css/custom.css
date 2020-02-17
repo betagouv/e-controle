@@ -51,6 +51,11 @@
     }
 }
 
+.gutters-md {
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+}
+
 /* Add tabler colors as vars. Only the main ones are in tabler. */
 :root {
     --azure-lightest: #ecf7fe;

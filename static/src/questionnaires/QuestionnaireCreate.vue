@@ -48,55 +48,58 @@
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
-    <div id="button-bar" class="flex-row justify-content-between sticky-bottom bg-white">
-      <button id="go-home-button"
-              type="button"
-              class="btn btn-secondary"
-              @click="saveDraftAndGoHome"
-      >
-        < Revenir à l'espace de dépôt
-      </button>
-      <div>
-        <button v-if="state !== STATES.START"
-                id="back-button"
-                @click="back"
-                class="btn btn-secondary">
-          < Retour
-        </button>
-        <button v-if="state === STATES.CREATING_BODY"
-                role="button"
+    <div id="bottom-bar"
+         class="flex-column sticky-bottom bg-white border-top p-4 gutters-md">
+      <div id="button-bar" class="flex-row justify-content-between">
+        <button id="go-home-button"
                 type="button"
                 class="btn btn-secondary"
-                @click="saveAndShowMoveThemesModal"
-                title="Réorganiser les thèmes">
-          <i class="fa fa-exchange-alt fa-rotate-90"></i>
-          Réorganiser les thèmes
+                @click="saveDraftAndGoHome"
+        >
+          < Revenir à l'espace de dépôt
         </button>
-        <button @click="validateFormAndSaveDraft"
-                class="btn btn-primary">
-          <i class="fe fe-save"></i>
-          Enregistrer le brouillon
-        </button>
-        <button v-if="state !== STATES.PREVIEW"
-                id="next-button"
-                @click="next"
-                class="btn btn-secondary">
-          Suivant >
-        </button>
-        <button v-if="state === STATES.PREVIEW"
-                id="publishButton"
-                ref="publishButton"
-                @click="showPublishConfirmModal()"
-                class="btn btn-primary ml-5"
-                title="Publier le questionnaire à l'organisme interrogé">
-          <i class="fa fa-rocket mr-1"></i>
-          Publier
-        </button>
+        <div>
+          <button v-if="state !== STATES.START"
+                  id="back-button"
+                  @click="back"
+                  class="btn btn-secondary">
+            < Retour
+          </button>
+          <button v-if="state === STATES.CREATING_BODY"
+                  role="button"
+                  type="button"
+                  class="btn btn-secondary"
+                  @click="saveAndShowMoveThemesModal"
+                  title="Réorganiser les thèmes">
+            <i class="fa fa-exchange-alt fa-rotate-90"></i>
+            Réorganiser les thèmes
+          </button>
+          <button @click="validateFormAndSaveDraft"
+                  class="btn btn-primary">
+            <i class="fe fe-save"></i>
+            Enregistrer le brouillon
+          </button>
+          <button v-if="state !== STATES.PREVIEW"
+                  id="next-button"
+                  @click="next"
+                  class="btn btn-secondary">
+            Suivant >
+          </button>
+          <button v-if="state === STATES.PREVIEW"
+                  id="publishButton"
+                  ref="publishButton"
+                  @click="showPublishConfirmModal()"
+                  class="btn btn-primary ml-5"
+                  title="Publier le questionnaire à l'organisme interrogé">
+            <i class="fa fa-rocket mr-1"></i>
+            Publier
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="flex-row justify-content-end mt-2">
-      <div class="text-muted">
-        {{ message }}
+      <div class="flex-row justify-content-end mt-2">
+        <div class="text-muted" style="min-height: 1.5rem;">
+          {{ saveMessage }}
+        </div>
       </div>
     </div>
 
@@ -190,7 +193,7 @@ export default Vue.extend({
       hasErrors: false,
       STATES: STATES,
       state: '',
-      message: '',
+      saveMessage: '',
       publishError: undefined,
     }
   },
@@ -361,8 +364,8 @@ export default Vue.extend({
       this.errors = []
       this.errorMessage = ''
     },
-    clearMessages() {
-      this.message = ''
+    clearSaveMessage() {
+      this.saveMessage = ''
     },
     _doSave() {
       const cleanPreSave = () => {
@@ -425,7 +428,7 @@ export default Vue.extend({
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
-          this.message = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          this.saveMessage = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
           return response.data
         })
         .catch((error) => {
