@@ -51,12 +51,6 @@
                     <i class="fe fe-trash-2"></i>
                   </button>
                 </span>
-                <button role="button"
-                        type="button"
-                        class="btn btn-secondary"
-                        @click="showMoveThemesModal">
-                  <i class="fa fa-exchange-alt fa-rotate-90"></i>
-                </button>
               </div>
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
                 Exemple : "Ressources Humaines". 255 caractères maximum.
@@ -239,9 +233,6 @@ export default Vue.extend({
       const array = this.themes[themeIndex].questions
       const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
       this.swapMixin_moveItemDown(array, qIndex, selectedJqueryElement)
-    },
-    showMoveThemesModal() {
-      $(this.$refs.moveThemesModal.$el).modal('show')
     },
   },
 })

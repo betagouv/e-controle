@@ -63,6 +63,15 @@
                 class="btn btn-secondary">
           < Retour
         </button>
+        <button v-if="state === STATES.CREATING_BODY"
+                role="button"
+                type="button"
+                class="btn btn-secondary"
+                @click="showMoveThemesModal"
+                title="Réorganiser les thèmes">
+          <i class="fa fa-exchange-alt fa-rotate-90"></i>
+          Réorganiser les thèmes
+        </button>
         <button @click="validateFormAndSaveDraft"
                 class="btn btn-primary">
           <i class="fe fe-save"></i>
@@ -472,6 +481,9 @@ export default Vue.extend({
     },
     goHome() {
       this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+    },
+    showMoveThemesModal() {
+      $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
     },
   },
 })
