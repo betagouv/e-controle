@@ -67,7 +67,7 @@
                 role="button"
                 type="button"
                 class="btn btn-secondary"
-                @click="showMoveThemesModal"
+                @click="saveAndShowMoveThemesModal"
                 title="Réorganiser les thèmes">
           <i class="fa fa-exchange-alt fa-rotate-90"></i>
           Réorganiser les thèmes
@@ -482,8 +482,14 @@ export default Vue.extend({
     goHome() {
       this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
     },
-    showMoveThemesModal() {
-      $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
+    saveAndShowMoveThemesModal() {
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      this.saveDraft()
+        .then(() => {
+          $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
+        })
     },
   },
 })
