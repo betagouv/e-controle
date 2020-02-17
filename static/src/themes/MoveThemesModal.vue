@@ -1,6 +1,9 @@
 <template>
   <confirm-modal title="Réorganiser les thèmes du questionnaire"
                  confirm-button="Ok">
+    <error-bar v-if="errorMessage !== undefined" noclose="true">
+      {{ errorMessage }}
+    </error-bar>
     <div class="table-responsive border">
       <table class="table card-table">
         <transition-group name="theme-list" tag="tbody">
@@ -47,6 +50,7 @@
 import axios from 'axios'
 import backendUrls from '../utils/backend'
 import ConfirmModal from '../utils/ConfirmModal'
+import ErrorBar from '../utils/ErrorBar'
 import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
 import SwapMixin from '../utils/SwapMixin'
@@ -54,10 +58,16 @@ import SwapMixin from '../utils/SwapMixin'
 export default Vue.extend({
   components: {
     ConfirmModal,
+    ErrorBar,
   },
   mixins: [
     SwapMixin,
   ],
+  data() {
+    return {
+      errorMessage: undefined,
+    }
+  },
   computed: {
     ...mapFields([
       'currentQuestionnaire.themes',
@@ -78,7 +88,11 @@ export default Vue.extend({
       this.saveThemeOrder(themeIndex)
       this.saveThemeOrder(themeIndex + 1)
     },
+    clearError() {
+      this.errorMessage = undefined
+    },
     saveThemeOrder(themeIndex) {
+      this.clearError()
       const theme = this.themes[themeIndex]
       return axios.put(
         backendUrls.theme(theme.id),
@@ -86,7 +100,10 @@ export default Vue.extend({
           title: theme.title, // title is required, so add it even though we're not changing it
           order: theme.order,
         })
-      // Todo deal with errors
+        .catch(err => {
+          this.errorMessage = 'Erreur lors de l\'enregistrement du thème : ' +
+            (err.message ? err.message : JSON.stringify(err))
+        })
     },
   },
 })
