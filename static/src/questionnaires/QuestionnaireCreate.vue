@@ -48,7 +48,7 @@
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
-    <div class="flex-row justify-content-between">
+    <div id="button-bar" class="flex-row justify-content-between sticky-bottom bg-white">
       <button id="go-home-button"
               type="button"
               class="btn btn-secondary"
