@@ -297,11 +297,14 @@ export default Vue.extend({
       const leftPx = element.getBoundingClientRect().left
       console.log('makeStickyBottom', bottomPx, leftPx, marginTopPx)
 
+      // TODO : add an empty space in the DOM where the sticky element will be when fixed.
+      // TODO : element is behind.
       $(document).scroll(function() {
         var scrollDistance = $(document).scrollTop()
         var viewPortHeight = $(window).height()
         var stickyMenu = $('#' + elementId)
-        if ((scrollDistance + viewPortHeight) <= (bottomPx - marginTopPx)) {
+        console.log('makeStickyBottom', scrollDistance, viewPortHeight, bottomPx, scrollDistance + viewPortHeight, $(document).height(), $(document).height() + bottomPx)
+        if ((scrollDistance + viewPortHeight) <= ($(document).height() + bottomPx - marginTopPx)) {
           stickyMenu.css({
             position: 'fixed',
             bottom: '0',
