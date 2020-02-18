@@ -4,7 +4,7 @@
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
     </swap-editor-button>
-    <div class="page-header bg-success sticky-top-ie" style="z-index: 999;">
+    <div class="page-header">
       <div class="page-title flex-wrap">
         <i class="fe fe-list mr-2"></i>
         <span v-if="currentQuestionnaire.is_draft || currentQuestionnaire.id === undefined"
@@ -48,10 +48,8 @@
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
-    <div style="min-height: 104px; background-color: red !important;"></div>
     <div id="bottom-bar"
-         class="flex-column bg-white border-top p-4 gutters-md"
-         style="background-color: orange !important; position: absolute; bottom: 140px;">
+         class="flex-column bg-success border-top p-4 gutters-md">
       <div id="button-bar" class="flex-row justify-content-between">
         <button id="go-home-button"
                 type="button"
@@ -271,41 +269,21 @@ export default Vue.extend({
     Wizard,
   },
   mounted() {
-    // Take first element with classname and makes it sticky-top.
-/*    const makeStickyTop = (className, marginTopPx) => {
-      const element = document.getElementsByClassName(className)[0]
-      const topPx = element.getBoundingClientRect().top
-      const leftPx = element.getBoundingClientRect().left
-      console.log('sticky-top-ie', topPx, leftPx, marginTopPx)
-
-      $(document).scroll(function() {
-        var scrollDistance = $(document).scrollTop()
-        var stickyMenu = $('.' + className)
-        if (scrollDistance >= (topPx - marginTopPx)) {
-          stickyMenu.css({
-            position: 'fixed',
-            top: '0',
-            left: '' + leftPx,
-          })
-        } else {
-          stickyMenu.css('position', 'relative')
-        }
-      })
-    }*/
-
     const makeStickyBottom = (elementId) => {
       const element = document.getElementById(elementId)
       const elementHeightPx = 104 // todo get programmatically
 
       // Create a placeholder element of the same height as the fixed element.
-/*      const placeholderElement = document.createElement('div')
+      const placeholderElement = document.createElement('div')
       placeholderElement.setAttribute('style', 'min-height: ' + elementHeightPx + 'px; background-color: red;')
       element.parentNode.insertBefore(placeholderElement, element)
-*/
-      const bottomPx = element.getBoundingClientRect().bottom
+
+      // Position the element on top of the placeholder.
+      element.setAttribute('style', 'position: absolute; bottom: 140px;')
+
+//      const bottomPx = element.getBoundingClientRect().bottom
       const leftPx = element.getBoundingClientRect().left
 
-      console.log('makeStickyBottom', bottomPx, leftPx)
       const heightOfFooterPx = 140
 
       $(document).scroll(function() {
@@ -328,7 +306,6 @@ export default Vue.extend({
       })
     }
 
-//    makeStickyTop('sticky-top-ie', 24)
     makeStickyBottom('bottom-bar', 0)
 
     console.debug('questionnaireId', this.questionnaireId)
