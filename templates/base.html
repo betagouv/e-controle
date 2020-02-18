@@ -54,17 +54,10 @@
         {% block page_top_nav %}
         {% endblock page_top_nav %}
 
-        {% block page_main_container %}
-          <div class="mt-3 mt-md-5">
-            <div class="container">
-              {% block page_title %}
-              {% endblock page_title %}
-
-              {% block page_content %}
-              {% endblock page_content %}
-            </div>
-          </div>
-        {% endblock page_main_container %}
+        <div class="mt-3 mt-md-5">
+          {% block page_main_container %}
+          {% endblock page_main_container %}
+        </div>
       </div>  <!--// closing: main_page  //-->
     </div>
     {% include "footer.html" %}

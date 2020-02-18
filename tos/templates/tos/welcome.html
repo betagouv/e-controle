@@ -7,11 +7,7 @@
 {% endblock nav_items %}
 
 {% block page_title %}
-  <div class="page-header">
-    <h1 class="page-title">
-      Bienvenue sur e.contrôle
-    </h1>
-  </div>
+  Bienvenue sur e.contrôle
 {% endblock page_title %}
 
 {% block subtitle %}
@@ -20,10 +16,7 @@
   </div>
 {% endblock subtitle %}
 
-{% block page_content %}
-  <div class="card-title"> Avant de démarrer, veuillez accepter les Conditions Générales d’Utilisation. </div>
-  {{ block.super }}
-
+{% block approval %}
   <form class="p-5" method="post"> {% csrf_token %}
     {% if messages %}
       <div class="text-center" role="alert">
@@ -48,8 +41,7 @@
       <button type="submit" class="btn btn-primary">Aller à e-contrôle</button>
     </div>
   </form>
-
-{% endblock page_content %}
+{% endblock approval %}
 
 
 {% block js_bundle %}

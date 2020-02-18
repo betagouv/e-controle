@@ -1,7 +1,10 @@
 <template>
   <empty-modal :no-close="noClose">
     <div class="modal-header border-bottom-0">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 class="modal-title">
+        <i :class="iconClass + ' mr-2'"></i>
+        {{ title }}
+      </h5>
       <button v-if="!noClose"
               type="button"
               class="close"
@@ -38,6 +41,7 @@ export default Vue.extend({
   props: [
     'cancel-button',
     'confirm-button',
+    'icon-class',
     'no-close',
     'title',
   ],

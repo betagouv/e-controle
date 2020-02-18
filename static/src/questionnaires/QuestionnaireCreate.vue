@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
