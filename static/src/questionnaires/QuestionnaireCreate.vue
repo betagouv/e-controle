@@ -269,44 +269,46 @@ export default Vue.extend({
     Wizard,
   },
   mounted() {
-    const makeStickyBottom = (elementId) => {
+    const makeStickyBottom = (elementId, bottomOffsetPx) => {
       const element = document.getElementById(elementId)
-      const elementHeightPx = 104 // todo get programmatically
+      const elementHeightPx = element.offsetHeight
+      const leftPx = element.getBoundingClientRect().left
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
-      placeholderElement.setAttribute('style', 'min-height: ' + elementHeightPx + 'px; background-color: red;')
+      placeholderElement.setAttribute('style', 'min-height: ' + elementHeightPx + 'px;')
       element.parentNode.insertBefore(placeholderElement, element)
 
       // Position the element on top of the placeholder.
-      element.setAttribute('style', 'position: absolute; bottom: 140px;')
+      element.setAttribute('style', 'position: absolute;')
+      element.setAttribute('style', 'bottom: ' + bottomOffsetPx + 'px;')
+      element.setAttribute('style', 'left: ' + leftPx + 'px;')
+      element.setAttribute('style', 'z-index: 1020;')
 
-//      const bottomPx = element.getBoundingClientRect().bottom
-      const leftPx = element.getBoundingClientRect().left
-
-      const heightOfFooterPx = 140
-
-      $(document).scroll(function() {
-        var scrollDistance = $(document).scrollTop()
-        var viewPortHeight = $(window).height()
-        var stickyMenu = $('#' + elementId)
-        console.log('scrollDistance + viewPortHeight', scrollDistance + viewPortHeight)
-        console.log('$(document).height() - heightOfFooterPx', $(document).height() - heightOfFooterPx)
-        if ((scrollDistance + viewPortHeight) <= ($(document).height() - heightOfFooterPx)) {
-          stickyMenu.css({
-            position: 'fixed',
-            bottom: '0',
-            left: '' + leftPx,
-          })
-          stickyMenu.css('z-index', '1020')
+      const positionElement = () => {
+        const scrollDistance = $(document).scrollTop()
+        const viewPortHeight = $(window).height()
+        const stickyMenu = $('#' + elementId)
+        if ((scrollDistance + viewPortHeight) <= ($(document).height() - bottomOffsetPx)) {
+          stickyMenu.css('position', 'fixed')
+          stickyMenu.css('bottom', '0')
         } else {
           stickyMenu.css('position', 'absolute')
-          stickyMenu.css('bottom', '140px')
+          stickyMenu.css('bottom', bottomOffsetPx + 'px')
         }
-      })
+      }
+
+      // Listen to scroll event, to reposition element all the time.
+      $(document).scroll(positionElement)
+
+      // Trigger the positioning every so often.
+      // Ideally we would want to trigger only when the document height changes, but we don't have
+      // an easy way to do that.
+      const repositionPeriodMs = 300
+      setInterval(positionElement, repositionPeriodMs)
     }
 
-    makeStickyBottom('bottom-bar', 0)
+    makeStickyBottom('bottom-bar', 140)
 
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
