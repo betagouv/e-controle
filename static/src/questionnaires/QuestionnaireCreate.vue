@@ -273,7 +273,6 @@ export default Vue.extend({
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
       const elementWidthPx = element.offsetWidth
-      const leftPx = element.getBoundingClientRect().left
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
@@ -284,7 +283,6 @@ export default Vue.extend({
       const stickyMenu = $('#' + elementId)
       stickyMenu.css('position', 'absolute')
       stickyMenu.css('bottom', bottomOffsetPx + 'px')
-      stickyMenu.css('left', leftPx + 'px')
       stickyMenu.css('min-width', elementWidthPx + 'px')
       stickyMenu.css('z-index', 1020)
 
