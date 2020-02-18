@@ -56,14 +56,14 @@
                 class="btn btn-secondary"
                 @click="saveDraftAndGoHome"
         >
-          < Revenir à l'espace de dépôt
+          < Retour
         </button>
         <div>
           <button v-if="state !== STATES.START"
                   id="back-button"
                   @click="back"
                   class="btn btn-secondary">
-            < Retour
+            < Etape {{ state - 1 }}
           </button>
           <button v-if="state === STATES.CREATING_BODY"
                   role="button"
@@ -77,13 +77,13 @@
           <button @click="validateFormAndSaveDraft"
                   class="btn btn-primary">
             <i class="fe fe-save"></i>
-            Enregistrer le brouillon
+            Enregistrer
           </button>
           <button v-if="state !== STATES.PREVIEW"
                   id="next-button"
                   @click="next"
                   class="btn btn-secondary">
-            Suivant >
+            Etape {{ state + 1 }} >
           </button>
           <button v-if="state === STATES.PREVIEW"
                   id="publishButton"
