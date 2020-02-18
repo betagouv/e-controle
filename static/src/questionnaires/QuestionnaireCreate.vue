@@ -48,8 +48,10 @@
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
+    <div style="min-height: 104px; background-color: red !important;"></div>
     <div id="bottom-bar"
-         class="flex-column bg-white border-top p-4 gutters-md">
+         class="flex-column bg-white border-top p-4 gutters-md"
+         style="background-color: orange !important; position: absolute; bottom: 140px;">
       <div id="button-bar" class="flex-row justify-content-between">
         <button id="go-home-button"
                 type="button"
@@ -270,7 +272,7 @@ export default Vue.extend({
   },
   mounted() {
     // Take first element with classname and makes it sticky-top.
-    const makeStickyTop = (className, marginTopPx) => {
+/*    const makeStickyTop = (className, marginTopPx) => {
       const element = document.getElementsByClassName(className)[0]
       const topPx = element.getBoundingClientRect().top
       const leftPx = element.getBoundingClientRect().left
@@ -289,21 +291,30 @@ export default Vue.extend({
           stickyMenu.css('position', 'relative')
         }
       })
-    }
+    }*/
 
     const makeStickyBottom = (elementId) => {
       const element = document.getElementById(elementId)
+      const elementHeightPx = 104 // todo get programmatically
+
+      // Create a placeholder element of the same height as the fixed element.
+/*      const placeholderElement = document.createElement('div')
+      placeholderElement.setAttribute('style', 'min-height: ' + elementHeightPx + 'px; background-color: red;')
+      element.parentNode.insertBefore(placeholderElement, element)
+*/
       const bottomPx = element.getBoundingClientRect().bottom
       const leftPx = element.getBoundingClientRect().left
-      console.log('makeStickyBottom', bottomPx, leftPx)
 
-      // TODO : add an empty space in the DOM where the sticky element will be when fixed.
+      console.log('makeStickyBottom', bottomPx, leftPx)
+      const heightOfFooterPx = 140
+
       $(document).scroll(function() {
         var scrollDistance = $(document).scrollTop()
         var viewPortHeight = $(window).height()
         var stickyMenu = $('#' + elementId)
-        console.log('makeStickyBottom', scrollDistance, viewPortHeight, bottomPx, scrollDistance + viewPortHeight, $(document).height(), $(document).height() + bottomPx)
-        if ((scrollDistance + viewPortHeight) <= ($(document).height() + bottomPx)) {
+        console.log('scrollDistance + viewPortHeight', scrollDistance + viewPortHeight)
+        console.log('$(document).height() - heightOfFooterPx', $(document).height() - heightOfFooterPx)
+        if ((scrollDistance + viewPortHeight) <= ($(document).height() - heightOfFooterPx)) {
           stickyMenu.css({
             position: 'fixed',
             bottom: '0',
@@ -311,12 +322,13 @@ export default Vue.extend({
           })
           stickyMenu.css('z-index', '1020')
         } else {
-          stickyMenu.css('position', 'relative')
+          stickyMenu.css('position', 'absolute')
+          stickyMenu.css('bottom', '140px')
         }
       })
     }
 
-    makeStickyTop('sticky-top-ie', 24)
+//    makeStickyTop('sticky-top-ie', 24)
     makeStickyBottom('bottom-bar', 0)
 
     console.debug('questionnaireId', this.questionnaireId)
