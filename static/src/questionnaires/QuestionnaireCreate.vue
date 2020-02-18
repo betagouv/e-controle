@@ -49,7 +49,7 @@
     </questionnaire-preview>
 
     <div id="bottom-bar"
-         class="flex-column bg-success border-top p-4 gutters-md">
+         class="flex-column bg-white sticky-bottom border-top p-4 gutters-md">
       <div id="button-bar" class="flex-row justify-content-between">
         <button id="go-home-button"
                 type="button"

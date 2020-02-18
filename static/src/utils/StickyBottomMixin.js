@@ -1,6 +1,24 @@
 export default {
   methods: {
     stickyBottom_makeStickyBottom(elementId, bottomOffsetPx) {
+      const stickySupport = this.stickyBottom_isPositionStickySupported()
+      console.log('stickySupport', stickySupport)
+
+      if (!stickySupport) {
+        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx)
+      }
+    },
+    stickyBottom_isPositionStickySupported() {
+      const prefix = ['', '-o-', '-webkit-', '-moz-', '-ms-']
+      const test = document.head.style
+
+      for (let i = 0; i < prefix.length; i += 1) {
+        test.position = `${prefix[i]}sticky`
+      }
+
+      return test.position === 'sticky'
+    },
+    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
       const elementWidthPx = element.offsetWidth
@@ -17,6 +35,7 @@ export default {
       stickyMenu.css('min-width', elementWidthPx + 'px')
       stickyMenu.css('z-index', 1020)
 
+      // Depending on how far we have scrolled, position the element fixed or absolute.
       const positionElement = () => {
         const scrollDistance = $(document).scrollTop()
         const viewPortHeight = $(window).height()
