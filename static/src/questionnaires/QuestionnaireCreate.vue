@@ -272,18 +272,21 @@ export default Vue.extend({
     const makeStickyBottom = (elementId, bottomOffsetPx) => {
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
+      const elementWidthPx = element.offsetWidth
       const leftPx = element.getBoundingClientRect().left
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
-      placeholderElement.setAttribute('style', 'min-height: ' + elementHeightPx + 'px;')
+      $(placeholderElement).css('min-height', elementHeightPx + 'px')
       element.parentNode.insertBefore(placeholderElement, element)
 
       // Position the element on top of the placeholder.
-      element.setAttribute('style', 'position: absolute;')
-      element.setAttribute('style', 'bottom: ' + bottomOffsetPx + 'px;')
-      element.setAttribute('style', 'left: ' + leftPx + 'px;')
-      element.setAttribute('style', 'z-index: 1020;')
+      const stickyMenu = $('#' + elementId)
+      stickyMenu.css('position', 'absolute')
+      stickyMenu.css('bottom', bottomOffsetPx + 'px')
+      stickyMenu.css('left', leftPx + 'px')
+      stickyMenu.css('min-width', elementWidthPx + 'px')
+      stickyMenu.css('z-index', 1020)
 
       const positionElement = () => {
         const scrollDistance = $(document).scrollTop()
