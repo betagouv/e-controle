@@ -65,6 +65,12 @@ export default {
 
       // Listen to doc height change, to reposition element on change
       this.$_stickyBottom_listenToDocHeightChange(positionElement)
+
+      // Listen to window resize event, to reposition element on change
+      $(window).resize(() => {
+        console.log('resize')
+        positionElement()
+      })
     },
   },
 }
