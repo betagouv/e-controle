@@ -18,6 +18,19 @@ export default {
 
       return test.position === 'sticky'
     },
+    // Execute listenerFunc when document height changes.
+    $_stickyBottom_listenToDocHeightChange(listenerFunc) {
+      let docHeight = $(document).height()
+      const pollPeriodMs = 300
+      const pollFunc = () => {
+        const newDocHeight = $(document).height()
+        if (newDocHeight !== docHeight) {
+          docHeight = newDocHeight
+          listenerFunc(docHeight)
+        }
+      }
+      setInterval(pollFunc, pollPeriodMs)
+    },
     stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
@@ -47,14 +60,11 @@ export default {
         }
       }
 
-      // Listen to scroll event, to reposition element all the time.
+      // Listen to scroll event, to reposition element on scroll
       $(document).scroll(positionElement)
 
-      // Trigger the positioning every so often.
-      // Ideally we would want to trigger only when the document height changes, but we don't have
-      // an easy way to do that.
-      const repositionPeriodMs = 300
-      setInterval(positionElement, repositionPeriodMs)
+      // Listen to doc height change, to reposition element on change
+      this.$_stickyBottom_listenToDocHeightChange(positionElement)
     },
   },
 }
