@@ -60,6 +60,8 @@ export default {
           stickyMenu.css('position', 'absolute')
           stickyMenu.css('bottom', bottomOffsetPx + 'px')
         }
+        const elementWidthPx = placeholderElement.offsetWidth
+        stickyMenu.css('min-width', elementWidthPx + 'px')
       }
 
       // Listen to scroll event, to reposition element on scroll
@@ -69,10 +71,7 @@ export default {
       this.$_stickyBottom_listenToDocHeightChange(positionElement)
 
       // Listen to window resize event, to reposition element on change
-      $(window).resize(() => {
-        console.log('resize')
-        positionElement()
-      })
+      $(window).resize(positionElement)
     },
   },
 }
