@@ -37,10 +37,6 @@
     cursor: not-allowed;
 }
 
-.fg-success {
-    color: var(--success);
-}
-
 /* sticky-top already exists in tabler. Add sticky-bottom. */
 @supports ((position: -webkit-sticky) or (position: sticky)) {
     .sticky-bottom {
@@ -51,24 +47,14 @@
     }
 }
 
-.gutters-md {
-    margin-right: -0.75rem;
-    margin-left: -0.75rem;
-}
-
-/* Add tabler colors as vars. Only the main ones are in tabler. */
-:root {
-    --azure-lightest: #ecf7fe;
-    --gray-light: #aab0b6;
-    --gray-lighter: #dbdde0;
-    --gray-lightest: #F3F4FE;
-    --text-default: #495057;
+.fg-success {
+    color: #5EBB00;
 }
 
 /* Secondary button : you can't see it's disabled */
 .btn-secondary.disabled {
-    color: var(--gray-light);
-    background-color: var(--gray-lightest);
+    color: #aab0b6; /* gray-light */
+    background-color: #F3F4FE; /* gray-lightest */
     border: none;
 }
 
@@ -160,14 +146,14 @@
 .blue .vdp-datepicker__calendar .cell.selected,
 .blue .vdp-datepicker__calendar .cell.selected.highlighted,
 .blue .vdp-datepicker__calendar .cell.selected:hover {
-    background: var(--primary);
-    color: var(--white);
+    background: #467fcf;
+    color: #fff;
 }
 
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,
 .blue .vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {
-    border: 1px solid var(--primary);
+    border: 1px solid #467fcf;
 }
 
 /* ResponseFileList.vue */
@@ -224,6 +210,10 @@ table.trash-list {
 
 .text-large-paragraph {
     font-size: 1.25em;
+}
+
+.white {
+    background-color: white;
 }
 
 .resize-bug {

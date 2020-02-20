@@ -27,7 +27,7 @@ export default Vue.extend({
 
 <style scoped>
   .help-tooltip {
-    color:var(--primary);
+    color:#467fcf;
     text-decoration: none;
   }
 </style>
