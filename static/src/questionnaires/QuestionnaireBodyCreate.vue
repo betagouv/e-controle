@@ -215,9 +215,11 @@ export default Vue.extend({
     },
     deleteQuestion: function(themeIndex, qIndex) {
       this.themes[themeIndex].questions.splice(qIndex, 1)
+      this.swapMixin_updateOrderFields(this.themes[themeIndex].questions)
     },
     deleteTheme: function(themeIndex) {
       this.themes.splice(themeIndex, 1)
+      this.swapMixin_updateOrderFields(this.themes)
     },
     // Used in QuestionnaireCreate.
     validateForm: function() {

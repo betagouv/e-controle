@@ -8,7 +8,7 @@ export default {
         return
       }
       this.$_swapMixin_swapItems(array, index, index - 1, selectedJqueryElement)
-      this.$_swapMixin_updateOrderFields(array)
+      this.swapMixin_updateOrderFields(array)
     },
     swapMixin_moveItemDown(array, index, selectedJqueryElement) {
       if (index >= (array.length - 1)) {
@@ -32,7 +32,7 @@ export default {
     },
     // For all items in array, set the 'order' field to match with the
     // order in the array.
-    $_swapMixin_updateOrderFields(array) {
+    swapMixin_updateOrderFields(array) {
       array.map((item, index) => {
         item.order = index
       })
