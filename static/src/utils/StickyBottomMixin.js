@@ -34,6 +34,7 @@ export default {
     stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
+      const elementWidthPx = element.offsetWidth
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
@@ -44,6 +45,7 @@ export default {
       const stickyMenu = $('#' + elementId)
       stickyMenu.css('position', 'absolute')
       stickyMenu.css('bottom', bottomOffsetPx + 'px')
+      stickyMenu.css('min-width', elementWidthPx + 'px')
       stickyMenu.css('z-index', 1020)
 
       // Depending on how far we have scrolled, position the element fixed or absolute.
