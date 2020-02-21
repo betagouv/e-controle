@@ -1,7 +1,8 @@
 <template>
   <confirm-modal title="Réorganiser les thèmes du questionnaire"
                  icon-class="fa fa-exchange-alt fa-rotate-90"
-                 confirm-button="Ok">
+                 confirm-button="Terminer"
+                 no-close="true">
     <error-bar v-if="errorMessage !== undefined" noclose="true">
       {{ errorMessage }}
     </error-bar>
