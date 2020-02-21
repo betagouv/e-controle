@@ -46,7 +46,7 @@ export default {
       stickyMenu.css('position', 'absolute')
       stickyMenu.css('bottom', bottomOffsetPx + 'px')
       stickyMenu.css('min-width', elementWidthPx + 'px')
-      stickyMenu.css('z-index', 1020)
+      stickyMenu.css('z-index', 99)
 
       // Depending on how far we have scrolled, position the element fixed or absolute.
       const positionElement = () => {
