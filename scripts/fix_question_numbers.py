@@ -26,6 +26,7 @@ for theme in Theme.objects.filter(questionnaire__is_draft=True):
     for index,question in enumerate(theme.questions.all()):
         if(index != question.order):
             print('Question', question.id, ', theme', theme.id, ', questionnaire', theme.questionnaire.id,': index', index, '- order', question.order, ': draft?', question.theme.questionnaire.is_draft, '- uploaded files', question.response_files.count())
+            count = count + 1
 print('Number of bad questions :', count)
 
 
@@ -37,6 +38,7 @@ for theme in Theme.objects.filter(questionnaire__is_draft=True):
             print('Question', question.id, ', theme', theme.id, ', questionnaire', theme.questionnaire.id,': index', index, '- order', question.order, ': draft?', question.theme.questionnaire.is_draft, '- uploaded files', question.response_files.count())
             question.order = index
             question.save()
+            count = count + 1
 print('Number of bad questions :', count)
 
 
@@ -49,11 +51,11 @@ for theme in Theme.objects.filter(questionnaire__is_draft=False):
             has_responses = True
             break
     if has_responses:
-        print('Theme', theme.id, 'has responses')
         continue
     for index,question in enumerate(theme.questions.all()):
         if(index != question.order):
             print('Question', question.id, ', theme', theme.id, ', questionnaire', theme.questionnaire.id,': index', index, '- order', question.order, ': draft?', question.theme.questionnaire.is_draft, '- uploaded files', question.response_files.count())
+            count = count + 1
 print('Number of bad questions :', count)
 
 
@@ -66,18 +68,18 @@ for theme in Theme.objects.filter(questionnaire__is_draft=False):
             has_responses = True
             break
     if has_responses:
-        print('Theme', theme.id, 'has responses')
         continue
     for index,question in enumerate(theme.questions.all()):
         if(index != question.order):
             print('Question', question.id, ', theme', theme.id, ', questionnaire', theme.questionnaire.id,': index', index, '- order', question.order, ': draft?', question.theme.questionnaire.is_draft, '- uploaded files', question.response_files.count())
             question.order = index
             question.save()
+            count = count + 1
 print('Number of bad questions :', count)
 
 
 # 4. Lister les questions mal numerotées dans les questionnaires publiés, qui ont des réponses déposées dans le theme
-count = 0
+question_count = 0
 for theme in Theme.objects.filter(questionnaire__is_draft=False):
     has_responses = False
     for index,question in enumerate(theme.questions.all()):
@@ -85,9 +87,26 @@ for theme in Theme.objects.filter(questionnaire__is_draft=False):
             has_responses = True
             break
     if not has_responses:
-        print('Theme', theme.id, 'has no responses')
         continue
     for index,question in enumerate(theme.questions.all()):
         if(index != question.order):
             print('Question', question.id, ', theme', theme.id, ', questionnaire', theme.questionnaire.id,': index', index, '- order', question.order, ': draft?', question.theme.questionnaire.is_draft, '- uploaded files', question.response_files.count())
-print('Number of bad questions :', count)
+            question_count = question_count + 1
+print('Number of bad questions :', question_count)
+
+# 4B. (CSV) Lister les questions mal numerotées dans les questionnaires publiés, qui ont des réponses déposées dans le theme
+question_count = 0
+print('question.id', '\t', 'theme.id', '\t', 'questionnaire.id', '\t', 'index', '\t', 'question.order', '\t', 'questionnaire.is_draft', '\t', 'question.response_files.count()')
+for theme in Theme.objects.filter(questionnaire__is_draft=False):
+    has_responses = False
+    for index,question in enumerate(theme.questions.all()):
+        if (question.response_files.count() > 0):
+            has_responses = True
+            break
+    if not has_responses:
+        continue
+    for index,question in enumerate(theme.questions.all()):
+        if(index != question.order):
+            print(question.id, '\t', theme.id, '\t', theme.questionnaire.id, '\t', index, '\t', question.order, '\t', question.theme.questionnaire.is_draft, '\t', question.response_files.count())
+            question_count = question_count + 1
+print('Number of bad questions :', question_count)
