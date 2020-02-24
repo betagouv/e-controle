@@ -15,6 +15,7 @@
 
       <template v-else>
         <control-card v-if="displayedControl !== undefined"
+                      :key="displayedControl.id"
                       :control="displayedControl"
                       :user="user"
                       :webdavurl="webdavurl"
