@@ -16,6 +16,7 @@ export default {
         return
       }
       this.$_swapMixin_swapItems(array, index, index + 1, selectedJqueryElement)
+      this.swapMixin_updateOrderFields(array)
     },
     $_swapMixin_swapItems(array, indexFrom, indexTo, selectedJqueryElement) {
       // Set CSS class on the moving element
