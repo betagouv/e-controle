@@ -141,7 +141,9 @@ describe('Questionnaire creation flow', () => {
 
     // Move to body create page.
     wrapper.find('#next-button').trigger('click')
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
     await flushPromises
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
     expect(wrapper.find('#questionnaire-body-create').isVisible()).toBeTruthy()
 
     // Before test : no files in annexe list.
@@ -168,7 +170,9 @@ describe('Questionnaire creation flow', () => {
 
     // Move to body create page.
     wrapper.find('#next-button').trigger('click')
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
     await flushPromises
+    await wrapper.vm.$forceUpdate() // force the update of the HTML of the Vue components
     expect(wrapper.find('#questionnaire-body-create').isVisible()).toBeTruthy()
 
     // Before test : no files in annexe list in Preview page.
