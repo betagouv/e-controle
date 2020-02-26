@@ -55,9 +55,8 @@ def create_user(user_info):
 
     :param user_info:
     """
-    user = User.objects.create_user(user_info.mail.value,
-                                    user_info.mail.value,
-                                    '?',
+    user = User.objects.create_user(username=user_info.mail.value,
+                                    email=user_info.mail.value,
                                     first_name=user_info.givenName.value,
                                     last_name=user_info.sn.value)
     UserProfile.objects.create(user=user,
