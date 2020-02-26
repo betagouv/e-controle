@@ -38,13 +38,11 @@
 }
 
 /* sticky-top already exists in tabler. Add sticky-bottom. */
-@supports ((position: -webkit-sticky) or (position: sticky)) {
-    .sticky-bottom {
-        position: -webkit-sticky;
-        position: sticky;
-        bottom: 0;
-        z-index: 99;
-    }
+.sticky-bottom {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
 }
 
 .fg-success {
