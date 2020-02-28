@@ -94,7 +94,7 @@ class ThemeInline(OrderedTabularInline):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'title', 'link_to_control', 'numbering', 'is_draft', 'editor',
+        'id', 'numbering', 'title', 'link_to_control', 'is_draft', 'editor',
         'sent_date', 'end_date')
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
