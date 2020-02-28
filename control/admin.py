@@ -25,6 +25,37 @@ class AdminHelpers(object):
     more_details.short_description = 'détails'
 
 
+class ParentLinksMixin(object):
+    def link_to_theme(self, obj):
+        link = reverse("admin:control_theme_change", args=[obj.theme.id])
+        return format_html('<a href="{}">{}</a>', link, obj.theme)
+    link_to_theme.short_description = 'Theme'
+
+    def link_to_questionnaire(self, obj):
+        questionnaire = 'unknown'
+        if hasattr(obj, 'questionnaire'):
+            questionnaire = obj.questionnaire
+        elif hasattr(obj, 'theme'):
+            questionnaire = obj.theme.questionnaire
+
+        link = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
+        return format_html('<a href="{}">{}</a>', link, questionnaire)
+    link_to_questionnaire.short_description = 'Questionnaire'
+
+    def link_to_control(self, obj):
+        control = 'unknown'
+        if hasattr(obj, 'control'):
+            control = obj.control
+        elif hasattr(obj, 'questionnaire'):
+            control = obj.questionnaire.control
+        elif hasattr(obj, 'theme'):
+            control = obj.theme.questionnaire.control
+
+        link = reverse("admin:control_control_change", args=[control.id])
+        return format_html('<a href="{}">{}</a>', link, control)
+    link_to_control.short_description = 'Control'
+
+
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
@@ -63,8 +94,9 @@ class QuestionInline(OrderedTabularInline):
 
 
 @admin.register(Theme)
-class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('id', 'numbering', 'title', 'questionnaire', 'move_up_down_links')
+class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
+    list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control',
+        'move_up_down_links')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
     inlines = (QuestionInline,)
@@ -78,28 +110,13 @@ class QuestionFileInline(OrderedTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
+class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
         'link_to_control', 'move_up_down_links')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
-
-    def link_to_theme(self, obj):
-        link = reverse("admin:control_theme_change", args=[obj.theme.id])
-        return format_html('<a href="{}">{}</a>', link, obj.theme)
-    link_to_theme.short_description = 'Theme'
-
-    def link_to_questionnaire(self, obj):
-        link = reverse("admin:control_questionnaire_change", args=[obj.theme.questionnaire.id])
-        return format_html('<a href="{}">{}</a>', link, obj.theme.questionnaire)
-    link_to_questionnaire.short_description = 'Questionnaire'
-
-    def link_to_control(self, obj):
-        link = reverse("admin:control_control_change", args=[obj.theme.questionnaire.control.id])
-        return format_html('<a href="{}">{}</a>', link, obj.theme.questionnaire.control)
-    link_to_control.short_description = 'Control'
 
 
 @admin.register(ResponseFile)
