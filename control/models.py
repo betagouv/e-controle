@@ -41,7 +41,7 @@ class FileInfoMixin(object):
     def question_display(self):
         question = self.question
         url = reverse('admin:control_question_change', args=[question.pk])
-        return mark_safe(f'<a href="{url}">{question.numbering}. {question}</a>')
+        return mark_safe(f'<a href="{url}">{question}</a>')
     question_display.fget.short_description = 'question'
 
     @property
@@ -206,7 +206,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return f'id {self.id} - Q{self.numbering} - {self.title}'
+        return f'id {self.id} - {self.title_display}'
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -242,7 +242,7 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return f'id {self.id} - {self.description}'
+        return f'id {self.id} - Q{self.numbering} - {self.description}'
 
 
 class QuestionFile(OrderedModel, FileInfoMixin):
