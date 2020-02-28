@@ -28,7 +28,7 @@ class WithNumberingMixin(object):
     numbering.fget.short_description = 'Numérotation'
 
 
-class QuestionnaireFileMixin(object):
+class FileInfoMixin(object):
     """
     Add common helpers for file information.
     """
@@ -245,7 +245,7 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return f'id {self.id} - {self.description}'
 
 
-class QuestionFile(OrderedModel, QuestionnaireFileMixin):
+class QuestionFile(OrderedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
@@ -270,7 +270,7 @@ class QuestionFile(OrderedModel, QuestionnaireFileMixin):
 
 
 @cleanup.ignore
-class ResponseFile(TimeStampedModel, QuestionnaireFileMixin):
+class ResponseFile(TimeStampedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)
