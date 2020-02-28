@@ -108,6 +108,9 @@ class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMix
         'move_up_down_links')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
+    fields = (
+        'id', 'title', 'questionnaire', 'link_to_control')
+    readonly_fields = ('id', 'link_to_control')
     inlines = (QuestionInline,)
 
 
@@ -122,6 +125,9 @@ class QuestionFileInline(OrderedTabularInline):
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
         'link_to_control', 'move_up_down_links')
+    fields = (
+        'id', 'description', 'theme', 'link_to_questionnaire', 'link_to_control')
+    readonly_fields = ('id', 'link_to_questionnaire', 'link_to_control')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
@@ -141,7 +147,7 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
     fields = (
         'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
         'created', 'modified', 'is_deleted')
-    readonly_fields = ('file_name', 'link_to_questionnaire', 'link_to_control')
+    readonly_fields = ('file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
     search_fields = (
         'file', 'question__description', 'author__first_name', 'author__last_name',
         'author__username')
@@ -157,9 +163,9 @@ class QuestionFileAdmin(admin.ModelAdmin, ParentLinksMixin):
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     fields = (
-        'id', 'file', 'question', 'order')
+        'id', 'file', 'question', 'order', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = (
-        'id', 'order')
+        'id', 'order', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('file', 'question__description')
     raw_id_fields = ('question',)
 
