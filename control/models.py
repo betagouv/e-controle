@@ -69,7 +69,7 @@ class QuestionnaireFileMixin(object):
     control_display.fget.short_description = 'control'
 
     def __str__(self):
-        return self.file_name
+        return f'id {self.id} - {self.file_name}'
 
 
 class Control(models.Model):
@@ -124,8 +124,8 @@ class Control(models.Model):
 
     def __str__(self):
         if self.depositing_organization:
-            return f'{self.title} - {self.depositing_organization}'
-        return self.title
+            return f'id {self.id} - {self.title} - {self.depositing_organization}'
+        return f'id {self.id} - {self.title}'
 
 
 class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -206,7 +206,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.title_display
+        return f'id {self.id} - {self.title_display}'
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -222,7 +222,7 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name_plural = "Thèmes"
 
     def __str__(self):
-        return self.title
+        return f'id {self.id} - {self.title}'
 
 
 class Question(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -242,7 +242,7 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.description
+        return f'id {self.id} - {self.description}'
 
 
 class QuestionFile(OrderedModel, QuestionnaireFileMixin):
