@@ -5,7 +5,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.views.generic import DetailView, RedirectView
 from django.views.generic.detail import SingleObjectMixin
@@ -32,8 +31,8 @@ class ParentLinksMixin(object):
             theme = obj.theme
         if hasattr(obj, 'question'):
             theme = obj.question.theme
-        link = reverse("admin:control_theme_change", args=[theme.id])
-        return format_html('<a href="{}">{}</a>', link, theme)
+        url = reverse("admin:control_theme_change", args=[theme.id])
+        return mark_safe(f'<a href="{url}">{theme}</a>')
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
@@ -43,8 +42,8 @@ class ParentLinksMixin(object):
         elif hasattr(obj, 'theme'):
             questionnaire = obj.theme.questionnaire
 
-        link = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
-        return format_html('<a href="{}">{}</a>', link, questionnaire)
+        url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
+        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
     link_to_questionnaire.short_description = 'Questionnaire'
 
     def link_to_control(self, obj):
@@ -56,8 +55,8 @@ class ParentLinksMixin(object):
         elif hasattr(obj, 'theme'):
             control = obj.theme.questionnaire.control
 
-        link = reverse("admin:control_control_change", args=[control.id])
-        return format_html('<a href="{}">{}</a>', link, control)
+        url = reverse("admin:control_control_change", args=[control.id])
+        return mark_safe(f'<a href="{url}">{control}</a>')
     link_to_control.short_description = 'Control'
 
 
