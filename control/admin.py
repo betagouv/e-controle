@@ -74,10 +74,10 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
+class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
+        'id', 'title', 'link_to_control', 'numbering', 'order', 'is_draft', 'editor',
         'sent_date', 'end_date')
     list_editable = ('order',)
     readonly_fields = ('order',)
