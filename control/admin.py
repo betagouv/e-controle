@@ -26,15 +26,15 @@ class AdminHelpers(object):
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
-        'title', 'description', 'uploaded_file', 'generated_file', 'end_date',
+        'id', 'title', 'description', 'uploaded_file', 'generated_file', 'end_date',
         'move_up_down_links', 'order')
-    readonly_fields = ('move_up_down_links',)
+    readonly_fields = ('id', 'move_up_down_links',)
     extra = 1
 
 
 @admin.register(Control)
 class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('title', 'depositing_organization', 'reference_code')
+    list_display = ('id', 'title', 'depositing_organization', 'reference_code')
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
     inlines = (QuestionnaireInline, )
@@ -56,13 +56,13 @@ class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
 
 class QuestionInline(OrderedTabularInline):
     model = Question
-    fields = ('description', 'order', 'move_up_down_links')
-    readonly_fields = ('order', 'move_up_down_links')
+    fields = ('id', 'description', 'order', 'move_up_down_links')
+    readonly_fields = ('id', 'order', 'move_up_down_links')
 
 
 @admin.register(Theme)
 class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
+    list_display = ('id', 'numbering', 'title', 'questionnaire', 'move_up_down_links')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
     inlines = (QuestionInline,)
@@ -77,7 +77,7 @@ class QuestionFileInline(OrderedTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
-    list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
+    list_display = ('id', 'numbering', 'description', 'theme', 'move_up_down_links')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
@@ -87,9 +87,9 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelper
 @admin.register(ResponseFile)
 class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
     list_display = (
-        'more_details', 'id', 'file_name', 'question_display', 'questionnaire_display',
+        'id', 'file_name', 'question_display', 'questionnaire_display',
         'control_display', 'created', 'author', 'is_deleted')
-    list_display_links = ('more_details', 'id')
+    list_display_links = ('id',)
     date_hierarchy = 'created'
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
@@ -106,9 +106,9 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
 @admin.register(QuestionFile)
 class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
     list_display = (
-        'more_details', 'id', 'file', 'question_display', 'questionnaire_display',
+        'id', 'file', 'question_display', 'questionnaire_display',
         'control_display')
-    list_display_links = ('more_details', 'id')
+    list_display_links = ('id',)
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
