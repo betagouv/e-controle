@@ -37,37 +37,6 @@ class FileInfoMixin(object):
     def file_name(self):
         return self.file.name
 
-    @property
-    def question_display(self):
-        question = self.question
-        url = reverse('admin:control_question_change', args=[question.pk])
-        return mark_safe(f'<a href="{url}">{question}</a>')
-    question_display.fget.short_description = 'question'
-
-    @property
-    def questionnaire_display(self):
-        is_empty = not self.question.theme or not self.question.theme.questionnaire
-        if is_empty:
-            return '-'
-        questionnaire = self.question.theme.questionnaire
-        url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
-        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
-    questionnaire_display.fget.short_description = 'questionnaire'
-
-    @property
-    def control_display(self):
-        is_empty = (
-            not self.question.theme or
-            not self.question.theme.questionnaire or
-            not self.question.theme.questionnaire.control
-        )
-        if is_empty:
-            return '-'
-        control = self.question.theme.questionnaire.control
-        url = reverse('admin:control_control_change', args=[control.pk])
-        return mark_safe(f'<a href="{url}">{control}</a>')
-    control_display.fget.short_description = 'control'
-
     def __str__(self):
         return f'id {self.id} - {self.file_name}'
 

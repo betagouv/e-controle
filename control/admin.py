@@ -17,16 +17,17 @@ from .models import Control, Questionnaire, Theme, Question, QuestionFile, Respo
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
 
 
-class AdminHelpers(object):
-
-    def more_details(self, instance):
-        return 'détails...'
-    more_details.short_description = 'détails'
-
-
 class ParentLinksMixin(object):
+    def link_to_question(self, obj):
+        question = None
+        if hasattr(obj, 'question'):
+            question = obj.question
+        url = reverse("admin:control_question_change", args=[question.id])
+        return mark_safe(f'<a href="{url}">{question}</a>')
+    link_to_question.short_description = 'Question'
+
     def link_to_theme(self, obj):
-        theme = 'unknown'
+        theme = None
         if hasattr(obj, 'theme'):
             theme = obj.theme
         if hasattr(obj, 'question'):
@@ -36,24 +37,28 @@ class ParentLinksMixin(object):
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
-        questionnaire = 'unknown'
+        questionnaire = None
         if hasattr(obj, 'questionnaire'):
             questionnaire = obj.questionnaire
         elif hasattr(obj, 'theme'):
             questionnaire = obj.theme.questionnaire
+        elif hasattr(obj, 'question'):
+            questionnaire = obj.question.theme.questionnaire
 
         url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
         return mark_safe(f'<a href="{url}">{questionnaire}</a>')
     link_to_questionnaire.short_description = 'Questionnaire'
 
     def link_to_control(self, obj):
-        control = 'unknown'
+        control = None
         if hasattr(obj, 'control'):
             control = obj.control
         elif hasattr(obj, 'questionnaire'):
             control = obj.questionnaire.control
         elif hasattr(obj, 'theme'):
             control = obj.theme.questionnaire.control
+        elif hasattr(obj, 'question'):
+            control = obj.question.theme.questionnaire.control
 
         url = reverse("admin:control_control_change", args=[control.id])
         return mark_safe(f'<a href="{url}">{control}</a>')
@@ -114,7 +119,7 @@ class QuestionFileInline(OrderedTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers, ParentLinksMixin):
+class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
         'link_to_control', 'move_up_down_links')
     raw_id_fields = ('theme',)
@@ -124,38 +129,37 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelper
 
 
 @admin.register(ResponseFile)
-class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers, ParentLinksMixin):
+class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
     list_display = (
-        'id', 'file_name', 'question_display', 'link_to_theme', 'questionnaire_display',
-        'control_display', 'created', 'author', 'is_deleted')
+        'id', 'file_name', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control', 'created', 'author', 'is_deleted')
     list_display_links = ('id',)
     date_hierarchy = 'created'
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'author', 'question__theme')
     fields = (
-        'id', 'author', 'file_name', 'question_display', 'questionnaire_display', 'control_display',
+        'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
         'created', 'modified', 'is_deleted')
-    readonly_fields = ('file_name', 'question_display', 'questionnaire_display', 'control_display')
+    readonly_fields = ('file_name', 'link_to_questionnaire', 'link_to_control')
     search_fields = (
         'file', 'question__description', 'author__first_name', 'author__last_name',
         'author__username')
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers, ParentLinksMixin):
+class QuestionFileAdmin(admin.ModelAdmin, ParentLinksMixin):
     list_display = (
-        'id', 'file', 'question_display', 'link_to_theme', 'questionnaire_display',
-        'control_display')
+        'id', 'file', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control')
     list_display_links = ('id',)
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     fields = (
-        'id', 'file', 'question', 'question_display', 'questionnaire_display',
-        'control_display', 'order')
+        'id', 'file', 'question', 'order')
     readonly_fields = (
-        'id', 'question_display', 'questionnaire_display', 'control_display', 'order')
+        'id', 'order')
     search_fields = ('file', 'question__description')
     raw_id_fields = ('question',)
 
