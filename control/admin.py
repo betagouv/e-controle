@@ -94,10 +94,8 @@ class ThemeInline(OrderedTabularInline):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'title', 'link_to_control', 'numbering', 'order', 'is_draft', 'editor',
+        'id', 'title', 'link_to_control', 'numbering', 'is_draft', 'editor',
         'sent_date', 'end_date')
-    list_editable = ('order',)
-    readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
     raw_id_fields = ('editor',)
@@ -113,8 +111,7 @@ class QuestionInline(OrderedTabularInline):
 
 @admin.register(Theme)
 class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
-    list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control',
-        'move_up_down_links')
+    list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
     fields = (
@@ -133,7 +130,7 @@ class QuestionFileInline(OrderedTabularInline):
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
-        'link_to_control', 'move_up_down_links')
+        'link_to_control')
     fields = (
         'id', 'description', 'theme', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = ('id', 'link_to_questionnaire', 'link_to_control')
