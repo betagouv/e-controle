@@ -27,8 +27,13 @@ class AdminHelpers(object):
 
 class ParentLinksMixin(object):
     def link_to_theme(self, obj):
-        link = reverse("admin:control_theme_change", args=[obj.theme.id])
-        return format_html('<a href="{}">{}</a>', link, obj.theme)
+        theme = 'unknown'
+        if hasattr(obj, 'theme'):
+            theme = obj.theme
+        if hasattr(obj, 'question'):
+            theme = obj.question.theme
+        link = reverse("admin:control_theme_change", args=[theme.id])
+        return format_html('<a href="{}">{}</a>', link, theme)
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
@@ -120,9 +125,9 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelper
 
 
 @admin.register(ResponseFile)
-class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
+class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers, ParentLinksMixin):
     list_display = (
-        'id', 'file_name', 'question_display', 'questionnaire_display',
+        'id', 'file_name', 'question_display', 'link_to_theme', 'questionnaire_display',
         'control_display', 'created', 'author', 'is_deleted')
     list_display_links = ('id',)
     date_hierarchy = 'created'
@@ -139,9 +144,9 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
+class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers, ParentLinksMixin):
     list_display = (
-        'id', 'file', 'question_display', 'questionnaire_display',
+        'id', 'file', 'question_display', 'link_to_theme', 'questionnaire_display',
         'control_display')
     list_display_links = ('id',)
     list_filter = (
