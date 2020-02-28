@@ -69,7 +69,7 @@ class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
         'id', 'title', 'description', 'uploaded_file', 'generated_file', 'end_date',
-        'move_up_down_links', 'order')
+        'order', 'move_up_down_links')
     readonly_fields = ('id', 'move_up_down_links',)
     extra = 1
 
@@ -82,8 +82,16 @@ class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     inlines = (QuestionnaireInline, )
 
 
+class ThemeInline(OrderedTabularInline):
+    model = Theme
+    fields = (
+        'id', 'title', 'order', 'move_up_down_links')
+    readonly_fields = ('id', 'order', 'move_up_down_links')
+    extra = 1
+
+
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin, ParentLinksMixin):
+class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
         'id', 'title', 'link_to_control', 'numbering', 'order', 'is_draft', 'editor',
@@ -94,6 +102,7 @@ class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin, ParentL
     list_filter = ('control', 'is_draft')
     raw_id_fields = ('editor',)
     actions = ['megacontrol_admin_action']
+    inlines = (ThemeInline, )
 
 
 class QuestionInline(OrderedTabularInline):
