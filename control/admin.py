@@ -79,7 +79,8 @@ class QuestionFileInline(OrderedTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
-    list_display = ('id', 'numbering', 'description', 'link_to_theme', 'move_up_down_links')
+    list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control', 'move_up_down_links')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
@@ -89,6 +90,17 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelper
         link = reverse("admin:control_theme_change", args=[obj.theme.id])
         return format_html('<a href="{}">{}</a>', link, obj.theme)
     link_to_theme.short_description = 'Theme'
+
+    def link_to_questionnaire(self, obj):
+        link = reverse("admin:control_questionnaire_change", args=[obj.theme.questionnaire.id])
+        return format_html('<a href="{}">{}</a>', link, obj.theme.questionnaire)
+    link_to_questionnaire.short_description = 'Questionnaire'
+
+    def link_to_control(self, obj):
+        link = reverse("admin:control_control_change", args=[obj.theme.questionnaire.control.id])
+        return format_html('<a href="{}">{}</a>', link, obj.theme.questionnaire.control)
+    link_to_control.short_description = 'Control'
+
 
 @admin.register(ResponseFile)
 class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
