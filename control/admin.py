@@ -3,7 +3,9 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.views.generic import DetailView, RedirectView
 from django.views.generic.detail import SingleObjectMixin
@@ -77,12 +79,16 @@ class QuestionFileInline(OrderedTabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
-    list_display = ('id', 'numbering', 'description', 'theme', 'move_up_down_links')
+    list_display = ('id', 'numbering', 'description', 'link_to_theme', 'move_up_down_links')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
 
+    def link_to_theme(self, obj):
+        link = reverse("admin:control_theme_change", args=[obj.theme.id])
+        return format_html('<a href="{}">{}</a>', link, obj.theme)
+    link_to_theme.short_description = 'Theme'
 
 @admin.register(ResponseFile)
 class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
