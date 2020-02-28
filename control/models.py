@@ -206,7 +206,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return f'id {self.id} - {self.title_display}'
+        return f'id {self.id} - Q{self.numbering} - {self.title}'
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -222,7 +222,7 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name_plural = "Thèmes"
 
     def __str__(self):
-        return f'id {self.id} - {self.title}'
+        return f'id {self.id} - T{self.numbering} - {self.title}'
 
 
 class Question(OrderedModel, WithNumberingMixin, DocxMixin):
