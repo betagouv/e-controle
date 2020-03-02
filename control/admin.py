@@ -15,6 +15,7 @@ from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMix
 
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
+from user_profiles.models import UserProfile
 
 
 class ParentLinksMixin(object):
@@ -74,12 +75,17 @@ class QuestionnaireInline(OrderedTabularInline):
     extra = 1
 
 
+class UserProfileInline(admin.TabularInline):
+    model = UserProfile.controls.through
+    verbose_name_plural = 'Profils Utilisateurs'
+
+
 @admin.register(Control)
 class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('id', 'title', 'depositing_organization', 'reference_code')
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
-    inlines = (QuestionnaireInline, )
+    inlines = (QuestionnaireInline, UserProfileInline, )
 
 
 class ThemeInline(OrderedTabularInline):
