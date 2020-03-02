@@ -34,7 +34,6 @@ export default {
     stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
       const element = document.getElementById(elementId)
       const elementHeightPx = element.offsetHeight
-      const elementWidthPx = element.offsetWidth
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
@@ -45,8 +44,21 @@ export default {
       const stickyMenu = $('#' + elementId)
       stickyMenu.css('position', 'absolute')
       stickyMenu.css('bottom', bottomOffsetPx + 'px')
-      stickyMenu.css('min-width', elementWidthPx + 'px')
       stickyMenu.css('z-index', 99)
+
+      // Set the width. Needs to change if width of page changes (window resize of change in page)
+      const setWidth = () => {
+        const elementWidthPx = placeholderElement.offsetWidth
+        stickyMenu.css('min-width', elementWidthPx + 'px')
+      }
+      setWidth()
+
+      // Set the left offset. Needs to follow horizontal scroll.
+      const setLeftOffset = () => {
+        const leftOffset = placeholderElement.getBoundingClientRect().left
+        stickyMenu.css('left', leftOffset + 'px')
+      }
+      setLeftOffset()
 
       // Depending on how far we have scrolled, position the element fixed or absolute.
       const positionElement = () => {
@@ -60,8 +72,10 @@ export default {
           stickyMenu.css('position', 'absolute')
           stickyMenu.css('bottom', bottomOffsetPx + 'px')
         }
-        const elementWidthPx = placeholderElement.offsetWidth
-        stickyMenu.css('min-width', elementWidthPx + 'px')
+        // Reset the width in case page width changed.
+        setWidth()
+        // Reset the left offset, in case there was horizontal scroll.
+        setLeftOffset()
       }
 
       // Listen to scroll event, to reposition element on scroll
