@@ -78,7 +78,6 @@ urlpatterns.extend(magicauth_urls)
 
 urlpatterns += [
     path('api/', include((router.urls, 'api'))),
-    path('api-auth/', include('rest_framework.urls')),
 ]
 
 if settings.DEBUG:
