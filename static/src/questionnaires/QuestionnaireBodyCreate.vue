@@ -159,6 +159,9 @@
           </div>
         </form>
 
+        <move-themes-modal ref="moveThemesModal">
+        </move-themes-modal>
+
       </div>
     </div>
 
@@ -171,12 +174,11 @@ import Vue from 'vue'
 import ConfirmModal from '../utils/ConfirmModal'
 import InfoBar from '../utils/InfoBar'
 import { mapFields } from 'vuex-map-fields'
+import MoveThemesModal from '../themes/MoveThemesModal'
 import QuestionFileList from '../questions/QuestionFileList'
 import QuestionFileUpload from '../questions/QuestionFileUpload'
-
 import reportValidity from 'report-validity'
-
-const ANIMATION_DURATION_SECONDS = 1
+import SwapMixin from '../utils/SwapMixin'
 
 export default Vue.extend({
   data() {
@@ -192,9 +194,13 @@ export default Vue.extend({
   components: {
     ConfirmModal,
     InfoBar,
+    MoveThemesModal,
     QuestionFileList,
     QuestionFileUpload,
   },
+  mixins: [
+    SwapMixin,
+  ],
   methods: {
     addQuestion: function(themeIndex) {
       console.debug('addQuestion', themeIndex)
@@ -209,54 +215,26 @@ export default Vue.extend({
     },
     deleteQuestion: function(themeIndex, qIndex) {
       this.themes[themeIndex].questions.splice(qIndex, 1)
+      this.swapMixin_updateOrderFields(this.themes[themeIndex].questions)
     },
     deleteTheme: function(themeIndex) {
       this.themes.splice(themeIndex, 1)
+      this.swapMixin_updateOrderFields(this.themes)
     },
     // Used in QuestionnaireCreate.
     validateForm: function() {
       const form = this.$refs.form
       return reportValidity(form)
     },
-    // For all questions in vuex, set the 'order' field to match with the
-    // order in the array.
-    $_updateOrderFields(questionArray) {
-      questionArray.map((question, qIndex) => {
-        question.order = qIndex
-      })
-    },
     moveQuestionUp(themeIndex, qIndex) {
-      console.debug('moveQuestionUp, theme', themeIndex, '- question ', qIndex)
-      if (qIndex <= 0) {
-        console.error('Cannot moveQuestionUp from index', qIndex)
-        return
-      }
-      this.$_swapQuestions(themeIndex, qIndex, qIndex - 1)
+      const array = this.themes[themeIndex].questions
+      const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
+      this.swapMixin_moveItemUp(array, qIndex, selectedJqueryElement)
     },
     moveQuestionDown(themeIndex, qIndex) {
-      console.debug('moveQuestionDown, theme', themeIndex, '- question ', qIndex)
-      if (qIndex >= (this.themes[themeIndex].questions.length - 1)) {
-        console.error('Cannot moveQuestionDown from index', qIndex)
-        return
-      }
-      this.$_swapQuestions(themeIndex, qIndex, qIndex + 1)
-    },
-    $_swapQuestions(themeIndex, qIndexFrom, qIndexTo) {
-      // Set CSS class on the moving element
-      const selectedElement = $('#theme-' + themeIndex + '-question-' + qIndexFrom)
-      selectedElement.addClass('selected')
-      setTimeout(
-        () => {
-          selectedElement.removeClass('selected')
-        },
-        ANIMATION_DURATION_SECONDS * 1000)
-
-      // Move the elements in the vuex array
       const array = this.themes[themeIndex].questions
-      const movingElement = array.splice(qIndexFrom, 1)[0]
-      array.splice(qIndexTo, 0, movingElement)
-
-      this.$_updateOrderFields(this.themes[themeIndex].questions)
+      const selectedJqueryElement = $('#theme-' + themeIndex + '-question-' + qIndex)
+      this.swapMixin_moveItemDown(array, qIndex, selectedJqueryElement)
     },
   },
 })
@@ -264,7 +242,7 @@ export default Vue.extend({
 
 <style>
 .question-list-move {
-  transition: transform 1s; /* same as ANIMATION_DURATION_SECONDS */
+  transition: transform 1s; /* same as SwapMixin.ANIMATION_DURATION_SECONDS */
 }
 .question-list-move.selected {
   z-index: 999;

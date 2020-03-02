@@ -1,5 +1,5 @@
 <template>
-  <div id="page-content">
+  <div id="page-content" class="container">
 
     <div id="controls">
       <div v-if="controls.length === 0">

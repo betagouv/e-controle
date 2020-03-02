@@ -2,7 +2,7 @@
 {% load static %}
 {% load control_tags %}
 
-{% block page_content %}
+{% block page_main_container %}
   <div id="control-detail-vm">
     <control-page :controls="{{ controls_json }}"
                        :user="{{ user_json }}"
@@ -11,7 +11,7 @@
     >
     </control-page>
   </div>
-{% endblock page_content %}
+{% endblock page_main_container %}
 
 {% block js_bundle %}
 <link href="{% static 'dist/control-detail-bundle.css' %}" rel="stylesheet" />

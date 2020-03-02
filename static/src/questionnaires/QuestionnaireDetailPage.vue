@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <template v-if="user.is_inspector">
       <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft"></request-editor-button>
       <success-bar v-else>
