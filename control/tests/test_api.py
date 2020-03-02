@@ -9,6 +9,48 @@ pytestmark = mark.django_db
 client = APIClient()
 
 
+#### Theme API ####
+def get_theme(user, id):
+    return utils.get_resource(client, user, 'theme', id)
+
+def test_can_access_theme_api_if_control_is_associated_with_the_user():
+    theme = factories.ThemeFactory()
+    user = utils.make_audited_user(theme.questionnaire.control)
+    assert get_theme(user, theme.id).status_code == 200
+
+
+def test_no_access_to_theme_api_if_control_is_not_associated_with_the_user():
+    theme_in = factories.ThemeFactory()
+    theme_out = factories.ThemeFactory()
+    user = utils.make_audited_user(theme_in.questionnaire.control)
+    assert get_theme(user, theme_out.id).status_code != 200
+
+
+def test_no_access_to_theme_api_for_anonymous():
+    theme = factories.ThemeFactory()
+    response = utils.get_resource_without_login(client, 'theme', theme.id)
+    assert response.status_code == 403
+
+
+def test_can_update_theme_order():
+    theme = factories.ThemeFactory()
+    user = utils.make_audited_user(theme.questionnaire.control)
+    original_order = theme.order
+    new_order = 123
+    assert new_order != original_order
+
+    payload = {
+        "id": str(theme.id),
+        "order": str(new_order),
+        "title": theme.title
+    }
+
+    response = utils.update_resource(client, user, 'theme', payload)
+
+    assert response.status_code == 200
+    assert response.data['order'] == str(new_order)
+
+
 #### Question API ####
 
 def get_question(user, id):
