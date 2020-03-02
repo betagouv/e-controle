@@ -78,6 +78,9 @@ class QuestionnaireInline(OrderedTabularInline):
 class UserProfileInline(admin.TabularInline):
     model = UserProfile.controls.through
     verbose_name_plural = 'Profils Utilisateurs'
+    extra = 1
+    fields = ('userprofile',)
+    raw_id_fields = ('userprofile',)
 
 
 @admin.register(Control)
