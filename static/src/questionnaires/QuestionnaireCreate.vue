@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div>
+  <div class="container">
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
@@ -48,31 +49,43 @@
             v-show="state === STATES.PREVIEW">
     </questionnaire-preview>
 
-    <div class="flex-row justify-content-between">
+  </div>
+  <div id="bottom-bar"
+        class="flex-column bg-white sticky-bottom border-top p-4">
+    <div id="button-bar" class="flex-row justify-content-between">
       <button id="go-home-button"
               type="button"
               class="btn btn-secondary"
               @click="saveDraftAndGoHome"
       >
-        < Revenir à l'espace de dépôt
+        < Retour
       </button>
       <div>
         <button v-if="state !== STATES.START"
                 id="back-button"
                 @click="back"
                 class="btn btn-secondary">
-          < Retour
+          < Etape {{ state - 1 }}
+        </button>
+        <button v-if="state === STATES.CREATING_BODY"
+                role="button"
+                type="button"
+                class="btn btn-secondary"
+                @click="saveAndShowMoveThemesModal"
+                title="Réorganiser les thèmes">
+          <i class="fa fa-exchange-alt fa-rotate-90"></i>
+          Réorganiser les thèmes
         </button>
         <button @click="validateFormAndSaveDraft"
                 class="btn btn-primary">
           <i class="fe fe-save"></i>
-          Enregistrer le brouillon
+          Enregistrer
         </button>
         <button v-if="state !== STATES.PREVIEW"
                 id="next-button"
                 @click="next"
                 class="btn btn-secondary">
-          Suivant >
+          Etape {{ state + 1 }} >
         </button>
         <button v-if="state === STATES.PREVIEW"
                 id="publishButton"
@@ -86,55 +99,56 @@
       </div>
     </div>
     <div class="flex-row justify-content-end mt-2">
-      <div class="text-muted">
-        {{ message }}
+      <div class="text-muted" style="min-height: 1.5rem;">
+        {{ saveMessage }}
       </div>
     </div>
-
-    <publish-confirm-modal id="publishConfirmModal"
-                           ref="publishConfirmModal"
-                           :error="publishError"
-                           @confirm="publish()"
-    >
-    </publish-confirm-modal>
-    <empty-modal id="savingModal"
-                 ref="savingModal"
-                 no-close="true">
-      <div class="d-flex flex-column align-items-center p-8">
-        <div class="m-4">
-          Questionnaire en cours de publication ...
-        </div>
-        <div class="loader m-4">
-        </div>
-      </div>
-    </empty-modal>
-    <empty-modal id="savedModal"
-                 ref="savedModal"
-                 no-close="true">
-      <div class="modal-header border-bottom-0 flex-column align-items-center">
-        <p>
-          <i class="fe fe-check-circle fg-success big-icon"></i>
-        </p>
-        <h4 class="text-center">
-          Bravo, votre questionnaire est publié!
-        </h4>
-      </div>
-      <div class="modal-body text-center">
-        <p>
-          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
-          notification dès le lendemain 8 heures.
-        </p>
-      </div>
-      <div class="modal-footer border-top-0 d-flex justify-content-center">
-        <button type="button"
-                class="btn btn-primary"
-                @click="goHome"
-        >
-          < Revenir à l'accueil
-        </button>
-      </div>
-    </empty-modal>
   </div>
+
+  <publish-confirm-modal id="publishConfirmModal"
+                          ref="publishConfirmModal"
+                          :error="publishError"
+                          @confirm="publish()"
+  >
+  </publish-confirm-modal>
+  <empty-modal id="savingModal"
+                ref="savingModal"
+                no-close="true">
+    <div class="d-flex flex-column align-items-center p-8">
+      <div class="m-4">
+        Questionnaire en cours de publication ...
+      </div>
+      <div class="loader m-4">
+      </div>
+    </div>
+  </empty-modal>
+  <empty-modal id="savedModal"
+                ref="savedModal"
+                no-close="true">
+    <div class="modal-header border-bottom-0 flex-column align-items-center">
+      <p>
+        <i class="fe fe-check-circle fg-success big-icon"></i>
+      </p>
+      <h4 class="text-center">
+        Bravo, votre questionnaire est publié!
+      </h4>
+    </div>
+    <div class="modal-body text-center">
+      <p>
+        Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
+        notification dès le lendemain 8 heures.
+      </p>
+    </div>
+    <div class="modal-footer border-top-0 d-flex justify-content-center">
+      <button type="button"
+              class="btn btn-primary"
+              @click="goHome"
+      >
+        < Revenir à l'accueil
+      </button>
+    </div>
+  </empty-modal>
+</div>
 </template>
 
 <script>
@@ -148,6 +162,7 @@ import PublishConfirmModal from './PublishConfirmModal'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
+import StickyBottomMixin from '../utils/StickyBottomMixin'
 import SwapEditorButton from '../editors/SwapEditorButton'
 import Vue from 'vue'
 import Wizard from '../utils/Wizard'
@@ -181,7 +196,7 @@ export default Vue.extend({
       hasErrors: false,
       STATES: STATES,
       state: '',
-      message: '',
+      saveMessage: '',
       publishError: undefined,
     }
   },
@@ -256,7 +271,12 @@ export default Vue.extend({
     SwapEditorButton,
     Wizard,
   },
+  mixins: [
+    StickyBottomMixin,
+  ],
   mounted() {
+    this.stickyBottom_makeStickyBottom('bottom-bar', 140)
+
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
     if (this.controlId === undefined && this.questionnaireId === undefined) {
@@ -352,8 +372,8 @@ export default Vue.extend({
       this.errors = []
       this.errorMessage = ''
     },
-    clearMessages() {
-      this.message = ''
+    clearSaveMessage() {
+      this.saveMessage = ''
     },
     _doSave() {
       const cleanPreSave = () => {
@@ -416,7 +436,7 @@ export default Vue.extend({
           this.emitQuestionnaireUpdated()
 
           const timeString = moment(new Date()).format('HH:mm:ss')
-          this.message = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          this.saveMessage = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
           return response.data
         })
         .catch((error) => {
@@ -472,6 +492,15 @@ export default Vue.extend({
     },
     goHome() {
       this.window.location.href = backend['control-detail'](this.currentQuestionnaire.control)
+    },
+    saveAndShowMoveThemesModal() {
+      if (!this.validateCurrentForm()) {
+        return
+      }
+      this.saveDraft()
+        .then(() => {
+          $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
+        })
     },
   },
 })

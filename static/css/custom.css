@@ -41,6 +41,14 @@
     cursor: not-allowed;
 }
 
+/* sticky-top already exists in tabler. Add sticky-bottom. */
+.sticky-bottom {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    z-index: 99;
+}
+
 .fg-success {
     color: #5EBB00;
 }

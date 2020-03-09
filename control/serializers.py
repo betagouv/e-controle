@@ -51,11 +51,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class ThemeSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Theme
-        fields = ('id', 'title', 'questionnaire', 'questions')
-        # not serialized : order
+        fields = ('id', 'title', 'order', 'questionnaire', 'questions')
 
 
 # Serializers for displaying control_detail.html
@@ -97,7 +97,7 @@ class ControlUpdateSerializer(serializers.ModelSerializer):
 
 class QuestionUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-    order = serializers.CharField(required=False)
+    order = serializers.IntegerField(required=False)
 
     class Meta:
         model = Question

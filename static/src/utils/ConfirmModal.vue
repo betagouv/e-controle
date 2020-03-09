@@ -1,7 +1,10 @@
 <template>
   <empty-modal :no-close="noClose">
     <div class="modal-header border-bottom-0">
-      <h5 class="modal-title">{{ title }}</h5>
+      <h5 class="modal-title">
+        <i :class="iconClass + ' mr-2'"></i>
+        {{ title }}
+      </h5>
       <button v-if="!noClose"
               type="button"
               class="close"
@@ -31,31 +34,32 @@
 </template>
 
 <script>
-  import EmptyModal from './EmptyModal'
-  import Vue from "vue"
+import EmptyModal from './EmptyModal'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: [
-        'cancel-button',
-        'confirm-button',
-        'no-close',
-        'title',
-    ],
-    components: {
-      EmptyModal,
+export default Vue.extend({
+  props: [
+    'cancel-button',
+    'confirm-button',
+    'icon-class',
+    'no-close',
+    'title',
+  ],
+  components: {
+    EmptyModal,
+  },
+  methods: {
+    confirmClicked () {
+      this.$emit('confirm')
     },
-    methods: {
-      confirmClicked () {
-        this.$emit('confirm')
-      },
-      cancelClicked () {
-        this.$emit('cancel')
-      },
-      closeModal () {
-        this.$emit('close')
-      },
-    }
-  })
+    cancelClicked () {
+      this.$emit('cancel')
+    },
+    closeModal () {
+      this.$emit('close')
+    },
+  },
+})
 
 </script>
 

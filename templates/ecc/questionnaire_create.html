@@ -5,7 +5,7 @@
 {{ block.super }}
 {% endblock extra_static_header %}
 
-{% block page_content %}
+{% block page_main_container %}
 
 <div id="questionnaire-create-vm">
     {% if control is not None %}
@@ -26,7 +26,7 @@
     {% endif %}
 </div>
 
-{% endblock page_content %}
+{% endblock page_main_container %}
 
 {% block js_bundle %}
   <link href="{% static "dist/questionnaire-create-bundle.css" %}" rel="stylesheet" />
