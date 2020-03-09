@@ -12,6 +12,7 @@
           </div>
         </div>
       </div>
+      <select-control v-if="displaySelectControl"></select-control>
 
       <template v-else>
         <control-card v-if="displayedControl !== undefined"
@@ -55,6 +56,7 @@ import AddUserModal from '../users/AddUserModal'
 import ControlCard from './ControlCard'
 import NoControls from './NoControls'
 import RemoveUserModal from '../users/RemoveUserModal'
+import SelectControl from './SelectControl'
 import UpdateUserModal from '../users/UpdateUserModal'
 import VideoModal from '../utils/VideoModal'
 
@@ -68,6 +70,7 @@ export default Vue.extend({
   data: function() {
     return {
       hash: '',
+      displaySelectControl: false,
     }
   },
   computed: {
@@ -96,6 +99,14 @@ export default Vue.extend({
 
     const updateHash = () => {
       console.debug('hashchange', window.location.hash)
+      console.log('HASH HERE')
+      console.log(window.location.hash)
+      if(window.location.hash === '#select-control') {
+        this.displaySelectControl = true
+        this.hash = window.location.hash
+        return
+      }
+
       if (!hashPointsToExistingControl(window.location.hash) && this.controls.length > 0) {
         // Change the hash to select the first control in the list, which will trigger the
         // hashchange event again.
@@ -117,6 +128,7 @@ export default Vue.extend({
     ControlCard,
     NoControls,
     RemoveUserModal,
+    SelectControl,
     UpdateUserModal,
     VideoModal,
   },

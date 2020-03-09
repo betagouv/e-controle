@@ -85,18 +85,31 @@
               Comment voir les réponses ?
             </a>
           </div>
-          <a href="javascript:void(0)"
-             class="btn btn-secondary"
-             title="Modifier l'espace de dépôt"
-             @click="enterEditMode"
-          >
-            <i class="fe fe-edit mr-2"></i>
-            Modifier
-          </a>
+          <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+              Action
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item"
+                 href="javascript:void(0)"
+                 @click="enterEditMode"
+              >
+                Modifier cet espace
+              </a>
+              <a class="dropdown-item"
+                 href="javascript:void(0)"
+                 @click="showControlDeleteModal"
+              >
+                Supprimer cet espace
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>
     </template>
+
+    <control-delete-modal :control="control"></control-delete-modal>
 
     <webdav-tip :id="'webdav-tip-' + control.id"
                 :webdavurl="webdavurl + '/' + control.reference_code">
@@ -111,6 +124,7 @@ import axios from 'axios'
 import backendUrls from '../utils/backend'
 import Vue from 'vue'
 import WebdavTip from '../controls/WebdavTip'
+import ControlDeleteModal from './ControlDeleteModal'
 
 import ErrorBar from '../utils/ErrorBar'
 
@@ -139,6 +153,7 @@ export default Vue.extend({
   components: {
     ErrorBar,
     WebdavTip,
+    ControlDeleteModal,
   },
   mounted() {
     this.restoreForm()
@@ -188,6 +203,9 @@ export default Vue.extend({
     },
     showWebdavTip() {
       $('#webdav-tip-' + this.control.id).modal('show')
+    },
+    showControlDeleteModal() {
+      $('#controlDeleteModal').modal('show')
     },
   },
 })
