@@ -67,7 +67,7 @@
                 </small>
               </div>
             </td>
-            <td class="w-1 text-right">
+            <td class="w-1 text-right action-column">
               <template v-if="!user.is_inspector">
                 <a :href="questionnaire.url"
                    class="btn btn-primary"
@@ -79,13 +79,41 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
-                  <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                    class="btn btn-primary"
-                    title="Modifier le brouillon de questionnaire"
-                  >
-                    <i class="fe fe-edit"></i>
-                    Modifier
-                  </a>
+                  <div class="flex-row justify-content-end">
+                    <a :href="'/questionnaire/modifier/' + questionnaire.id "
+                       class="btn btn-primary btn-rounded-left mr-small"
+                       title="Modifier le brouillon de questionnaire"
+                    >
+                      <i class="fe fe-edit"></i>
+                      Modifier
+                    </a>
+
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-primary btn-rounded-right dropdown-toggle" data-toggle="dropdown">
+                      </button>
+                      <div class="dropdown-menu">
+                        <a :href="'/questionnaire/modifier/' + questionnaire.id "
+                           class="dropdown-item"
+                           title="Modifier le brouillon de questionnaire"
+                        >
+                          Modifier...
+                        </a>
+                        <a class="dropdown-item"
+                          href="javascript:void(0)"
+                          @click="showQuestionnaireDeleteModal"
+                        >
+                          Supprimer...
+                        </a>
+                        <a href="javascript:void(0)"
+                           class="dropdown-item"
+                           title="Exporter le questionnaire"
+                        >
+                          Exporter
+                        </a>
+                      </div>
+
+                    </div>
+                  </div>
                 </template>
                 <template v-else>
                   <a :href="questionnaire.url"
@@ -153,5 +181,29 @@ export default Vue.extend({
 
   .end-date-column {
     min-width: 9em;
+  }
+
+  .action-column {
+    min-width: 13em;
+  }
+
+  .mr-small {
+    margin-right: 0.10rem;
+  }
+
+  .btn-rounded-right {
+    border-radius: 3px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 0px;
+  }
+
+  .btn-rounded-left {
+    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 3px;
   }
 </style>
