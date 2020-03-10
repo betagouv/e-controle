@@ -100,7 +100,7 @@
                         </a>
                         <a class="dropdown-item"
                           href="javascript:void(0)"
-                          @click="showQuestionnaireDeleteModal"
+                          @click="showQuestionnaireDeleteModal(questionnaire)"
                         >
                           Supprimer...
                         </a>
@@ -137,12 +137,15 @@
         Ajouter un questionnaire
       </a>
     </div>
+
+    <questionnaire-delete-modal></questionnaire-delete-modal>
   </div>
 </template>
 
 <script>
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
+import QuestionnaireDeleteModal from './QuestionnaireDeleteModal'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -158,6 +161,7 @@ export default Vue.extend({
   },
   components: {
     HelpTooltip,
+    QuestionnaireDeleteModal,
   },
   computed: {
     accessibleQuestionnaires: function () {
@@ -165,6 +169,11 @@ export default Vue.extend({
         return this.control.questionnaires
       }
       return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
+    },
+  },
+  methods: {
+    showQuestionnaireDeleteModal(questionnaire) {
+      $('#questionnaireDeleteModal').modal('show')
     },
   },
 })
