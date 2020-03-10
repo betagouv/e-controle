@@ -102,13 +102,13 @@
                   href="javascript:void(0)"
                   @click="enterEditMode"
                 >
-                  Modifier cet espace
+                  Modifier cet espace...
                 </a>
                 <a class="dropdown-item"
                   href="javascript:void(0)"
                   @click="showControlDeleteModal"
                 >
-                  Supprimer cet espace
+                  Supprimer cet espace...
                 </a>
               </div>
             </div>
