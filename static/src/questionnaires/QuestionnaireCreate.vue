@@ -68,6 +68,7 @@
           < Etape {{ state - 1 }}
         </button>
         <button v-if="state === STATES.CREATING_BODY"
+                id="move-themes-button"
                 role="button"
                 type="button"
                 class="btn btn-secondary"
@@ -497,9 +498,14 @@ export default Vue.extend({
       if (!this.validateCurrentForm()) {
         return
       }
+      $('#move-themes-button').addClass('btn-loading')
       this.saveDraft()
         .then(() => {
-          $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
+          $('#move-themes-button').removeClass('btn-loading')
+          // Only display moveThemesModal if the user is still on the same page.
+          if (this.state === STATES.CREATING_BODY) {
+            $(this.$refs.questionnaireBodyCreate.$refs.moveThemesModal.$el).modal('show')
+          }
         })
     },
   },
