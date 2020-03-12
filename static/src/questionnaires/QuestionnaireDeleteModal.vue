@@ -3,66 +3,57 @@
     <empty-modal id="questionnaireDeleteModal"
                 ref="questionnaireDeleteModal"
                 :no-close="true">
-      <div class="modal-body">
-        <form @submit.prevent="deleteControl">
-          <div class="modal-header border-bottom-0">
-            <h4 class="modal-title">
-              Vous êtes sur le point de supprimer le questionnaire :
-            </h4>
-          </div>
+      <form @submit.prevent="deleteControl">
+        <div class="modal-header border-bottom-0">
+          <h4 class="modal-title">
+            Vous êtes sur le point de supprimer le questionnaire :
+          </h4>
+        </div>
 
-          <div class="modal-body">
-            <div class="flex-row">
-              <input class="mt-2"
-                    type="checkbox"
-                    name="questionnaire-delete-checkbox-1"
-                    id="questionnaire-delete-checkbox-1"
-                    required>
-              <label class="ml-2" for="questionnaire-delete-checkbox-1">
-                Les données ne seront pas récupérables.
-              </label>
-            </div>
-            <div class="flex-row">
-              <input class="mt-2"
-                    type="checkbox"
-                    name="questionnaire-delete-checkbox-2"
-                    id="questionnaire-delete-checkbox-2"
-                    required>
-              <label class="ml-2" for="questionnaire-delete-checkbox-2">
-                Tous les utilisateurs de cet espace n'y auront plus accès.
-              </label>
-            </div>
-            <div class="flex-row">
-              <input class="mt-2"
-                    type="checkbox"
-                    name="questionnaire-delete-checkbox-3"
-                    id="questionnaire-delete-checkbox-3"
-                    required>
-              <label class="ml-2" for="questionnaire-delete-checkbox-3">
-                En cas de contrôle juridictionnel, je confirme que la suppression
-                des données, n'impacte pas la suite de la procédure, en cas de
-                contentieux notament.
-              </label>
-            </div>
-          </div>
-          <div class="modal-footer border-top-0">
-            <button type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal"
-                    title="Annuler"
-            >
-              Annuler
-            </button>
-            <button type="submit"
-                    class="btn btn-primary btn-red"
-                    title="Forcer le transfert"
-            >
-              <i class="fe fe-trash-2 mr-1"></i>
-              Supprimer
-            </button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-body">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox"
+                   class="custom-control-input"
+                   required>
+            <span class="custom-control-label">Les données ne seront pas récupérables.</span>
+          </label>
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox"
+                   class="custom-control-input"
+                   required>
+            <span class="custom-control-label">
+              Tous les utilisateurs de cet espace n'y auront plus accès.
+            </span>
+          </label>
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox"
+                   class="custom-control-input"
+                   required>
+            <span class="custom-control-label">
+              En cas de contrôle juridictionnel, je confirme que la suppression
+              des données, n'impacte pas la suite de la procédure, en cas de
+              contentieux notament.
+            </span>
+          </label>
+        </div>
+
+        <div class="modal-footer border-top-0">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                  title="Annuler"
+          >
+            Annuler
+          </button>
+          <button type="submit"
+                  class="btn btn-primary btn-red"
+                  title="Forcer le transfert"
+          >
+            <i class="fe fe-trash-2 mr-1"></i>
+            Supprimer
+          </button>
+        </div>
+      </form>
     </empty-modal>
     <empty-modal id="waitingModal"
                  ref="waitingModal"
