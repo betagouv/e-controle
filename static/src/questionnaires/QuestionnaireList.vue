@@ -101,12 +101,15 @@
                       </button>
                       <button class="dropdown-item text-danger"
                               type="button"
-                              @click="showQuestionnaireDeleteModal(questionnaire)">
+                              @click="showQuestionnaireDeleteModal(questionnaire.id)">
                         <i class="fe fe-trash-2 mr-2"></i>
                         Supprimer...
                       </button>
                     </div>
                   </div>
+                  <questionnaire-delete-modal :id="'questionnaireDeleteModal-' + questionnaire.id"
+                                              :questionnaire="questionnaire">
+                  </questionnaire-delete-modal>
                 </template>
                 <template v-else>
                   <a :href="questionnaire.url"
@@ -131,7 +134,6 @@
       </a>
     </div>
 
-    <questionnaire-delete-modal></questionnaire-delete-modal>
   </div>
 </template>
 
@@ -165,8 +167,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    showQuestionnaireDeleteModal(questionnaire) {
-      $('#questionnaireDeleteModal').modal('show')
+    showQuestionnaireDeleteModal(questionnaireId) {
+      $('#questionnaireDeleteModal-' + questionnaireId + ' .confirm-modal').modal('show')
     },
   },
 })

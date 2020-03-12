@@ -1,12 +1,15 @@
 <template>
   <div>
-    <empty-modal id="questionnaireDeleteModal"
-                ref="questionnaireDeleteModal"
-                :no-close="true">
+    <empty-modal ref="confirmModal" class="confirm-modal" :no-close="true">
       <form @submit.prevent="deleteControl">
         <div class="modal-header border-bottom-0">
           <h4 class="modal-title">
-            Vous êtes sur le point de supprimer le questionnaire :
+            <div class="mb-4">
+              Vous êtes sur le point de supprimer :
+            </div>
+            <div>
+              Questionnaire {{ questionnaire.numbering }} : {{ questionnaire.title }}
+            </div>
           </h4>
         </div>
 
@@ -55,8 +58,7 @@
         </div>
       </form>
     </empty-modal>
-    <empty-modal id="waitingModal"
-                 ref="waitingModal"
+    <empty-modal ref="waitingModal"
                  no-close="true">
       <div class="d-flex flex-column align-items-center p-8">
         <div class="m-4">
@@ -65,8 +67,7 @@
         <div class="loader m-4"></div>
       </div>
     </empty-modal>
-    <empty-modal id="successModal"
-                 ref="successModal"
+    <empty-modal ref="successModal"
                  no-close="true">
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -89,12 +90,10 @@
 </template>
 
 <script>
-import backendUrls from '../utils/backend.js'
 import EmptyModal from '../utils/EmptyModal'
 import Vue from 'vue'
 
 const SPINNER_DURATION_MILLIS = 2000
-
 
 export default Vue.extend({
   props: {
@@ -119,7 +118,7 @@ export default Vue.extend({
       console.log('calling API...')
     },
     deleteControl() {
-      $(this.$refs.questionnaireDeleteModal.$el).modal('hide')
+      $(this.$refs.confirmModal.$el).modal('hide')
       $(this.$refs.waitingModal.$el).modal('show')
 
       return Promise.all([this.wait(SPINNER_DURATION_MILLIS), this.callDeleteControlAPI()])
