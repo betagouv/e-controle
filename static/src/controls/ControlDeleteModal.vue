@@ -7,8 +7,12 @@
         <form @submit.prevent="deleteControl">
           <div class="modal-header border-bottom-0">
             <h4 class="modal-title">
-              Vous êtes sur le point de supprimer l'espace de dépôt :
-              "{{ control.title }}"
+              <div class="mb-4">
+                Vous êtes sur le point de supprimer l'espace de dépôt :
+              </div>
+              <div>
+                "{{ control.title }}"
+              </div>
             </h4>
           </div>
 

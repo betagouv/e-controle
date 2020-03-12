@@ -189,8 +189,4 @@ export default Vue.extend({
     min-width: 13em;
   }
 
-  .mr-small {
-    margin-right: 0.10rem;
-  }
-
 </style>
