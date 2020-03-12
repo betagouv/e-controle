@@ -91,7 +91,7 @@
                     <div class="dropdown">
                       <button type="button" class="btn btn-primary btn-rounded-right dropdown-toggle" data-toggle="dropdown">
                       </button>
-                      <div class="dropdown-menu">
+                      <div class="dropdown-menu dropdown-menu-right">
                         <a href="javascript:void(0)"
                            class="dropdown-item"
                            title="Exporter le questionnaire"

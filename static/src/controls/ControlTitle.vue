@@ -99,7 +99,7 @@
                       class="btn btn-secondary btn-rounded-right dropdown-toggle"
                       data-toggle="dropdown">
               </button>
-              <div class="dropdown-menu">
+              <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item"
                   href="javascript:void(0)"
                   @click="showControlDeleteModal"
