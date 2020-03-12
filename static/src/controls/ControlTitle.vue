@@ -85,34 +85,32 @@
               Comment voir les réponses ?
             </a>
           </div>
-          <div>
-            <a class="btn btn-secondary btn-rounded-left border-right-0"
-                href="javascript:void(0)"
-                @click="enterEditMode"
-            >
+
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-secondary"
+                    @click="enterEditMode">
               <i class="fe fe-edit mr-2"></i>
               Modifier
-            </a>
-
-            <div class="dropdown">
-              <button type="button" class="btn btn-rounded-right .bg-gray dropdown-toggle" data-toggle="dropdown">
+            </button>
+            <button type="button"
+                    class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+              <span class="sr-only">Menu d'actions</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item text-danger"
+                      type="button"
+                      @click="showControlDeleteModal"
+              >
+                <i class="fe fe-trash-2 mr-2"></i>
+                Supprimer cet espace...
               </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item"
-                  href="javascript:void(0)"
-                  @click="enterEditMode"
-                >
-                  Modifier cet espace...
-                </a>
-                <a class="dropdown-item"
-                  href="javascript:void(0)"
-                  @click="showControlDeleteModal"
-                >
-                  Supprimer cet espace...
-                </a>
-              </div>
             </div>
           </div>
+
         </div>
 
       </div>
@@ -229,20 +227,6 @@ export default Vue.extend({
     position: absolute;
     top: 2px;
     left: 5px;
-  }
-  .btn-rounded-right {
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 0px;
-  }
-  .btn-rounded-left {
-    border-radius: 3px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 3px;
   }
   .break-word {
     word-break: break-all;

@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="table-responsive">
+    <div>
       <div v-if="accessibleQuestionnaires.length === 0"
            class="alert alert-icon alert-secondary m-2">
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
@@ -79,39 +79,32 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
-                  <div class="flex-row justify-content-end">
-                    <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                       class="btn btn-primary btn-rounded-left mr-small"
-                       title="Modifier le brouillon de questionnaire"
-                    >
+                  <div class="btn-group">
+                    <a class="btn btn-primary"
+                       :href="'/questionnaire/modifier/' + questionnaire.id"
+                       title="Modifier le brouillon de questionnaire">
                       <i class="fe fe-edit"></i>
                       Modifier
                     </a>
-
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary btn-rounded-right dropdown-toggle" data-toggle="dropdown">
+                    <button type="button"
+                            class="btn btn-primary dropdown-toggle dropdown-toggle-split ml-1"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                      <span class="sr-only">Menu d'actions</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <button class="dropdown-item" type="button">
+                        <!-- todo : do the export -->
+                        <i class="fe fe-file-text mr-2"></i>
+                        Exporter
                       </button>
-                      <div class="dropdown-menu">
-                        <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                           class="dropdown-item"
-                           title="Modifier le brouillon de questionnaire"
-                        >
-                          Modifier...
-                        </a>
-                        <a class="dropdown-item"
-                          href="javascript:void(0)"
-                          @click="showQuestionnaireDeleteModal(questionnaire)"
-                        >
-                          Supprimer...
-                        </a>
-                        <a href="javascript:void(0)"
-                           class="dropdown-item"
-                           title="Exporter le questionnaire"
-                        >
-                          Exporter
-                        </a>
-                      </div>
-
+                      <button class="dropdown-item text-danger"
+                              type="button"
+                              @click="showQuestionnaireDeleteModal(questionnaire)">
+                        <i class="fe fe-trash-2 mr-2"></i>
+                        Supprimer...
+                      </button>
                     </div>
                   </div>
                 </template>
@@ -196,23 +189,4 @@ export default Vue.extend({
     min-width: 13em;
   }
 
-  .mr-small {
-    margin-right: 0.10rem;
-  }
-
-  .btn-rounded-right {
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 0px;
-  }
-
-  .btn-rounded-left {
-    border-radius: 3px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 3px;
-  }
 </style>

@@ -36,7 +36,9 @@
 @supports not (-ms-high-contrast: none) {
 }
 
-/* Fixes to tabler*/
+/*********************************/
+/* Fixes and additions to tabler */
+/*********************************/
 .btn-primary.disabled, .btn-primary:disabled, .btn.disabled, .btn:disabled {
     cursor: not-allowed;
 }
@@ -100,6 +102,23 @@
     font-size: 2em;
 }
 
+.btn-rounded-right {
+    border-radius: 3px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 0px;
+}
+
+.btn-rounded-left {
+    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 3px;
+}
+
+/********************/
 /* Footer : at the bottom of viewport, and if content fills viewport vertically, then bottom of content. */
 #page {
     position: relative;

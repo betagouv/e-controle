@@ -1,14 +1,18 @@
 <template>
   <div>
     <empty-modal id="controlDeleteModal"
-                ref="controlDeleteModal"
-                :no-close="true">
+                 ref="controlDeleteModal"
+                 :no-close="true">
       <div class="modal-body">
         <form @submit.prevent="deleteControl">
           <div class="modal-header border-bottom-0">
             <h4 class="modal-title">
-              Vous êtes sur le point de supprimer l'espace de dépôt :
-              "{{ control.title }}"
+              <div class="mb-4">
+                Vous êtes sur le point de supprimer l'espace de dépôt :
+              </div>
+              <div>
+                "{{ control.title }}"
+              </div>
             </h4>
           </div>
 
@@ -99,7 +103,6 @@
 </template>
 
 <script>
-import backendUrls from '../utils/backend.js'
 import EmptyModal from '../utils/EmptyModal'
 import Vue from 'vue'
 
@@ -114,6 +117,7 @@ export default Vue.extend({
     EmptyModal,
   },
   methods: {
+    // todo : reuse the wait function.
     wait(timeMillis) {
       return new Promise((resolve) => {
         const id = setTimeout(() => {
@@ -127,6 +131,8 @@ export default Vue.extend({
     },
     callDeleteControlAPI() {
       console.log('calling API...')
+      // todo call real API
+      return Promise.resolve()
     },
     deleteControl() {
       $(this.$refs.controlDeleteModal.$el).modal('hide')
@@ -140,6 +146,7 @@ export default Vue.extend({
         })
         .catch(error => {
           console.error('Error deleting control : ', error)
+          // todo : show error to user
         })
     },
   },
