@@ -18,24 +18,9 @@
           <input type="checkbox"
                   class="custom-control-input"
                   required>
-          <span class="custom-control-label">Les données ne seront pas récupérables.</span>
-        </label>
-        <label class="custom-control custom-checkbox">
-          <input type="checkbox"
-                  class="custom-control-input"
-                  required>
           <span class="custom-control-label">
-            Tous les utilisateurs de cet espace n'y auront plus accès.
-          </span>
-        </label>
-        <label class="custom-control custom-checkbox">
-          <input type="checkbox"
-                  class="custom-control-input"
-                  required>
-          <span class="custom-control-label">
-            En cas de contrôle juridictionnel, je confirme que la suppression
-            des données, n'impacte pas la suite de la procédure, en cas de
-            contentieux notament.
+            J'ai compris que ce questionnaire sera supprimé pour tous les utilisateurs de l'espace
+            de dépôt.
           </span>
         </label>
       </div>
