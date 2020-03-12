@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="table-responsive">
+    <div>
       <div v-if="accessibleQuestionnaires.length === 0"
            class="alert alert-icon alert-secondary m-2">
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
