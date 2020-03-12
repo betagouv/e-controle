@@ -79,35 +79,36 @@
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
-                  <div class="flex-row justify-content-end">
-                    <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                       class="btn btn-primary btn-rounded-left mr-small"
-                       title="Modifier le brouillon de questionnaire"
-                    >
+                  <div class="btn-group">
+                    <a class="btn btn-primary"
+                       :href="'/questionnaire/modifier/' + questionnaire.id"
+                       title="Modifier le brouillon de questionnaire">
                       <i class="fe fe-edit"></i>
                       Modifier
                     </a>
-
-                    <div class="dropdown">
-                      <button type="button" class="btn btn-primary btn-rounded-right dropdown-toggle" data-toggle="dropdown">
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <a href="javascript:void(0)"
-                           class="dropdown-item"
-                           title="Exporter le questionnaire"
-                        >
-                          Exporter
-                        </a>
-                        <a class="dropdown-item"
-                          href="javascript:void(0)"
-                          @click="showQuestionnaireDeleteModal(questionnaire)"
-                        >
-                          <div class="text-danger">
-                            Supprimer...
-                          </div>
-                        </a>
-                      </div>
-
+                    <button type="button"
+                            class="btn btn-primary dropdown-toggle dropdown-toggle-split ml-1"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                      <span class="sr-only">Menu d'actions</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <a href="javascript:void(0)"
+                          class="dropdown-item"
+                          title="Exporter le questionnaire"
+                      >
+                        <!-- todo : do the export -->
+                        Exporter
+                      </a>
+                      <a class="dropdown-item"
+                        href="javascript:void(0)"
+                        @click="showQuestionnaireDeleteModal(questionnaire)"
+                      >
+                        <div class="text-danger">
+                          Supprimer...
+                        </div>
+                      </a>
                     </div>
                   </div>
                 </template>

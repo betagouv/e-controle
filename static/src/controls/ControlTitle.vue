@@ -85,32 +85,33 @@
               Comment voir les réponses ?
             </a>
           </div>
-          <div>
-            <a class="btn btn-secondary btn-rounded-left"
-                href="javascript:void(0)"
-                @click="enterEditMode"
-            >
+
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-secondary"
+                    @click="enterEditMode">
               <i class="fe fe-edit mr-2"></i>
               Modifier
-            </a>
-
-            <div class="dropdown">
-              <button type="button"
-                      class="btn btn-secondary btn-rounded-right dropdown-toggle"
-                      data-toggle="dropdown">
-              </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item"
-                  href="javascript:void(0)"
-                  @click="showControlDeleteModal"
-                >
-                  <div class="text-danger">
-                    Supprimer cet espace...
-                  </div>
-                </a>
-              </div>
+            </button>
+            <button type="button"
+                    class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+              <span class="sr-only">Menu d'actions</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item"
+                href="javascript:void(0)"
+                @click="showControlDeleteModal"
+              >
+                <div class="text-danger">
+                  Supprimer cet espace...
+                </div>
+              </a>
             </div>
           </div>
+
         </div>
 
       </div>
