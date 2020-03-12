@@ -105,6 +105,7 @@
                       type="button"
                       @click="showControlDeleteModal"
               >
+                <i class="fe fe-trash-2 mr-2"></i>
                 Supprimer cet espace...
               </button>
             </div>

@@ -96,11 +96,13 @@
                     <div class="dropdown-menu dropdown-menu-right">
                       <button class="dropdown-item" type="button">
                         <!-- todo : do the export -->
+                        <i class="fe fe-file-text mr-2"></i>
                         Exporter
                       </button>
                       <button class="dropdown-item text-danger"
                               type="button"
                               @click="showQuestionnaireDeleteModal(questionnaire)">
+                        <i class="fe fe-trash-2 mr-2"></i>
                         Supprimer...
                       </button>
                     </div>
