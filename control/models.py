@@ -6,10 +6,10 @@ from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+from softdelete.models import SoftDeleteModel
 
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
@@ -72,7 +72,7 @@ class QuestionnaireFileMixin(object):
         return self.file_name
 
 
-class Control(models.Model):
+class Control(SoftDeleteModel):
     # These error messages are used in the frontend (ConsoleCreate.vue),
     # if you change them you might break the frontend.
     INVALID_ERROR_MESSAGE = 'INVALID'
@@ -100,6 +100,8 @@ class Control(models.Model):
         ],
         unique=True,
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
+
+    objects = models.Manager()
 
     class Meta:
         verbose_name = "Controle"
