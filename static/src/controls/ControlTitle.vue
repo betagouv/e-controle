@@ -102,15 +102,11 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item"
                   href="javascript:void(0)"
-                  @click="enterEditMode"
-                >
-                  Modifier cet espace...
-                </a>
-                <a class="dropdown-item"
-                  href="javascript:void(0)"
                   @click="showControlDeleteModal"
                 >
-                  Supprimer cet espace...
+                  <div class="text-danger">
+                    Supprimer cet espace...
+                  </div>
                 </a>
               </div>
             </div>

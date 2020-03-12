@@ -92,23 +92,19 @@
                       <button type="button" class="btn btn-primary btn-rounded-right dropdown-toggle" data-toggle="dropdown">
                       </button>
                       <div class="dropdown-menu">
-                        <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                           class="dropdown-item"
-                           title="Modifier le brouillon de questionnaire"
-                        >
-                          Modifier...
-                        </a>
-                        <a class="dropdown-item"
-                          href="javascript:void(0)"
-                          @click="showQuestionnaireDeleteModal(questionnaire)"
-                        >
-                          Supprimer...
-                        </a>
                         <a href="javascript:void(0)"
                            class="dropdown-item"
                            title="Exporter le questionnaire"
                         >
                           Exporter
+                        </a>
+                        <a class="dropdown-item"
+                          href="javascript:void(0)"
+                          @click="showQuestionnaireDeleteModal(questionnaire)"
+                        >
+                          <div class="text-danger">
+                            Supprimer...
+                          </div>
                         </a>
                       </div>
 
