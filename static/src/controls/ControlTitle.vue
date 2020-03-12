@@ -101,14 +101,12 @@
               <span class="sr-only">Menu d'actions</span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <a class="dropdown-item"
-                href="javascript:void(0)"
-                @click="showControlDeleteModal"
+              <button class="dropdown-item text-danger"
+                      type="button"
+                      @click="showControlDeleteModal"
               >
-                <div class="text-danger">
-                  Supprimer cet espace...
-                </div>
-              </a>
+                Supprimer cet espace...
+              </button>
             </div>
           </div>
 

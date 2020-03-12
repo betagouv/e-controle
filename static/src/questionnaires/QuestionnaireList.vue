@@ -94,21 +94,15 @@
                       <span class="sr-only">Menu d'actions</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                      <a href="javascript:void(0)"
-                          class="dropdown-item"
-                          title="Exporter le questionnaire"
-                      >
+                      <button class="dropdown-item" type="button">
                         <!-- todo : do the export -->
                         Exporter
-                      </a>
-                      <a class="dropdown-item"
-                        href="javascript:void(0)"
-                        @click="showQuestionnaireDeleteModal(questionnaire)"
-                      >
-                        <div class="text-danger">
-                          Supprimer...
-                        </div>
-                      </a>
+                      </button>
+                      <button class="dropdown-item text-danger"
+                              type="button"
+                              @click="showQuestionnaireDeleteModal(questionnaire)">
+                        Supprimer...
+                      </button>
                     </div>
                   </div>
                 </template>
