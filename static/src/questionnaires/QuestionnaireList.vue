@@ -200,19 +200,4 @@ export default Vue.extend({
     margin-right: 0.10rem;
   }
 
-  .btn-rounded-right {
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 0px;
-  }
-
-  .btn-rounded-left {
-    border-radius: 3px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 3px;
-  }
 </style>

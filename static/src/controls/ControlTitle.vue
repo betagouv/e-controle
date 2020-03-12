@@ -86,7 +86,7 @@
             </a>
           </div>
           <div>
-            <a class="btn btn-secondary btn-rounded-left border-right-0"
+            <a class="btn btn-secondary btn-rounded-left"
                 href="javascript:void(0)"
                 @click="enterEditMode"
             >
@@ -95,7 +95,9 @@
             </a>
 
             <div class="dropdown">
-              <button type="button" class="btn btn-rounded-right .bg-gray dropdown-toggle" data-toggle="dropdown">
+              <button type="button"
+                      class="btn btn-secondary btn-rounded-right dropdown-toggle"
+                      data-toggle="dropdown">
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item"
@@ -229,20 +231,6 @@ export default Vue.extend({
     position: absolute;
     top: 2px;
     left: 5px;
-  }
-  .btn-rounded-right {
-    border-radius: 3px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 0px;
-  }
-  .btn-rounded-left {
-    border-radius: 3px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-bottom-left-radius: 3px;
   }
   .break-word {
     word-break: break-all;
