@@ -97,11 +97,13 @@
                         <span class="sr-only">Menu d'actions</span>
                       </button>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button">
-                          <!-- todo : do the export -->
+                        <a class="dropdown-item"
+                            :href="exportUrl(questionnaire)"
+                            target="_blank"
+                            title="Exporter">
                           <i class="fe fe-file-text mr-2"></i>
                           Exporter
-                        </button>
+                        </a>
                         <button class="dropdown-item text-danger"
                                 type="button"
                                 @click="showQuestionnaireDeleteModal(questionnaire.id)">
@@ -144,6 +146,7 @@
 </template>
 
 <script>
+import backendUrls from '../utils/backend'
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
 import QuestionnaireDeleteModal from './QuestionnaireDeleteModal'
@@ -173,6 +176,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    exportUrl(questionnaire) {
+      return backendUrls['questionnaire-export'](questionnaire.id)
+    },
     showQuestionnaireDeleteModal(questionnaireId) {
       $('#questionnaireDeleteModal-' + questionnaireId + ' .confirm-modal').modal('show')
     },
