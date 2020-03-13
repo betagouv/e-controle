@@ -1,16 +1,23 @@
 <!--
-  A flow in three modals :
+  A flow in three modals (that you specify in three corresponding slots):
    - 1 - confirm-modal: The user clicks checkboxes (or fills whatever other form) to validate that
    they really want to take the action.<style scoped>
    - 2 - waiting-modal: the action is taken in the background (e.g. API call) while a wait message
    is displayed.
    - 3 - success-modal: the action has successfully been taken, a success modal is displayed.
 
-   Todo : when action errors
+  The action to take is specified by passing actionFunction as a prop. The function should return a
+  Promise, that either resolves, or rejects with an error whose message will be displayed to
+  the user.
+
+   Todo : example
 -->
 <template>
   <div>
     <empty-modal ref="confirmModal" class="confirm-modal" :no-close="true">
+      <error-bar v-if="errorMessage !== undefined" class="m-3">
+        {{ errorMessage }}
+      </error-bar>
       <form @submit.prevent="confirmed">
         <!--
           This slot should contain the form, which when submitted will trigger the rest of the
@@ -47,6 +54,7 @@
 
 <script>
 import EmptyModal from './EmptyModal'
+import ErrorBar from './ErrorBar'
 import Vue from 'vue'
 
 const SPINNER_DURATION_MILLIS = 2000
@@ -56,8 +64,14 @@ export default Vue.extend({
     // The function to run once the user has confirmed they really want to take the action.
     actionFunction: Function,
   },
+  data() {
+    return {
+      errorMessage: undefined,
+    }
+  },
   components: {
     EmptyModal,
+    ErrorBar,
   },
   methods: {
     // Called by parent to start the flow.
@@ -78,6 +92,8 @@ export default Vue.extend({
       $(this.$refs.confirmModal.$el).modal('hide')
       $(this.$refs.waitingModal.$el).modal('show')
 
+      this.errorMessage = undefined
+
       return Promise.all([this.wait(SPINNER_DURATION_MILLIS), this.actionFunction()])
         .then(() => {
           console.debug('Done action.')
@@ -85,9 +101,11 @@ export default Vue.extend({
           $(this.$refs.successModal.$el).modal('show')
         })
         .catch(error => {
-          console.error('Error deleting questionnaire : ', error)
-          // todo display error.
-          this.$emit('error', error)
+          console.error('Error while doing the action : ', error)
+          // Go back to the first modal, with an error message.
+          this.errorMessage = error.message ? error.message : error
+          $(this.$refs.waitingModal.$el).modal('hide')
+          $(this.$refs.confirmModal.$el).modal('show')
         })
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <modal-flow ref="modalFlow" :action-function="callDeleteControlAPI">
+  <modal-flow ref="modalFlow" :action-function="callDeleteQuestionnaireAPI">
 
     <template v-slot:confirm-modal-form>
       <div class="modal-header border-bottom-0">
@@ -85,7 +85,7 @@ export default Vue.extend({
       console.debug('outer start!')
       this.$refs.modalFlow.start()
     },
-    callDeleteControlAPI() {
+    callDeleteQuestionnaireAPI() {
       // Todo call real API
       console.log('calling API...')
       return Promise.resolve()
