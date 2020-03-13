@@ -99,6 +99,10 @@ export default Vue.extend({
     // Called by parent to start the flow.
     start() {
       console.debug('start!')
+      $(this.$refs.confirmModal.$el).on('hidden.bs.modal', () => {
+        this.error = undefined
+      })
+
       $(this.$refs.confirmModal.$el).modal('show')
     },
     wait(timeMillis) {
