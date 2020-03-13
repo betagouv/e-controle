@@ -56,6 +56,25 @@
       Questionnaire en cours de publication ...
     </template>
 
+    <template v-slot:error-message>
+      <div>
+        Le questionnaire n'a pas pu être publié. Vous pouvez réessayer.
+      </div>
+      <div>
+        Si l'erreur persiste, vous pouvez contacter
+        <a :href="'mailto:' + config.support_team_email + '?subject=Erreur lors de la publication :' + JSON.stringify($refs.modalFlow.error)"
+            class="text-nowrap"
+            target="_blank"
+        >
+          {{ config.support_team_email }}
+        </a>
+        , et indiquer l'erreur suivante :
+      </div>
+      <div>
+        {{ $refs.modalFlow.error }}
+      </div>
+    </template>
+
     <template v-slot:success-modal-body>
       <div class="modal-header border-bottom-0 flex-column align-items-center">
         <p>
@@ -88,14 +107,9 @@
 import backend from '../utils/backend'
 import { mapFields } from 'vuex-map-fields'
 import ModalFlow from '../utils/ModalFlow'
-import { store } from '../store'
 import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
 
 export default Vue.extend({
-  store,
   components: {
     ModalFlow,
   },
@@ -109,8 +123,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapFields([
-      'config', // used to get support_team_email for error message. Seems overkill to use vuex.
-      // todo errors
+      'config',
     ]),
   },
   methods: {

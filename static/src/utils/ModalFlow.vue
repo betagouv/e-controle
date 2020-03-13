@@ -10,13 +10,30 @@
   Promise, that either resolves, or rejects with an error whose message will be displayed to
   the user.
 
-   Todo : example
+  To trigger the start of the flow, you need to call ModalFlow's "start" method.
+
+  See ControlDeleteFlow.vue for an example of use.
+
+  Optional : if you want to customize how errors are displayed, you can use the slot named
+  "error-message". To use the error object, you need to fetch it in the ModalFlow object. See
+  PublishFlow.vue for an example.
+
 -->
 <template>
   <div>
     <empty-modal ref="confirmModal" class="confirm-modal" :no-close="true">
-      <error-bar v-if="errorMessage !== undefined" class="m-3">
-        {{ errorMessage }}
+      <error-bar v-if="error !== undefined" class="m-3">
+        <!-- The "error-message" slot should be displayed if specified, otherwise display a default
+        layout. -->
+        <div v-if="hasCustomError">
+          <slot name="error-message"></slot>
+        </div>
+        <div v-else-if="error.message !== undefined">
+          {{ error.message }}
+        </div>
+        <div v-else>
+          {{ error }}
+        </div>
       </error-bar>
       <form @submit.prevent="confirmed">
         <!--
@@ -66,8 +83,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      errorMessage: undefined,
+      error: undefined,
     }
+  },
+  computed: {
+    hasCustomError() {
+      return !!this.$scopedSlots['error-message']
+    },
   },
   components: {
     EmptyModal,
@@ -92,7 +114,7 @@ export default Vue.extend({
       $(this.$refs.confirmModal.$el).modal('hide')
       $(this.$refs.waitingModal.$el).modal('show')
 
-      this.errorMessage = undefined
+      this.error = undefined
 
       return Promise.all([this.wait(SPINNER_DURATION_MILLIS), this.actionFunction()])
         .then(() => {
@@ -103,7 +125,7 @@ export default Vue.extend({
         .catch(error => {
           console.error('Error while doing the action : ', error)
           // Go back to the first modal, with an error message.
-          this.errorMessage = error.message ? error.message : error
+          this.error = error
           $(this.$refs.waitingModal.$el).modal('hide')
           $(this.$refs.confirmModal.$el).modal('show')
         })
