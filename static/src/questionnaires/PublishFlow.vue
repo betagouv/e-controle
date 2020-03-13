@@ -62,7 +62,9 @@
       </div>
       <div>
         Si l'erreur persiste, vous pouvez contacter
-        <a :href="'mailto:' + config.support_team_email + '?subject=Erreur lors de la publication :' + JSON.stringify($refs.modalFlow.error)"
+        <a :href="'mailto:' + config.support_team_email +
+                  '?subject=Erreur lors de la publication : ' +
+                  $refs.modalFlow.error.message"
             class="text-nowrap"
             target="_blank"
         >
@@ -71,7 +73,7 @@
         , et indiquer l'erreur suivante :
       </div>
       <div>
-        {{ $refs.modalFlow.error }}
+        {{ $refs.modalFlow.error.message }}
       </div>
     </template>
 
