@@ -38,5 +38,5 @@ django-http-referrer-policy==1.0.1
 django-feature-policy==3.0.0
 django-csp==3.6
 django-email-obfuscator==0.1.5
-https://github.com/collabo-br/django-soft-delete/archive/0.2.0.tar.gz
+soft-delete==0.2.2
 coverage==5.0.4
