@@ -12,7 +12,7 @@ from django.views.generic.detail import SingleObjectMixin
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
-from utils.soft_delete import SoftDeletedAdmin, IsActiveFilter
+from soft_deletion.admin import SoftDeletedAdmin, IsActiveFilter
 
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin

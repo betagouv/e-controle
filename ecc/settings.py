@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'utils',
     'adauth',
     'session',
+    'soft_deletion',
     'tos',
     'logs',
 
