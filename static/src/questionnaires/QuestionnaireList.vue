@@ -67,55 +67,64 @@
                 </small>
               </div>
             </td>
-            <td class="w-1 text-right action-column">
+            <td class="w-1 action-column">
               <template v-if="!user.is_inspector">
-                <a :href="questionnaire.url"
-                   class="btn btn-primary"
-                   title="Déposer et consulter vos réponses"
-                >
-                  <i class="fe fe-eye"></i>
-                  Répondre
-                </a>
+                <div class="text-right">
+                  <a :href="questionnaire.url"
+                    class="btn btn-primary"
+                    title="Déposer et consulter vos réponses"
+                  >
+                    <i class="fe fe-eye"></i>
+                    Répondre
+                  </a>
+                </div>
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
-                  <div class="btn-group">
-                    <a class="btn btn-primary"
-                       :href="'/questionnaire/modifier/' + questionnaire.id"
-                       title="Modifier le brouillon de questionnaire">
-                      <i class="fe fe-edit"></i>
-                      Modifier
-                    </a>
-                    <button type="button"
-                            class="btn btn-primary dropdown-toggle dropdown-toggle-split ml-1"
-                            data-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false">
-                      <span class="sr-only">Menu d'actions</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                      <button class="dropdown-item" type="button">
-                        <!-- todo : do the export -->
-                        <i class="fe fe-file-text mr-2"></i>
-                        Exporter
+                  <div class="text-right">
+                    <div class="btn-group">
+                      <a class="btn btn-primary"
+                        :href="'/questionnaire/modifier/' + questionnaire.id"
+                        title="Modifier le brouillon de questionnaire">
+                        <i class="fe fe-edit"></i>
+                        Modifier
+                      </a>
+                      <button type="button"
+                              class="btn btn-primary dropdown-toggle dropdown-toggle-split ml-1"
+                              data-toggle="dropdown"
+                              aria-haspopup="true"
+                              aria-expanded="false">
+                        <span class="sr-only">Menu d'actions</span>
                       </button>
-                      <button class="dropdown-item text-danger"
-                              type="button"
-                              @click="showQuestionnaireDeleteModal(questionnaire)">
-                        <i class="fe fe-trash-2 mr-2"></i>
-                        Supprimer...
-                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item" type="button">
+                          <!-- todo : do the export -->
+                          <i class="fe fe-file-text mr-2"></i>
+                          Exporter
+                        </button>
+                        <button class="dropdown-item text-danger"
+                                type="button"
+                                @click="showQuestionnaireDeleteModal(questionnaire.id)">
+                          <i class="fe fe-trash-2 mr-2"></i>
+                          Supprimer...
+                        </button>
+                      </div>
                     </div>
                   </div>
+                  <questionnaire-delete-modal :id="'questionnaireDeleteModal-' + questionnaire.id"
+                                              :questionnaire="questionnaire">
+                  </questionnaire-delete-modal>
                 </template>
                 <template v-else>
-                  <a :href="questionnaire.url"
-                    class="btn btn-primary ml-2"
-                    title="Voir le brouillon de questionnaire"
-                  >
-                    <i class="fe fe-eye"></i>
-                    Consulter
-                  </a>
+                  <div class="text-right">
+                    <a :href="questionnaire.url"
+                      class="btn btn-primary ml-2"
+                      title="Voir le brouillon de questionnaire"
+                    >
+                      <i class="fe fe-eye"></i>
+                      Consulter
+                    </a>
+                  </div>
                 </template>
               </template>
             </td>
@@ -131,7 +140,6 @@
       </a>
     </div>
 
-    <questionnaire-delete-modal></questionnaire-delete-modal>
   </div>
 </template>
 
@@ -165,8 +173,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    showQuestionnaireDeleteModal(questionnaire) {
-      $('#questionnaireDeleteModal').modal('show')
+    showQuestionnaireDeleteModal(questionnaireId) {
+      $('#questionnaireDeleteModal-' + questionnaireId + ' .confirm-modal').modal('show')
     },
   },
 })
