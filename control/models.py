@@ -71,8 +71,8 @@ class Control(models.Model):
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
     class Meta:
-        verbose_name = "Controle"
-        verbose_name_plural = "Controles"
+        verbose_name = "Contrôle"
+        verbose_name_plural = "Contrôles"
 
     def data(self):
         return {
@@ -122,7 +122,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         help_text=(
             "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
     control = models.ForeignKey(
-        to='Control', verbose_name='controle', related_name='questionnaires',
+        to='Control', verbose_name='contrôle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
