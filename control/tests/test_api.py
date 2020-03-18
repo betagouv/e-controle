@@ -48,7 +48,7 @@ def test_can_update_theme_order():
     response = utils.update_resource(client, user, 'theme', payload)
 
     assert response.status_code == 200
-    assert response.data['order'] == str(new_order)
+    assert response.data['order'] == new_order
 
 
 #### Question API ####
