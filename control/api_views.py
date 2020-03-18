@@ -29,7 +29,7 @@ class ControlViewSet(viewsets.ModelViewSet):
         return ControlSerializer
 
     def get_queryset(self):
-        return self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        return self.request.user.profile.controls.active()
 
     def add_log_entry(self, control, verb):
         action_details = {

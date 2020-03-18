@@ -22,7 +22,7 @@ class WithListOfControlsMixin(object):
         context = super().get_context_data(**kwargs)
         # Questionnaires are grouped by control:
         # we get the list of questionnaire from the list of controls
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         control_list = Control.objects.filter(id__in=user_controls).order_by('-id')
         context['controls'] = control_list
         return context
@@ -50,7 +50,7 @@ class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
     template_name = "ecc/trash.html"
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         queryset = Questionnaire.objects.filter(control__in=user_controls)
         return queryset
 
@@ -91,7 +91,7 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         queryset = Questionnaire.objects.filter(control__in=user_controls)
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
@@ -120,7 +120,7 @@ class QuestionnaireEdit(LoginRequiredMixin, WithListOfControlsMixin, DetailView)
     def get_queryset(self):
         if not self.request.user.profile.is_inspector:
             return Control.objects.none()
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         questionnaires = Questionnaire.objects.filter(
             control__in=user_controls,
             editor=self.request.user
@@ -136,7 +136,7 @@ class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
     context_object_name = 'control'
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         if not self.request.user.profile.is_inspector:
             return Control.objects.none()
         return Control.objects.filter(id__in=user_controls)
@@ -232,7 +232,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         return self.model.objects.filter(control__in=user_controls)
 
 
@@ -244,7 +244,7 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
         # The user should only have access to files that belong to the control
         # he was associated with. That's why we filter-out based on the user's
         # control.
-        user_controls = self.request.user.profile.controls.filter(deleted_at__isnull=True)
+        user_controls = self.request.user.profile.controls.active()
         return self.model.objects.filter(
             question__theme__questionnaire__control__in=user_controls)
 

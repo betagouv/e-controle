@@ -11,6 +11,8 @@ from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
 from softdelete.models import SoftDeleteModel
 
+from soft_deletion.managers import DeletableQuerySet
+
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
 
@@ -101,7 +103,7 @@ class Control(SoftDeleteModel):
         unique=True,
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
-    objects = models.Manager()
+    objects = DeletableQuerySet.as_manager()
 
     class Meta:
         verbose_name = "Controle"
