@@ -81,13 +81,13 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(file=self.request.data.get('file'))
 
 
 class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
@@ -95,13 +95,13 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(file=self.request.data.get('file'))
 
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
@@ -109,7 +109,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def put(self, request, *args, **kwargs):
