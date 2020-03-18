@@ -107,7 +107,7 @@ class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMix
         'sent_date', 'end_date')
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
-    raw_id_fields = ('editor',)
+    raw_id_fields = ('editor', 'control')
     actions = ['megacontrol_admin_action']
     inlines = (ThemeInline, )
 
