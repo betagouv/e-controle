@@ -22,6 +22,7 @@ class UserProfileInline(admin.StackedInline):
 
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
+    list_filter = ('profile__profile_type', 'profile__controls')
 
 
 admin.site.unregister(User)
