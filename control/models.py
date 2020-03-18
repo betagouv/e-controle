@@ -28,7 +28,7 @@ class WithNumberingMixin(object):
     numbering.fget.short_description = 'Numérotation'
 
 
-class QuestionnaireFileMixin(object):
+class FileInfoMixin(object):
     """
     Add common helpers for file information.
     """
@@ -37,39 +37,8 @@ class QuestionnaireFileMixin(object):
     def file_name(self):
         return self.file.name
 
-    @property
-    def question_display(self):
-        question = self.question
-        url = reverse('admin:control_question_change', args=[question.pk])
-        return mark_safe(f'<a href="{url}">{question.numbering}. {question}</a>')
-    question_display.fget.short_description = 'question'
-
-    @property
-    def questionnaire_display(self):
-        is_empty = not self.question.theme or not self.question.theme.questionnaire
-        if is_empty:
-            return '-'
-        questionnaire = self.question.theme.questionnaire
-        url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
-        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
-    questionnaire_display.fget.short_description = 'questionnaire'
-
-    @property
-    def control_display(self):
-        is_empty = (
-            not self.question.theme or
-            not self.question.theme.questionnaire or
-            not self.question.theme.questionnaire.control
-        )
-        if is_empty:
-            return '-'
-        control = self.question.theme.questionnaire.control
-        url = reverse('admin:control_control_change', args=[control.pk])
-        return mark_safe(f'<a href="{url}">{control}</a>')
-    control_display.fget.short_description = 'control'
-
     def __str__(self):
-        return self.file_name
+        return f'id {self.id} - {self.file_name}'
 
 
 class Control(models.Model):
@@ -102,8 +71,8 @@ class Control(models.Model):
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
     class Meta:
-        verbose_name = "Controle"
-        verbose_name_plural = "Controles"
+        verbose_name = "Contrôle"
+        verbose_name_plural = "Contrôles"
 
     def data(self):
         return {
@@ -124,8 +93,8 @@ class Control(models.Model):
 
     def __str__(self):
         if self.depositing_organization:
-            return f'{self.title} - {self.depositing_organization}'
-        return self.title
+            return f'id {self.id} - {self.title} - {self.depositing_organization}'
+        return f'id {self.id} - {self.title}'
 
 
 class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -153,7 +122,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         help_text=(
             "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
     control = models.ForeignKey(
-        to='Control', verbose_name='controle', related_name='questionnaires',
+        to='Control', verbose_name='contrôle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
@@ -206,7 +175,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.title_display
+        return f'id {self.id} - C{self.control.id}-Q{self.numbering} - {self.title}'
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -222,7 +191,7 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name_plural = "Thèmes"
 
     def __str__(self):
-        return self.title
+        return f'id {self.id} - C{self.questionnaire.control.id}-Q{self.questionnaire.numbering}-T{self.numbering} - {self.title}'
 
 
 class Question(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -242,10 +211,10 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.description
+        return f'id {self.id} - C{self.theme.questionnaire.control.id}-Q{self.theme.questionnaire.numbering}-T{self.theme.numbering}-{self.numbering} - {self.description}'
 
 
-class QuestionFile(OrderedModel, QuestionnaireFileMixin):
+class QuestionFile(OrderedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
@@ -270,7 +239,7 @@ class QuestionFile(OrderedModel, QuestionnaireFileMixin):
 
 
 @cleanup.ignore
-class ResponseFile(TimeStampedModel, QuestionnaireFileMixin):
+class ResponseFile(TimeStampedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)

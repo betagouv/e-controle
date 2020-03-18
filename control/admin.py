@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.views.generic import DetailView, RedirectView
@@ -14,57 +15,117 @@ from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMix
 
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
+from user_profiles.models import UserProfile
 
 
-class AdminHelpers(object):
+class ParentLinksMixin(object):
+    def link_to_question(self, obj):
+        question = None
+        if hasattr(obj, 'question'):
+            question = obj.question
+        url = reverse("admin:control_question_change", args=[question.id])
+        return mark_safe(f'<a href="{url}">{question}</a>')
+    link_to_question.short_description = 'Question'
 
-    def more_details(self, instance):
-        return 'détails...'
-    more_details.short_description = 'détails'
+    def link_to_theme(self, obj):
+        theme = None
+        if hasattr(obj, 'theme'):
+            theme = obj.theme
+        if hasattr(obj, 'question'):
+            theme = obj.question.theme
+        url = reverse("admin:control_theme_change", args=[theme.id])
+        return mark_safe(f'<a href="{url}">{theme}</a>')
+    link_to_theme.short_description = 'Theme'
+
+    def link_to_questionnaire(self, obj):
+        questionnaire = None
+        if hasattr(obj, 'questionnaire'):
+            questionnaire = obj.questionnaire
+        elif hasattr(obj, 'theme'):
+            questionnaire = obj.theme.questionnaire
+        elif hasattr(obj, 'question'):
+            questionnaire = obj.question.theme.questionnaire
+
+        url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
+        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
+    link_to_questionnaire.short_description = 'Questionnaire'
+
+    def link_to_control(self, obj):
+        control = None
+        if hasattr(obj, 'control'):
+            control = obj.control
+        elif hasattr(obj, 'questionnaire'):
+            control = obj.questionnaire.control
+        elif hasattr(obj, 'theme'):
+            control = obj.theme.questionnaire.control
+        elif hasattr(obj, 'question'):
+            control = obj.question.theme.questionnaire.control
+
+        url = reverse("admin:control_control_change", args=[control.id])
+        return mark_safe(f'<a href="{url}">{control}</a>')
+    link_to_control.short_description = 'Control'
 
 
 class QuestionnaireInline(OrderedTabularInline):
     model = Questionnaire
     fields = (
-        'title', 'description', 'uploaded_file', 'generated_file', 'end_date',
-        'move_up_down_links', 'order')
-    readonly_fields = ('move_up_down_links',)
+        'id', 'title', 'description', 'uploaded_file', 'generated_file', 'end_date',
+        'order', 'move_up_down_links')
+    readonly_fields = ('id', 'move_up_down_links',)
     extra = 1
+
+
+class UserProfileInline(admin.TabularInline):
+    model = UserProfile.controls.through
+    verbose_name_plural = 'Profils Utilisateurs'
+    extra = 1
+    fields = ('userprofile',)
+    raw_id_fields = ('userprofile',)
 
 
 @admin.register(Control)
 class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('title', 'depositing_organization', 'reference_code')
+    list_display = ('id', 'title', 'depositing_organization', 'reference_code')
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
-    inlines = (QuestionnaireInline, )
+    inlines = (QuestionnaireInline, UserProfileInline, )
+
+
+class ThemeInline(OrderedTabularInline):
+    model = Theme
+    fields = (
+        'id', 'title', 'order', 'move_up_down_links')
+    readonly_fields = ('id', 'order', 'move_up_down_links')
+    extra = 1
 
 
 @admin.register(Questionnaire)
-class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedModelAdmin):
+class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'title', 'control', 'numbering', 'order', 'is_draft', 'editor',
+        'id', 'numbering', 'title', 'link_to_control', 'is_draft', 'editor',
         'sent_date', 'end_date')
-    list_editable = ('order',)
-    readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
-    raw_id_fields = ('editor',)
+    raw_id_fields = ('editor', 'control')
     actions = ['megacontrol_admin_action']
+    inlines = (ThemeInline, )
 
 
 class QuestionInline(OrderedTabularInline):
     model = Question
-    fields = ('description', 'order', 'move_up_down_links')
-    readonly_fields = ('order', 'move_up_down_links')
+    fields = ('id', 'description', 'order', 'move_up_down_links')
+    readonly_fields = ('id', 'order', 'move_up_down_links')
 
 
 @admin.register(Theme)
-class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
-    list_display = ('numbering', 'title', 'questionnaire', 'move_up_down_links')
+class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
+    list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('title',)
     list_filter = ('questionnaire__control', 'questionnaire',)
+    fields = (
+        'id', 'title', 'questionnaire', 'link_to_control')
+    readonly_fields = ('id', 'link_to_control')
     inlines = (QuestionInline,)
 
 
@@ -76,8 +137,12 @@ class QuestionFileInline(OrderedTabularInline):
 
 
 @admin.register(Question)
-class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelpers):
-    list_display = ('more_details', 'numbering', 'description', 'theme', 'move_up_down_links')
+class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
+    list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control')
+    fields = (
+        'id', 'description', 'theme', 'link_to_questionnaire', 'link_to_control')
+    readonly_fields = ('id', 'link_to_questionnaire', 'link_to_control')
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
@@ -85,38 +150,37 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, AdminHelper
 
 
 @admin.register(ResponseFile)
-class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, AdminHelpers):
+class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
     list_display = (
-        'more_details', 'id', 'file_name', 'question_display', 'questionnaire_display',
-        'control_display', 'created', 'author', 'is_deleted')
-    list_display_links = ('more_details', 'id')
+        'id', 'file_name', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control', 'created', 'author', 'is_deleted')
+    list_display_links = ('id',)
     date_hierarchy = 'created'
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'author', 'question__theme')
     fields = (
-        'id', 'author', 'file_name', 'question_display', 'questionnaire_display', 'control_display',
+        'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
         'created', 'modified', 'is_deleted')
-    readonly_fields = ('file_name', 'question_display', 'questionnaire_display', 'control_display')
+    readonly_fields = ('file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
     search_fields = (
         'file', 'question__description', 'author__first_name', 'author__last_name',
         'author__username')
 
 
 @admin.register(QuestionFile)
-class QuestionFileAdmin(admin.ModelAdmin, AdminHelpers):
+class QuestionFileAdmin(admin.ModelAdmin, ParentLinksMixin):
     list_display = (
-        'more_details', 'id', 'file', 'question_display', 'questionnaire_display',
-        'control_display')
-    list_display_links = ('more_details', 'id')
+        'id', 'file', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
+        'link_to_control')
+    list_display_links = ('id',)
     list_filter = (
         'question__theme__questionnaire__control', 'question__theme__questionnaire',
         'question__theme')
     fields = (
-        'id', 'file', 'question', 'question_display', 'questionnaire_display',
-        'control_display', 'order')
+        'id', 'file', 'question', 'order', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = (
-        'id', 'question_display', 'questionnaire_display', 'control_display', 'order')
+        'id', 'order', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('file', 'question__description')
     raw_id_fields = ('question',)
 
