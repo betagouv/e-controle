@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from django.views.generic import DetailView, RedirectView
 from django.views.generic.detail import SingleObjectMixin
 
@@ -148,16 +148,29 @@ class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectM
         questionnaire = self.get_object()
         created_questionnaires = self.do_megacontrol(questionnaire)
 
-        message = (
-            f'Vous avez créé les <b>{ len(created_questionnaires) }</b> questionnaires suivants : <ul>')
+        message = format_html(
+            'Vous avez créé les <b>{}</b> questionnaires suivants : <ul>',
+            len(created_questionnaires)
+        )
         for created_questionnaire in created_questionnaires:
-            message += f'<li>'
-            message += f'  <a href="/{settings.ADMIN_URL}control/questionnaire/{created_questionnaire.id}/change/">'
-            message += f'    <b> {created_questionnaire.id} : {created_questionnaire} </b>'
-            message += f'  </a>'
-            message += f'  dans l\'espace <b>{ created_questionnaire.control }</b>'
-            message += f'</li>'
-        message += '</ul>'
-        messages.success(self.request, mark_safe(message))
+            message = format_html(
+                """
+                {}
+                <li>
+                    <a href="/{}control/questionnaire/{}/change/">
+                        <b> {} : {} </b>
+                    </a>
+                    dans l\'espace <b>{}</b>
+                </li>
+                """,
+                message,
+                settings.ADMIN_URL,
+                created_questionnaire.id,
+                created_questionnaire.id,
+                created_questionnaire,
+                created_questionnaire.control
+            )
+        message = format_html('{}</ul>', message)
+        messages.success(self.request, message)
 
         return super().get(*args, **kwargs)
