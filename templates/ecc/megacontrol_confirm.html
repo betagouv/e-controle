@@ -5,31 +5,38 @@
 {{ block.super }}
 {% endblock extra_static_header %}
 
-{% block page_content %}
+{% block content %}
+  <div class="mt-5 flex-column align-items-center">
+    <h3>Confirmer Megacontrole</h3>
 
-  <h3>Confirmer Megacontrole</h3>
+    <div>
+      <p>
+        Vous allez dupliquer le questionnaire {{questionnaire.id}} : <b>{{ questionnaire }}</b>
+      </p>
+      <p>
+        qui vient de l'espace : <b> {{ questionnaire.control }} </b>
+      </p>
+      <p>
+        dans les <b>{{ controls_to_copy_to.count }}</b> espaces suivants :
+        <ul>
+          {% for control_to_copy_to in controls_to_copy_to %}
+            <li><b>{{ control_to_copy_to }}</b></li>
+          {% endfor %}
+        </ul>
+      </p>
+    </div>
 
-  <p>
-    Vous allez dupliquer le questionnaire {{questionnaire.id}} : <b>{{ questionnaire }}</b>
-  </p>
-  <p>
-    qui vient de l'espace : <b> {{ questionnaire.control }} </b>
-  </p>
-  <p>
-    dans les <b>{{ controls_to_copy_to.count }}</b> espaces suivants :
-    <ul>
-      {% for control_to_copy_to in controls_to_copy_to %}
-        <li><b>{{ control_to_copy_to }}</b></li>
-      {% endfor %}
-    </ul>
-  </p>
+    <div class="flex-row">
+      <a href="{% url 'megacontrol-done' questionnaire.id %}" class="btn btn-primary" title="Faire la copie">
+        Faire la copie
+      </a>
 
-  <a href="{% url 'megacontrol-done' questionnaire.id %}" class="btn btn-primary" title="Faire la copie">
-      Faire la copie
-  </a>
-
-  <a href="/admin/control/questionnaire/" class="btn btn-secondary" title="Annuler">
-      Annuler
-  </a>
-{% endblock page_content %}
+      <a href="{% url 'admin:control_questionnaire_changelist' %}"
+         class="btn btn-secondary ml-5"
+         title="Annuler">
+        Annuler
+      </a>
+    </div>
+  </div>
+{% endblock content %}
 

@@ -1,4 +1,5 @@
 from django_admin import ReadOnlyModelAdmin
+from django.conf import settings
 from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -137,7 +138,7 @@ class MegacontrolConfirm(QuestionnaireDuplicateMixin, DetailView):
 
 @method_decorator(staff_member_required, name='dispatch')
 class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectMixin, RedirectView):
-    url = '/admin/control/questionnaire/'
+    url = f'/{settings.ADMIN_URL}control/questionnaire/'
     model = Questionnaire
 
     def get_queryset(self):
@@ -151,7 +152,7 @@ class Megacontrol(LoginRequiredMixin, QuestionnaireDuplicateMixin, SingleObjectM
             f'Vous avez créé les <b>{ len(created_questionnaires) }</b> questionnaires suivants : <ul>')
         for created_questionnaire in created_questionnaires:
             message += f'<li>'
-            message += f'  <a href="/admin/control/questionnaire/{created_questionnaire.id}/change/">'
+            message += f'  <a href="/{settings.ADMIN_URL}control/questionnaire/{created_questionnaire.id}/change/">'
             message += f'    <b> {created_questionnaire.id} : {created_questionnaire} </b>'
             message += f'  </a>'
             message += f'  dans l\'espace <b>{ created_questionnaire.control }</b>'
