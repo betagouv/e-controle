@@ -87,6 +87,9 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
+        question = serializer.validated_data['question']
+        if question.theme.questionnaire.control.is_deleted():
+            raise PermissionDenied('Invalid control')
         serializer.save(file=self.request.data.get('file'))
 
 
