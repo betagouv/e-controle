@@ -103,7 +103,7 @@
             <div class="dropdown-menu dropdown-menu-right">
               <button class="dropdown-item text-danger"
                       type="button"
-                      @click="showControlDeleteModal"
+                      @click="startControlDeleteFlow"
               >
                 <i class="fe fe-trash-2 mr-2"></i>
                 Supprimer cet espace...
@@ -116,7 +116,7 @@
       </div>
     </template>
 
-    <control-delete-modal :control="control"></control-delete-modal>
+    <control-delete-flow ref="controlDeleteFlow" :control="control"></control-delete-flow>
 
     <webdav-tip :id="'webdav-tip-' + control.id"
                 :webdavurl="webdavurl + '/' + control.reference_code">
@@ -131,7 +131,7 @@ import axios from 'axios'
 import backendUrls from '../utils/backend'
 import Vue from 'vue'
 import WebdavTip from '../controls/WebdavTip'
-import ControlDeleteModal from './ControlDeleteModal'
+import ControlDeleteFlow from './ControlDeleteFlow'
 
 import ErrorBar from '../utils/ErrorBar'
 
@@ -160,7 +160,7 @@ export default Vue.extend({
   components: {
     ErrorBar,
     WebdavTip,
-    ControlDeleteModal,
+    ControlDeleteFlow,
   },
   mounted() {
     this.restoreForm()
@@ -211,8 +211,8 @@ export default Vue.extend({
     showWebdavTip() {
       $('#webdav-tip-' + this.control.id).modal('show')
     },
-    showControlDeleteModal() {
-      $('#controlDeleteModal').modal('show')
+    startControlDeleteFlow() {
+      this.$refs.controlDeleteFlow.start()
     },
   },
 })

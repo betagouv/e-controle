@@ -106,16 +106,16 @@
                         </a>
                         <button class="dropdown-item text-danger"
                                 type="button"
-                                @click="showQuestionnaireDeleteModal(questionnaire.id)">
+                                @click="startQuestionnaireDeleteFlow(questionnaire.id)">
                           <i class="fe fe-trash-2 mr-2"></i>
                           Supprimer...
                         </button>
                       </div>
                     </div>
                   </div>
-                  <questionnaire-delete-modal :id="'questionnaireDeleteModal-' + questionnaire.id"
+                  <questionnaire-delete-flow :ref="'questionnaireDeleteFlow' + questionnaire.id"
                                               :questionnaire="questionnaire">
-                  </questionnaire-delete-modal>
+                  </questionnaire-delete-flow>
                 </template>
                 <template v-else>
                   <div class="text-right">
@@ -149,7 +149,7 @@
 import backendUrls from '../utils/backend'
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
-import QuestionnaireDeleteModal from './QuestionnaireDeleteModal'
+import QuestionnaireDeleteFlow from './QuestionnaireDeleteFlow'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -165,7 +165,7 @@ export default Vue.extend({
   },
   components: {
     HelpTooltip,
-    QuestionnaireDeleteModal,
+    QuestionnaireDeleteFlow,
   },
   computed: {
     accessibleQuestionnaires: function () {
@@ -176,11 +176,11 @@ export default Vue.extend({
     },
   },
   methods: {
+    startQuestionnaireDeleteFlow(questionnaireId) {
+      this.$refs['questionnaireDeleteFlow' + questionnaireId][0].start()
+    },
     exportUrl(questionnaire) {
       return backendUrls['questionnaire-export'](questionnaire.id)
-    },
-    showQuestionnaireDeleteModal(questionnaireId) {
-      $('#questionnaireDeleteModal-' + questionnaireId + ' .confirm-modal').modal('show')
     },
   },
 })
