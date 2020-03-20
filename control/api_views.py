@@ -7,9 +7,8 @@ from rest_framework import serializers
 
 import django.dispatch
 from django.core.files import File
-import os
 
-from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
+from .models import Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
@@ -102,9 +101,6 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = ResponseFile.objects.filter(
             question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
 
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
