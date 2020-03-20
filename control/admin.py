@@ -25,7 +25,11 @@ class ParentLinksMixin(object):
         if hasattr(obj, 'question'):
             question = obj.question
         url = reverse("admin:control_question_change", args=[question.id])
-        return mark_safe(f'<a href="{url}">{question}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            question
+        )
     link_to_question.short_description = 'Question'
 
     def link_to_theme(self, obj):
@@ -35,7 +39,11 @@ class ParentLinksMixin(object):
         if hasattr(obj, 'question'):
             theme = obj.question.theme
         url = reverse("admin:control_theme_change", args=[theme.id])
-        return mark_safe(f'<a href="{url}">{theme}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            theme
+        )
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
@@ -48,7 +56,11 @@ class ParentLinksMixin(object):
             questionnaire = obj.question.theme.questionnaire
 
         url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
-        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            questionnaire
+        )
     link_to_questionnaire.short_description = 'Questionnaire'
 
     def link_to_control(self, obj):
@@ -63,7 +75,11 @@ class ParentLinksMixin(object):
             control = obj.question.theme.questionnaire.control
 
         url = reverse("admin:control_control_change", args=[control.id])
-        return mark_safe(f'<a href="{url}">{control}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            control
+        )
     link_to_control.short_description = 'Control'
 
 
