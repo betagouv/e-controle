@@ -2,7 +2,7 @@ from django_admin import ReadOnlyModelAdmin
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 
 from actstream.models import Action, Follow
@@ -29,7 +29,15 @@ def get_object_display_line(obj):
     if not obj:
         return '-'
     url = get_admin_url(obj)
-    return mark_safe(f'<a href="{url}">{obj}</a>')
+    return format_html(
+        '<a href="{}">{}</a>',
+        url,
+        obj
+    )
+
+
+def action_display(obj):
+    return get_object_display_line(obj)
 
 
 def actor_display(obj):
@@ -44,6 +52,7 @@ def action_object_display(obj):
     return get_object_display_line(obj.action_object)
 
 
+action_display.short_description = 'action'
 actor_display.short_description = 'actor'
 target_display.short_description = 'target'
 action_object_display.short_description = 'action_object'
@@ -53,7 +62,7 @@ action_object_display.short_description = 'action_object'
 class ActionAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     date_hierarchy = 'timestamp'
     list_display = (
-        '__str__', actor_display, 'verb', target_display, 'target_content_type',
+        action_display, actor_display, 'verb', target_display, 'target_content_type',
         action_object_display, 'action_object_content_type', 'timestamp')
     list_filter = ('timestamp', 'verb')
     fieldsets = (
