@@ -4,8 +4,7 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
-from django.utils.safestring import mark_safe
-
+from django.utils.html import format_html
 
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
@@ -41,7 +40,12 @@ class QuestionnaireFileMixin(object):
     def question_display(self):
         question = self.question
         url = reverse('admin:control_question_change', args=[question.pk])
-        return mark_safe(f'<a href="{url}">{question.numbering}. {question}</a>')
+        return format_html(
+            '<a href="{}">{}. {}</a>',
+            url,
+            question.numbering,
+            question
+        )
     question_display.fget.short_description = 'question'
 
     @property
@@ -51,7 +55,11 @@ class QuestionnaireFileMixin(object):
             return '-'
         questionnaire = self.question.theme.questionnaire
         url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
-        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            questionnaire
+        )
     questionnaire_display.fget.short_description = 'questionnaire'
 
     @property
@@ -65,7 +73,11 @@ class QuestionnaireFileMixin(object):
             return '-'
         control = self.question.theme.questionnaire.control
         url = reverse('admin:control_control_change', args=[control.pk])
-        return mark_safe(f'<a href="{url}">{control}</a>')
+        return format_html(
+            '<a href="{}">{}</a>',
+            url,
+            control
+        )
     control_display.fget.short_description = 'control'
 
     def __str__(self):
