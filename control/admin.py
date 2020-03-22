@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.utils.html import format_html
 from django.views.generic import DetailView, RedirectView
@@ -121,7 +122,7 @@ class ThemeInline(OrderedTabularInline):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'numbering', 'title', 'link_to_control', 'is_draft', 'editor',
+        'id', 'numbering', 'title', 'order', 'link_to_control', 'is_draft', 'editor',
         'sent_date', 'end_date')
     list_editable = ('order',)
     readonly_fields = ('order',)
