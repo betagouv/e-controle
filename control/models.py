@@ -4,7 +4,6 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
-from django.utils.html import format_html
 
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
