@@ -6,13 +6,13 @@ from logs.actions import add_log_entry
 def soft_delete(modeladmin, request, queryset):
     for item in queryset:
         item.soft_delete()
-        add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item)
+        add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item, target=item)
 
 
 def undelete(modeladmin, request, queryset):
     for item in queryset:
         item.undelete()
-        add_log_entry(verb='admin undeleted', session_user=request.user, obj=item)
+        add_log_entry(verb='admin undeleted', session_user=request.user, obj=item, target=item)
 
 
 soft_delete.short_description = "Deactivate selected items - soft delete"

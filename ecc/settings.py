@@ -30,6 +30,7 @@ DEBUG_TOOLBAR_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
+    # Third-party apps
     'debug_toolbar',
     'model_utils',
     'ordered_model',
@@ -53,7 +55,9 @@ INSTALLED_APPS = [
     'django_admin',
     'django_http_referrer_policy',
     'email_obfuscator',
+    'softdelete',
 
+    # Project's apps
     'config',
     'control',
     'demo',
@@ -65,6 +69,7 @@ INSTALLED_APPS = [
     'utils',
     'adauth',
     'session',
+    'soft_deletion',
     'tos',
     'logs',
 

@@ -7,9 +7,8 @@ from rest_framework import serializers
 
 import django.dispatch
 from django.core.files import File
-import os
 
-from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
+from .models import Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
@@ -29,7 +28,7 @@ class ControlViewSet(viewsets.ModelViewSet):
         return ControlSerializer
 
     def get_queryset(self):
-        return self.request.user.profile.controls.all()
+        return self.request.user.profile.controls.active()
 
     def add_log_entry(self, control, verb):
         action_details = {
@@ -41,7 +40,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = self.get_queryset().get(id=response.data['id'])
         # The current user is automatically added to the created control
         self.request.user.profile.controls.add(control)
         self.add_log_entry(control=control, verb='created control')
@@ -49,7 +48,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).update(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = self.get_queryset().get(id=response.data['id'])
         self.add_log_entry(control=control, verb='updated control')
         return response
 
@@ -59,7 +58,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Question.objects.filter(
-            theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -81,13 +80,16 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
+
+    def perform_create(self, serializer):
+        question = serializer.validated_data['question']
+        if question.theme.questionnaire.control.is_deleted():
+            raise PermissionDenied('Invalid control')
+        serializer.save(file=self.request.data.get('file'))
 
 
 class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
@@ -95,12 +97,9 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
 
@@ -109,7 +108,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def put(self, request, *args, **kwargs):
@@ -147,7 +146,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Theme.objects.filter(
-            questionnaire__control__in=self.request.user.profile.controls.all())
+            questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
 

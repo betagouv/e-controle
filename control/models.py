@@ -9,6 +9,9 @@ from django.utils.html import format_html
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+from softdelete.models import SoftDeleteModel
+
+from soft_deletion.managers import DeletableQuerySet
 
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
@@ -36,11 +39,42 @@ class FileInfoMixin(object):
     def file_name(self):
         return self.file.name
 
+    @property
+    def question_display(self):
+        question = self.question
+        url = reverse('admin:control_question_change', args=[question.pk])
+        return mark_safe(f'<a href="{url}">{question.numbering}. {question}</a>')
+    question_display.fget.short_description = 'question'
+
+    @property
+    def questionnaire_display(self):
+        is_empty = not self.question.theme or not self.question.theme.questionnaire
+        if is_empty:
+            return '-'
+        questionnaire = self.question.theme.questionnaire
+        url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
+        return mark_safe(f'<a href="{url}">{questionnaire}</a>')
+    questionnaire_display.fget.short_description = 'questionnaire'
+
+    @property
+    def control_display(self):
+        is_empty = (
+            not self.question.theme or
+            not self.question.theme.questionnaire or
+            not self.question.theme.questionnaire.control
+        )
+        if is_empty:
+            return '-'
+        control = self.question.theme.questionnaire.control
+        url = reverse('admin:control_control_change', args=[control.pk])
+        return mark_safe(f'<a href="{url}">{control}</a>')
+    control_display.fget.short_description = 'control'
+
     def __str__(self):
         return f'id {self.id} - {self.file_name}'
 
 
-class Control(models.Model):
+class Control(SoftDeleteModel):
     # These error messages are used in the frontend (ConsoleCreate.vue),
     # if you change them you might break the frontend.
     INVALID_ERROR_MESSAGE = 'INVALID'
@@ -68,6 +102,8 @@ class Control(models.Model):
         ],
         unique=True,
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
+
+    objects = DeletableQuerySet.as_manager()
 
     class Meta:
         verbose_name = "Contrôle"
