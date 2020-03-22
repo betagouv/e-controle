@@ -108,6 +108,7 @@ class ControlAdmin(SoftDeletedAdmin, OrderedInlineModelAdminMixin, OrderedModelA
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
     inlines = (QuestionnaireInline, UserProfileInline, )
+    list_filter = (IsActiveFilter,)
 
 
 class ThemeInline(OrderedTabularInline):
