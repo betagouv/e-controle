@@ -41,7 +41,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = self.get_queryset().get(id=response.data['id'])
         # The current user is automatically added to the created control
         self.request.user.profile.controls.add(control)
         self.add_log_entry(control=control, verb='created control')
@@ -49,7 +49,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).update(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = self.get_queryset().get(id=response.data['id'])
         self.add_log_entry(control=control, verb='updated control')
         return response
 
@@ -59,7 +59,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Question.objects.filter(
-            theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -147,7 +147,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Theme.objects.filter(
-            questionnaire__control__in=self.request.user.profile.controls.all())
+            questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
 
