@@ -82,40 +82,13 @@
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
                   <div class="text-right">
-                    <div class="btn-group">
-                      <a class="btn btn-primary"
-                        :href="'/questionnaire/modifier/' + questionnaire.id"
-                        title="Modifier le brouillon de questionnaire">
-                        <i class="fe fe-edit"></i>
-                        Modifier
-                      </a>
-                      <button type="button"
-                              class="btn btn-primary dropdown-toggle dropdown-toggle-split ml-1"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false">
-                        <span class="sr-only">Menu d'actions</span>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item"
-                            :href="exportUrl(questionnaire)"
-                            target="_blank"
-                            title="Exporter">
-                          <i class="fe fe-file-text mr-2"></i>
-                          Exporter
-                        </a>
-                        <button class="dropdown-item text-danger"
-                                type="button"
-                                @click="startQuestionnaireDeleteFlow(questionnaire.id)">
-                          <i class="fe fe-trash-2 mr-2"></i>
-                          Supprimer...
-                        </button>
-                      </div>
-                    </div>
+                    <a class="btn btn-primary"
+                      :href="'/questionnaire/modifier/' + questionnaire.id"
+                      title="Modifier le brouillon de questionnaire">
+                      <i class="fe fe-edit"></i>
+                      Modifier
+                    </a>
                   </div>
-                  <questionnaire-delete-flow :ref="'questionnaireDeleteFlow' + questionnaire.id"
-                                              :questionnaire="questionnaire">
-                  </questionnaire-delete-flow>
                 </template>
                 <template v-else>
                   <div class="text-right">
