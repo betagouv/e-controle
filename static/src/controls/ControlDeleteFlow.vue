@@ -50,7 +50,7 @@
         </button>
         <button type="submit"
                 class="btn btn-primary btn-red"
-                title="Forcer le transfert"
+                title="Supprimer l'espace de dépôt"
         >
           <i class="fe fe-trash-2 mr-1"></i>
           Supprimer
@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import backendUrls from '../utils/backend.js'
 import ModalFlow from '../utils/ModalFlow'
 import Vue from 'vue'
 
@@ -104,9 +105,8 @@ export default Vue.extend({
       window.location.assign('/accueil')
     },
     callDeleteControlAPI() {
-      console.log('calling API...')
-      // todo call real API
-      return Promise.resolve()
+      const url = backendUrls.deleteControl(this.control.id)
+      return Vue.axios.post(url)
     },
   },
 })
