@@ -12,4 +12,4 @@ class DeleteViewSet(viewsets.ViewSet):
     def delete_control(self, request, pk):
         control = self.get_controls().get(pk=pk)
         control.delete()
-        return Response({'status': f"Deleted {control}"})
+        return Response({'status': f"Deactivated {control}"})
