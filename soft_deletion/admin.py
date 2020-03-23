@@ -1,11 +1,21 @@
 from django.contrib import admin
 
+from control.models import Control, Questionnaire
 from logs.actions import add_log_entry
+
+
+def find_parent_control(obj):
+    if isinstance(obj, Control):
+        return obj
+    if isinstance(obj, Questionnaire):
+        return obj.control
+    return obj
 
 
 def soft_delete(modeladmin, request, queryset):
     for item in queryset:
         item.soft_delete()
+        find_parent_control(item)
         add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item, target=item)
 
 
