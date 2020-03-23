@@ -59,6 +59,13 @@ def test_no_access_to_theme_for_deleted_control():
     assert get_theme(user, theme.id).status_code == 404
 
 
+def test_no_access_to_theme_for_deleted_control():
+    theme = factories.ThemeFactory()
+    user = utils.make_audited_user(theme.questionnaire.control)
+    theme.questionnaire.control.delete()
+    assert get_theme(user, theme.id).status_code == 404
+
+
 #### Question API ####
 
 def get_question(user, id):
