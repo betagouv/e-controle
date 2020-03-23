@@ -8,7 +8,7 @@ from rest_framework import serializers
 import django.dispatch
 from django.core.files import File
 
-from .models import Question, Questionnaire, Theme, QuestionFile, ResponseFile
+from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
 from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
@@ -40,7 +40,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = self.get_queryset().get(id=response.data['id'])
+        control = Control.objects.active().get(id=response.data['id'])
         # The current user is automatically added to the created control
         self.request.user.profile.controls.add(control)
         self.add_log_entry(control=control, verb='created control')
