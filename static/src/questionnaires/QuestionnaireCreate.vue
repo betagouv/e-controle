@@ -24,34 +24,45 @@
       {{ errorMessage }}
     </div>
 
-    <wizard id="wizard"
-            :active-step-number="this.state"
-            :step-titles="['Renseigner l\'introduction',
-                           'Ajouter des questions',
-                           'Aperçu avant publication']"
-            @next="next"
-            @previous="back">
-    </wizard>
+    <div v-if="typeof state === 'undefined'"
+         class="card mt-9">
+      <div class="card-body flex-column align-items-center">
+        <div class="loader"></div>
+        <div class="mt-4"> En chargement ... </div>
+      </div>
+    </div>
+    <div v-else
+         id="page-middle">
+      <wizard id="wizard"
+              :active-step-number="this.state"
+              :step-titles="['Renseigner l\'introduction',
+                            'Ajouter des questions',
+                            'Aperçu avant publication']"
+              @next="next"
+              @previous="back">
+      </wizard>
 
-    <questionnaire-metadata-create
-            id="questionnaire-metadata-create"
-            ref="questionnaireMetadataCreate"
-            :questionnaire-numbering="questionnaireNumbering"
-            v-show="state === STATES.START">
-    </questionnaire-metadata-create>
-    <questionnaire-body-create
-            id="questionnaire-body-create"
-            ref="questionnaireBodyCreate"
-            v-show="state === STATES.CREATING_BODY">
-    </questionnaire-body-create>
-    <questionnaire-preview
-            id="questionnaire-preview"
-            v-show="state === STATES.PREVIEW">
-    </questionnaire-preview>
-
+      <questionnaire-metadata-create
+              id="questionnaire-metadata-create"
+              ref="questionnaireMetadataCreate"
+              :questionnaire-numbering="questionnaireNumbering"
+              v-show="state === STATES.START">
+      </questionnaire-metadata-create>
+      <questionnaire-body-create
+              id="questionnaire-body-create"
+              ref="questionnaireBodyCreate"
+              v-show="state === STATES.CREATING_BODY">
+      </questionnaire-body-create>
+      <questionnaire-preview
+              id="questionnaire-preview"
+              v-show="state === STATES.PREVIEW">
+      </questionnaire-preview>
+    </div>
   </div>
+
   <div id="bottom-bar"
-        class="flex-column bg-white sticky-bottom border-top p-4">
+       v-if="typeof state !== 'undefined'"
+       class="flex-column bg-white sticky-bottom border-top p-4">
     <div id="button-bar" class="flex-row justify-content-between">
       <button id="go-home-button"
               type="button"
@@ -196,7 +207,7 @@ export default Vue.extend({
       errors: [],
       hasErrors: false,
       STATES: STATES,
-      state: '',
+      state: undefined,
       saveMessage: '',
       publishError: undefined,
     }
