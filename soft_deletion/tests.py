@@ -28,3 +28,16 @@ def test_inspector_can_delete_a_control():
     count_after = Control.objects.active().count()
     assert count_after == count_before - 1
     assert response.status_code == 200
+
+
+def test_audited_cannot_delete_a_control():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    control = factories.ControlFactory()
+    audited.controls.add(control)
+    utils.login(client, user=audited.user)
+    url = reverse('api:deletion-delete-control', args=[control.pk])
+    count_before = Control.objects.active().count()
+    response = client.post(url)
+    count_after = Control.objects.active().count()
+    assert count_after == count_before
+    assert response.status_code == 403

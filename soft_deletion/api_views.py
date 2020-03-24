@@ -2,8 +2,11 @@ from rest_framework import decorators
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+from control.permissions import OnlyInspectorCanAccess
+
 
 class DeleteViewSet(viewsets.ViewSet):
+    permission_classes = (OnlyInspectorCanAccess,)
 
     def get_controls(self):
         return self.request.user.profile.controls.active()
