@@ -3,8 +3,9 @@ from rest_framework import decorators
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 
+from control.permissions import OnlyInspectorCanChange
+
 from .models import UserProfile
-from .permissions import ChangeUserPermission
 from .serializers import UserProfileSerializer, RemoveControlSerializer
 
 
@@ -18,7 +19,7 @@ class UserProfileViewSet(
     serializer_class = UserProfileSerializer
     filterset_fields = ('controls', 'profile_type')
     search_fields = ('=user__username',)
-    permission_classes = (ChangeUserPermission,)
+    permission_classes = (OnlyInspectorCanChange,)
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(
