@@ -41,3 +41,14 @@ def test_audited_cannot_delete_a_control():
     count_after = Control.objects.active().count()
     assert count_after == count_before
     assert response.status_code == 403
+
+
+def test_delete_twice_raise_404():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:deletion-delete-control', args=[control.pk])
+    control.delete()
+    response = client.post(url)
+    assert response.status_code == 404
