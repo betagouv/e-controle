@@ -223,9 +223,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
-        if not request.user.profile.controls.filter(id=control.id).exists():
-            e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
-                                 code=status.HTTP_403_FORBIDDEN)
+        if not request.user.profile.controls.active().filter(id=control.id).exists():
+            e = PermissionDenied(
+                detail=(
+                    'Users can only create questionnaires '
+                    'in active controls that they belong to.'),
+                code=status.HTTP_403_FORBIDDEN)
             raise e
 
         return serializer.validated_data.get('themes', [])

@@ -263,6 +263,17 @@ def test_questionnaire_draft_update__editor_can_update():
     assert response.status_code == 200
 
 
+def test_questionnaire_create_fails_if_control_is_deleted():
+    increment_ids()
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    payload = make_create_payload(control.id)
+    assert_no_data_is_saved()
+    control.delete()
+    response = create_questionnaire(user, payload)
+    assert response.status_code == 403
+
+
 def test_questionnaire_draft_update__non_editor_cannot_update():
     increment_ids()
     questionnaire = factories.QuestionnaireFactory()
