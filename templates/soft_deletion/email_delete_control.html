@@ -16,9 +16,9 @@
 <p>
   Personnes concernées de l'équipe de contrôle :
   <ul>
-    {% for user in inspectors %}
+    {% for profile in inspectors %}
       <li>
-        {{ user.first_name }} {{ user.last_name }}
+        {{ profile.user.first_name }} {{ profile.user.last_name }}
       </li>
     {% endfor %}
   </ul>
