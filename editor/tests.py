@@ -138,3 +138,13 @@ def test_query_without_editor_is_refused():
 
     assert 400 <= response.status_code < 500
     assert_questionnaire_has_editor(questionnaire, user)
+
+
+def test_no_access_to_editor_api_for_deleted_control():
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control, assign_questionnaire_editor=False)
+    questionnaire = factories.QuestionnaireFactory(control=control, is_draft=True, editor=user)
+    assert_questionnaire_has_editor(questionnaire, user)
+    control.delete()
+    response = call_api(user, questionnaire.id, user.id)
+    assert response.status_code == 404
