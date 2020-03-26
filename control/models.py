@@ -125,6 +125,12 @@ class Control(SoftDeleteModel):
     def has_multiple_inspectors(self):
         return self.user_profiles.filter(profile_type=UserProfile.INSPECTOR).count() > 1
 
+    @property
+    def title_display(self):
+        if self.depositing_organization:
+            return f'{self.title} - {self.depositing_organization}'
+        return self.title
+
     def __str__(self):
         if self.depositing_organization:
             return f'id {self.id} - {self.title} - {self.depositing_organization}'
