@@ -150,6 +150,13 @@ def test_no_access_to_draft_if_not_inspector():
     assert get_questionnaire(audited_user, questionnaire.id).status_code != 200
 
 
+def test_no_access_to_questionnaire_control_is_deleted():
+    questionnaire = factories.QuestionnaireFactory()
+    audited_user = utils.make_audited_user(questionnaire.control)
+    questionnaire.control.delete()
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 404
+
+
 def test_questionnaire_create__success():
     increment_ids()
     control = factories.ControlFactory()
