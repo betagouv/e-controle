@@ -1,15 +1,15 @@
 from rest_framework import generics
 
-from control.models import Questionnaire
 from .serializers import UpdateEditorSerializer
+from control.models import Questionnaire
+from control.permissions import OnlyInspectorCanChange
 
 
 class UpdateEditor(generics.UpdateAPIView):
     serializer_class = UpdateEditorSerializer
+    permission_classes = (OnlyInspectorCanChange,)
 
     def get_queryset(self):
-        if not self.request.user.profile.is_inspector:
-            return Questionnaire.objects.none()
         queryset = Questionnaire.objects  \
             .filter(control__in=self.request.user.profile.controls.active())  \
             .filter(is_draft=True)
