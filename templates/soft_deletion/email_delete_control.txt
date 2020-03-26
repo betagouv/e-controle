@@ -1,10 +1,10 @@
 Bonjour,
 
-{{ deleter_user.first_name }} {{ deleter_user.last_name }} vient de supprimer l'espace de dépôt "{{ control }}"".
+{{ deleter_user.first_name }} {{ deleter_user.last_name }} vient de supprimer l'espace de dépôt "{{ control }}".
 
-Cet espace n'est donc plus accessible pour les personne qui y avaient accès, qu'elles soient membres de l'équipe de contrôle ou de l'organisme interrogé.
+Cet espace n'est donc plus accessible pour les personnes qui y avaient accès, qu'elles soient membres de l'équipe de contrôle ou de l'organisme interrogé.
 
-Personnes de l'équipe de contrôle qui n'ont plus accès à l'espace :
+  Personnes concernées de l'équipe de contrôle :
   {% for user in inspectors %}
    -  {{ user.first_name }} {{ user.last_name }}
   {% endfor %}
