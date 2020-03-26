@@ -1,0 +1,36 @@
+{% extends "base_email.html" %}
+{% block email_content %}
+
+<p>Bonjour,</p>
+
+<p>
+  {{ deleter_user.first_name }} {{ deleter_user.last_name }} vient de supprimer l'espace de dépôt
+  "{{ control }}".
+</p>
+
+<p>
+  Cet espace n'est donc plus accessible pour les personnes qui y avaient accès, qu'elles soient
+  membres de l'équipe de contrôle ou de l'organisme interrogé.
+</p>
+
+<p>
+  Personnes concernées de l'équipe de contrôle :
+  <ul>
+    {% for profile in inspectors %}
+      <li>
+        {{ profile.user.first_name }} {{ profile.user.last_name }}
+      </li>
+    {% endfor %}
+  </ul>
+</p>
+
+<p>
+  Si vous pensez ne pas être le bon destinataire de ce message, ou si cette suppression est une
+  erreur, vous pouvez nous contacter en répondant directement à cet email.
+</p>
+
+<p>Merci beaucoup,</p>
+
+<p>L'équipe e.contrôle</p>
+
+{% endblock email_content %}
