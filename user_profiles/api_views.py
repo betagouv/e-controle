@@ -23,7 +23,7 @@ class UserProfileViewSet(
 
     def get_queryset(self):
         queryset = UserProfile.objects.filter(
-            controls__in=self.request.user.profile.controls.all()).distinct()
+            controls__in=self.request.user.profile.controls.active()).distinct()
         return queryset
 
     @decorators.action(detail=True, methods=['post'], url_path='remove-control')

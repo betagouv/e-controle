@@ -15,8 +15,8 @@ def find_parent_control(obj):
 def soft_delete(modeladmin, request, queryset):
     for item in queryset:
         item.soft_delete()
-        find_parent_control(item)
-        add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item, target=item)
+        parent = find_parent_control(item)
+        add_log_entry(verb='admin soft deleted', session_user=request.user, obj=item, target=parent)
 
 
 def undelete(modeladmin, request, queryset):

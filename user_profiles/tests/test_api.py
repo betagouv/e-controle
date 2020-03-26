@@ -23,6 +23,33 @@ def test_logged_in_user_can_list_users():
     assert response.status_code == 200
 
 
+def test_logged_in_user_can_see_users_detail():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    login_user = inspector.user
+    target_user = factories.UserProfileFactory()
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    target_user.controls.add(control)
+    utils.login(client, user=login_user)
+    url = reverse('api:user-detail', args=[target_user.pk])
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+def test_no_access_to_user_associated_with_deleted_controle():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    login_user = inspector.user
+    target_user = factories.UserProfileFactory()
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    target_user.controls.add(control)
+    control.delete()
+    utils.login(client, user=login_user)
+    url = reverse('api:user-detail', args=[target_user.pk])
+    response = client.get(url)
+    assert response.status_code == 404
+
+
 def test_inspector_can_create_user():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()

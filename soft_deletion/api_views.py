@@ -1,4 +1,7 @@
 from django.dispatch import Signal
+from django.shortcuts import get_object_or_404
+
+
 from rest_framework import decorators
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -18,7 +21,7 @@ class DeleteViewSet(viewsets.ViewSet):
 
     @decorators.action(detail=True, methods=['post'], url_path='delete-control')
     def delete_control(self, request, pk):
-        control = self.get_controls().get(pk=pk)
+        control = get_object_or_404(self.get_controls(), pk=pk)
         control.delete()
         soft_delete_signal.send(
             sender=Control,
