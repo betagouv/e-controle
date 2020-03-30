@@ -19,7 +19,11 @@ from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSe
 questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"])
 
 
-class ControlViewSet(viewsets.ModelViewSet):
+class ControlViewSet(mixins.CreateModelMixin,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     viewsets.GenericViewSet):
     permission_classes = (OnlyInspectorCanChange,)
 
     def get_serializer_class(self):

@@ -246,3 +246,20 @@ def test_no_access_to_control_update_api_if_deleted():
     user = utils.make_inspector_user(control)
     control.delete()
     assert update_control(user, make_update_payload(), control).status_code == 404
+
+
+## Delete
+
+def test_cannot_delete_a_control():
+    """
+    This is a testing the DELETE method that should not be allowed.
+    To remove a contrl, we do a soft delete.
+    """
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    count_before = Control.objects.active().count()
+    assert get_control(user, control.id).status_code == 200
+    response = utils.delete_resource(client, user, 'control', control.pk)
+    count_after = Control.objects.active().count()
+    assert count_before == count_after
+    assert response.status_code == 405
