@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'envoi de ce formulaire n'a pas fonctionné.
+          La modification d'utilisateur n'a pas fonctionné.
         </div>
 
             <div class="form-group">
