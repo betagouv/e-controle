@@ -247,7 +247,7 @@ export default Vue.extend({
   #sidebar-vm {
     background-color: white;
   }
-  .sidebar-body {
+  .sidebar-body.vsm_expanded {
     min-width: 350px;
   }
 
