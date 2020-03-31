@@ -17,6 +17,12 @@
 </template>
 
 <script>
+/*
+  Note : there are also breadcrumbs in trash.html, that don't use this component (because it's not a
+  Vue page). If you change this component, maybe you will want to make the same changes to
+  trash.html.
+*/
+
 import backendUrls from './backend'
 import Vue from 'vue'
 
