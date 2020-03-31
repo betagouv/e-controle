@@ -147,10 +147,6 @@ export default Vue.extend({
     console.debug('this.window.location.pathname', this.window.location.pathname)
     if (this.window.location.pathname === backend.welcome()) {
       this.showSidebar = false
-      // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
-      // ever do).
-      const sidebar = this.window.document.getElementsByClassName('sidebar')[0]
-      sidebar.setAttribute('style', 'width: 135px;')
       return
     }
   },
@@ -240,9 +236,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  .sidebar {
-    width: 350px;
-  }
 </style>
 
 <style>
