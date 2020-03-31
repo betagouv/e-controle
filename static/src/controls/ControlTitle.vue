@@ -99,7 +99,7 @@
     </template>
 
     <webdav-tip :id="'webdav-tip-' + control.id"
-                :webdavurl="webdavurl + '/' + control.reference_code">
+                :reference-code="control.reference_code">
     </webdav-tip>
 
   </div>

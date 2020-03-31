@@ -25,7 +25,7 @@
               </strong>
             </p>
             <div>
-              <div id="link-text" class="mb-4">{{ webdavurl}}</div>
+              <div id="link-text" class="mb-4">{{webdavurl}}</div>
               <div id="copy-success-message-parent">
                 <button class="btn btn-primary"
                         @click="copyLink">
@@ -79,19 +79,29 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { mapFields } from 'vuex-map-fields'
 import EmptyModal from '../utils/EmptyModal'
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
 
 const SUCCESS_MESSAGE_FADE_SECONDS = 5
 
 export default Vue.extend({
-  props: ['webdavurl'],
+  props: ['referenceCode'],
   components: {
     EmptyModal,
   },
   data: function () {
     return {
       showCopySuccess: false,
+    }
+  },
+  computed: {
+    ...mapFields(['config']),
+    webdavurl: function() {
+      return this.config.webdav_url + '/' + this.referenceCode
     }
   },
   methods: {

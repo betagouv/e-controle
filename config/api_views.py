@@ -7,5 +7,8 @@ from rest_framework.response import Response
 class ConfigViewSet(viewsets.ViewSet):
 
     def list(self, request):
-        config = {'support_team_email': settings.SUPPORT_TEAM_EMAIL}
+        config = {
+            'support_team_email': settings.SUPPORT_TEAM_EMAIL,
+            'webdav_url': settings.WEBDAV_URL,
+        }
         return Response(config)
