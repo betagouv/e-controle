@@ -247,6 +247,9 @@ export default Vue.extend({
   #sidebar-vm {
     background-color: white;
   }
+  .sidebar-body {
+    min-width: 350px;
+  }
 
   /* Place toggle button outside of the sidebar, in the navbar. */
   .sidebar {
