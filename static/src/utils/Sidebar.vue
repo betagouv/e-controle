@@ -1,11 +1,5 @@
 <template>
   <div class="sidebar">
-    <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
-      <a class="header-brand" href="/accueil">
-        <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
-      </a>
-    </div>
-
     <div v-if="showSidebar">
       <sidebar-menu class="sidebar-body"
                     :menu="menu"
@@ -246,12 +240,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  .sidebar-header {
-    padding: 1rem;
-    width: 351px; /* 1px wider so that the right-border is hidden */
-    margin-top: 1px;
-  }
-
   .sidebar {
     width: 350px;
   }
