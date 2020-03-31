@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-row">
+  <h5 class="flex-row mb-5 text-muted">
     <div class="mx-2">
       <i class="fa fa-archive"></i>
     </div>
@@ -11,7 +11,7 @@
       {{ control.depositing_organization !== undefined ?
             control.depositing_organization : control.title}}
     </div>
-  </div>
+  </h5>
 </template>
 
 <script>
