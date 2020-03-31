@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="mx-3">
+    <breadcrumbs :control="control"></breadcrumbs>
     <template v-if="user.is_inspector">
       <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft">
       </request-editor-button>
@@ -64,6 +65,7 @@ import Vue from 'vue'
 
 import axios from 'axios'
 import backendUrls from '../utils/backend'
+import Breadcrumbs from '../utils/Breadcrumbs'
 import QuestionBox from '../questions/QuestionBox'
 import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
 import QuestionnaireMetadata from './QuestionnaireMetadata'
@@ -74,7 +76,10 @@ import SuccessBar from '../utils/SuccessBar'
 import ThemeBox from '../themes/ThemeBox'
 
 export default Vue.extend({
-  props: ['questionnaire'],
+  props: {
+    control: Object,
+    questionnaire: Object,
+  },
   data: function () {
     return {
       user: { is_audited: false },
@@ -92,6 +97,7 @@ export default Vue.extend({
     },
   },
   components: {
+    Breadcrumbs,
     QuestionBox,
     QuestionFileListWithoutVuex,
     QuestionnaireMetadata,
