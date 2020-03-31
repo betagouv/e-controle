@@ -1,6 +1,19 @@
 <template>
 <div>
   <div class="mx-3">
+    <div class="flex-row">
+      <div class="mx-2">
+        <i class="fa fa-archive"></i>
+      </div>
+      <div class="mx-2">
+        >
+      </div>
+      <div v-if="typeof state !== 'undefined'" class="mx-2">
+        {{ currentControl.reference_code }} -
+        {{ currentControl.depositing_organization !== undefined ?
+             currentControl.depositing_organization : currentControl.title}}
+      </div>
+    </div>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
@@ -218,6 +231,12 @@ export default Vue.extend({
       'controlsLoadStatus',
       'currentQuestionnaire',
     ]),
+    currentControl() {
+      if (!this.currentQuestionnaire || !this.currentQuestionnaire.control) {
+        return ''
+      }
+      return this.controls.find(control => control.id === this.currentQuestionnaire.control)
+    },
   },
   watch: {
     // Watch change of loadStatus coming from the store, to know when the data is ready.
