@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="container">
+  <div class="mx-3">
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
