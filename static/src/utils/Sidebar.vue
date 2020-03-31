@@ -7,12 +7,12 @@
                     :hideToggle="false"
                     :show-one-child="true"
                     theme="white-theme"
-                    :collapsed="collapsed"
-                    @item-click="onItemClick"
+                    :collapsed="false"
+                    widthCollapsed="0px"
       >
         <template v-slot:header>
           <div class="card-header flex-row justify-content-center border-top">
-            <div class="card-title">
+            <div class="card-title text-nowrap">
               Mes espaces de dépôt
             </div>
           </div>
@@ -38,7 +38,7 @@
             <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
           </div>
 
-          <div v-if="!collapsed && !isLoaded && !hasError"
+          <div v-if="!isLoaded && !hasError"
               class="sidebar-load-message card-header border-0 mt-4 mb-4">
             <div class="loader mr-2"></div>
             En attente de la liste d'espaces...
@@ -98,7 +98,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      collapsed: false,
       hasError: false,
       error: undefined,
       errorMessage: undefined,
@@ -228,8 +227,8 @@ export default Vue.extend({
       this.isMenuBuilt = true
       this.menu = menu
     },
-    onItemClick (event, item) {
-      console.debug('onItemClick', event, item)
+    onToggleCollapse (collapsed) {
+      console.debug('onToggleCollapse', collapsed)
     },
   },
 })
@@ -241,6 +240,11 @@ export default Vue.extend({
 <style>
   #sidebar-vm {
     background-color: white;
+  }
+
+  /* Don't show elements sticking out of the sidebar */
+  .sidebar-body {
+    overflow: hidden;
   }
 
   /* Add borders to items */
