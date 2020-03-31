@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <div v-if="showSidebar">
-      <button class="btn btn-secondary" @click="toggleCollapse">
+      <button id="toggle-button" class="btn btn-secondary" @click="toggleCollapse">
         <i class="fe fe-sidebar"></i>
         Fermer/ouvrir le menu
       </button>
@@ -240,6 +240,11 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+  #toggle-button {
+    position: fixed;
+    top: 23px;
+    left: 182px;
+  }
 </style>
 
 <style>
