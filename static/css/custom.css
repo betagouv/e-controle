@@ -238,3 +238,9 @@ table.trash-list {
     padding-left: 1em;
     padding-right: 1em;
 }
+
+/* Images */
+.icon-32 {
+    height: 32px;
+    width: 32px;
+}
