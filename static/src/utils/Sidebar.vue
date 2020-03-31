@@ -16,8 +16,9 @@
                     widthCollapsed="0px"
       >
         <template v-slot:header>
-          <div class="card-header flex-row justify-content-center border-top">
-            <div class="card-title text-nowrap">
+          <div id="sidebar-title"
+               class="card-header flex-row justify-content-center border-top">
+            <div class="card-title text-nowrap text-center">
               Mes espaces de dépôt
             </div>
           </div>
@@ -247,7 +248,7 @@ export default Vue.extend({
   #sidebar-vm {
     background-color: white;
   }
-  .sidebar-body.vsm_expanded {
+  #sidebar-title .card-title {
     min-width: 350px;
   }
 
