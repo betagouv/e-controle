@@ -7,6 +7,24 @@
 
 {% block page_main_container %}
 <div class="mx-3">
+  <!-- Code from Breadcrumbs.vue -->
+  <div class="flex-row">
+    <div class="mx-2">
+      <i class="fa fa-archive"></i>
+    </div>
+    <div class="mx-2">
+      &gt;
+    </div>
+    <div class="mx-2">
+      {{ questionnaire.control.reference_code }} -
+      {% if questionnaire.control.depositing_organization is not None %}
+        {{ questionnaire.control.depositing_organization }}
+      {% else %}
+        {{ questionnaire.control.title }}
+      {% endif %}
+    </div>
+  </div>
+
   <div class="page-header">
     <div class="page-title">
       <i class="fe fe-trash-2 mr-2"></i>

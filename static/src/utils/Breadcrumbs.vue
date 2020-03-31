@@ -4,7 +4,7 @@
       <i class="fa fa-archive"></i>
     </div>
     <div class="mx-2">
-      >
+      &gt;
     </div>
     <div class="mx-2">
       {{ control.reference_code }} -
