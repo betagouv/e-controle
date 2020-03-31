@@ -241,16 +241,21 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  #toggle-button {
-    position: fixed;
-    top: 23px;
-    left: 182px;
-  }
 </style>
 
 <style>
   #sidebar-vm {
     background-color: white;
+  }
+
+  /* Place toggle button outside of the sidebar, in the navbar. */
+  .sidebar {
+    position: relative;
+  }
+  #toggle-button {
+    position: absolute;
+    top: -60px;
+    left: 182px;
   }
 
   /* Don't show elements sticking out of the sidebar */
