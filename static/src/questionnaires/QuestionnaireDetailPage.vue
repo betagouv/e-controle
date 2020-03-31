@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mx-3">
     <template v-if="user.is_inspector">
       <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft">
       </request-editor-button>
@@ -99,7 +99,10 @@ import ThemeBox from '../themes/ThemeBox'
 import WebdavTip from '../controls/WebdavTip'
 
 export default Vue.extend({
-  props: ['questionnaire'],
+  props: {
+    control: Object,
+    questionnaire: Object,
+  },
   data: function () {
     return {
       user: { is_audited: false },
