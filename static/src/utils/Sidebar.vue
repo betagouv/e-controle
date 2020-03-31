@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div v-if="showSidebar">
       <button class="btn btn-secondary" @click="toggleCollapse">
-        <i class="fa fa-building"></i>
+        <i class="fe fe-sidebar"></i>
         Fermer/ouvrir le menu
       </button>
       <sidebar-menu class="sidebar-body"
