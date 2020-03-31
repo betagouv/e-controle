@@ -248,6 +248,12 @@ export default Vue.extend({
   #sidebar-vm {
     background-color: white;
   }
+
+  /*
+  Sidebar should not be too narrow, fix a min-width.
+  The sidebar itself has a changing width (since it collapses, with an animation), so constrain the
+  width of the sidebar-title instead.
+  */
   #sidebar-title .card-title {
     min-width: 350px;
   }
