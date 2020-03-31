@@ -7,65 +7,66 @@
     </div>
 
     <div v-if="showSidebar">
-      <div class="card-header flex-row justify-content-center border-top">
-        <div class="card-title">
-          Mes espaces de dépôt
-        </div>
-      </div>
-
-      <div v-if="isLoaded && controls.length === 0">
-        <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
-          <div v-if="user.is_inspector">
-            Vous n'avez pas encore créé d'espace de dépôt.
-          </div>
-          <div v-else>
-            Vous n'avez pas d'espace de dépôt.
-          </div>
-        </div>
-      </div>
-
-      <div v-if="user && user.is_inspector"
-          class="card-header flex-row justify-content-center border-0">
-        <control-create></control-create>
-      </div>
-
-      <div v-if="isLoaded && controls.length === 0"
-           class="ie-margin-for-footer">
-        <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
-      </div>
-
-      <div v-if="!collapsed && !isLoaded && !hasError"
-          class="sidebar-load-message card-header border-0 mt-4 mb-4">
-        <div class="loader mr-2"></div>
-        En attente de la liste d'espaces...
-      </div>
-
-      <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
-        <div>
-          Nous n'avons pas pu obtenir vos espaces de dépôt.
-        </div>
-        <div class="mt-2">
-          Erreur : {{ errorMessage }}
-        </div>
-        <div class="mt-2">
-          Vous pouvez essayer de recharger la page, ou
-          <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
-            target="_blank"
-          >
-            cliquez ici pour nous contacter
-          </a>.
-        </div>
-      </error-bar>
-
       <sidebar-menu class="sidebar-body"
                     :menu="menu"
                     :relative="true"
-                    :hideToggle="true"
+                    :hideToggle="false"
                     :show-one-child="true"
                     theme="white-theme"
                     :collapsed="collapsed"
                     @item-click="onItemClick"
       >
+        <template v-slot:header>
+          <div class="card-header flex-row justify-content-center border-top">
+            <div class="card-title">
+              Mes espaces de dépôt
+            </div>
+          </div>
+
+          <div v-if="isLoaded && controls.length === 0">
+            <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
+              <div v-if="user.is_inspector">
+                Vous n'avez pas encore créé d'espace de dépôt.
+              </div>
+              <div v-else>
+                Vous n'avez pas d'espace de dépôt.
+              </div>
+            </div>
+          </div>
+
+          <div v-if="user && user.is_inspector"
+              class="card-header flex-row justify-content-center border-0">
+            <control-create></control-create>
+          </div>
+
+          <div v-if="isLoaded && controls.length === 0"
+              class="ie-margin-for-footer">
+            <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
+          </div>
+
+          <div v-if="!collapsed && !isLoaded && !hasError"
+              class="sidebar-load-message card-header border-0 mt-4 mb-4">
+            <div class="loader mr-2"></div>
+            En attente de la liste d'espaces...
+          </div>
+
+          <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
+            <div>
+              Nous n'avons pas pu obtenir vos espaces de dépôt.
+            </div>
+            <div class="mt-2">
+              Erreur : {{ errorMessage }}
+            </div>
+            <div class="mt-2">
+              Vous pouvez essayer de recharger la page, ou
+              <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
+                target="_blank"
+              >
+                cliquez ici pour nous contacter
+              </a>.
+            </div>
+          </error-bar>
+        </template>
       </sidebar-menu>
     </div>
   </div>
@@ -291,6 +292,11 @@ export default Vue.extend({
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
     color: #495057;
     background-color: white;
+  }
+
+  /* Fix height of items when collapsed */
+  .vsm_collapsed .vsm--item {
+    height: 80px;
   }
 
 </style>
