@@ -1,13 +1,17 @@
 <template>
   <div class="sidebar">
     <div v-if="showSidebar">
+      <button class="btn btn-secondary" @click="toggleCollapse">
+        <i class="fa fa-building"></i>
+        Fermer/ouvrir le menu
+      </button>
       <sidebar-menu class="sidebar-body"
                     :menu="menu"
                     :relative="true"
-                    :hideToggle="false"
+                    :hideToggle="true"
                     :show-one-child="true"
                     theme="white-theme"
-                    :collapsed="false"
+                    :collapsed="collapsed"
                     widthCollapsed="0px"
       >
         <template v-slot:header>
@@ -98,6 +102,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      collapsed: false,
       hasError: false,
       error: undefined,
       errorMessage: undefined,
@@ -227,8 +232,8 @@ export default Vue.extend({
       this.isMenuBuilt = true
       this.menu = menu
     },
-    onToggleCollapse (collapsed) {
-      console.debug('onToggleCollapse', collapsed)
+    toggleCollapse() {
+      this.collapsed = !this.collapsed
     },
   },
 })
