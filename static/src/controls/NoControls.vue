@@ -30,7 +30,8 @@
         <div class="card-body flex-row align-items-center">
           <i class="fe fa-2x fe-users text-muted mr-4 p-4 border rounded"></i>
           <div class="card-title">
-            3. Partagez l'espace de dépôt avec les membres de votre équipe et ceux de l'organisme interrogé.
+            3. Partagez l'espace de dépôt avec les membres de votre équipe et ceux de l'organisme
+            interrogé.
           </div>
         </div>
       </div>
@@ -48,8 +49,8 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  export default Vue.extend({
+import Vue from 'vue'
+export default Vue.extend({
 
-  })
+})
 </script>
