@@ -11,9 +11,10 @@
         <div class="card-status card-status-top bg-blue"></div>
         <div class="card-body flex-row align-items-center">
           <i class="fa fa-2x fa-archive text-muted mr-4 p-4 border rounded"></i>
-          <div class="card-title">
+          <div class="card-title mb-0 mr-3">
             1. Créez un espace de dépôt pour chaque organisme interrogé.
           </div>
+          <control-create></control-create>
         </div>
       </div>
       <div class="card mx-2">
@@ -49,8 +50,12 @@
 </template>
 
 <script>
+import ControlCreate from './ControlCreate'
 import Vue from 'vue'
-export default Vue.extend({
 
+export default Vue.extend({
+  components: {
+    ControlCreate,
+  },
 })
 </script>
