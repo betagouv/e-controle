@@ -21,6 +21,25 @@
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
 
+      <div v-if="user.is_inspector" class="alert alert-info alert-icon">
+        <i class="fe fe-info" aria-hidden="true"></i>
+        <div class="flex-row justify-content-end">
+          <div>
+            <p>
+              Toutes les réponses déposées sont automatiquement classées et renomées dans un dossier
+              dans votre Explorateur Windows. Découvrez comment les consulter !
+            </p>
+          </div>
+          <div class="col-3 text-right pr-0">
+            <button class="btn btn-primary btn-fake-icon" @click="showWebdavTip">
+              <img :src="'/static/img/file-explorer.png'"
+                  alt="Explorateur Windows"
+                  class="fake-icon mr-2" />
+              Voir les réponses
+            </button>
+          </div>
+        </div>
+      </div>
       <div>
         <theme-box v-for="(theme, themeIndex) in questionnaire.themes"
                    :theme="theme"
@@ -45,6 +64,9 @@
 
       </div>
     </div>
+    <webdav-tip :id="'webdav-tip-' + questionnaire.control"
+                :reference-code="questionnaire.control_reference_code">
+    </webdav-tip>
   </div>
 
 </template>
@@ -53,7 +75,6 @@
   import Vue from "vue";
 
   import axios from 'axios'
-  import InfoBar from '../utils/InfoBar'
   import QuestionBox from '../questions/QuestionBox'
   import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
   import QuestionnaireMetadata from './QuestionnaireMetadata'
@@ -62,6 +83,7 @@
   import ResponseFileList from '../questions/ResponseFileList'
   import SuccessBar from '../utils/SuccessBar'
   import ThemeBox from '../themes/ThemeBox'
+  import WebdavTip from '../controls/WebdavTip'
 
   const questionnaire_url = "/api/questionnaire/";
   const session_user_url = "/api/user/current/";
@@ -83,9 +105,11 @@
           this.user = response.data
         })
       },
+      showWebdavTip() {
+        $('#webdav-tip-' + this.questionnaire.control).modal('show')
+      },
     },
     components: {
-      InfoBar,
       QuestionBox,
       QuestionFileListWithoutVuex,
       QuestionnaireMetadata,
@@ -94,6 +118,7 @@
       ResponseFileList,
       SuccessBar,
       ThemeBox,
+      WebdavTip,
     }
   })
 
