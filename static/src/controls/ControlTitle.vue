@@ -120,7 +120,6 @@ axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 export default Vue.extend({
   props: {
     control: Object,
-    webdavurl: String,
   },
   data: function() {
     return {

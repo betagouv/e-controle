@@ -18,7 +18,6 @@
                       :key="displayedControl.id"
                       :control="displayedControl"
                       :user="user"
-                      :webdavurl="webdavurl"
         >
         </control-card>
       </template>
@@ -63,7 +62,6 @@ export default Vue.extend({
     'controls',
     'user',
     'staticFilesUrl',
-    'webdavurl',
   ],
   data: function() {
     return {
