@@ -1,19 +1,7 @@
 <template>
 <div>
   <div class="mx-3">
-    <div class="flex-row">
-      <div class="mx-2">
-        <i class="fa fa-archive"></i>
-      </div>
-      <div class="mx-2">
-        >
-      </div>
-      <div v-if="typeof state !== 'undefined'" class="mx-2">
-        {{ currentControl.reference_code }} -
-        {{ currentControl.depositing_organization !== undefined ?
-             currentControl.depositing_organization : currentControl.title}}
-      </div>
-    </div>
+    <breadcrumbs v-if="typeof state !== 'undefined'" :control="currentControl"></breadcrumbs>
     <swap-editor-button v-if="controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
@@ -179,6 +167,7 @@
 <script>
 import axios from 'axios'
 import backend from '../utils/backend'
+import Breadcrumbs from '../utils/Breadcrumbs'
 import EmptyModal from '../utils/EmptyModal'
 import { loadStatuses } from '../store'
 import moment from 'moment'
@@ -233,7 +222,7 @@ export default Vue.extend({
     ]),
     currentControl() {
       if (!this.currentQuestionnaire || !this.currentQuestionnaire.control) {
-        return ''
+        return null
       }
       return this.controls.find(control => control.id === this.currentQuestionnaire.control)
     },
@@ -294,6 +283,7 @@ export default Vue.extend({
     },
   },
   components: {
+    Breadcrumbs,
     EmptyModal,
     PublishConfirmModal,
     QuestionnaireBodyCreate,
