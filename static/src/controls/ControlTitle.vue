@@ -98,7 +98,8 @@
       </div>
     </template>
 
-    <webdav-tip :id="'webdav-tip-' + control.id"
+    <webdav-tip :control-id="control.id"
+                :ref="'webdavTip' + control.id"
                 :reference-code="control.reference_code">
     </webdav-tip>
 
@@ -186,7 +187,7 @@ export default Vue.extend({
         })
     },
     showWebdavTip() {
-      $('#webdav-tip-' + this.control.id).modal('show')
+      this.$refs['webdavTip' + this.control.id].start()
     },
   },
 })

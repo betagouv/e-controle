@@ -64,7 +64,8 @@
 
       </div>
     </div>
-    <webdav-tip :id="'webdav-tip-' + questionnaire.control"
+    <webdav-tip ref="webdavTip"
+                :control-id="questionnaire.control"
                 :reference-code="questionnaire.control_reference_code">
     </webdav-tip>
   </div>
@@ -89,7 +90,7 @@
   const session_user_url = "/api/user/current/";
 
   export default Vue.extend({
-    props: [ 'questionnaire'],
+    props: ['questionnaire'],
     data : function () {
       return {
         user: { is_audited: false },
@@ -106,7 +107,7 @@
         })
       },
       showWebdavTip() {
-        $('#webdav-tip-' + this.questionnaire.control).modal('show')
+        this.$refs.webdavTip.start()
       },
     },
     components: {

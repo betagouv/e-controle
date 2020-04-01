@@ -5,9 +5,7 @@
 {% block page_main_container %}
   <div id="control-detail-vm">
     <control-page :controls="{{ controls_json }}"
-                       :user="{{ user_json }}"
-                       webdavurl="{{ settings.WEBDAV_URL }}"
-                       static-files-url="//{{ current_site.domain }}{% static '' %}"
+                  :user="{{ user_json }}"
     >
     </control-page>
   </div>
