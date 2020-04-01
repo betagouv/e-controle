@@ -265,7 +265,7 @@ export default Vue.extend({
   #toggle-button {
     position: fixed;
     top: 90px;
-    left: 316px;
+    left: 350px;
     z-index: 9990;
     transition: left 0.3s;
   }
