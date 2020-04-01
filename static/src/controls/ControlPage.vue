@@ -12,6 +12,7 @@
           </div>
         </div>
       </div>
+
       <template v-else>
         <control-card v-if="displayedControl !== undefined"
                       :key="displayedControl.id"
@@ -95,7 +96,6 @@ export default Vue.extend({
 
     const updateHash = () => {
       console.debug('hashchange', window.location.hash)
-
       if (!hashPointsToExistingControl(window.location.hash) && this.controls.length > 0) {
         // Change the hash to select the first control in the list, which will trigger the
         // hashchange event again.
