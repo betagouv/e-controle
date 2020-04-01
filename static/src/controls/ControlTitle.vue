@@ -3,7 +3,7 @@
     <div class="card-status card-status-top bg-blue"></div>
     <template v-if="editMode">
       <div class="card-body">
-        <error-bar v-if="hasErrors">
+        <error-bar v-if="hasErrors" :noclose="true">
             L'espace de dépôt n'a pas pu être modifié. Erreur : {{JSON.stringify(errors)}}
         </error-bar>
 
@@ -165,6 +165,7 @@ export default Vue.extend({
       this.quitEditMode()
     },
     updateControl: function() {
+      this.clearErrors()
       const payload = {
         title: this.title,
         depositing_organization: this.organization,
