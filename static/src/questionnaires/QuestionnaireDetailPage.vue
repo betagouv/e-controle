@@ -21,7 +21,7 @@
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
 
-      <div v-if="user.is_inspector" class="alert alert-info alert-icon">
+      <div v-if="user.is_inspector && !questionnaire.is_draft" class="alert alert-info alert-icon">
         <i class="fe fe-info" aria-hidden="true"></i>
         <div class="flex-row justify-content-end">
           <div>
@@ -64,7 +64,8 @@
 
       </div>
     </div>
-    <webdav-tip ref="webdavTip"
+    <webdav-tip v-if="!questionnaire.is_draft"
+                ref="webdavTip"
                 :control-id="questionnaire.control"
                 :reference-code="questionnaire.control_reference_code">
     </webdav-tip>
