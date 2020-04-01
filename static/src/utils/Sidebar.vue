@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" :class="{ collapsed: collapsed }">
     <div v-if="showSidebar">
       <button id="toggle-button" class="btn btn-secondary" @click="toggleCollapse">
         <i class="fe fe-sidebar"></i>
@@ -263,11 +263,15 @@ export default Vue.extend({
     position: relative;
   }
   #toggle-button {
-    position: absolute;
-    top: 173px;
-    right: -88px;
+    position: fixed;
+    top: 263px;
+    left: 312px;
     z-index: 9990;
     transform: rotate(90deg);
+    transition: left 0.3s;
+  }
+  .collapsed #toggle-button {
+    left: -35px;
   }
 
   /* Don't show elements sticking out of the sidebar */
