@@ -1,10 +1,13 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import DetailView, CreateView, TemplateView
 from django.views.generic.detail import SingleObjectMixin
+
 
 from actstream import action
 from actstream.models import model_stream
@@ -12,7 +15,7 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
-from .models import Control, Questionnaire, QuestionFile, ResponseFile
+from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
 from .serializers import ControlDetailControlSerializer, QuestionnaireSerializer, ControlDetailUserSerializer
 
 
@@ -160,10 +163,18 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         action.send(**action_details)
 
     def form_valid(self, form):
+        if not self.request.user.profile.is_audited:
+            return HttpResponseForbidden("User is not authorized to access this ressource")
         try:
             question_id = form.data['question_id']
         except KeyError:
             raise forms.ValidationError("Question ID was missing on file upload")
+        user_controls = self.request.user.profile.controls.active()
+        get_object_or_404(
+            Question,
+            pk=question_id,
+            theme__questionnaire__control__in=user_controls
+        )
         self.object = form.save(commit=False)
         self.object.question_id = question_id
         self.object.author = self.request.user
