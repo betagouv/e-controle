@@ -23,6 +23,33 @@ def test_logged_in_user_can_list_users():
     assert response.status_code == 200
 
 
+def test_logged_in_user_can_see_users_detail():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    login_user = inspector.user
+    target_user = factories.UserProfileFactory()
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    target_user.controls.add(control)
+    utils.login(client, user=login_user)
+    url = reverse('api:user-detail', args=[target_user.pk])
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+def test_no_access_to_user_associated_with_deleted_control():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    login_user = inspector.user
+    target_user = factories.UserProfileFactory()
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    target_user.controls.add(control)
+    control.delete()
+    utils.login(client, user=login_user)
+    url = reverse('api:user-detail', args=[target_user.pk])
+    response = client.get(url)
+    assert response.status_code == 404
+
+
 def test_inspector_can_create_user():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
@@ -109,6 +136,27 @@ def test_audited_cannot_create_user():
     count_after = User.objects.count()
     assert count_after == count_before
     assert response.status_code >= 300
+
+
+def test_cannot_create_user_when_control_is_deleted():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    control = factories.ControlFactory()
+    inspector.controls.add(control)
+    post_data = {
+        'first_name': 'Marcel',
+        'last_name': 'Proust',
+        'profile_type': UserProfile.AUDITED,
+        'email': 'marcel@proust.com',
+        'control': control.id
+    }
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    control.delete()
+    response = client.post(url, post_data)
+    count_after = User.objects.count()
+    assert count_after == count_before
+    assert 400 <= response.status_code < 500
 
 
 def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():

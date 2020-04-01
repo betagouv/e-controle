@@ -85,18 +85,38 @@
               Comment voir les réponses ?
             </a>
           </div>
-          <a href="javascript:void(0)"
-             class="btn btn-secondary"
-             title="Modifier l'espace de dépôt"
-             @click="enterEditMode"
-          >
-            <i class="fe fe-edit mr-2"></i>
-            Modifier
-          </a>
+
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-secondary"
+                    @click="enterEditMode">
+              <i class="fe fe-edit mr-2"></i>
+              Modifier
+            </button>
+            <button type="button"
+                    class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+              <span class="sr-only">Menu d'actions</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item text-danger"
+                      type="button"
+                      @click="startControlDeleteFlow"
+              >
+                <i class="fe fe-trash-2 mr-2"></i>
+                Supprimer cet espace...
+              </button>
+            </div>
+          </div>
+
         </div>
 
       </div>
     </template>
+
+    <control-delete-flow ref="controlDeleteFlow" :control="control"></control-delete-flow>
 
     <webdav-tip :id="'webdav-tip-' + control.id"
                 :webdavurl="webdavurl + '/' + control.reference_code">
@@ -111,6 +131,7 @@ import axios from 'axios'
 import backendUrls from '../utils/backend'
 import Vue from 'vue'
 import WebdavTip from '../controls/WebdavTip'
+import ControlDeleteFlow from './ControlDeleteFlow'
 
 import ErrorBar from '../utils/ErrorBar'
 
@@ -139,6 +160,7 @@ export default Vue.extend({
   components: {
     ErrorBar,
     WebdavTip,
+    ControlDeleteFlow,
   },
   mounted() {
     this.restoreForm()
@@ -190,6 +212,9 @@ export default Vue.extend({
     showWebdavTip() {
       $('#webdav-tip-' + this.control.id).modal('show')
     },
+    startControlDeleteFlow() {
+      this.$refs.controlDeleteFlow.start()
+    },
   },
 })
 
@@ -204,7 +229,6 @@ export default Vue.extend({
     top: 2px;
     left: 5px;
   }
-
   .break-word {
     word-break: break-all;
   }

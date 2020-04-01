@@ -49,6 +49,14 @@ def test_cannot_get_response_file_if_user_not_logged_in():
     assert response.status_code == 403
 
 
+def test_cannot_get_response_file_for_deleted_control():
+    response_file = factories.ResponseFileFactory()
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    response_file.question.theme.questionnaire.control.delete()
+    response = get_response_file(user, response_file.id)
+    assert response.status_code == 404
+
+
 ########## write methods
 
 def run_test_response_file_api_is_readonly(user, response_file):
@@ -175,3 +183,12 @@ def test_cannot_untrash_a_file():
 
     assert 400 <= response.status_code < 500
     assert ResponseFile.objects.get(id=response_file.id).is_deleted
+
+
+def test_cannot_trash_response_file_if_control_is_deleted():
+    response_file = factories.ResponseFileFactory()
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+    response_file.question.theme.questionnaire.control.delete()
+    response = trash_response_file(user, response_file.id, payload)
+    assert response.status_code == 404

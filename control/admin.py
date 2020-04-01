@@ -14,6 +14,8 @@ from django.views.generic.detail import SingleObjectMixin
 from ordered_model.admin import OrderedModelAdmin
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
+from soft_deletion.admin import SoftDeletedAdmin, IsActiveFilter
+
 from .models import Control, Questionnaire, Theme, Question, QuestionFile, ResponseFile
 from .questionnaire_duplicate import QuestionnaireDuplicateMixin
 from user_profiles.models import UserProfile
@@ -101,11 +103,12 @@ class UserProfileInline(admin.TabularInline):
 
 
 @admin.register(Control)
-class ControlAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin):
+class ControlAdmin(SoftDeletedAdmin, OrderedInlineModelAdminMixin, OrderedModelAdmin):
     list_display = ('id', 'title', 'depositing_organization', 'reference_code')
     search_fields = (
         'title', 'reference_code', 'questionnaires__title', 'questionnaires__description')
     inlines = (QuestionnaireInline, UserProfileInline, )
+    list_filter = (IsActiveFilter,)
 
 
 class ThemeInline(OrderedTabularInline):
@@ -120,8 +123,10 @@ class ThemeInline(OrderedTabularInline):
 class QuestionnaireAdmin(QuestionnaireDuplicateMixin, OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     save_as = True
     list_display = (
-        'id', 'numbering', 'title', 'link_to_control', 'is_draft', 'editor',
+        'id', 'numbering', 'title', 'order', 'link_to_control', 'is_draft', 'editor',
         'sent_date', 'end_date')
+    list_editable = ('order',)
+    readonly_fields = ('order',)
     search_fields = ('title', 'description')
     list_filter = ('control', 'is_draft')
     raw_id_fields = ('editor', 'control')

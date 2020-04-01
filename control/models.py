@@ -8,6 +8,9 @@ from django.urls import reverse
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+from softdelete.models import SoftDeleteModel
+
+from soft_deletion.managers import DeletableQuerySet
 
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
@@ -39,7 +42,7 @@ class FileInfoMixin(object):
         return f'id {self.id} - {self.file_name}'
 
 
-class Control(models.Model):
+class Control(SoftDeleteModel):
     # These error messages are used in the frontend (ConsoleCreate.vue),
     # if you change them you might break the frontend.
     INVALID_ERROR_MESSAGE = 'INVALID'
@@ -68,6 +71,8 @@ class Control(models.Model):
         unique=True,
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
+    objects = DeletableQuerySet.as_manager()
+
     class Meta:
         verbose_name = "Contrôle"
         verbose_name_plural = "Contrôles"
@@ -88,6 +93,12 @@ class Control(models.Model):
     @property
     def has_multiple_inspectors(self):
         return self.user_profiles.filter(profile_type=UserProfile.INSPECTOR).count() > 1
+
+    @property
+    def title_display(self):
+        if self.depositing_organization:
+            return f'{self.title} - {self.depositing_organization}'
+        return self.title
 
     def __str__(self):
         if self.depositing_organization:

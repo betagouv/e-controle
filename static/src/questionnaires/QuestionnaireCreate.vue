@@ -102,7 +102,7 @@
         <button v-if="state === STATES.PREVIEW"
                 id="publishButton"
                 ref="publishButton"
-                @click="showPublishConfirmModal()"
+                @click="startPublishFlow()"
                 class="btn btn-primary ml-5"
                 title="Publier le questionnaire à l'organisme interrogé">
           <i class="fa fa-rocket mr-1"></i>
@@ -117,60 +117,21 @@
     </div>
   </div>
 
-  <publish-confirm-modal id="publishConfirmModal"
-                          ref="publishConfirmModal"
-                          :error="publishError"
-                          @confirm="publish()"
-  >
-  </publish-confirm-modal>
-  <empty-modal id="savingModal"
-                ref="savingModal"
-                no-close="true">
-    <div class="d-flex flex-column align-items-center p-8">
-      <div class="m-4">
-        Questionnaire en cours de publication ...
-      </div>
-      <div class="loader m-4">
-      </div>
-    </div>
-  </empty-modal>
-  <empty-modal id="savedModal"
-                ref="savedModal"
-                no-close="true">
-    <div class="modal-header border-bottom-0 flex-column align-items-center">
-      <p>
-        <i class="fe fe-check-circle fg-success big-icon"></i>
-      </p>
-      <h4 class="text-center">
-        Bravo, votre questionnaire est publié!
-      </h4>
-    </div>
-    <div class="modal-body text-center">
-      <p>
-        Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
-        notification dès le lendemain 8 heures.
-      </p>
-    </div>
-    <div class="modal-footer border-top-0 d-flex justify-content-center">
-      <button type="button"
-              class="btn btn-primary"
-              @click="goHome"
-      >
-        < Revenir à l'accueil
-      </button>
-    </div>
-  </empty-modal>
+  <publish-flow ref="publishFlow"
+                :publishFunction="publish"
+                :controlId="currentQuestionnaire.control">
+  </publish-flow>
+
 </div>
 </template>
 
 <script>
 import axios from 'axios'
 import backend from '../utils/backend'
-import EmptyModal from '../utils/EmptyModal'
 import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
-import PublishConfirmModal from './PublishConfirmModal'
+import PublishFlow from './PublishFlow'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
 import QuestionnaireMetadataCreate from './QuestionnaireMetadataCreate'
 import QuestionnairePreview from './QuestionnairePreview'
@@ -186,7 +147,6 @@ const STATES = {
   PREVIEW: 3,
 }
 
-const PUBLISH_TIME_MILLIS = 3000
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
@@ -209,7 +169,6 @@ export default Vue.extend({
       STATES: STATES,
       state: undefined,
       saveMessage: '',
-      publishError: undefined,
     }
   },
   computed: {
@@ -275,8 +234,7 @@ export default Vue.extend({
     },
   },
   components: {
-    EmptyModal,
-    PublishConfirmModal,
+    PublishFlow,
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
     QuestionnairePreview,
@@ -294,10 +252,6 @@ export default Vue.extend({
     if (this.controlId === undefined && this.questionnaireId === undefined) {
       throw Error('QuestionnaireCreate needs a controlId or a questionnaireId')
     }
-
-    $('#publishConfirmModal').on('hidden.bs.modal', () => {
-      this.publishError = undefined
-    })
   },
   methods: {
     findCurrentQuestionnaire: function(controls, questionnaireId) {
@@ -458,36 +412,12 @@ export default Vue.extend({
           this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
         })
     },
-    wait(timeMillis) {
-      return new Promise((resolve) => {
-        const id = setTimeout(() => {
-          clearTimeout(id)
-          resolve()
-        }, timeMillis)
-      })
-    },
-    showPublishConfirmModal: function () {
-      $(this.$refs.publishConfirmModal.$el).modal('show')
+    startPublishFlow() {
+      this.$refs.publishFlow.start()
     },
     publish() {
-      $(this.$refs.savingModal.$el).modal('show')
       this.currentQuestionnaire.is_draft = false
-
-      // Leave the "Saving..." modal for at least PUBLISH_TIME_MILLIS.
-      // This is for the user to see the wait modal and be satisfied that the saving really
-      // happened.
-      return Promise.all([this.wait(PUBLISH_TIME_MILLIS), this._doSave()])
-        .then(() => {
-          console.debug('Done publishing questionnaire.')
-          $(this.$refs.savingModal.$el).modal('hide')
-          $(this.$refs.savedModal.$el).modal('show')
-        })
-        .catch(error => {
-          console.error('Error publishing questionnaire : ', error)
-          this.publishError = error
-          $(this.$refs.savingModal.$el).modal('hide')
-          this.showPublishConfirmModal()
-        })
+      return this._doSave()
     },
     saveDraftAndGoHome(event) {
       if (!this.validateCurrentForm()) {
