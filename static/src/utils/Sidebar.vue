@@ -264,8 +264,10 @@ export default Vue.extend({
   }
   #toggle-button {
     position: absolute;
-    top: -60px;
-    left: 182px;
+    top: 173px;
+    right: -88px;
+    z-index: 9990;
+    transform: rotate(90deg);
   }
 
   /* Don't show elements sticking out of the sidebar */
