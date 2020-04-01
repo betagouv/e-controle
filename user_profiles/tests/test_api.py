@@ -156,7 +156,8 @@ def test_cannot_create_user_when_control_is_deleted():
     response = client.post(url, post_data)
     count_after = User.objects.count()
     assert count_after == count_before
-    assert response.status_code >= 300
+    assert 400 <= response.status_code < 500
+
 
 def test_inspector_cannot_alter_a_control_that_is_not_accessible_to_him():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
