@@ -77,7 +77,7 @@
     <webdav-tip v-if="!questionnaire.is_draft"
                 ref="webdavTip"
                 :control-id="questionnaire.control"
-                :reference-code="questionnaire.control_reference_code">
+                :reference-code="control.reference_code">
     </webdav-tip>
   </div>
 
