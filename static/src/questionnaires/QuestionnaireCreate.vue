@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="container">
-    <swap-editor-button v-if="controlHasMultipleInspectors"
+    <swap-editor-button v-if="state !== STATES.LOADING && controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
     </swap-editor-button>
@@ -24,7 +24,7 @@
       {{ errorMessage }}
     </div>
 
-    <div v-if="typeof state === 'undefined'"
+    <div v-if="state === STATES.LOADING"
          class="card mt-9">
       <div class="card-body flex-column align-items-center">
         <div class="loader"></div>
@@ -61,7 +61,7 @@
   </div>
 
   <div id="bottom-bar"
-       v-if="typeof state !== 'undefined'"
+       v-if="state !== STATES.LOADING"
        class="flex-column bg-white sticky-bottom border-top p-4">
     <div id="button-bar" class="flex-row justify-content-between">
       <button id="go-home-button"
@@ -142,6 +142,7 @@ import Wizard from '../utils/Wizard'
 
 // State machine
 const STATES = {
+  LOADING: 0,
   START: 1,
   CREATING_BODY: 2,
   PREVIEW: 3,
@@ -167,7 +168,7 @@ export default Vue.extend({
       errors: [],
       hasErrors: false,
       STATES: STATES,
-      state: undefined,
+      state: STATES.LOADING,
       saveMessage: '',
     }
   },
