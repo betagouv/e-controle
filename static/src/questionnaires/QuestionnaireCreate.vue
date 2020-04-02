@@ -532,4 +532,9 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style scoped>
+  #bottom-bar {
+    margin-left: -2rem;
+    margin-right: -0.75rem;
+  }
+</style>
