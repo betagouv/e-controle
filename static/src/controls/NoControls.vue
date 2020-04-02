@@ -6,7 +6,7 @@
     <div class="card-title mb-xl-8">
       Quelques étapes pour bien démarrer...
     </div>
-    <div class="flex-column col-lg-11 col-xl-7">
+    <div id="steps" class="flex-column">
       <div class="card mx-2">
         <div class="card-status card-status-top bg-blue"></div>
         <div class="card-body flex-row align-items-center">
@@ -59,3 +59,9 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style scoped>
+  #steps {
+    max-width: 670px;
+  }
+</style>
