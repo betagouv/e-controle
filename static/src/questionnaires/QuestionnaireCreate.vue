@@ -69,14 +69,16 @@
               class="btn btn-secondary"
               @click="saveDraftAndGoHome"
       >
-        < Retour
+        <i class="fa fa-chevron-left mr-2"></i>
+        Retour
       </button>
       <div>
         <button v-if="state !== STATES.START"
                 id="back-button"
                 @click="back"
                 class="btn btn-secondary">
-          < Etape {{ state - 1 }}
+          <i class="fa fa-chevron-left mr-2"></i>
+          Etape {{ state - 1 }}
         </button>
         <button v-if="state === STATES.CREATING_BODY"
                 id="move-themes-button"
@@ -97,7 +99,8 @@
                 id="next-button"
                 @click="next"
                 class="btn btn-secondary">
-          Etape {{ state + 1 }} >
+          Etape {{ state + 1 }}
+          <i class="fa fa-chevron-right ml-2"></i>
         </button>
         <button v-if="state === STATES.PREVIEW"
                 id="publishButton"
