@@ -249,6 +249,11 @@ export default Vue.extend({
     background-color: white;
   }
 
+  /* Fix z-index for modal in CreateControl to be displayed correctly */
+  .sidebar .v-sidebar-menu {
+    z-index: unset;
+  }
+
   /*
   Sidebar should not be too narrow, fix a min-width.
   The sidebar itself has a changing width (since it collapses, with an animation), so constrain the
