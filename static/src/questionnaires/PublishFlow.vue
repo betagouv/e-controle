@@ -67,6 +67,7 @@
                   $refs.modalFlow.error.message"
             class="text-nowrap"
             target="_blank"
+            rel="noopener noreferrer"
         >
           {{ config.support_team_email }}
         </a>

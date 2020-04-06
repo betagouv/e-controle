@@ -64,9 +64,11 @@
             <i class="fa fa-play-circle mr-1"></i>
             Suivez les instructions en vidéo
           </button>
-          <a target="_blank" href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf"
-              class="btn btn-primary"
-              title="Suivez les instructions en images."
+          <a target="_blank"
+             rel="noopener noreferrer"
+             href="https://github.com/betagouv/e-controle/raw/develop/docs/guides/e-controle-explorateur-de-fichiers.pdf"
+             class="btn btn-primary"
+             title="Suivez les instructions en images."
           >
             <i class="fe fe-image mr-1"></i>
             Suivez les instructions en images
