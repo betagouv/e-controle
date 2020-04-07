@@ -86,17 +86,6 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
         serializer.save(file=self.request.data.get('file'))
 
 
-class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ResponseFileSerializer
-    parser_classes = (MultiPartParser, FormParser)
-    filterset_fields = ('question',)
-
-    def get_queryset(self):
-        queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
-        return queryset
-
-
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
     serializer_class = ResponseFileTrashSerializer
 
