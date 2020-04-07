@@ -126,3 +126,21 @@ def delete_resource_without_login(client, resource_type, resource_id):
     url = reverse('api:' + resource_type + '-detail', args=[resource_id])
     response = client.delete(url)
     return response
+
+
+def list_resource(client, user, resource_type):
+    """
+    Call the rest api to list all objects of a resource.
+    :param client: APIClient
+    :param user: user to log in
+    :param resource_type: e.g. 'questionnaire'
+    :return: response object from API
+    """
+    login(client, user=user)
+    return list_resource_without_login(client, resource_type)
+
+
+def list_resource_without_login(client, resource_type):
+    url = reverse('api:' + resource_type + '-list')
+    response = client.get(url)
+    return response

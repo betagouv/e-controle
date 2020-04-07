@@ -14,6 +14,10 @@ def get_questionnaire(user, id):
     return utils.get_resource(client, user, 'questionnaire', id)
 
 
+def list_questionnaires(user):
+    return utils.list_resource(client, user, 'questionnaire')
+
+
 def create_questionnaire(user, payload):
     return utils.create_resource(client, user, 'questionnaire', payload)
 
@@ -81,7 +85,7 @@ def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     assert create_questionnaire(inspector_user, payload).status_code == 201
 
 
-def test_cannot_retrieve_questionnaire_even_if_control_is_associated_with_the_user():
+def test_cannot_get_questionnaire_even_if_control_is_associated_with_the_user():
     # Retrieve is disabled
     questionnaire = factories.QuestionnaireFactory()
     audited_user = utils.make_audited_user(questionnaire.control)
@@ -89,6 +93,10 @@ def test_cannot_retrieve_questionnaire_even_if_control_is_associated_with_the_us
 
     assert get_questionnaire(audited_user, questionnaire.id).status_code == 405
     assert get_questionnaire(inspector_user, questionnaire.id).status_code == 405
+
+    # list is disabled
+    assert list_questionnaires(audited_user).status_code == 405
+    assert list_questionnaires(inspector_user).status_code == 405
 
 
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
