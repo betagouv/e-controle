@@ -66,7 +66,10 @@ class QuestionViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
         return queryset
 
 
-class QuestionFileViewSet(viewsets.ModelViewSet):
+class QuestionFileViewSet(mixins.DestroyModelMixin,
+                          mixins.ListModelMixin,
+                          mixins.CreateModelMixin,
+                          viewsets.GenericViewSet):
     serializer_class = QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
