@@ -14,17 +14,37 @@ client = APIClient()
 
 User = get_user_model()
 
-
-def test_can_get_question_file():
+### Retrive API endpoint closed.
+def test_cannot_get_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question_file = factories.QuestionFileFactory()
     inspector.controls.add(question_file.question.theme.questionnaire.control)
     utils.login(client, user=inspector.user)
     url = reverse('api:annexe-detail', args=[question_file.id])
     response = client.get(url)
-    assert response.status_code == 200
+    assert response.status_code == 405  # method not allowed
 
 
+def test_cannot_get_inexistant_question_file():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:annexe-detail', args=[21038476187629481736498376])
+    response = client.get(url)
+    assert response.status_code == 405  # method not allowed
+
+
+def test_cannot_get_question_file_if_control_is_deleted():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    question_file = factories.QuestionFileFactory()
+    inspector.controls.add(question_file.question.theme.questionnaire.control)
+    utils.login(client, user=inspector.user)
+    question_file.question.theme.questionnaire.control.delete()
+    url = reverse('api:annexe-detail', args=[question_file.id])
+    response = client.get(url)
+    assert response.status_code == 405  # method not allowed
+
+
+### Upload API
 def test_inspector_can_upload_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question = factories.QuestionFactory()
@@ -57,17 +77,6 @@ def test_inspector_can_remove_question_file():
     assert response.status_code == 204
     count_after = QuestionFile.objects.count()
     assert count_after == count_before - 1
-
-
-def test_cannot_get_question_file_if_control_is_deleted():
-    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    question_file = factories.QuestionFileFactory()
-    inspector.controls.add(question_file.question.theme.questionnaire.control)
-    utils.login(client, user=inspector.user)
-    question_file.question.theme.questionnaire.control.delete()
-    url = reverse('api:annexe-detail', args=[question_file.id])
-    response = client.get(url)
-    assert response.status_code == 404
 
 
 def test_cannot_upload_question_file_if_control_is_deleted():
