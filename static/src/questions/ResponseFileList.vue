@@ -29,7 +29,11 @@
               <div class="small text-muted">{{  file.creation_time }}</div>
             </td>
             <td>
-              <div><a target="_blank" :href="file.url">{{ file.basename }}</a></div>
+              <div>
+                <a target="_blank" rel="noopener noreferrer" :href="file.url">
+                  {{ file.basename }}
+                </a>
+              </div>
             </td>
             <td>
               <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>

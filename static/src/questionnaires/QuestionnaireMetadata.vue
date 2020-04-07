@@ -22,6 +22,7 @@
           <a class="btn btn-primary"
              :href="exportUrl"
              target="_blank"
+             rel="noopener noreferrer"
              title="Exporter ce questionnaire">
             <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
           </a>
