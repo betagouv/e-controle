@@ -14,7 +14,8 @@ user_api_post_remove = Signal(providing_args=['user_profile', 'control'])
 
 
 class UserProfileViewSet(
-        mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+        mixins.CreateModelMixin,
+        mixins.ListModelMixin,
         viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
     filterset_fields = ('controls', 'profile_type')
