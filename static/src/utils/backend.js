@@ -53,8 +53,11 @@ for (const [name, url] of Object.entries(apiUrls)) {
 
 urlMaker.currentUser = () => '/api/user/current/'
 urlMaker.removeUserFromControl = (id) => '/api/user/' + id + '/remove-control/'
-urlMaker.swapEditor = (questionnaireId) => '/api/questionnaire/' + questionnaireId + '/changer-redacteur/'
+urlMaker.swapEditor = (questionnaireId) =>
+  '/api/questionnaire/' + questionnaireId + '/changer-redacteur/'
 urlMaker.deleteControl = (controlId) => '/api/deletion/' + controlId + '/delete-control/'
+urlMaker.responseFileTrash = (responseFileId) =>
+  '/api/fichier-reponse/corbeille/' + responseFileId + '/'
 
 for (const [name, url] of Object.entries(viewUrls)) {
   urlMaker[name] = (id) => {
