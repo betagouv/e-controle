@@ -21,7 +21,6 @@ questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"]
 
 class ControlViewSet(mixins.CreateModelMixin,
                      mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
     permission_classes = (OnlyInspectorCanChange,)
