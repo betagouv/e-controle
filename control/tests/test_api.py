@@ -1,8 +1,9 @@
 from django.shortcuts import reverse
-from pytest import mark
+from django.urls.exceptions import NoReverseMatch
+from pytest import mark, raises
 from rest_framework.test import APIClient
 
-from control.models import Control
+from control.models import Control, Questionnaire
 from tests import factories, utils
 
 pytestmark = mark.django_db
@@ -10,8 +11,16 @@ client = APIClient()
 
 
 #### Theme API ####
+def get_theme(user, id):
+    return utils.get_resource(client, user, 'theme', id)
+
+
 def update_theme(user, payload):
     return utils.update_resource(client, user, 'theme', payload)
+
+
+def delete_theme(user, payload):
+    return utils.delete_resource(client, user, 'theme', id)
 
 
 def make_update_theme_payload(theme):
@@ -66,6 +75,51 @@ def test_no_access_to_theme_for_deleted_control():
     assert update_theme(user, make_update_theme_payload(theme)).status_code == 404
 
 
+def test_cannot_list_themes():
+    with raises(NoReverseMatch):
+        utils.list_resource_without_login(client, 'theme')
+
+
+def test_cannot_retrieve_theme_even_if_user_belongs_to_control():
+    theme = factories.ThemeFactory()
+    audited_user = utils.make_audited_user(theme.questionnaire.control)
+    inspector_user = utils.make_inspector_user(theme.questionnaire.control)
+    assert not theme.questionnaire.is_draft
+
+    assert get_theme(audited_user, theme.id).status_code == 405
+    assert get_theme(inspector_user, theme.id).status_code == 405
+
+
+def test_audited_cannot_retrieve_theme_from_draft_questionnaire():
+    theme = factories.ThemeFactory()
+    audited_user = utils.make_audited_user(theme.questionnaire.control)
+    theme.questionnaire.is_draft = True
+    theme.questionnaire.save()
+    assert Questionnaire.objects.get(id=theme.questionnaire.id).is_draft
+
+    assert get_theme(audited_user, theme.id).status_code == 405
+
+
+def test_cannot_delete_theme_even_if_user_belongs_to_control():
+    theme = factories.ThemeFactory()
+    audited_user = utils.make_audited_user(theme.questionnaire.control)
+    inspector_user = utils.make_inspector_user(theme.questionnaire.control)
+    assert not theme.questionnaire.is_draft
+
+    assert delete_theme(audited_user, theme.id).status_code == 405
+    assert delete_theme(inspector_user, theme.id).status_code == 405
+
+
+def test_audited_cannot_delete_theme_from_draft_questionnaire():
+    theme = factories.ThemeFactory()
+    audited_user = utils.make_audited_user(theme.questionnaire.control)
+    theme.questionnaire.is_draft = True
+    theme.questionnaire.save()
+    assert Questionnaire.objects.get(id=theme.questionnaire.id).is_draft
+
+    assert delete_theme(audited_user, theme.id).status_code == 405
+
+
 #### Question API ####
 
 def get_question(user, id):
@@ -108,6 +162,11 @@ def test_no_access_to_question_api_for_deleted_control():
     user = utils.make_audited_user(question.theme.questionnaire.control)
     question.theme.questionnaire.control.delete()
     assert get_question(user, question.id).status_code == 404
+
+
+def test_cannot_list_questions():
+    with raises(NoReverseMatch):
+        utils.list_resource_without_login(client, 'question')
 
 
 #### Control API ####
