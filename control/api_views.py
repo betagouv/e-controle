@@ -145,7 +145,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
         instance.file.delete(False)
 
 
-class ThemeViewSet(viewsets.ModelViewSet):
+class ThemeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
