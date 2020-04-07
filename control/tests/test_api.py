@@ -10,21 +10,28 @@ client = APIClient()
 
 
 #### Theme API ####
-def get_theme(user, id):
-    return utils.get_resource(client, user, 'theme', id)
+def update_theme(user, payload):
+    return utils.update_resource(client, user, 'theme', payload)
+
+
+def make_update_theme_payload(theme):
+    return {
+        "id": str(theme.id),
+        "title": theme.title
+    }
 
 
 def test_can_access_theme_api_if_control_is_associated_with_the_user():
     theme = factories.ThemeFactory()
     user = utils.make_audited_user(theme.questionnaire.control)
-    assert get_theme(user, theme.id).status_code == 200
+    assert update_theme(user, make_update_theme_payload(theme)).status_code == 200
 
 
 def test_no_access_to_theme_api_if_control_is_not_associated_with_the_user():
     theme_in = factories.ThemeFactory()
     theme_out = factories.ThemeFactory()
     user = utils.make_audited_user(theme_in.questionnaire.control)
-    assert get_theme(user, theme_out.id).status_code != 200
+    assert update_theme(user, make_update_theme_payload(theme_out)).status_code != 200
 
 
 def test_no_access_to_theme_api_for_anonymous():
@@ -56,7 +63,7 @@ def test_no_access_to_theme_for_deleted_control():
     theme = factories.ThemeFactory()
     user = utils.make_audited_user(theme.questionnaire.control)
     theme.questionnaire.control.delete()
-    assert get_theme(user, theme.id).status_code == 404
+    assert update_theme(user, make_update_theme_payload(theme)).status_code == 404
 
 
 #### Question API ####
@@ -105,35 +112,35 @@ def test_no_access_to_question_api_for_deleted_control():
 
 #### Control API ####
 
-### Get
+### Get is disabled. It should never work.
 def get_control(user, id):
     return utils.get_resource(client, user, 'control', id)
 
 
-def test_can_access_control_get_api_if_control_is_associated_with_the_user():
+def test_cannot_get_control_even_if_control_is_associated_with_the_user():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
-    assert get_control(user, control.id).status_code == 200
+    assert get_control(user, control.id).status_code == 405
 
 
-def test_no_access_to_control_get_api_if_control_is_not_associated_with_the_user():
+def test_cannot_get_control_if_control_is_not_associated_with_the_user():
     control_in = factories.ControlFactory()
     control_out = factories.ControlFactory()
     user = utils.make_audited_user(control_in)
-    assert get_control(user, control_out.id).status_code != 200
+    assert get_control(user, control_out.id).status_code == 405
 
 
-def test_no_access_to_control_get_api_for_anonymous():
+def test_cannot_get_control_for_anonymous():
     control = factories.ControlFactory()
     response = utils.get_resource_without_login(client, 'control', control.id)
     assert response.status_code == 403
 
 
-def test_no_access_to_deleted_control():
+def test_cannot_get_deleted_control():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
     control.delete()
-    assert get_control(user, control.id).status_code == 404
+    assert get_control(user, control.id).status_code == 405
 
 
 ### Create
@@ -241,7 +248,7 @@ def test_no_access_to_control_update_api_if_deleted():
     assert update_control(user, make_update_payload(), control).status_code == 404
 
 
-## Delete
+## Delete is never allowed
 
 def test_cannot_delete_a_control():
     """
@@ -251,8 +258,9 @@ def test_cannot_delete_a_control():
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
     count_before = Control.objects.active().count()
-    assert get_control(user, control.id).status_code == 200
+
     response = utils.delete_resource(client, user, 'control', control.pk)
+
     count_after = Control.objects.active().count()
     assert count_before == count_after
     assert response.status_code == 405
