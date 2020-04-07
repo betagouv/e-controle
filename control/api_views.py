@@ -154,7 +154,9 @@ class ThemeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class QuestionnaireViewSet(viewsets.ModelViewSet):
+class QuestionnaireViewSet(mixins.CreateModelMixin,
+                           mixins.UpdateModelMixin,
+                           viewsets.GenericViewSet):
     serializer_class = QuestionnaireSerializer
     permission_classes = (ChangeQuestionnairePermission,)
 
