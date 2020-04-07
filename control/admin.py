@@ -179,9 +179,14 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinks
 
 @admin.register(ResponseFile)
 class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
+    def is_active(self, obj):
+        return not obj.is_deleted
+    is_active.boolean = True
+    is_active.short_description = u"Actif ou corbeille?"
+
     list_display = (
         'id', 'file_name', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
-        'link_to_control', 'created', 'author', 'is_deleted')
+        'link_to_control', 'created', 'author', 'is_active')
     list_display_links = ('id',)
     date_hierarchy = 'created'
     list_filter = (
@@ -189,8 +194,8 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
         'author', 'question__theme')
     fields = (
         'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
-        'created', 'modified', 'is_deleted')
-    readonly_fields = ('file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
+        'created', 'modified', 'is_active')
+    readonly_fields = ('file_name', 'is_active', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
     search_fields = (
         'file', 'question__description', 'author__first_name', 'author__last_name',
         'author__username')

@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="container">
-    <swap-editor-button v-if="controlHasMultipleInspectors"
+    <swap-editor-button v-if="state !== STATES.LOADING && controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
     </swap-editor-button>
@@ -24,7 +24,7 @@
       {{ errorMessage }}
     </div>
 
-    <div v-if="typeof state === 'undefined'"
+    <div v-if="state === STATES.LOADING"
          class="card mt-9">
       <div class="card-body flex-column align-items-center">
         <div class="loader"></div>
@@ -61,7 +61,7 @@
   </div>
 
   <div id="bottom-bar"
-       v-if="typeof state !== 'undefined'"
+       v-if="state !== STATES.LOADING"
        class="flex-column bg-white sticky-bottom border-top p-4">
     <div id="button-bar" class="flex-row justify-content-between">
       <button id="go-home-button"
@@ -69,14 +69,16 @@
               class="btn btn-secondary"
               @click="saveDraftAndGoHome"
       >
-        < Retour
+        <i class="fa fa-chevron-left mr-2"></i>
+        Retour
       </button>
       <div>
         <button v-if="state !== STATES.START"
                 id="back-button"
                 @click="back"
                 class="btn btn-secondary">
-          < Etape {{ state - 1 }}
+          <i class="fa fa-chevron-left mr-2"></i>
+          Etape {{ state - 1 }}
         </button>
         <button v-if="state === STATES.CREATING_BODY"
                 id="move-themes-button"
@@ -97,7 +99,8 @@
                 id="next-button"
                 @click="next"
                 class="btn btn-secondary">
-          Etape {{ state + 1 }} >
+          Etape {{ state + 1 }}
+          <i class="fa fa-chevron-right ml-2"></i>
         </button>
         <button v-if="state === STATES.PREVIEW"
                 id="publishButton"
@@ -142,6 +145,7 @@ import Wizard from '../utils/Wizard'
 
 // State machine
 const STATES = {
+  LOADING: 0,
   START: 1,
   CREATING_BODY: 2,
   PREVIEW: 3,
@@ -167,7 +171,7 @@ export default Vue.extend({
       errors: [],
       hasErrors: false,
       STATES: STATES,
-      state: undefined,
+      state: STATES.LOADING,
       saveMessage: '',
     }
   },

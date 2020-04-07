@@ -13,24 +13,48 @@
 
             <div class="form-group">
               <p class="form-label">Email : {{ editingUser.email}}</p>
-              <p class="small text-muted">Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.</p>
+              <p class="small text-muted">
+                Pour modifier un email, vous devez supprimer l'utilisateur et en créer un nouveau.
+              </p>
               <button class="btn btn-secondary btn-sm" @click="showRemoveModal">
                 Supprimer l'utilisateur
               </button>
             </div>
         <form @submit.prevent="updateUser" @keydown.esc="resetFormData">
-          <fieldset class="form-fieldset">
+          <div class="form-fieldset">
             <div class="form-group">
-              <label class="form-label">Prénom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.first_name }" v-model="editingUser.first_name" required>
-              <p class="text-muted pl-2" v-if="errors.first_name"><i class="fa fa-warning"></i> {{ errors.first_name.join(' / ')}}</p>
+              <label id="first-name-label" class="form-label">
+                Prénom
+                <span class="form-required"></span>
+              </label>
+              <input type="text"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.first_name }"
+                     v-model="editingUser.first_name"
+                     required
+                     aria-labelledby="first-name-label">
+              <p class="text-muted pl-2" v-if="errors.first_name">
+                <i class="fa fa-warning"></i>
+                {{ errors.first_name.join(' / ')}}
+              </p>
             </div>
             <div class="form-group">
-              <label class="form-label">Nom<span class="form-required"></span></label>
-              <input type="text" class="form-control" v-bind:class="{ 'state-invalid': errors.last_name }" v-model="editingUser.last_name" required>
-              <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
+              <label id="last-name-label" class="form-label">
+                Nom
+                <span class="form-required"></span>
+              </label>
+              <input type="text"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.last_name }"
+                     v-model="editingUser.last_name"
+                     required
+                     aria-labelledby="last-name-label">
+              <p class="text-muted pl-2" v-if="errors.last_name">
+                <i class="fa fa-warning"></i>
+                {{ errors.last_name.join(' / ')}}
+              </p>
             </div>
-          </fieldset>
+          </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Modifier</button>

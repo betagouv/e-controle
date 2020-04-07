@@ -26,7 +26,7 @@
             <th v-if="user.is_inspector">
               Rédacteur
             </th>
-            <th></th>
+            <td></td>
           </tr>
         </thead>
         <tbody>

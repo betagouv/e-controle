@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
       <a class="header-brand" href="/accueil">
-        <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo" />
+        <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo e.contrôle" />
       </a>
     </div>
 

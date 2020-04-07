@@ -12,7 +12,7 @@
 
           <tr v-for="(theme, themeIndex) in themes"
               :id="'move-themes-modal-theme-' + themeIndex"
-              :key="theme.id"
+              :key="theme.id || (Math.random() + themeIndex)"
               class="flex-row">
             <td>
               <div class="flex-column align-items-center">

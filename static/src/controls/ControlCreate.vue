@@ -22,34 +22,55 @@
 
         <form>
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
+            <label id="title-label" class="form-label">
+              Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
+              <span class="form-required">*</span>
+            </label>
             <div id="title-help" class="text-muted">
-              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
+              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de
+              Football. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-award mr-2 text-muted"></i>
-              <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+              <input type="text"
+                     class="form-control"
+                     v-model="title"
+                     maxlength="255"
+                     required
+                     aria-describedby="title-help"
+                     aria-labelledby="title-label">
             </div>
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
+            <label id="organization-label" class="form-label">
+              Quel est le nom de l’organisme qui va déposer les réponses ?
+              <span class="form-required">*</span>
+            </label>
             <div id="organization-help" class="text-muted">
               Exemple : Ministère des Sports. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-building mr-2 text-muted"></i>
-              <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+              <input type="text"
+                     class="form-control"
+                     v-model="organization"
+                     maxlength="255"
+                     required
+                     aria-describedby="organization-help"
+                     aria-labelledby="organization-label">
             </div>
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Indiquez un nom abrégé pour cet espace de dépôt :<span class="form-required">*</span></label>
+            <label id="reference-code-label" class="form-label">
+              Indiquez un nom abrégé pour cet espace de dépôt :
+              <span class="form-required">*</span>
+            </label>
             <div id="reference-code-help" class="text-muted">
-              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre explorateur Windows. Nous
-              conseillons
-              un nom court (max 25 caractères) et signifiant, pour que vous retrouviez facilement le dossier.
-              Exemple : FFF_MinSports
+              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre
+              explorateur Windows. Nous conseillons un nom court (max 25 caractères) et signifiant,
+              pour que vous retrouviez facilement le dossier. Exemple : FFF_MinSports
             </div>
             <div class="input-group">
             <span class="input-group-prepend" id="basic-addon3">
@@ -59,7 +80,8 @@
                      pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
                      maxlength="255"
                      title="Ce champ ne doit pas contenir de caractères spéciaux ( ! , @ # $ / \ ' &quot; + etc)"
-                     aria-describedby="reference-code-help">
+                     aria-describedby="reference-code-help"
+                     aria-labelledby="reference-code-label">
             </div>
           </div>
 
