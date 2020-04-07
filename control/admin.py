@@ -158,6 +158,12 @@ class QuestionFileInline(OrderedTabularInline):
     readonly_fields = ('order', 'move_up_down_links')
 
 
+class ResponseFileInline(OrderedTabularInline):
+    model = ResponseFile
+    max_num = 4
+    fields = ('file',)
+
+
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
@@ -168,7 +174,7 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinks
     raw_id_fields = ('theme',)
     list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
     search_fields = ('description',)
-    inlines = (QuestionFileInline,)
+    inlines = (QuestionFileInline, ResponseFileInline,)
 
 
 @admin.register(ResponseFile)
