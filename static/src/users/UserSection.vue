@@ -81,13 +81,10 @@ export default Vue.extend({
   },
   methods: {
     getUsers() {
-      axios.get(backendUrls.user(), {
-        params: {
-          controls: this.control.id,
-        },
-      }).then((response) => {
-        this.users = response.data
-      })
+      axios.get('/api/control/' + this.control.id + '/users/') // todo use backend.js
+        .then((response) => {
+          this.users = response.data
+        })
     },
     auditedUsers() {
       return this.users.filter(item => {
