@@ -83,9 +83,19 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
     filterset_fields = ('question',)
     permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted, QuestionnaireIsDraft)
 
+    def get_user_questionnaires(self):
+        """
+        Returns the questionnaires belonging to the user.
+        """
+        user_controls = self.request.user.profile.controls.active()
+        user_questionnaires = Questionnaire.objects.filter(control__in=user_controls)
+        if self.request.user.profile.is_audited:
+            user_questionnaires = user_questionnaires.filter(is_draft=False)
+        return user_questionnaires
+
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
+            question__theme__questionnaire__in=self.get_user_questionnaires())
         return queryset
 
     def perform_create(self, serializer):

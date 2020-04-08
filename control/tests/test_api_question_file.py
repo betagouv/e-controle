@@ -14,6 +14,47 @@ client = APIClient()
 
 User = get_user_model()
 
+
+## List API
+
+def test_inspector_can_list_question_file_from_draft_questionnaire():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    question_file = factories.QuestionFileFactory()
+    questionnaire = question_file.question.theme.questionnaire
+    inspector.controls.add(questionnaire.control)
+    draft_question_file = factories.QuestionFileFactory()
+    draft_questionnaire = draft_question_file.question.theme.questionnaire
+    draft_questionnaire.is_draft = True
+    draft_questionnaire.save()
+    inspector.controls.add(draft_questionnaire.control)
+    assert not Questionnaire.objects.get(id=questionnaire.id).is_draft
+    assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
+    utils.login(client, user=inspector.user)
+    url = reverse('api:annexe-list')
+    response = client.get(url)
+    assert question_file.file.name in str(response.content)
+    assert draft_question_file.file.name in str(response.content)
+
+
+def test_audited_cannot_list_question_file_from_draft_questionnaire():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    questionnaire = question_file.question.theme.questionnaire
+    audited.controls.add(questionnaire.control)
+    draft_question_file = factories.QuestionFileFactory()
+    draft_questionnaire = draft_question_file.question.theme.questionnaire
+    draft_questionnaire.is_draft = True
+    draft_questionnaire.save()
+    audited.controls.add(draft_questionnaire.control)
+    assert not Questionnaire.objects.get(id=questionnaire.id).is_draft
+    assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
+    utils.login(client, user=audited.user)
+    url = reverse('api:annexe-list')
+    response = client.get(url)
+    assert question_file.file.name in str(response.content)
+    assert draft_question_file.file.name not in str(response.content)
+
+
 ### Retrive API endpoint closed.
 
 
@@ -157,6 +198,7 @@ def test_inspector_cannot_upload_question_file_to_published_questionnaire():
     assert response.status_code == 403
     count_after = QuestionFile.objects.count()
     assert count_after == count_before
+
 
 def test_inspector_can_remove_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
