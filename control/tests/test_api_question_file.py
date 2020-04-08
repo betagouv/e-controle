@@ -149,6 +149,22 @@ def test_inspector_can_remove_question_file():
     assert count_after == count_before - 1
 
 
+def test_inspector_cannot_remove_question_file_if_control_is_deleted():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    question_file = factories.QuestionFileFactory()
+    inspector.controls.add(question_file.question.theme.questionnaire.control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:annexe-detail', args=[question_file.id])
+    count_before = QuestionFile.objects.count()
+    question_file.question.theme.questionnaire.control.delete()
+
+    response = client.delete(url)
+
+    assert response.status_code == 404
+    count_after = QuestionFile.objects.count()
+    assert count_after == count_before
+
+
 def test_cannot_upload_question_file_if_control_is_deleted():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question = factories.QuestionFactory()
