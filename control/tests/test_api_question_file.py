@@ -137,6 +137,27 @@ def test_inspector_can_upload_question_file():
     assert count_after == count_before + 1
 
 
+def test_inspector_cannot_upload_question_file_to_published_questionnaire():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    question = factories.QuestionFactory()
+    questionnaire = question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    inspector.controls.add(questionnaire.control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:annexe-list')
+    count_before = QuestionFile.objects.count()
+
+    post_data = {
+        'file': factories.dummy_file.open(),
+        'question': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+
+    assert response.status_code == 403
+    count_after = QuestionFile.objects.count()
+    assert count_after == count_before
+
 def test_inspector_can_remove_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question_file = factories.QuestionFileFactory()
