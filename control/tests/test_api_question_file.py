@@ -118,7 +118,10 @@ def test_audited_cannot_update_question_file_from_draft_questionnaire():
 def test_inspector_can_upload_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question = factories.QuestionFactory()
-    inspector.controls.add(question.theme.questionnaire.control)
+    questionnaire = question.theme.questionnaire
+    questionnaire.is_draft = True
+    questionnaire.save()
+    inspector.controls.add(questionnaire.control)
     utils.login(client, user=inspector.user)
     url = reverse('api:annexe-list')
     count_before = QuestionFile.objects.count()
@@ -137,7 +140,10 @@ def test_inspector_can_upload_question_file():
 def test_inspector_can_remove_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question_file = factories.QuestionFileFactory()
-    inspector.controls.add(question_file.question.theme.questionnaire.control)
+    questionnaire = question_file.question.theme.questionnaire
+    questionnaire.is_draft = True
+    questionnaire.save()
+    inspector.controls.add(questionnaire.control)
     utils.login(client, user=inspector.user)
     url = reverse('api:annexe-detail', args=[question_file.id])
     count_before = QuestionFile.objects.count()
@@ -147,6 +153,24 @@ def test_inspector_can_remove_question_file():
     assert response.status_code == 204
     count_after = QuestionFile.objects.count()
     assert count_after == count_before - 1
+
+
+def test_inspector_cannot_remove_question_file_if_control_is_published():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    question_file = factories.QuestionFileFactory()
+    questionnaire = question_file.question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    inspector.controls.add(questionnaire.control)
+    utils.login(client, user=inspector.user)
+    url = reverse('api:annexe-detail', args=[question_file.id])
+    count_before = QuestionFile.objects.count()
+
+    response = client.delete(url)
+
+    assert response.status_code == 403
+    count_after = QuestionFile.objects.count()
+    assert count_after == count_before
 
 
 def test_inspector_cannot_remove_question_file_if_control_is_deleted():

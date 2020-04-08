@@ -10,7 +10,7 @@ from django.core.files import File
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
-from control.permissions import ControlIsNotDeleted
+from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft
 from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
@@ -73,7 +73,7 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
     serializer_class = QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
-    permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted)
+    permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted, QuestionnaireIsDraft)
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
