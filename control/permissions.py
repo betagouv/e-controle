@@ -1,5 +1,8 @@
 from rest_framework import permissions
+from rest_framework.exceptions import ParseError
+
 from control.models import Questionnaire
+
 
 
 class OnlyInspectorCanAccess(permissions.BasePermission):
@@ -40,3 +43,12 @@ class ChangeQuestionnairePermission(OnlyInspectorCanChange):
         if questionnaire.editor.pk == request.user.pk:
             return True
         return False
+
+
+class ControlIsNotDeleted(permissions.BasePermission):
+    message_format = 'Accessing this resource is not allowed.'
+
+    def has_object_permission(self, request, view, obj):
+        if not hasattr(obj, 'control'):
+            raise ParseError(detail='Missing attribute "control" during permission check')
+        return not obj.control.is_deleted()
