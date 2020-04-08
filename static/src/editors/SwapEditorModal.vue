@@ -75,10 +75,8 @@ import ContactSupport from '../utils/ContactSupport'
 import EditorList from './EditorList'
 import ErrorBar from '../utils/ErrorBar'
 import Vue from 'vue'
-import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
 
-Vue.use(VueAxios, axios)
 Vue.use(Vuex)
 
 export default Vue.extend({
@@ -97,7 +95,7 @@ export default Vue.extend({
   },
   methods: {
     getUsers() {
-      Vue.axios.get('/api/control/' + this.controlId + '/users/') // todo use backend.js
+      axios.get(backendUrls.getUsersInControl(this.controlId))
         .then((response) => {
           this.users = response.data
         })
