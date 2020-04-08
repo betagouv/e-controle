@@ -224,6 +224,10 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.theme.control
 
     @property
+    def questionnaire(self):
+        return self.theme.questionnaire
+
+    @property
     def description_rich_text(self):
         return self.to_rich_text(self.description)
 
@@ -246,6 +250,10 @@ class QuestionFile(OrderedModel, FileInfoMixin):
     @property
     def control(self):
         return self.question.control
+
+    @property
+    def questionnaire(self):
+        return self.question.questionnaire
 
     @property
     def url(self):

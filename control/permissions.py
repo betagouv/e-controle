@@ -4,7 +4,6 @@ from rest_framework.exceptions import ParseError
 from control.models import Questionnaire
 
 
-
 class OnlyInspectorCanAccess(permissions.BasePermission):
     message_format = 'Accessing this resource is not allowed.'
 
@@ -52,3 +51,12 @@ class ControlIsNotDeleted(permissions.BasePermission):
         if not hasattr(obj, 'control'):
             raise ParseError(detail='Missing attribute "control" during permission check')
         return not obj.control.is_deleted()
+
+
+class QuestionnaireIsDraft(permissions.BasePermission):
+    message_format = 'Accessing this resource is not allowed.'
+
+    def has_object_permission(self, request, view, obj):
+        if not hasattr(obj, 'questionnaire'):
+            raise ParseError(detail='Missing attribute "questionnaire" during permission check')
+        return obj.questionnaire.is_draft
