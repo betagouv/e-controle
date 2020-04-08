@@ -1,6 +1,7 @@
 from actstream.models import Action
 from django.shortcuts import reverse
-from pytest import mark
+from django.urls.exceptions import NoReverseMatch
+from pytest import mark, raises
 from rest_framework.test import APIClient
 
 from control.models import ResponseFile
@@ -22,71 +23,31 @@ def trash_response_file(user, id, payload):
     return response
 
 
-########## get
+########## Read methods : API endpoint closed.
 
-def test_can_get_response_file_if_control_is_associated_with_the_user():
-    response_file = factories.ResponseFileFactory()
-    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
-
-    response = get_response_file(user, response_file.id)
-
-    assert response.status_code == 200
+def test_retrieve_API_is_closed():
+    with raises(NoReverseMatch):
+        response_file = factories.ResponseFileFactory()
+        reverse('api:response-file-detail', args=[response_file.id])
 
 
-def test_cannot_get_response_file_if_control_is_not_associated_with_the_user():
-    response_file = factories.ResponseFileFactory()
-    control = factories.ControlFactory()
-    user = utils.make_audited_user(control)
-
-    response = get_response_file(user, response_file.id)
-
-    assert 400 <= response.status_code <= 499
+def test_list_API_is_closed():
+    with raises(NoReverseMatch):
+        reverse('api:response-file-list')
 
 
-def test_cannot_get_response_file_if_user_not_logged_in():
-    response_file = factories.ResponseFileFactory()
-    response = utils.get_resource_without_login(client, 'response-file', response_file.id)
-    assert response.status_code == 403
+########## write methods : API endpoints for create, update, patch and delete are closed.
+
+def test_create_API_is_closed():
+    with raises(NoReverseMatch):
+        reverse('api:response-file-list')
 
 
-def test_cannot_get_response_file_for_deleted_control():
-    response_file = factories.ResponseFileFactory()
-    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
-    response_file.question.theme.questionnaire.control.delete()
-    response = get_response_file(user, response_file.id)
-    assert response.status_code == 404
-
-
-########## write methods
-
-def run_test_response_file_api_is_readonly(user, response_file):
-    payload = {"id": response_file.id}
-    utils.login(client, user=user)
-
-    # no create
-    response = utils.create_resource_without_login(client, 'response-file', payload)
-    assert response.status_code == 405  # method not allowed
-
-    # no update
-    response = utils.update_resource_without_login(client, 'response-file', payload)
-    assert response.status_code == 405  # method not allowed
-
-    # no patch
-    url = reverse('api:response-file-detail', args=[payload['id']])
-    response = client.patch(url, payload, format='json')
-    assert response.status_code == 405  # method not allowed
-
-
-def test_response_file_api_is_readonly_for_audited():
-    response_file = factories.ResponseFileFactory()
-    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
-    run_test_response_file_api_is_readonly(user, response_file)
-
-
-def test_response_file_api_is_readonly_for_inspector():
-    response_file = factories.ResponseFileFactory()
-    user = utils.make_inspector_user(response_file.question.theme.questionnaire.control)
-    run_test_response_file_api_is_readonly(user, response_file)
+def test_update_API_is_closed():
+    with raises(NoReverseMatch):
+        response_file = factories.ResponseFileFactory()
+        reverse('api:response-file-detail', args=[response_file.id])
+        # same url for patch and delete
 
 
 ########## trash

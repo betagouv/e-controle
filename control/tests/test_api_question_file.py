@@ -5,7 +5,7 @@ from django.shortcuts import reverse
 
 from rest_framework.test import APIClient
 
-from control.models import QuestionFile
+from control.models import QuestionFile, Questionnaire
 from tests import factories, utils
 from user_profiles.models import UserProfile
 
@@ -14,17 +14,95 @@ client = APIClient()
 
 User = get_user_model()
 
+### Retrive API endpoint closed.
 
-def test_can_get_question_file():
+
+def get_question_file(user, id):
+    return utils.get_resource(client, user, 'annexe', id)
+
+
+def update_question_file(user, payload):
+    return utils.update_resource(client, user, 'annexe', payload)
+
+
+def test_cannot_get_question_file_even_if_user_belongs_to_control():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    inspector.controls.add(question_file.question.theme.questionnaire.control)
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    assert not question_file.question.theme.questionnaire.is_draft
+
+    # method not allowed
+    assert get_question_file(inspector.user, question_file.id).status_code == 405
+    assert get_question_file(audited.user, question_file.id).status_code == 405
+
+
+def test_cannot_get_inexistant_question_file():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+
+    # method not allowed
+    assert get_question_file(inspector.user, 21038476187629481736498376).status_code == 405
+
+
+def test_cannot_get_question_file_if_control_is_deleted():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question_file = factories.QuestionFileFactory()
     inspector.controls.add(question_file.question.theme.questionnaire.control)
-    utils.login(client, user=inspector.user)
-    url = reverse('api:annexe-detail', args=[question_file.id])
-    response = client.get(url)
-    assert response.status_code == 200
+    question_file.question.theme.questionnaire.control.delete()
+
+    # method not allowed
+    assert get_question_file(inspector.user, question_file.id).status_code == 405
 
 
+def test_audited_cannot_get_question_file_from_draft_questionnaire():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    question_file.question.theme.questionnaire.is_draft = True
+    question_file.question.theme.questionnaire.save()
+    assert Questionnaire.objects.get(id=question_file.question.theme.questionnaire.id).is_draft
+
+    # method not allowed
+    assert get_question_file(audited.user, question_file.id).status_code == 405
+
+
+def test_cannot_update_question_file_from_published_questionnaire():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    inspector.controls.add(question_file.question.theme.questionnaire.control)
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    assert not question_file.question.theme.questionnaire.is_draft
+
+    payload = {
+        "id": question_file.id,
+        "question": question_file.question.id + 1
+    }
+
+    # method not allowed
+    assert update_question_file(inspector.user, payload).status_code == 405
+    assert update_question_file(audited.user, payload).status_code == 405
+
+
+def test_audited_cannot_update_question_file_from_draft_questionnaire():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    question_file.question.theme.questionnaire.is_draft = True
+    question_file.question.theme.questionnaire.save()
+    assert Questionnaire.objects.get(id=question_file.question.theme.questionnaire.id).is_draft
+
+    payload = {
+        "id": question_file.id,
+        "question": question_file.question.id + 1
+    }
+
+    # method not allowed
+    assert update_question_file(audited.user, payload).status_code == 405
+
+
+### Upload API
 def test_inspector_can_upload_question_file():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question = factories.QuestionFactory()
@@ -57,17 +135,6 @@ def test_inspector_can_remove_question_file():
     assert response.status_code == 204
     count_after = QuestionFile.objects.count()
     assert count_after == count_before - 1
-
-
-def test_cannot_get_question_file_if_control_is_deleted():
-    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    question_file = factories.QuestionFileFactory()
-    inspector.controls.add(question_file.question.theme.questionnaire.control)
-    utils.login(client, user=inspector.user)
-    question_file.question.theme.questionnaire.control.delete()
-    url = reverse('api:annexe-detail', args=[question_file.id])
-    response = client.get(url)
-    assert response.status_code == 404
 
 
 def test_cannot_upload_question_file_if_control_is_deleted():

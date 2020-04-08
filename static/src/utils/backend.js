@@ -13,7 +13,6 @@ backend['questionnaire-edit'](4) ---> 'questionnaire/modifier/4/'
 const apiUrls = {
   annexe: '/api/annexe/',
   control: '/api/control/',
-  'fichier-reponse': '/api/fichier-reponse/',
   question: '/api/question/',
   questionnaire: '/api/questionnaire/',
   theme: '/api/theme/',
