@@ -14,6 +14,12 @@ client = APIClient()
 User = get_user_model()
 
 
+def search_user_by_username(current_user, username):
+    utils.login(client, user=current_user)
+    url = f"{reverse('api:user-list')}?search={username}"
+    return client.get(url)
+
+
 def test_logged_in_user_can_list_users():
     user_profile = factories.UserProfileFactory()
     user = user_profile.user
@@ -23,20 +29,22 @@ def test_logged_in_user_can_list_users():
     assert response.status_code == 200
 
 
-def test_logged_in_user_can_see_users_detail():
+def test_logged_in_user_can_search_user_by_username():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     login_user = inspector.user
     target_user = factories.UserProfileFactory()
     control = factories.ControlFactory()
     inspector.controls.add(control)
     target_user.controls.add(control)
-    utils.login(client, user=login_user)
-    url = reverse('api:user-detail', args=[target_user.pk])
-    response = client.get(url)
+
+    response = search_user_by_username(login_user, target_user.user.username)
+
     assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]['email'] == target_user.user.username
 
 
-def test_no_access_to_user_associated_with_deleted_control():
+def test_cannot_search_user_by_username_if_associated_with_deleted_control():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     login_user = inspector.user
     target_user = factories.UserProfileFactory()
@@ -44,10 +52,13 @@ def test_no_access_to_user_associated_with_deleted_control():
     inspector.controls.add(control)
     target_user.controls.add(control)
     control.delete()
-    utils.login(client, user=login_user)
-    url = reverse('api:user-detail', args=[target_user.pk])
-    response = client.get(url)
-    assert response.status_code == 404
+    control.save()
+
+    response = search_user_by_username(login_user, target_user.user.username)
+
+    # Sucessful query with no results
+    assert response.status_code == 200
+    assert len(response.data) == 0
 
 
 def test_inspector_can_create_user():
@@ -94,7 +105,7 @@ def test_inspector_can_update_an_existing_user():
     assert modified_user.user.last_name == 'Proust'
 
 
-def test_can_associate_a_control_to_anexisting_user():
+def test_can_associate_a_control_to_an_existing_user():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     control = factories.ControlFactory()
     inspector.controls.add(control)
