@@ -199,6 +199,10 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
 
+    @property
+    def control(self):
+        return self.questionnaire.control
+
     def __str__(self):
         return f'id {self.id} - C{self.questionnaire.control.id}-Q{self.questionnaire.numbering}-T{self.numbering} - {self.title}'
 
@@ -214,6 +218,10 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         ordering = ('theme', 'order')
         verbose_name = "Question"
         verbose_name_plural = "Questions"
+
+    @property
+    def control(self):
+        return self.theme.control
 
     @property
     def description_rich_text(self):
@@ -234,6 +242,10 @@ class QuestionFile(OrderedModel, FileInfoMixin):
         ordering = ('question', 'order')
         verbose_name = 'Question: Fichier Annexe'
         verbose_name_plural = 'Question: Fichiers Annexes'
+
+    @property
+    def control(self):
+        return self.question.control
 
     @property
     def url(self):

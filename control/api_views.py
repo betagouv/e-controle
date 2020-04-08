@@ -10,6 +10,7 @@ from django.core.files import File
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
+from control.permissions import ControlIsNotDeleted
 from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
@@ -72,7 +73,7 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
     serializer_class = QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
-    permission_classes = (OnlyInspectorCanChange,)
+    permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted)
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
@@ -81,8 +82,9 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
 
     def perform_create(self, serializer):
         question = serializer.validated_data['question']
-        if question.theme.questionnaire.control.is_deleted():
-            raise PermissionDenied('Invalid control')
+        # Before creating the QuestionFile, let's check that permission are ok for
+        # the associated Question object.
+        self.check_object_permissions(self.request, question)
         serializer.save(file=self.request.data.get('file'))
 
 
