@@ -18,7 +18,6 @@ class UserProfileViewSet(
         mixins.ListModelMixin,
         viewsets.GenericViewSet):
     serializer_class = UserProfileSerializer
-    filterset_fields = ('controls',)
     search_fields = ('=user__username',)
     permission_classes = (OnlyInspectorCanChange,)
 
