@@ -67,12 +67,10 @@ def test_audited_cannot_get_question_file_from_draft_questionnaire():
     assert get_question_file(audited.user, question_file.id).status_code == 405
 
 
-def test_cannot_update_question_file_from_published_questionnaire():
+def test_inspector_cannot_update_question_file_from_published_questionnaire():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     question_file = factories.QuestionFileFactory()
     inspector.controls.add(question_file.question.theme.questionnaire.control)
-    audited.controls.add(question_file.question.theme.questionnaire.control)
     assert not question_file.question.theme.questionnaire.is_draft
 
     payload = {
@@ -82,7 +80,21 @@ def test_cannot_update_question_file_from_published_questionnaire():
 
     # method not allowed
     assert update_question_file(inspector.user, payload).status_code == 405
-    assert update_question_file(audited.user, payload).status_code == 405
+
+
+def test_audited_cannot_update_question_file_from_published_questionnaire():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    assert not question_file.question.theme.questionnaire.is_draft
+
+    payload = {
+        "id": question_file.id,
+        "question": question_file.question.id + 1
+    }
+
+    # forbidden
+    assert update_question_file(audited.user, payload).status_code == 403
 
 
 def test_audited_cannot_update_question_file_from_draft_questionnaire():
@@ -98,8 +110,8 @@ def test_audited_cannot_update_question_file_from_draft_questionnaire():
         "question": question_file.question.id + 1
     }
 
-    # method not allowed
-    assert update_question_file(audited.user, payload).status_code == 405
+    # Forbidden
+    assert update_question_file(audited.user, payload).status_code == 403
 
 
 ### Upload API
@@ -150,3 +162,37 @@ def test_cannot_upload_question_file_if_control_is_deleted():
     question.theme.questionnaire.control.delete()
     response = client.post(url, post_data, format='multipart')
     assert response.status_code == 403
+
+
+def test_audited_cannot_upload_question_file():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    utils.login(client, user=audited.user)
+    url = reverse('api:annexe-list')
+    count_before = QuestionFile.objects.count()
+
+    post_data = {
+        'file': factories.dummy_file.open(),
+        'question': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+
+    assert response.status_code == 403
+    count_after = QuestionFile.objects.count()
+    assert count_after == count_before
+
+
+def test_audited_cannot_remove_question_file():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question_file = factories.QuestionFileFactory()
+    audited.controls.add(question_file.question.theme.questionnaire.control)
+    utils.login(client, user=audited.user)
+    url = reverse('api:annexe-detail', args=[question_file.id])
+    count_before = QuestionFile.objects.count()
+
+    response = client.delete(url)
+
+    assert response.status_code == 403
+    count_after = QuestionFile.objects.count()
+    assert count_after == count_before

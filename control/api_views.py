@@ -72,6 +72,7 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
     serializer_class = QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
+    permission_classes = (OnlyInspectorCanChange,)
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
