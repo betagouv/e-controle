@@ -323,3 +323,55 @@ def test_cannot_delete_a_control():
     count_after = Control.objects.active().count()
     assert count_before == count_after
     assert response.status_code == 405
+
+## Get users of a control
+
+
+def get_users_of_control(current_user, control):
+    utils.login(client, user=current_user)
+    url = reverse('api:control-users', args=[control.id])
+    return client.get(url)
+
+
+def test_can_get_users_of_control_if_control_belongs_to_user():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user(control)
+    audited = utils.make_audited_user(control)
+
+    assert get_users_of_control(inspector, control).status_code == 200
+    assert get_users_of_control(audited, control).status_code == 200
+
+
+def test_cannot_get_users_of_control_if_control_does_not_belong_to_user():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user()
+    audited = utils.make_audited_user()
+
+    assert get_users_of_control(inspector, control).status_code == 404
+    assert get_users_of_control(audited, control).status_code == 404
+
+
+def test_cannot_get_users_of_neigboring_control():
+    # testing for a specific bug we had.
+    control_1 = factories.ControlFactory()
+    inspector_1 = utils.make_inspector_user(control_1)
+
+    control_2 = factories.ControlFactory()
+    inspector_2 = utils.make_inspector_user(control_2)
+    inspector_2.profile.controls.add(control_1)
+
+    # control_2 is unknown to inspector_1.
+    # inspector_2 is known to inspector_1/
+    # So inspector_1 should not be able to get info on control_2.
+
+    assert get_users_of_control(inspector_1, control_2).status_code == 404
+
+
+def test_cannot_get_users_of_control_if_control_is_deleted():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user(control)
+    audited = utils.make_audited_user(control)
+    control.delete()
+
+    assert get_users_of_control(inspector, control).status_code == 404
+    assert get_users_of_control(audited, control).status_code == 404

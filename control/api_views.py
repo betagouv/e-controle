@@ -1,9 +1,11 @@
 from actstream import action
 from functools import partial
 from rest_framework import generics, mixins, status, viewsets
+from rest_framework import serializers
+from rest_framework import decorators
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework import serializers
+from rest_framework.response import Response
 
 import django.dispatch
 from django.core.files import File
@@ -14,6 +16,7 @@ from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft
 from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
+from user_profiles.serializers import UserProfileSerializer
 
 
 # This signal is triggered after the questionnaire is saved via the API
@@ -55,6 +58,11 @@ class ControlViewSet(mixins.CreateModelMixin,
         control = self.get_queryset().get(id=response.data['id'])
         self.add_log_entry(control=control, verb='updated control')
         return response
+
+    @decorators.action(detail=True, methods=['get'], url_path='users')
+    def users(self, request, pk):
+        serialized_users = UserProfileSerializer(self.get_object().user_profiles.all(), many=True)
+        return Response(serialized_users.data)
 
 
 class QuestionViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
