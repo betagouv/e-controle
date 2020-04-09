@@ -130,7 +130,7 @@ class QuestionInline(OrderedTabularInline):
 class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('title',)
-    list_filter = ('questionnaire__control', 'questionnaire',)
+    list_filter = ('questionnaire__control',)
     fields = (
         'id', 'title', 'questionnaire', 'link_to_control')
     readonly_fields = ('id', 'link_to_control')
@@ -152,7 +152,7 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinks
         'id', 'description', 'theme', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = ('id', 'link_to_questionnaire', 'link_to_control')
     raw_id_fields = ('theme',)
-    list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
+    list_filter = ('theme__questionnaire__control',)
     search_fields = ('description',)
     inlines = (QuestionFileInline,)
 
@@ -164,9 +164,7 @@ class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
         'link_to_control', 'created', 'author', 'is_deleted')
     list_display_links = ('id',)
     date_hierarchy = 'created'
-    list_filter = (
-        'question__theme__questionnaire__control', 'question__theme__questionnaire',
-        'author', 'question__theme')
+    list_filter = ('question__theme__questionnaire__control',)
     fields = (
         'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
         'created', 'modified', 'is_deleted')
@@ -182,9 +180,7 @@ class QuestionFileAdmin(admin.ModelAdmin, ParentLinksMixin):
         'id', 'file', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
         'link_to_control')
     list_display_links = ('id',)
-    list_filter = (
-        'question__theme__questionnaire__control', 'question__theme__questionnaire',
-        'question__theme')
+    list_filter = ('question__theme__questionnaire__control',)
     fields = (
         'id', 'file', 'question', 'order', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = (
