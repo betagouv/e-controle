@@ -23,9 +23,9 @@ from user_profiles.models import UserProfile
 
 class ParentLinksMixin(object):
     def link_to_question(self, obj):
-        question = None
-        if hasattr(obj, 'question'):
-            question = obj.question
+        question = getattr(obj, 'question', None)
+        if not question:
+            return '-'
         url = reverse("admin:control_question_change", args=[question.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -35,11 +35,9 @@ class ParentLinksMixin(object):
     link_to_question.short_description = 'Question'
 
     def link_to_theme(self, obj):
-        theme = None
-        if hasattr(obj, 'theme'):
-            theme = obj.theme
-        if hasattr(obj, 'question'):
-            theme = obj.question.theme
+        theme = getattr(obj, 'theme', None)
+        if not theme:
+            return '-'
         url = reverse("admin:control_theme_change", args=[theme.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -49,14 +47,9 @@ class ParentLinksMixin(object):
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
-        questionnaire = None
-        if hasattr(obj, 'questionnaire'):
-            questionnaire = obj.questionnaire
-        elif hasattr(obj, 'theme'):
-            questionnaire = obj.theme.questionnaire
-        elif hasattr(obj, 'question'):
-            questionnaire = obj.question.theme.questionnaire
-
+        questionnaire = getattr(obj, 'questionnaire', None)
+        if not questionnaire:
+            return '-'
         url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -66,16 +59,9 @@ class ParentLinksMixin(object):
     link_to_questionnaire.short_description = 'Questionnaire'
 
     def link_to_control(self, obj):
-        control = None
-        if hasattr(obj, 'control'):
-            control = obj.control
-        elif hasattr(obj, 'questionnaire'):
-            control = obj.questionnaire.control
-        elif hasattr(obj, 'theme'):
-            control = obj.theme.questionnaire.control
-        elif hasattr(obj, 'question'):
-            control = obj.question.theme.questionnaire.control
-
+        control = getattr(obj, 'control', None)
+        if not control:
+            return '-'
         url = reverse("admin:control_control_change", args=[control.id])
         return format_html(
             '<a href="{}">{}</a>',
