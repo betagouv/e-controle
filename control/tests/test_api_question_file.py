@@ -5,7 +5,7 @@ from django.shortcuts import reverse
 
 from rest_framework.test import APIClient
 
-from control.models import QuestionFile, Questionnaire
+from control.models import Control, QuestionFile, Questionnaire
 from tests import factories, utils
 from user_profiles.models import UserProfile
 
@@ -17,42 +17,106 @@ User = get_user_model()
 
 ## List API
 
+def list_annexes(user):
+    utils.login(client, user=user)
+    url = reverse('api:annexe-list')
+    return client.get(url)
+
+
+def list_annexes_for_question(user, questionId):
+    utils.login(client, user=user)
+    url = f"{reverse('api:annexe-list')}?question={questionId}"
+    return client.get(url)
+
+
 def test_inspector_can_list_question_file_from_draft_questionnaire():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
-    question_file = factories.QuestionFileFactory()
-    questionnaire = question_file.question.theme.questionnaire
-    inspector.controls.add(questionnaire.control)
+
+    published_question_file = factories.QuestionFileFactory()
+    published_questionnaire = published_question_file.question.theme.questionnaire
+    assert not Questionnaire.objects.get(id=published_questionnaire.id).is_draft
+    inspector.controls.add(published_questionnaire.control)
+
     draft_question_file = factories.QuestionFileFactory()
     draft_questionnaire = draft_question_file.question.theme.questionnaire
     draft_questionnaire.is_draft = True
     draft_questionnaire.save()
-    inspector.controls.add(draft_questionnaire.control)
-    assert not Questionnaire.objects.get(id=questionnaire.id).is_draft
     assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
-    utils.login(client, user=inspector.user)
-    url = reverse('api:annexe-list')
-    response = client.get(url)
-    assert question_file.file.name in str(response.content)
+    inspector.controls.add(draft_questionnaire.control)
+
+    response = list_annexes(inspector.user)
+
+    assert response.status_code == 200
+    assert published_question_file.file.name in str(response.content)
     assert draft_question_file.file.name in str(response.content)
+    assert len(response.data) == 2
 
 
 def test_audited_cannot_list_question_file_from_draft_questionnaire():
     audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
-    question_file = factories.QuestionFileFactory()
-    questionnaire = question_file.question.theme.questionnaire
-    audited.controls.add(questionnaire.control)
+
+    published_question_file = factories.QuestionFileFactory()
+    published_questionnaire = published_question_file.question.theme.questionnaire
+    assert not Questionnaire.objects.get(id=published_questionnaire.id).is_draft
+    audited.controls.add(published_questionnaire.control)
+
     draft_question_file = factories.QuestionFileFactory()
     draft_questionnaire = draft_question_file.question.theme.questionnaire
     draft_questionnaire.is_draft = True
     draft_questionnaire.save()
-    audited.controls.add(draft_questionnaire.control)
-    assert not Questionnaire.objects.get(id=questionnaire.id).is_draft
     assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
-    utils.login(client, user=audited.user)
-    url = reverse('api:annexe-list')
-    response = client.get(url)
-    assert question_file.file.name in str(response.content)
+    audited.controls.add(draft_questionnaire.control)
+
+    response = list_annexes(audited.user)
+
+    assert response.status_code == 200
+    assert published_question_file.file.name in str(response.content)
     assert draft_question_file.file.name not in str(response.content)
+    assert len(response.data) == 1
+
+
+def test_audited_cannot_list_question_file_by_question_from_draft_questionnaire():
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+
+    draft_question_file = factories.QuestionFileFactory()
+    draft_questionnaire = draft_question_file.question.theme.questionnaire
+    draft_questionnaire.is_draft = True
+    draft_questionnaire.save()
+    assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
+    audited.controls.add(draft_questionnaire.control)
+
+    response = list_annexes_for_question(audited.user, draft_question_file.id)
+
+    assert response.status_code == 200
+    assert len(response.data) == 0
+    assert draft_question_file.file.name not in str(response.content)
+
+
+def test_cannot_list_question_file_by_question_from_deleted_control():
+    deleted_question_file = factories.QuestionFileFactory()
+    deleted_control = deleted_question_file.question.theme.questionnaire.control
+    deleted_control.delete()
+    assert Control.objects.get(id=deleted_control.id).is_deleted
+
+    # Audited
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    audited.controls.add(deleted_control)
+
+    response = list_annexes_for_question(audited.user, deleted_question_file.id)
+
+    assert response.status_code == 200
+    assert len(response.data) == 0
+    assert deleted_question_file.file.name not in str(response.content)
+
+    # Inspector
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    inspector.controls.add(deleted_control)
+
+    response = list_annexes_for_question(inspector.user, deleted_question_file.id)
+
+    assert response.status_code == 200
+    assert len(response.data) == 0
+    assert deleted_question_file.file.name not in str(response.content)
 
 
 ### Retrive API endpoint closed.
