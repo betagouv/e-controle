@@ -40,3 +40,4 @@ django-csp==3.6
 django-email-obfuscator==0.1.5
 soft-delete==0.2.2
 coverage==5.0.4
+pyasn1==0.4.8
