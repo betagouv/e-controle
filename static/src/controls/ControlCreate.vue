@@ -8,7 +8,6 @@
       Ajouter un espace de dépôt
     </a>
 
-
     <confirm-modal-with-wait id="controlcreate"
                              cancel-button="Annuler"
                              confirm-button="Créer l'espace de dépôt"
@@ -22,34 +21,53 @@
 
         <form>
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?<span class="form-required">*</span></label>
+            <label class="form-label">
+              Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
+              <span class="form-required">*</span>
+            </label>
             <div id="title-help" class="text-muted">
-              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de Football. 255 caractères maximum.
+              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de
+              Football. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-award mr-2 text-muted"></i>
-              <input type="text" class="form-control" v-model="title" maxlength="255" required aria-describedby="title-help">
+              <input type="text"
+                     class="form-control"
+                     v-model="title"
+                     maxlength="255"
+                     required
+                     aria-describedby="title-help">
             </div>
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Quel est le nom de l’organisme qui va déposer les réponses ?<span class="form-required">*</span></label>
+            <label class="form-label">
+              Quel est le nom de l’organisme qui va déposer les réponses ?
+              <span class="form-required">*</span>
+            </label>
             <div id="organization-help" class="text-muted">
               Exemple : Ministère des Sports. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-building mr-2 text-muted"></i>
-              <input type="text" class="form-control" v-model="organization" maxlength="255" required aria-describedby="organization-help">
+              <input type="text"
+                     class="form-control"
+                     v-model="organization"
+                     maxlength="255"
+                     required
+                     aria-describedby="organization-help">
             </div>
           </div>
 
           <div class="form-group mb-6">
-            <label class="form-label">Indiquez un nom abrégé pour cet espace de dépôt :<span class="form-required">*</span></label>
+            <label class="form-label">
+              Indiquez un nom abrégé pour cet espace de dépôt :
+              <span class="form-required">*</span>
+            </label>
             <div id="reference-code-help" class="text-muted">
-              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre explorateur Windows. Nous
-              conseillons
-              un nom court (max 25 caractères) et signifiant, pour que vous retrouviez facilement le dossier.
-              Exemple : FFF_MinSports
+              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre
+              explorateur Windows. Nous conseillons un nom court (max 25 caractères) et signifiant,
+              pour que vous retrouviez facilement le dossier. Exemple : FFF_MinSports
             </div>
             <div class="input-group">
             <span class="input-group-prepend" id="basic-addon3">
@@ -58,7 +76,8 @@
               <input type="text" class="form-control" v-model="reference_code_suffix" required
                      pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
                      maxlength="255"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux ( ! , @ # $ / \ ' &quot; + etc)"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux
+                         ( ! , @ # $ / \ ' &quot; + etc)"
                      aria-describedby="reference-code-help">
             </div>
           </div>
@@ -70,82 +89,78 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Vue from "vue"
+import axios from 'axios'
+import Vue from 'vue'
 
-  import ConfirmModalWithWait from "../utils/ConfirmModalWithWait"
-  import ErrorBar from "../utils/ErrorBar"
-  import InfoBar from "../utils/InfoBar"
+import backendUrls from '../utils/backend'
+import ConfirmModalWithWait from '../utils/ConfirmModalWithWait'
+import InfoBar from '../utils/InfoBar'
 
-  const create_control_url = "/api/control/"
-  const home_url = "/accueil/"
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
-  axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
-  export default Vue.extend({
-    data: function() {
-      return {
-        title: "",
-        organization: "",
-        reference_code_suffix: "",
-        year: new Date().getFullYear(),
-      }
-    },
-    computed: {
-      reference_code_prefix: function () {
-        return this.year + "_"
-      }
-    },
-    components: {
-      ConfirmModalWithWait,
-      ErrorBar,
-      InfoBar,
-    },
-    methods: {
-      createControl: function(processingDoneCallback) {
-        const payload = {
-          title: this.title,
-          depositing_organization: this.organization,
-          reference_code: this.reference_code_prefix + this.reference_code_suffix,
-        }
-        axios.post(create_control_url, payload)
-          .then(response => {
-            console.debug(response)
-            processingDoneCallback(null, response)
-            window.location.href = '/accueil'
-          })
-          .catch((error) => {
-            console.error('Error creating control', error)
-            const errorMessage = this.makeErrorMessage(error)
-            processingDoneCallback(errorMessage)
-          })
-      },
-      makeErrorMessage: function (error) {
-        if (error.response && error.response.data && error.response.data['reference_code']) {
-          const requestedCode = JSON.parse(error.response.config.data).reference_code
-          if (error.response.data['reference_code'][0] === 'UNIQUE') {
-            return 'Le nom abrégé "' + requestedCode +
-                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
-          }
-          if (error.response.data['reference_code'][0] === 'INVALID') {
-            return 'Le nom abrégé "' + requestedCode +
-                '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).'
-                ' Veuillez en choisir un autre.'
-          }
-        }
-
-        if (error.message && error.message === 'Network Error') {
-          return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
-        }
-
-        if (error.message) {
-          return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
-        }
-
-        return "L'espace de dépôt n'a pas pu être créé."
-      },
+export default Vue.extend({
+  data: function() {
+    return {
+      title: '',
+      organization: '',
+      reference_code_suffix: '',
+      year: new Date().getFullYear(),
     }
-  })
+  },
+  computed: {
+    reference_code_prefix: function () {
+      return this.year + '_'
+    },
+  },
+  components: {
+    ConfirmModalWithWait,
+    InfoBar,
+  },
+  methods: {
+    createControl: function(processingDoneCallback) {
+      const payload = {
+        title: this.title,
+        depositing_organization: this.organization,
+        reference_code: this.reference_code_prefix + this.reference_code_suffix,
+      }
+      axios.post(backendUrls.control(), payload)
+        .then(response => {
+          console.debug(response)
+          processingDoneCallback(null, response)
+          window.location.href = backendUrls.home()
+        })
+        .catch((error) => {
+          console.error('Error creating control', error)
+          const errorMessage = this.makeErrorMessage(error)
+          processingDoneCallback(errorMessage)
+        })
+    },
+    makeErrorMessage: function (error) {
+      if (error.response && error.response.data && error.response.data.reference_code) {
+        const requestedCode = JSON.parse(error.response.config.data).reference_code
+        if (error.response.data.reference_code[0] === 'UNIQUE') {
+          return 'Le nom abrégé "' + requestedCode +
+                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+        }
+        if (error.response.data.reference_code[0] === 'INVALID') {
+          return 'Le nom abrégé "' + requestedCode +
+                 '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).' +
+                 ' Veuillez en choisir un autre.'
+        }
+      }
+
+      if (error.message && error.message === 'Network Error') {
+        return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
+      }
+
+      if (error.message) {
+        return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+      }
+
+      return "L'espace de dépôt n'a pas pu être créé."
+    },
+  },
+})
 
 </script>

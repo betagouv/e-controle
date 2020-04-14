@@ -6,14 +6,15 @@
     <div class="card-title mb-xl-8">
       Quelques étapes pour bien démarrer...
     </div>
-    <div class="flex-column col-lg-11 col-xl-7">
+    <div id="steps" class="flex-column">
       <div class="card mx-2">
         <div class="card-status card-status-top bg-blue"></div>
         <div class="card-body flex-row align-items-center">
           <i class="fa fa-2x fa-archive text-muted mr-4 p-4 border rounded"></i>
-          <div class="card-title">
+          <div class="card-title mb-0 mr-3">
             1. Créez un espace de dépôt pour chaque organisme interrogé.
           </div>
+          <control-create></control-create>
         </div>
       </div>
       <div class="card mx-2">
@@ -30,7 +31,8 @@
         <div class="card-body flex-row align-items-center">
           <i class="fe fa-2x fe-users text-muted mr-4 p-4 border rounded"></i>
           <div class="card-title">
-            3. Partagez l'espace de dépôt avec les membres de votre équipe et ceux de l'organisme interrogé.
+            3. Partagez l'espace de dépôt avec les membres de votre équipe et ceux de l'organisme
+            interrogé.
           </div>
         </div>
       </div>
@@ -48,8 +50,18 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  export default Vue.extend({
+import ControlCreate from './ControlCreate'
+import Vue from 'vue'
 
-  })
+export default Vue.extend({
+  components: {
+    ControlCreate,
+  },
+})
 </script>
+
+<style scoped>
+  #steps {
+    max-width: 670px;
+  }
+</style>

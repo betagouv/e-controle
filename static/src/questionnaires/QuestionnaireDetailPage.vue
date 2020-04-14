@@ -1,5 +1,6 @@
 <template>
   <div class="mx-3">
+    <breadcrumbs :control="control"></breadcrumbs>
     <template v-if="user.is_inspector">
       <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft">
       </request-editor-button>
@@ -89,6 +90,7 @@ import Vue from 'vue'
 
 import axios from 'axios'
 import backendUrls from '../utils/backend'
+import Breadcrumbs from '../utils/Breadcrumbs'
 import QuestionBox from '../questions/QuestionBox'
 import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
 import QuestionnaireMetadata from './QuestionnaireMetadata'
@@ -124,6 +126,7 @@ export default Vue.extend({
     },
   },
   components: {
+    Breadcrumbs,
     QuestionBox,
     QuestionFileListWithoutVuex,
     QuestionnaireMetadata,
