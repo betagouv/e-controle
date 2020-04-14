@@ -6,7 +6,7 @@
           <i class="fe fe-folder mr-4"></i>
           <img :src="'/static/img/file-explorer.png'"
                 alt="Explorateur Windows"
-                class="fake-icon" />
+                class="title-fake-icon" />
           <span>Comment voir les réponses classées dans l’Explorateur Windows ?</span>
         </h4>
         <button type="button"
@@ -177,10 +177,7 @@ export default Vue.extend({
 </script>
 
   <style scoped>
-    .parent-fake-icon {
-      position: relative;
-    }
-    .fake-icon {
+    .title-fake-icon {
       position: absolute;
       top: 14px;
       left: 14px;

@@ -36,10 +36,11 @@
             </p>
           </div>
           <div class="col-3 text-right pr-0">
-            <button class="btn btn-primary btn-fake-icon" @click="showWebdavTip">
+            <button class="btn btn-primary parent-fake-icon" @click="showWebdavTip">
+              <i class="fe fe-folder mr-3"></i>
               <img :src="'/static/img/file-explorer.png'"
                   alt="Explorateur Windows"
-                  class="fake-icon mr-2" />
+                  class="fake-icon" />
               Voir les réponses
             </button>
           </div>
