@@ -13,7 +13,7 @@ from django.core.files import File
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
 from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft
-from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
+from control.permissions import OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 from user_profiles.serializers import UserProfileSerializer
@@ -157,7 +157,7 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
                            mixins.UpdateModelMixin,
                            viewsets.GenericViewSet):
     serializer_class = QuestionnaireSerializer
-    permission_classes = (ChangeQuestionnairePermission,)
+    permission_classes = (OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire)
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
