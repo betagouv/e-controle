@@ -85,7 +85,7 @@ def test_audited_cannot_list_question_file_by_question_from_draft_questionnaire(
     assert Questionnaire.objects.get(id=draft_questionnaire.id).is_draft
     audited.controls.add(draft_questionnaire.control)
 
-    response = list_annexes_for_question(audited.user, draft_question_file.id)
+    response = list_annexes_for_question(audited.user, draft_question_file.question.id)
 
     assert response.status_code == 200
     assert len(response.data) == 0
@@ -102,7 +102,7 @@ def test_cannot_list_question_file_by_question_from_deleted_control():
     audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     audited.controls.add(deleted_control)
 
-    response = list_annexes_for_question(audited.user, deleted_question_file.id)
+    response = list_annexes_for_question(audited.user, deleted_question_file.question.id)
 
     assert response.status_code == 200
     assert len(response.data) == 0
@@ -112,7 +112,7 @@ def test_cannot_list_question_file_by_question_from_deleted_control():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     inspector.controls.add(deleted_control)
 
-    response = list_annexes_for_question(inspector.user, deleted_question_file.id)
+    response = list_annexes_for_question(inspector.user, deleted_question_file.question.id)
 
     assert response.status_code == 200
     assert len(response.data) == 0
