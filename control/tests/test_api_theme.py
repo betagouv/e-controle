@@ -82,7 +82,8 @@ def test_cannot_retrieve_theme_even_if_user_belongs_to_control():
     theme = factories.ThemeFactory()
     audited_user = utils.make_audited_user(theme.questionnaire.control)
     inspector_user = utils.make_inspector_user(theme.questionnaire.control)
-    assert not theme.questionnaire.is_draft
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
 
     assert get_theme(audited_user, theme.id).status_code == 405
     assert get_theme(inspector_user, theme.id).status_code == 405
@@ -102,7 +103,8 @@ def test_cannot_delete_theme_even_if_user_belongs_to_control():
     theme = factories.ThemeFactory()
     audited_user = utils.make_audited_user(theme.questionnaire.control)
     inspector_user = utils.make_inspector_user(theme.questionnaire.control)
-    assert not theme.questionnaire.is_draft
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
 
     assert delete_theme(audited_user, theme.id).status_code == 405
     assert delete_theme(inspector_user, theme.id).status_code == 405

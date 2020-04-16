@@ -50,6 +50,15 @@ class QuestionnaireIsDraft(permissions.BasePermission):
     message_format = 'Accessing this resource is not allowed.'
 
     def has_object_permission(self, request, view, obj):
-        if not hasattr(obj, 'questionnaire'):
-            raise ParseError(detail='Missing attribute "questionnaire" during permission check')
-        return obj.questionnaire.is_draft
+        """
+        Checks if the questionnaire is draft.
+        Expects either an instance of a questionnaire object, or an object
+        that relate to a questionnaire via its `questionnaire` attribute.
+        """
+        if isinstance(obj, Questionnaire):
+            questionnaire = obj
+        elif hasattr(obj, 'questionnaire'):
+            questionnaire = obj.questionnaire
+        else:
+            raise ParseError(detail='Could not get "questionnaire" during permission check')
+        return questionnaire.is_draft

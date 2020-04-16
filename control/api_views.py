@@ -157,7 +157,8 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
                            mixins.UpdateModelMixin,
                            viewsets.GenericViewSet):
     serializer_class = QuestionnaireSerializer
-    permission_classes = (OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire)
+    permission_classes = (
+        OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire, QuestionnaireIsDraft)
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
