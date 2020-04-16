@@ -35,6 +35,24 @@ class FileInfoMixin(object):
     """
 
     @property
+    def control(self):
+        if not self.question:
+            return None
+        return self.question.control
+
+    @property
+    def questionnaire(self):
+        if not self.question:
+            return None
+        return self.question.questionnaire
+
+    @property
+    def theme(self):
+        if not self.question:
+            return None
+        return self.question.theme
+
+    @property
     def file_name(self):
         return self.file.name
 
@@ -102,8 +120,8 @@ class Control(SoftDeleteModel):
 
     def __str__(self):
         if self.depositing_organization:
-            return f'id {self.id} - {self.title} - {self.depositing_organization}'
-        return f'id {self.id} - {self.title}'
+            return f'[ID{self.id}] - {self.title} - {self.depositing_organization}'
+        return f'[ID{self.id}] - {self.title}'
 
 
 class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -184,7 +202,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return f'id {self.id} - C{self.control.id}-Q{self.numbering} - {self.title}'
+        display_text = f'[ID{self.id}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        display_text += f' [Q{self.numbering}]'
+        display_text += f' - {self.title}'
+        return display_text
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -199,8 +222,21 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
 
+    @property
+    def control(self):
+        if not self.questionnaire:
+            return None
+        return self.questionnaire.control
+
     def __str__(self):
-        return f'id {self.id} - C{self.questionnaire.control.id}-Q{self.questionnaire.numbering}-T{self.numbering} - {self.title}'
+        display_text = f'[ID{self.id}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        if self.questionnaire:
+            display_text += f' [Q{self.questionnaire.numbering}]'
+        display_text += f' [T{self.numbering}]'
+        display_text += f' - {self.title}'
+        return display_text
 
 
 class Question(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -216,11 +252,31 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name_plural = "Questions"
 
     @property
+    def control(self):
+        if not self.theme:
+            return None
+        return self.theme.control
+
+    @property
+    def questionnaire(self):
+        if not self.theme:
+            return None
+        return self.theme.questionnaire
+
+    @property
     def description_rich_text(self):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return f'id {self.id} - C{self.theme.questionnaire.control.id}-Q{self.theme.questionnaire.numbering}-T{self.theme.numbering}-{self.numbering} - {self.description}'
+        display_text = f'[ID{self.id}] [Num{self.numbering}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        if self.questionnaire:
+            display_text += f' [Q{self.theme.questionnaire.numbering}]'
+        if self.theme:
+            display_text += f' [T{self.theme.numbering}]'
+        display_text += f' - {self.description}'
+        return display_text
 
 
 class QuestionFile(OrderedModel, FileInfoMixin):
