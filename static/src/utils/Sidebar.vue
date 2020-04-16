@@ -61,6 +61,7 @@
               Vous pouvez essayer de recharger la page, ou
               <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 cliquez ici pour nous contacter
               </a>.

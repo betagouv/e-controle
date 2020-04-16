@@ -69,6 +69,7 @@
               Suivez les instructions en vidéo
             </button>
             <a target="_blank"
+              rel="noopener noreferrer"
               :href="PDF_FILE_URL"
               class="btn btn-primary"
               title="Suivez les instructions en images."
@@ -77,8 +78,8 @@
               Suivez les instructions en images
             </a>
           </div>
-
         </div>
+
       </div>
     </empty-modal>
     <video-modal

@@ -1,18 +1,22 @@
 from actstream import action
 from functools import partial
 from rest_framework import generics, mixins, status, viewsets
+from rest_framework import serializers
+from rest_framework import decorators
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework import serializers
+from rest_framework.response import Response
 
 import django.dispatch
 from django.core.files import File
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
+from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft
 from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
+from user_profiles.serializers import UserProfileSerializer
 
 
 # This signal is triggered after the questionnaire is saved via the API
@@ -21,7 +25,6 @@ questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"]
 
 class ControlViewSet(mixins.CreateModelMixin,
                      mixins.ListModelMixin,
-                     mixins.RetrieveModelMixin,
                      mixins.UpdateModelMixin,
                      viewsets.GenericViewSet):
     permission_classes = (OnlyInspectorCanChange,)
@@ -56,8 +59,13 @@ class ControlViewSet(mixins.CreateModelMixin,
         self.add_log_entry(control=control, verb='updated control')
         return response
 
+    @decorators.action(detail=True, methods=['get'], url_path='users')
+    def users(self, request, pk):
+        serialized_users = UserProfileSerializer(self.get_object().user_profiles.all(), many=True)
+        return Response(serialized_users.data)
 
-class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
+
+class QuestionViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = QuestionSerializer
 
     def get_queryset(self):
@@ -65,46 +73,37 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
             theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
-    def list(self, request, *args, **kwargs):
-        """
-        Instead of rendering a list, we reformat the response data to render
-        a dict where the key is the question id.
-        """
-        response = super(QuestionViewSet, self).list(request, *args, **kwargs)
-        dict_data = {}
-        for elem in response.data:
-            question_id = elem['id']
-            dict_data[question_id] = elem
-        response.data = dict_data
-        return response
 
-
-class QuestionFileViewSet(viewsets.ModelViewSet):
+class QuestionFileViewSet(mixins.DestroyModelMixin,
+                          mixins.ListModelMixin,
+                          mixins.CreateModelMixin,
+                          viewsets.GenericViewSet):
     serializer_class = QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
+    permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted, QuestionnaireIsDraft)
+
+    def get_user_questionnaires(self):
+        """
+        Returns the questionnaires belonging to the user.
+        """
+        user_controls = self.request.user.profile.controls.active()
+        user_questionnaires = Questionnaire.objects.filter(control__in=user_controls)
+        if self.request.user.profile.is_audited:
+            user_questionnaires = user_questionnaires.filter(is_draft=False)
+        return user_questionnaires
 
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
+            question__theme__questionnaire__in=self.get_user_questionnaires())
         return queryset
 
     def perform_create(self, serializer):
         question = serializer.validated_data['question']
-        if question.theme.questionnaire.control.is_deleted():
-            raise PermissionDenied('Invalid control')
+        # Before creating the QuestionFile, let's check that permission are ok for
+        # the associated Question object.
+        self.check_object_permissions(self.request, question)
         serializer.save(file=self.request.data.get('file'))
-
-
-class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ResponseFileSerializer
-    parser_classes = (MultiPartParser, FormParser)
-    filterset_fields = ('question',)
-
-    def get_queryset(self):
-        queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
-        return queryset
 
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
@@ -145,7 +144,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
         instance.file.delete(False)
 
 
-class ThemeViewSet(viewsets.ModelViewSet):
+class ThemeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
@@ -154,7 +153,9 @@ class ThemeViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class QuestionnaireViewSet(viewsets.ModelViewSet):
+class QuestionnaireViewSet(mixins.CreateModelMixin,
+                           mixins.UpdateModelMixin,
+                           viewsets.GenericViewSet):
     serializer_class = QuestionnaireSerializer
     permission_classes = (ChangeQuestionnairePermission,)
 

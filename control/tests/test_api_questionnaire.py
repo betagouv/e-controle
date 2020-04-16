@@ -14,6 +14,10 @@ def get_questionnaire(user, id):
     return utils.get_resource(client, user, 'questionnaire', id)
 
 
+def list_questionnaires(user):
+    return utils.list_resource(client, user, 'questionnaire')
+
+
 def create_questionnaire(user, payload):
     return utils.create_resource(client, user, 'questionnaire', payload)
 
@@ -74,10 +78,6 @@ def increment_ids():
 
 def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     questionnaire = factories.QuestionnaireFactory()
-    audited_user = utils.make_audited_user(questionnaire.control)
-
-    # get
-    assert get_questionnaire(audited_user, questionnaire.id).status_code == 200
 
     # create
     inspector_user = utils.make_inspector_user(questionnaire.control)
@@ -85,14 +85,25 @@ def test_can_access_questionnaire_api_if_control_is_associated_with_the_user():
     assert create_questionnaire(inspector_user, payload).status_code == 201
 
 
+def test_cannot_get_questionnaire_even_if_control_is_associated_with_the_user():
+    # Retrieve is disabled
+    questionnaire = factories.QuestionnaireFactory()
+    audited_user = utils.make_audited_user(questionnaire.control)
+    inspector_user = utils.make_inspector_user(questionnaire.control)
+
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 405
+    assert get_questionnaire(inspector_user, questionnaire.id).status_code == 405
+
+    # list is disabled
+    assert list_questionnaires(audited_user).status_code == 405
+    assert list_questionnaires(inspector_user).status_code == 405
+
+
 def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_user():
     questionnaire_in = factories.QuestionnaireFactory()
     questionnaire_out = factories.QuestionnaireFactory()
     assert questionnaire_in.control.id != questionnaire_out.control.id
     user = utils.make_inspector_user(questionnaire_in.control)
-
-    # get
-    assert get_questionnaire(user, questionnaire_out.id).status_code != 200
 
     # create
     payload = make_create_payload(questionnaire_out.control.id)
@@ -104,7 +115,7 @@ def test_no_access_to_questionnaire_api_if_control_is_not_associated_with_the_us
 def test_no_access_to_questionnaire_api_for_anonymous():
     questionnaire = factories.QuestionnaireFactory()
 
-    # get
+    # retrieve is never allowed
     response = utils.get_resource_without_login(client, 'questionnaire', questionnaire.id)
     assert response.status_code == 403
 
@@ -113,7 +124,7 @@ def test_no_access_to_questionnaire_api_for_anonymous():
     response = utils.update_resource_without_login(client, 'questionnaire', payload)
     assert response.status_code == 403
 
-    # delete
+    # delete is never allowed
     response = utils.delete_resource_without_login(client, 'questionnaire', questionnaire.id)
     assert response.status_code == 403
 
@@ -133,7 +144,7 @@ def test_no_modifying_questionnaire_if_not_inspector():
     payload = make_update_payload(questionnaire)
     assert update_questionnaire(audited_user, payload).status_code == 403
 
-    # delete
+    # delete is never allowed
     assert delete_questionnaire(audited_user, questionnaire.id).status_code == 403
 
     # create
@@ -146,15 +157,39 @@ def test_no_modifying_questionnaire_if_not_inspector():
 def test_no_access_to_draft_if_not_inspector():
     questionnaire = factories.QuestionnaireFactory(is_draft=True)
     audited_user = utils.make_audited_user(questionnaire.control)
+    # retrieve is never allowed
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 405
 
-    assert get_questionnaire(audited_user, questionnaire.id).status_code != 200
 
-
-def test_no_access_to_questionnaire_control_is_deleted():
+def test_no_access_to_questionnaire_if_control_is_deleted():
+    # retrieve is never allowed
     questionnaire = factories.QuestionnaireFactory()
     audited_user = utils.make_audited_user(questionnaire.control)
     questionnaire.control.delete()
-    assert get_questionnaire(audited_user, questionnaire.id).status_code == 404
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 405
+
+
+def test_no_questionnaire_create_if_control_is_deleted():
+    increment_ids()
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    payload = make_create_payload(control.id)
+    assert_no_data_is_saved()
+    control.delete()
+    response = create_questionnaire(user, payload)
+    assert 403 <= response.status_code <= 404
+
+
+def test_no_questionnaire_update_if_control_is_deleted():
+    increment_ids()
+    questionnaire = factories.QuestionnaireFactory()
+    user = utils.make_inspector_user(questionnaire.control)
+    payload = make_update_payload(questionnaire)
+
+    questionnaire.control.delete()
+
+    response = update_questionnaire(user, payload)
+    assert 403 <= response.status_code <= 404
 
 
 def test_questionnaire_create__success():
@@ -261,17 +296,6 @@ def test_questionnaire_draft_update__editor_can_update():
 
     response = update_questionnaire(user, payload)
     assert response.status_code == 200
-
-
-def test_questionnaire_create_fails_if_control_is_deleted():
-    increment_ids()
-    control = factories.ControlFactory()
-    user = utils.make_inspector_user(control)
-    payload = make_create_payload(control.id)
-    assert_no_data_is_saved()
-    control.delete()
-    response = create_questionnaire(user, payload)
-    assert response.status_code == 403
 
 
 def test_questionnaire_draft_update__non_editor_cannot_update():
@@ -454,6 +478,7 @@ def test_questionnaire_update__question_create():
 
 
 def test_questionnaire_delete():
+    # delete is never allowed.
     increment_ids()
     question = factories.QuestionFactory()
     theme = question.theme
@@ -465,12 +490,12 @@ def test_questionnaire_delete():
     assert Question.objects.all().count() == 1
 
     response = delete_questionnaire(user, questionnaire.id)
-    assert 200 <= response.status_code < 300
+    assert response.status_code == 405
 
-    # Cascade delete : child objects are deleted
-    assert Questionnaire.objects.all().count() == 0
-    assert Theme.objects.all().count() == 0
-    assert Question.objects.all().count() == 0
+    # Cascade delete : child objects are not deleted
+    assert Questionnaire.objects.all().count() == 1
+    assert Theme.objects.all().count() == 1
+    assert Question.objects.all().count() == 1
 
 
 def test_questionnaire_update__question_delete():

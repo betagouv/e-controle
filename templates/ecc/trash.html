@@ -65,7 +65,11 @@
               <div>{{ response_file.deletion_date }}</div>
             </td>
             <td>
-              <div><a target="_blank" href="{{ response_file.url }}">{{ response_file.basename }}</a></div>
+              <div>
+                <a target="_blank" rel="noopener noreferrer" href="{{ response_file.url }}">
+                  {{ response_file.basename }}
+                </a>
+              </div>
             </td>
             <td>
               <div>{{ response_file.deletion_user.first_name }} {{ response_file.deletion_user.last_name }}</div>
