@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar" :class="{ collapsed: collapsed }">
     <div v-if="showSidebar">
-      <button id="toggle-button" class="btn btn-secondary" @click="toggleCollapse">
+      <button id="sidebar-toggle-button" class="btn btn-secondary" @click="toggleCollapse">
         <i v-show="!collapsed" class="fa fa-chevron-left"></i>
         <i v-show="collapsed" class="fa fa-chevron-down"></i>
         <span v-show="collapsed">Ouvrir le menu</span>
@@ -267,14 +267,14 @@ export default Vue.extend({
   .sidebar {
     position: relative;
   }
-  #toggle-button {
+  #sidebar-toggle-button {
     position: fixed;
     top: 90px;
     left: 350px;
-    z-index: 10;
+    z-index: 21;
     transition: left 0.3s;
   }
-  .collapsed #toggle-button {
+  .collapsed #sidebar-toggle-button {
     transform: rotate(-90deg);
     left: -35px;
     top: 134px;

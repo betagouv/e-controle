@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="mx-3">
-    <breadcrumbs v-if="typeof state !== STATES.LOADING" :control="currentControl"></breadcrumbs>
+    <breadcrumbs v-if="state !== STATES.LOADING" :control="currentControl"></breadcrumbs>
     <swap-editor-button v-if="state !== STATES.LOADING && controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
