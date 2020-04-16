@@ -102,6 +102,7 @@ import ThemeBox from '../themes/ThemeBox'
 import WebdavTip from '../controls/WebdavTip'
 
 export default Vue.extend({
+  name: 'QuestionnaireDetailPage',
   props: {
     control: Object,
     questionnaireId: Number,
