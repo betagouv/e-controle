@@ -257,3 +257,13 @@ table.trash-list {
     padding-left: 1em;
     padding-right: 1em;
 }
+
+/* Image displayed on top of icon (fake icon). Used for WebdavTip button. */
+.parent-fake-icon {
+    position: relative;
+}
+.fake-icon {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+}

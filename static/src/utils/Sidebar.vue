@@ -1,62 +1,11 @@
 <template>
-  <div class="sidebar">
-    <div class="sidebar-header bg-white flex-row justify-content-between align-items-center">
-      <a class="header-brand" href="/accueil">
-        <img :src="'/static/img/e-controle.png'" class="header-brand-img" alt="logo e.contrôle" />
-      </a>
-    </div>
-
+  <div class="sidebar" :class="{ collapsed: collapsed }">
     <div v-if="showSidebar">
-      <div class="card-header flex-row justify-content-center border-top">
-        <div class="card-title">
-          Mes espaces de dépôt
-        </div>
-      </div>
-
-      <div v-if="isLoaded && controls.length === 0">
-        <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
-          <div v-if="user.is_inspector">
-            Vous n'avez pas encore créé d'espace de dépôt.
-          </div>
-          <div v-else>
-            Vous n'avez pas d'espace de dépôt.
-          </div>
-        </div>
-      </div>
-
-      <div v-if="user && user.is_inspector"
-          class="card-header flex-row justify-content-center border-0">
-        <control-create></control-create>
-      </div>
-
-      <div v-if="isLoaded && controls.length === 0"
-           class="ie-margin-for-footer">
-        <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
-      </div>
-
-      <div v-if="!collapsed && !isLoaded && !hasError"
-          class="sidebar-load-message card-header border-0 mt-4 mb-4">
-        <div class="loader mr-2"></div>
-        En attente de la liste d'espaces...
-      </div>
-
-      <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
-        <div>
-          Nous n'avons pas pu obtenir vos espaces de dépôt.
-        </div>
-        <div class="mt-2">
-          Erreur : {{ errorMessage }}
-        </div>
-        <div class="mt-2">
-          Vous pouvez essayer de recharger la page, ou
-          <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
-            target="_blank"
-          >
-            cliquez ici pour nous contacter
-          </a>.
-        </div>
-      </error-bar>
-
+      <button id="sidebar-toggle-button" class="btn btn-secondary" @click="toggleCollapse">
+        <i v-show="!collapsed" class="fa fa-chevron-left"></i>
+        <i v-show="collapsed" class="fa fa-chevron-down"></i>
+        <span v-show="collapsed">Ouvrir le menu</span>
+      </button>
       <sidebar-menu class="sidebar-body"
                     :menu="menu"
                     :relative="true"
@@ -64,8 +13,60 @@
                     :show-one-child="true"
                     theme="white-theme"
                     :collapsed="collapsed"
-                    @item-click="onItemClick"
+                    widthCollapsed="0px"
       >
+        <template v-slot:header>
+          <div id="sidebar-title"
+               class="card-header flex-row justify-content-center">
+            <div class="card-title text-nowrap text-center">
+              Mes espaces de dépôt
+            </div>
+          </div>
+
+          <div v-if="isLoaded && controls.length === 0">
+            <div class="text-muted card-title text-center mx-7 mt-10 mb-4">
+              <div v-if="user.is_inspector">
+                Vous n'avez pas encore créé d'espace de dépôt.
+              </div>
+              <div v-else>
+                Vous n'avez pas d'espace de dépôt.
+              </div>
+            </div>
+          </div>
+
+          <div v-if="user && user.is_inspector"
+              class="card-header flex-row justify-content-center border-0">
+            <control-create></control-create>
+          </div>
+
+          <div v-if="isLoaded && controls.length === 0"
+              class="ie-margin-for-footer">
+            <!-- empty div. Adds margin-bottom to fix a footer bug for IE. -->
+          </div>
+
+          <div v-if="!isLoaded && !hasError"
+              class="sidebar-load-message card-header border-0 mt-4 mb-4">
+            <div class="loader mr-2"></div>
+            En attente de la liste d'espaces...
+          </div>
+
+          <error-bar id="sidebar-error-bar" v-if="hasError" noclose=true>
+            <div>
+              Nous n'avons pas pu obtenir vos espaces de dépôt.
+            </div>
+            <div class="mt-2">
+              Erreur : {{ errorMessage }}
+            </div>
+            <div class="mt-2">
+              Vous pouvez essayer de recharger la page, ou
+              <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
+                target="_blank"
+              >
+                cliquez ici pour nous contacter
+              </a>.
+            </div>
+          </error-bar>
+        </template>
       </sidebar-menu>
     </div>
   </div>
@@ -152,10 +153,6 @@ export default Vue.extend({
     console.debug('this.window.location.pathname', this.window.location.pathname)
     if (this.window.location.pathname === backend.welcome()) {
       this.showSidebar = false
-      // Hack to reduce width of sidebar, until we figure out the layout for collapsed menu (if we
-      // ever do).
-      const sidebar = this.window.document.getElementsByClassName('sidebar')[0]
-      sidebar.setAttribute('style', 'width: 135px;')
       return
     }
   },
@@ -237,28 +234,55 @@ export default Vue.extend({
       this.isMenuBuilt = true
       this.menu = menu
     },
-    onItemClick (event, item) {
-      console.debug('onItemClick', event, item)
+    toggleCollapse() {
+      this.collapsed = !this.collapsed
     },
   },
 })
 </script>
 
 <style scoped>
-  .sidebar-header {
-    padding: 1rem;
-    width: 351px; /* 1px wider so that the right-border is hidden */
-    margin-top: 1px;
-  }
-
-  .sidebar {
-    width: 350px;
-  }
 </style>
 
 <style>
   #sidebar-vm {
     background-color: white;
+  }
+
+  /* Fix z-index for modal in CreateControl to be displayed correctly */
+  .sidebar .v-sidebar-menu {
+    z-index: unset;
+  }
+
+  /*
+  Sidebar should not be too narrow, fix a min-width.
+  The sidebar itself has a changing width (since it collapses, with an animation), so constrain the
+  width of the sidebar-title instead.
+  */
+  #sidebar-title .card-title {
+    min-width: 350px;
+  }
+
+  /* Place toggle button outside of the sidebar, in the navbar. */
+  .sidebar {
+    position: relative;
+  }
+  #sidebar-toggle-button {
+    position: fixed;
+    top: 90px;
+    left: 350px;
+    z-index: 21;
+    transition: left 0.3s;
+  }
+  .collapsed #sidebar-toggle-button {
+    transform: rotate(-90deg);
+    left: -35px;
+    top: 134px;
+  }
+
+  /* Don't show elements sticking out of the sidebar */
+  .sidebar-body {
+    overflow: hidden;
   }
 
   /* Add borders to items */
@@ -291,6 +315,11 @@ export default Vue.extend({
   .v-sidebar-menu.vsm_white-theme .vsm--link_level-1.vsm--link_active .vsm--icon {
     color: #495057;
     background-color: white;
+  }
+
+  /* Fix height of items when collapsed */
+  .vsm_collapsed .vsm--item {
+    height: 80px;
   }
 
 </style>

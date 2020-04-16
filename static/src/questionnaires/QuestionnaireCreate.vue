@@ -1,6 +1,7 @@
 <template>
 <div>
-  <div class="container">
+  <div class="mx-3">
+    <breadcrumbs v-if="state !== STATES.LOADING" :control="currentControl"></breadcrumbs>
     <swap-editor-button v-if="state !== STATES.LOADING && controlHasMultipleInspectors"
                         :control-id="controlId"
                         @save-draft="saveDraftAndSwapEditor">
@@ -131,6 +132,7 @@
 <script>
 import axios from 'axios'
 import backend from '../utils/backend'
+import Breadcrumbs from '../utils/Breadcrumbs'
 import { loadStatuses } from '../store'
 import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
@@ -181,6 +183,12 @@ export default Vue.extend({
       'controlsLoadStatus',
       'currentQuestionnaire',
     ]),
+    currentControl() {
+      if (!this.currentQuestionnaire || !this.currentQuestionnaire.control) {
+        return null
+      }
+      return this.controls.find(control => control.id === this.currentQuestionnaire.control)
+    },
   },
   watch: {
     // Watch change of loadStatus coming from the store, to know when the data is ready.
@@ -238,6 +246,7 @@ export default Vue.extend({
     },
   },
   components: {
+    Breadcrumbs,
     PublishFlow,
     QuestionnaireBodyCreate,
     QuestionnaireMetadataCreate,
@@ -457,4 +466,9 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style scoped>
+  #bottom-bar {
+    margin-left: -2rem;
+    margin-right: -0.75rem;
+  }
+</style>

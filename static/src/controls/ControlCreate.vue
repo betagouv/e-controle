@@ -8,7 +8,6 @@
       Ajouter un espace de dépôt
     </a>
 
-
     <confirm-modal-with-wait id="controlcreate"
                              cancel-button="Annuler"
                              confirm-button="Créer l'espace de dépôt"
@@ -79,7 +78,8 @@
               <input type="text" class="form-control" v-model="reference_code_suffix" required
                      pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
                      maxlength="255"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux ( ! , @ # $ / \ ' &quot; + etc)"
+                     title="Ce champ ne doit pas contenir de caractères spéciaux
+                         ( ! , @ # $ / \ ' &quot; + etc)"
                      aria-describedby="reference-code-help"
                      aria-labelledby="reference-code-label">
             </div>
@@ -92,82 +92,78 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Vue from "vue"
+import axios from 'axios'
+import Vue from 'vue'
 
-  import ConfirmModalWithWait from "../utils/ConfirmModalWithWait"
-  import ErrorBar from "../utils/ErrorBar"
-  import InfoBar from "../utils/InfoBar"
+import backendUrls from '../utils/backend'
+import ConfirmModalWithWait from '../utils/ConfirmModalWithWait'
+import InfoBar from '../utils/InfoBar'
 
-  const create_control_url = "/api/control/"
-  const home_url = "/accueil/"
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 
-  axios.defaults.xsrfCookieName = 'csrftoken'
-  axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-
-  export default Vue.extend({
-    data: function() {
-      return {
-        title: "",
-        organization: "",
-        reference_code_suffix: "",
-        year: new Date().getFullYear(),
-      }
-    },
-    computed: {
-      reference_code_prefix: function () {
-        return this.year + "_"
-      }
-    },
-    components: {
-      ConfirmModalWithWait,
-      ErrorBar,
-      InfoBar,
-    },
-    methods: {
-      createControl: function(processingDoneCallback) {
-        const payload = {
-          title: this.title,
-          depositing_organization: this.organization,
-          reference_code: this.reference_code_prefix + this.reference_code_suffix,
-        }
-        axios.post(create_control_url, payload)
-          .then(response => {
-            console.debug(response)
-            processingDoneCallback(null, response)
-            window.location.href = '/accueil'
-          })
-          .catch((error) => {
-            console.error('Error creating control', error)
-            const errorMessage = this.makeErrorMessage(error)
-            processingDoneCallback(errorMessage)
-          })
-      },
-      makeErrorMessage: function (error) {
-        if (error.response && error.response.data && error.response.data['reference_code']) {
-          const requestedCode = JSON.parse(error.response.config.data).reference_code
-          if (error.response.data['reference_code'][0] === 'UNIQUE') {
-            return 'Le nom abrégé "' + requestedCode +
-                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
-          }
-          if (error.response.data['reference_code'][0] === 'INVALID') {
-            return 'Le nom abrégé "' + requestedCode +
-                '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).'
-                ' Veuillez en choisir un autre.'
-          }
-        }
-
-        if (error.message && error.message === 'Network Error') {
-          return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
-        }
-
-        if (error.message) {
-          return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
-        }
-
-        return "L'espace de dépôt n'a pas pu être créé."
-      },
+export default Vue.extend({
+  data: function() {
+    return {
+      title: '',
+      organization: '',
+      reference_code_suffix: '',
+      year: new Date().getFullYear(),
     }
-  })
+  },
+  computed: {
+    reference_code_prefix: function () {
+      return this.year + '_'
+    },
+  },
+  components: {
+    ConfirmModalWithWait,
+    InfoBar,
+  },
+  methods: {
+    createControl: function(processingDoneCallback) {
+      const payload = {
+        title: this.title,
+        depositing_organization: this.organization,
+        reference_code: this.reference_code_prefix + this.reference_code_suffix,
+      }
+      axios.post(backendUrls.control(), payload)
+        .then(response => {
+          console.debug(response)
+          processingDoneCallback(null, response)
+          window.location.href = backendUrls.home()
+        })
+        .catch((error) => {
+          console.error('Error creating control', error)
+          const errorMessage = this.makeErrorMessage(error)
+          processingDoneCallback(errorMessage)
+        })
+    },
+    makeErrorMessage: function (error) {
+      if (error.response && error.response.data && error.response.data.reference_code) {
+        const requestedCode = JSON.parse(error.response.config.data).reference_code
+        if (error.response.data.reference_code[0] === 'UNIQUE') {
+          return 'Le nom abrégé "' + requestedCode +
+                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+        }
+        if (error.response.data.reference_code[0] === 'INVALID') {
+          return 'Le nom abrégé "' + requestedCode +
+                 '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).' +
+                 ' Veuillez en choisir un autre.'
+        }
+      }
+
+      if (error.message && error.message === 'Network Error') {
+        return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
+      }
+
+      if (error.message) {
+        return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+      }
+
+      return "L'espace de dépôt n'a pas pu être créé."
+    },
+  },
+})
 
 </script>

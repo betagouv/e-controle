@@ -16,7 +16,8 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
-from .serializers import ControlDetailControlSerializer, QuestionnaireSerializer, ControlDetailUserSerializer
+from .serializers import ControlSerializer, ControlDetailControlSerializer, ControlDetailUserSerializer
+from .serializers import QuestionnaireSerializer
 
 
 class WithListOfControlsMixin(object):
@@ -104,6 +105,10 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         context = super().get_context_data(**kwargs)
         context['questionnaire_json'] = \
             json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
+
+        control = self.get_object().control
+        context['control_json'] = json.dumps(ControlSerializer(instance=control).data)
+
         return context
 
     def add_access_log_entry(self):
