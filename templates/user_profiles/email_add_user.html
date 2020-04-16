@@ -6,7 +6,7 @@
 <br/>
 - Profil : {{ target_user.profile.get_profile_type_display }}
 <br/>
-- Espace de dépôt : {{ control }}
+- Espace de dépôt : {{ control.title_display }}
 <hr/>
 <p class="text-bold">
   Pensez à inviter la nouvelle personne à se connecter à e.contrôle.
@@ -17,7 +17,7 @@
 <p class="text-justify">
 Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
 <br/>
-Dans le cadre de la procédure "{{ control }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
+Dans le cadre de la procédure "{{ control.title_display }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
 <br/>
 Cordialement,
 </p>

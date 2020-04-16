@@ -1,0 +1,43 @@
+{% load i18n static %}
+
+<!-- Place description text here, to be displayed above search bar. -->
+<div>
+  Vous pouvez limiter la liste des utilisateurs pour un certain contrôle.
+  Il suffit de regarder la zone "FILTRE" de cette page et d'utiliser
+  le filtre <strong>Par contrôles</strong>.
+</div>
+<br>
+<div>
+  Si vous connessez déjà l'ID d'un contrôle, par exemple '123', et que vous voulez
+  trouver <strong>tous les utilisateurs de ce contrôle</strong> :
+  <code>/user_profiles/userprofile/?controls__id__exact=123</code>
+</div>
+<br>
+<div>
+  Comment trouver l'ID d'un objet, par exemple d'un contrôle ?
+</div>
+<div>
+  Aller à la page de cet objet et regarder le numéro dans l'URL.
+</div>
+<div>
+  Exemple : trouver l'ID du contrôle "CCG de Blablabla". Je vais sur la page du CCG de Blablabla dans l'admin.
+  L'URL est : <code>/control/control/37/change/</code>. L'ID est donc 37.
+</div>
+
+<!-- Original search field below. Do not edit. -->
+
+{% if cl.search_fields %}
+<div id="toolbar"><form id="changelist-search" method="get">
+<div><!-- DIV needed for valid HTML -->
+<label for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></label>
+<input type="text" size="40" name="{{ search_var }}" value="{{ cl.query }}" id="searchbar" autofocus>
+<input type="submit" value="{% trans 'Search' %}">
+{% if show_result_count %}
+    <span class="small quiet">{% blocktrans count counter=cl.result_count %}{{ counter }} result{% plural %}{{ counter }} results{% endblocktrans %} (<a href="?{% if cl.is_popup %}_popup=1{% endif %}">{% if cl.show_full_result_count %}{% blocktrans with full_result_count=cl.full_result_count %}{{ full_result_count }} total{% endblocktrans %}{% else %}{% trans "Show all" %}{% endif %}</a>)</span>
+{% endif %}
+{% for pair in cl.params.items %}
+    {% if pair.0 != search_var %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}">{% endif %}
+{% endfor %}
+</div>
+</form></div>
+{% endif %}

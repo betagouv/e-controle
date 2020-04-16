@@ -4,11 +4,13 @@ from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.urls import reverse
-from django.utils.html import format_html
 
 from django_cleanup import cleanup
 from model_utils.models import TimeStampedModel
 from ordered_model.models import OrderedModel
+from softdelete.models import SoftDeleteModel
+
+from soft_deletion.managers import DeletableQuerySet
 
 from .docx import DocxMixin
 from .upload_path import questionnaire_file_path, question_file_path, response_file_path, Prefixer
@@ -27,64 +29,38 @@ class WithNumberingMixin(object):
     numbering.fget.short_description = 'Numérotation'
 
 
-class QuestionnaireFileMixin(object):
+class FileInfoMixin(object):
     """
     Add common helpers for file information.
     """
 
     @property
+    def control(self):
+        if not self.question:
+            return None
+        return self.question.control
+
+    @property
+    def questionnaire(self):
+        if not self.question:
+            return None
+        return self.question.questionnaire
+
+    @property
+    def theme(self):
+        if not self.question:
+            return None
+        return self.question.theme
+
+    @property
     def file_name(self):
         return self.file.name
 
-    @property
-    def question_display(self):
-        question = self.question
-        url = reverse('admin:control_question_change', args=[question.pk])
-        return format_html(
-            '<a href="{}">{}. {}</a>',
-            url,
-            question.numbering,
-            question
-        )
-    question_display.fget.short_description = 'question'
-
-    @property
-    def questionnaire_display(self):
-        is_empty = not self.question.theme or not self.question.theme.questionnaire
-        if is_empty:
-            return '-'
-        questionnaire = self.question.theme.questionnaire
-        url = reverse('admin:control_questionnaire_change', args=[questionnaire.pk])
-        return format_html(
-            '<a href="{}">{}</a>',
-            url,
-            questionnaire
-        )
-    questionnaire_display.fget.short_description = 'questionnaire'
-
-    @property
-    def control_display(self):
-        is_empty = (
-            not self.question.theme or
-            not self.question.theme.questionnaire or
-            not self.question.theme.questionnaire.control
-        )
-        if is_empty:
-            return '-'
-        control = self.question.theme.questionnaire.control
-        url = reverse('admin:control_control_change', args=[control.pk])
-        return format_html(
-            '<a href="{}">{}</a>',
-            url,
-            control
-        )
-    control_display.fget.short_description = 'control'
-
     def __str__(self):
-        return self.file_name
+        return f'id {self.id} - {self.file_name}'
 
 
-class Control(models.Model):
+class Control(SoftDeleteModel):
     # These error messages are used in the frontend (ConsoleCreate.vue),
     # if you change them you might break the frontend.
     INVALID_ERROR_MESSAGE = 'INVALID'
@@ -113,9 +89,11 @@ class Control(models.Model):
         unique=True,
         error_messages={'unique': UNIQUE_ERROR_MESSAGE})
 
+    objects = DeletableQuerySet.as_manager()
+
     class Meta:
-        verbose_name = "Controle"
-        verbose_name_plural = "Controles"
+        verbose_name = "Contrôle"
+        verbose_name_plural = "Contrôles"
 
     def data(self):
         return {
@@ -134,10 +112,16 @@ class Control(models.Model):
     def has_multiple_inspectors(self):
         return self.user_profiles.filter(profile_type=UserProfile.INSPECTOR).count() > 1
 
-    def __str__(self):
+    @property
+    def title_display(self):
         if self.depositing_organization:
             return f'{self.title} - {self.depositing_organization}'
         return self.title
+
+    def __str__(self):
+        if self.depositing_organization:
+            return f'[ID{self.id}] - {self.title} - {self.depositing_organization}'
+        return f'[ID{self.id}] - {self.title}'
 
 
 class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -165,7 +149,7 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         help_text=(
             "Ce fichier est généré automatiquement quand le questionnaire est enregistré."))
     control = models.ForeignKey(
-        to='Control', verbose_name='controle', related_name='questionnaires',
+        to='Control', verbose_name='contrôle', related_name='questionnaires',
         null=True, blank=True, on_delete=models.CASCADE)
     order_with_respect_to = 'control'
     order = models.PositiveIntegerField('order', db_index=True)
@@ -218,7 +202,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.title_display
+        display_text = f'[ID{self.id}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        display_text += f' [Q{self.numbering}]'
+        display_text += f' - {self.title}'
+        return display_text
 
 
 class Theme(OrderedModel, WithNumberingMixin):
@@ -233,8 +222,21 @@ class Theme(OrderedModel, WithNumberingMixin):
         verbose_name = "Thème"
         verbose_name_plural = "Thèmes"
 
+    @property
+    def control(self):
+        if not self.questionnaire:
+            return None
+        return self.questionnaire.control
+
     def __str__(self):
-        return self.title
+        display_text = f'[ID{self.id}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        if self.questionnaire:
+            display_text += f' [Q{self.questionnaire.numbering}]'
+        display_text += f' [T{self.numbering}]'
+        display_text += f' - {self.title}'
+        return display_text
 
 
 class Question(OrderedModel, WithNumberingMixin, DocxMixin):
@@ -250,14 +252,34 @@ class Question(OrderedModel, WithNumberingMixin, DocxMixin):
         verbose_name_plural = "Questions"
 
     @property
+    def control(self):
+        if not self.theme:
+            return None
+        return self.theme.control
+
+    @property
+    def questionnaire(self):
+        if not self.theme:
+            return None
+        return self.theme.questionnaire
+
+    @property
     def description_rich_text(self):
         return self.to_rich_text(self.description)
 
     def __str__(self):
-        return self.description
+        display_text = f'[ID{self.id}] [Num{self.numbering}]'
+        if self.control:
+            display_text += f' [C{self.control.id}]'
+        if self.questionnaire:
+            display_text += f' [Q{self.theme.questionnaire.numbering}]'
+        if self.theme:
+            display_text += f' [T{self.theme.numbering}]'
+        display_text += f' - {self.description}'
+        return display_text
 
 
-class QuestionFile(OrderedModel, QuestionnaireFileMixin):
+class QuestionFile(OrderedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='question_files',
         on_delete=models.CASCADE)
@@ -282,7 +304,7 @@ class QuestionFile(OrderedModel, QuestionnaireFileMixin):
 
 
 @cleanup.ignore
-class ResponseFile(TimeStampedModel, QuestionnaireFileMixin):
+class ResponseFile(TimeStampedModel, FileInfoMixin):
     question = models.ForeignKey(
         to='Question', verbose_name='question', related_name='response_files',
         on_delete=models.CASCADE)

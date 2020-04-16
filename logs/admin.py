@@ -64,7 +64,7 @@ class ActionAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     list_display = (
         action_display, actor_display, 'verb', target_display, 'target_content_type',
         action_object_display, 'action_object_content_type', 'timestamp')
-    list_filter = ('timestamp', 'verb',)
+    list_filter = ('timestamp', 'verb')
     fieldsets = (
         (None, {
             'fields': ('verb', 'timestamp', 'description')

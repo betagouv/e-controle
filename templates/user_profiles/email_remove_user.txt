@@ -4,7 +4,7 @@ Bonjour,
 
 - {{ target_user.first_name }} , {{ target_user.email }}
 - Profil : {{ target_user.profile.get_profile_type_display }}
-- Espace de dépôt : {{ control }}
+- Espace de dépôt : {{ control.title_display }}
 
 
 Si vous pensez ne pas être le bon destinataire de ce message, merci de nous informer en répondant directement à cet email.

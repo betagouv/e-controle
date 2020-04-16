@@ -8,5 +8,8 @@
       "javascript",
       "javascriptreact",
       { "language": "vue", "autoFix": true }
-  ]
+  ],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true
 }

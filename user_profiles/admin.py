@@ -17,10 +17,12 @@ class UserProfileInline(admin.StackedInline):
     model = UserProfile
     can_delete = False
     verbose_name_plural = 'Profile Utilisateurs'
+    filter_horizontal = ('controls',)
 
 
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
+    list_filter = ('profile__profile_type', 'profile__controls')
 
 
 admin.site.unregister(User)

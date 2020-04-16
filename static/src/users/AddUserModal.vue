@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'envoi de ce formulaire n'a pas fonctionné.
+          L'ajout d'utilisateur n'a pas fonctionné.
         </div>
         <div v-if="editingProfileType==='inspector'" class="text-center">
             <h4><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h4>

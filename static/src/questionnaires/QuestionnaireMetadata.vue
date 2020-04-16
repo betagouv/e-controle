@@ -20,7 +20,7 @@
       <div class="flex-column text-right">
         <div class="card-footer border-0">
           <a class="btn btn-primary"
-             :href="'/fichier-questionnaire/' + questionnaire.id"
+             :href="exportUrl"
              target="_blank"
              title="Exporter ce questionnaire">
             <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
@@ -39,15 +39,20 @@
 </template>
 
 <script>
-  import DateFormat from '../utils/DateFormat.js';
-  import Vue from 'vue'
+import backendUrls from '../utils/backend'
+import DateFormat from '../utils/DateFormat.js'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: [ 'questionnaire', 'withTrash' ],
-    filters: {
-      DateFormat
+export default Vue.extend({
+  props: ['questionnaire', 'withTrash'],
+  filters: {
+    DateFormat,
+  },
+  computed: {
+    exportUrl() {
+      return backendUrls['questionnaire-export'](this.questionnaire.id)
     },
-
-  })
+  },
+})
 
 </script>

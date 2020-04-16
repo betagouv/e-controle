@@ -13,6 +13,7 @@ client = APIClient()
 def get_theme(user, id):
     return utils.get_resource(client, user, 'theme', id)
 
+
 def test_can_access_theme_api_if_control_is_associated_with_the_user():
     theme = factories.ThemeFactory()
     user = utils.make_audited_user(theme.questionnaire.control)
@@ -48,7 +49,14 @@ def test_can_update_theme_order():
     response = utils.update_resource(client, user, 'theme', payload)
 
     assert response.status_code == 200
-    assert response.data['order'] == str(new_order)
+    assert response.data['order'] == new_order
+
+
+def test_no_access_to_theme_for_deleted_control():
+    theme = factories.ThemeFactory()
+    user = utils.make_audited_user(theme.questionnaire.control)
+    theme.questionnaire.control.delete()
+    assert get_theme(user, theme.id).status_code == 404
 
 
 #### Question API ####
@@ -88,6 +96,13 @@ def test_response_file_listed_in_question_endpoint():
     assert response_file.basename in str(response.content)
 
 
+def test_no_access_to_question_api_for_deleted_control():
+    question = factories.QuestionFactory()
+    user = utils.make_audited_user(question.theme.questionnaire.control)
+    question.theme.questionnaire.control.delete()
+    assert get_question(user, question.id).status_code == 404
+
+
 #### Control API ####
 
 ### Get
@@ -112,6 +127,13 @@ def test_no_access_to_control_get_api_for_anonymous():
     control = factories.ControlFactory()
     response = utils.get_resource_without_login(client, 'control', control.id)
     assert response.status_code == 403
+
+
+def test_no_access_to_deleted_control():
+    control = factories.ControlFactory()
+    user = utils.make_audited_user(control)
+    control.delete()
+    assert get_control(user, control.id).status_code == 404
 
 
 ### Create
@@ -210,3 +232,27 @@ def test_no_access_to_control_update_api_for_anonymous():
     url = reverse('api:control-detail', args=[control.id])
     response = client.put(url, make_update_payload(), format='json')
     assert response.status_code == 403
+
+
+def test_no_access_to_control_update_api_if_deleted():
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    control.delete()
+    assert update_control(user, make_update_payload(), control).status_code == 404
+
+
+## Delete
+
+def test_cannot_delete_a_control():
+    """
+    This is a testing the DELETE method that should not be allowed.
+    To remove a contrl, we do a soft delete.
+    """
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    count_before = Control.objects.active().count()
+    assert get_control(user, control.id).status_code == 200
+    response = utils.delete_resource(client, user, 'control', control.pk)
+    count_after = Control.objects.active().count()
+    assert count_before == count_after
+    assert response.status_code == 405
