@@ -292,14 +292,6 @@ class QuestionFile(OrderedModel, FileInfoMixin):
         verbose_name_plural = 'Question: Fichiers Annexes'
 
     @property
-    def control(self):
-        return self.question.control
-
-    @property
-    def questionnaire(self):
-        return self.question.questionnaire
-
-    @property
     def url(self):
         return reverse('send-question-file', args=[self.id])
 
