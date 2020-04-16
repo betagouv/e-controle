@@ -18,7 +18,6 @@
                       :key="displayedControl.id"
                       :control="displayedControl"
                       :user="user"
-                      :webdavurl="webdavurl"
         >
         </control-card>
       </template>
@@ -29,21 +28,6 @@
     <update-user-modal></update-user-modal>
 
     <remove-user-modal></remove-user-modal>
-
-    <video-modal
-      id="fileExplorerVideoModal"
-      :video-versions="[
-        {
-          url: staticFilesUrl + 'videos/file-explorer.mp4',
-          type: 'video/mp4'
-        },
-        {
-          url: staticFilesUrl + 'videos/file-explorer.webm',
-          type: 'video/webm'
-        },
-      ]"
-    >
-    </video-modal>
 
   </div>
 </template>
@@ -56,14 +40,11 @@ import ControlCard from './ControlCard'
 import NoControls from './NoControls'
 import RemoveUserModal from '../users/RemoveUserModal'
 import UpdateUserModal from '../users/UpdateUserModal'
-import VideoModal from '../utils/VideoModal'
 
 export default Vue.extend({
   props: [
     'controls',
     'user',
-    'staticFilesUrl',
-    'webdavurl',
   ],
   data: function() {
     return {
@@ -118,7 +99,6 @@ export default Vue.extend({
     NoControls,
     RemoveUserModal,
     UpdateUserModal,
-    VideoModal,
   },
 
 })

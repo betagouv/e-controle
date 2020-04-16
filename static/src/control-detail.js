@@ -15,9 +15,11 @@ new Vue({ // eslint-disable-line no-new
     ControlPage,
   },
   methods: {
-    ...mapActions(['fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchSessionUser']),
+
   },
   created() {
+    this.fetchConfig()
     this.fetchSessionUser()
   },
 })

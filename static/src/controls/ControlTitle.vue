@@ -76,9 +76,9 @@
             <div class="text-muted card-title mb-1 break-word text-right">
               <strong>../{{control.reference_code}}</strong>
             </div>
-            <a class="btn btn-secondary btn-fake-icon"
+            <a class="btn btn-secondary parent-fake-icon"
                @click="showWebdavTip">
-              <i class="fe fe-folder mr-2"></i>
+              <i class="fe fe-folder mr-3"></i>
               <img :src="'/static/img/file-explorer.png'"
                    alt="Explorateur Windows"
                    class="fake-icon" />
@@ -98,8 +98,9 @@
       </div>
     </template>
 
-    <webdav-tip :id="'webdav-tip-' + control.id"
-                :webdavurl="webdavurl + '/' + control.reference_code">
+    <webdav-tip :control-id="control.id"
+                :ref="'webdavTip' + control.id"
+                :reference-code="control.reference_code">
     </webdav-tip>
 
   </div>
@@ -120,7 +121,6 @@ axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 export default Vue.extend({
   props: {
     control: Object,
-    webdavurl: String,
   },
   data: function() {
     return {
@@ -187,7 +187,7 @@ export default Vue.extend({
         })
     },
     showWebdavTip() {
-      $('#webdav-tip-' + this.control.id).modal('show')
+      this.$refs['webdavTip' + this.control.id].start()
     },
   },
 })
@@ -195,15 +195,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-  .btn-fake-icon {
-    position: relative;
-  }
-  .fake-icon {
-    position: absolute;
-    top: 2px;
-    left: 5px;
-  }
-
   .break-word {
     word-break: break-all;
   }
