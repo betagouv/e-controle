@@ -150,12 +150,12 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
         instance.file.delete(False)
 
 
-class ThemeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class ThemeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet, WithUserQuestionnairesMixin):
     serializer_class = ThemeSerializer
+    permission_classes = (OnlyInspectorCanChange, QuestionnaireIsDraft)
 
     def get_queryset(self):
-        queryset = Theme.objects.filter(
-            questionnaire__control__in=self.request.user.profile.controls.active())
+        queryset = Theme.objects.filter(questionnaire__in=self.get_user_questionnaires())
         return queryset
 
 
