@@ -30,6 +30,7 @@ const backendViewUrls = {
   'questionnaire-detail': 'questionnaire/<int:pk>/',
   'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
   'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
+  'questionnaire-export': 'fichier-questionnaire/<int:pk>/',
   trash: 'questionnaire/corbeille/<int:pk>/',
   // Control pages
   'control-detail': 'accueil/#control-<int:pk>',
@@ -53,6 +54,7 @@ for (const [name, url] of Object.entries(apiUrls)) {
 urlMaker.currentUser = () => '/api/user/current/'
 urlMaker.removeUserFromControl = (id) => '/api/user/' + id + '/remove-control/'
 urlMaker.swapEditor = (questionnaireId) => '/api/questionnaire/' + questionnaireId + '/changer-redacteur/'
+urlMaker.deleteControl = (controlId) => '/api/deletion/' + controlId + '/delete-control/'
 
 for (const [name, url] of Object.entries(viewUrls)) {
   urlMaker[name] = (id) => {

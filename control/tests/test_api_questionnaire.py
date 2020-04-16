@@ -150,6 +150,13 @@ def test_no_access_to_draft_if_not_inspector():
     assert get_questionnaire(audited_user, questionnaire.id).status_code != 200
 
 
+def test_no_access_to_questionnaire_control_is_deleted():
+    questionnaire = factories.QuestionnaireFactory()
+    audited_user = utils.make_audited_user(questionnaire.control)
+    questionnaire.control.delete()
+    assert get_questionnaire(audited_user, questionnaire.id).status_code == 404
+
+
 def test_questionnaire_create__success():
     increment_ids()
     control = factories.ControlFactory()
@@ -254,6 +261,17 @@ def test_questionnaire_draft_update__editor_can_update():
 
     response = update_questionnaire(user, payload)
     assert response.status_code == 200
+
+
+def test_questionnaire_create_fails_if_control_is_deleted():
+    increment_ids()
+    control = factories.ControlFactory()
+    user = utils.make_inspector_user(control)
+    payload = make_create_payload(control.id)
+    assert_no_data_is_saved()
+    control.delete()
+    response = create_questionnaire(user, payload)
+    assert response.status_code == 403
 
 
 def test_questionnaire_draft_update__non_editor_cannot_update():

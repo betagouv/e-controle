@@ -7,11 +7,10 @@ from rest_framework import serializers
 
 import django.dispatch
 from django.core.files import File
-import os
 
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
 from .serializers import ControlSerializer, ControlUpdateSerializer
-from control.permissions import ChangeControlPermission, ChangeQuestionnairePermission
+from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
 
@@ -20,8 +19,12 @@ from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSe
 questionnaire_api_post_save = django.dispatch.Signal(providing_args=["instance"])
 
 
-class ControlViewSet(viewsets.ModelViewSet):
-    permission_classes = (ChangeControlPermission,)
+class ControlViewSet(mixins.CreateModelMixin,
+                     mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     viewsets.GenericViewSet):
+    permission_classes = (OnlyInspectorCanChange,)
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
@@ -29,7 +32,7 @@ class ControlViewSet(viewsets.ModelViewSet):
         return ControlSerializer
 
     def get_queryset(self):
-        return self.request.user.profile.controls.all()
+        return self.request.user.profile.controls.active()
 
     def add_log_entry(self, control, verb):
         action_details = {
@@ -41,7 +44,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).create(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = Control.objects.active().get(id=response.data['id'])
         # The current user is automatically added to the created control
         self.request.user.profile.controls.add(control)
         self.add_log_entry(control=control, verb='created control')
@@ -49,7 +52,7 @@ class ControlViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         response = super(ControlViewSet, self).update(request, *args, **kwargs)
-        control = Control.objects.get(id=response.data['id'])
+        control = self.get_queryset().get(id=response.data['id'])
         self.add_log_entry(control=control, verb='updated control')
         return response
 
@@ -59,7 +62,7 @@ class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         queryset = Question.objects.filter(
-            theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -81,13 +84,16 @@ class QuestionFileViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
+
+    def perform_create(self, serializer):
+        question = serializer.validated_data['question']
+        if question.theme.questionnaire.control.is_deleted():
+            raise PermissionDenied('Invalid control')
+        serializer.save(file=self.request.data.get('file'))
 
 
 class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
@@ -95,12 +101,9 @@ class ResponseFileViewSet(viewsets.ReadOnlyModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
 
-    def perform_create(self, serializer):
-        serializer.save(file=self.request.data.get('file'))
-
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
 
@@ -109,7 +112,7 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
-            question__theme__questionnaire__control__in=self.request.user.profile.controls.all())
+            question__theme__questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
     def put(self, request, *args, **kwargs):
@@ -147,7 +150,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Theme.objects.filter(
-            questionnaire__control__in=self.request.user.profile.controls.all())
+            questionnaire__control__in=self.request.user.profile.controls.active())
         return queryset
 
 
@@ -157,7 +160,7 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
-            control__in=self.request.user.profile.controls.all())
+            control__in=self.request.user.profile.controls.active())
         if not self.request.user.profile.is_inspector:
             queryset = queryset.filter(is_draft=False)
         return queryset
@@ -224,9 +227,12 @@ class QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
-        if not request.user.profile.controls.filter(id=control.id).exists():
-            e = PermissionDenied(detail='Users can only create questionnaires in controls that they belong to.',
-                                 code=status.HTTP_403_FORBIDDEN)
+        if not request.user.profile.controls.active().filter(id=control.id).exists():
+            e = PermissionDenied(
+                detail=(
+                    'Users can only create questionnaires '
+                    'in active controls that they belong to.'),
+                code=status.HTTP_403_FORBIDDEN)
             raise e
 
         return serializer.validated_data.get('themes', [])

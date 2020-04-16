@@ -40,7 +40,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user_data['username'] = user_data['email']
         profile = UserProfile.objects.filter(user__username=user_data.get('email')).first()
         session_user = self.context['request'].user
-        if control and control not in session_user.profile.controls.all():
+        if control and control not in session_user.profile.controls.active():
             raise serializers.ValidationError(
                 f"{session_user} n'est pas authorisé à modifier ce contrôle: {control}")
         should_receive_email_report = False

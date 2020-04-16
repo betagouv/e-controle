@@ -16,6 +16,7 @@ from editor import api_views as editor_api_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from session import api_views as session_api_views
+from soft_deletion import api_views as deletion_api_views
 from tos import views as tos_views
 from user_profiles import api_views as user_profiles_api_views
 
@@ -32,6 +33,8 @@ router.register(r'questionnaire', control_api_views.QuestionnaireViewSet, basena
 router.register(r'theme', control_api_views.ThemeViewSet, basename='theme')
 router.register(r'user', user_profiles_api_views.UserProfileViewSet, basename='user')
 router.register(r'session', session_api_views.SessionTimeoutViewSet, basename='session')
+router.register(r'deletion', deletion_api_views.DeleteViewSet, basename='deletion')
+
 
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),

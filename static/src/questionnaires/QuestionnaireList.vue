@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div class="table-responsive">
+    <div>
       <div v-if="accessibleQuestionnaires.length === 0"
            class="alert alert-icon alert-secondary m-2">
         <i class="fe fe-info mr-2" aria-hidden="true"></i>
@@ -26,7 +26,7 @@
             <th v-if="user.is_inspector">
               Rédacteur
             </th>
-            <th></th>
+            <td></td>
           </tr>
         </thead>
         <tbody>
@@ -67,34 +67,39 @@
                 </small>
               </div>
             </td>
-            <td class="w-1 text-right">
+            <td class="w-1 action-column">
               <template v-if="!user.is_inspector">
-                <a :href="questionnaire.url"
-                   class="btn btn-primary"
-                   title="Déposer et consulter vos réponses"
-                >
-                  <i class="fe fe-eye"></i>
-                  Répondre
-                </a>
+                <div class="text-right">
+                  <a :href="questionnaire.url"
+                    class="btn btn-primary"
+                    title="Déposer et consulter vos réponses"
+                  >
+                    <i class="fe fe-eye"></i>
+                    Répondre
+                  </a>
+                </div>
               </template>
               <template v-else>
                 <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
-                  <a :href="'/questionnaire/modifier/' + questionnaire.id "
-                    class="btn btn-primary"
-                    title="Modifier le brouillon de questionnaire"
-                  >
-                    <i class="fe fe-edit"></i>
-                    Modifier
-                  </a>
+                  <div class="text-right">
+                    <a class="btn btn-primary"
+                      :href="'/questionnaire/modifier/' + questionnaire.id"
+                      title="Modifier le brouillon de questionnaire">
+                      <i class="fe fe-edit"></i>
+                      Modifier
+                    </a>
+                  </div>
                 </template>
                 <template v-else>
-                  <a :href="questionnaire.url"
-                    class="btn btn-primary ml-2"
-                    title="Voir le brouillon de questionnaire"
-                  >
-                    <i class="fe fe-eye"></i>
-                    Consulter
-                  </a>
+                  <div class="text-right">
+                    <a :href="questionnaire.url"
+                      class="btn btn-primary ml-2"
+                      title="Voir le brouillon de questionnaire"
+                    >
+                      <i class="fe fe-eye"></i>
+                      Consulter
+                    </a>
+                  </div>
                 </template>
               </template>
             </td>
@@ -109,12 +114,15 @@
         Ajouter un questionnaire
       </a>
     </div>
+
   </div>
 </template>
 
 <script>
+import backendUrls from '../utils/backend'
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
+import QuestionnaireDeleteFlow from './QuestionnaireDeleteFlow'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -130,6 +138,7 @@ export default Vue.extend({
   },
   components: {
     HelpTooltip,
+    QuestionnaireDeleteFlow,
   },
   computed: {
     accessibleQuestionnaires: function () {
@@ -137,6 +146,14 @@ export default Vue.extend({
         return this.control.questionnaires
       }
       return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
+    },
+  },
+  methods: {
+    startQuestionnaireDeleteFlow(questionnaireId) {
+      this.$refs['questionnaireDeleteFlow' + questionnaireId][0].start()
+    },
+    exportUrl(questionnaire) {
+      return backendUrls['questionnaire-export'](questionnaire.id)
     },
   },
 })
@@ -154,4 +171,9 @@ export default Vue.extend({
   .end-date-column {
     min-width: 9em;
   }
+
+  .action-column {
+    min-width: 13em;
+  }
+
 </style>

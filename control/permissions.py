@@ -2,27 +2,27 @@ from rest_framework import permissions
 from control.models import Questionnaire
 
 
-class ChangePermissionForInspector(permissions.BasePermission):
-    message_format = 'Adding or changing {} is not allowed.'
+class OnlyInspectorCanAccess(permissions.BasePermission):
+    message_format = 'Accessing this resource is not allowed.'
 
     def has_permission(self, request, view):
-        try:
-            if request.user.profile.is_inspector:
-                return True
-        except AttributeError:
-            # user not logged in
+        if not request.user.is_authenticated:
             return False
+        return request.user.profile.is_inspector
 
-        # logged in user, not inspector
+
+class OnlyInspectorCanChange(permissions.BasePermission):
+    message_format = 'Adding or changing this resource is not allowed.'
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
         if request.method in permissions.SAFE_METHODS:
-            # can read
             return True
-        # cannot write
-        return False
+        return request.user.profile.is_inspector
 
 
-class ChangeQuestionnairePermission(ChangePermissionForInspector):
-    message = ChangePermissionForInspector.message_format.format('questionnaire')
+class ChangeQuestionnairePermission(OnlyInspectorCanChange):
 
     def has_permission(self, request, view):
         if not super(ChangeQuestionnairePermission, self).has_permission(request, view):
@@ -40,7 +40,3 @@ class ChangeQuestionnairePermission(ChangePermissionForInspector):
         if questionnaire.editor.pk == request.user.pk:
             return True
         return False
-
-
-class ChangeControlPermission(ChangePermissionForInspector):
-    message = ChangePermissionForInspector.message_format.format('control')

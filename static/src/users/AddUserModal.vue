@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'envoi de ce formulaire n'a pas fonctionné.
+          L'ajout d'utilisateur n'a pas fonctionné.
         </div>
         <div v-if="editingProfileType==='inspector'" class="text-center">
             <h4><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h4>
@@ -18,13 +18,24 @@
         </div>
 
         <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
-          <fieldset class="form-fieldset">
+          <div class="form-fieldset">
             <div class="form-group">
-              <label class="form-label">Email<span class="form-required"></span></label>
-              <input type="email" class="form-control" v-bind:class="{ 'state-invalid': errors.email }" v-model="formData.email" required>
-              <p class="text-muted pl-2" v-if="errors.email"><i class="fa fa-warning"></i> {{ errors.email.join(' / ')}}</p>
+              <label id="email-label" class="form-label">
+                Email
+                <span class="form-required"></span>
+              </label>
+              <input type="email"
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.email }"
+                     v-model="formData.email"
+                     required
+                     aria-labelledby="email-label">
+              <p class="text-muted pl-2" v-if="errors.email">
+                <i class="fa fa-warning"></i>
+                {{ errors.email.join(' / ')}}
+              </p>
             </div>
-          </fieldset>
+          </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Suivant</button>
