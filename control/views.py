@@ -103,12 +103,8 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['questionnaire_json'] = \
-            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
-
         control = self.get_object().control
         context['control_json'] = json.dumps(ControlSerializer(instance=control).data)
-
         return context
 
     def add_access_log_entry(self):
