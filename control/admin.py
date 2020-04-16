@@ -23,9 +23,9 @@ from user_profiles.models import UserProfile
 
 class ParentLinksMixin(object):
     def link_to_question(self, obj):
-        question = None
-        if hasattr(obj, 'question'):
-            question = obj.question
+        question = getattr(obj, 'question', None)
+        if not question:
+            return '-'
         url = reverse("admin:control_question_change", args=[question.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -35,11 +35,9 @@ class ParentLinksMixin(object):
     link_to_question.short_description = 'Question'
 
     def link_to_theme(self, obj):
-        theme = None
-        if hasattr(obj, 'theme'):
-            theme = obj.theme
-        if hasattr(obj, 'question'):
-            theme = obj.question.theme
+        theme = getattr(obj, 'theme', None)
+        if not theme:
+            return '-'
         url = reverse("admin:control_theme_change", args=[theme.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -49,14 +47,9 @@ class ParentLinksMixin(object):
     link_to_theme.short_description = 'Theme'
 
     def link_to_questionnaire(self, obj):
-        questionnaire = None
-        if hasattr(obj, 'questionnaire'):
-            questionnaire = obj.questionnaire
-        elif hasattr(obj, 'theme'):
-            questionnaire = obj.theme.questionnaire
-        elif hasattr(obj, 'question'):
-            questionnaire = obj.question.theme.questionnaire
-
+        questionnaire = getattr(obj, 'questionnaire', None)
+        if not questionnaire:
+            return '-'
         url = reverse("admin:control_questionnaire_change", args=[questionnaire.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -66,16 +59,9 @@ class ParentLinksMixin(object):
     link_to_questionnaire.short_description = 'Questionnaire'
 
     def link_to_control(self, obj):
-        control = None
-        if hasattr(obj, 'control'):
-            control = obj.control
-        elif hasattr(obj, 'questionnaire'):
-            control = obj.questionnaire.control
-        elif hasattr(obj, 'theme'):
-            control = obj.theme.questionnaire.control
-        elif hasattr(obj, 'question'):
-            control = obj.question.theme.questionnaire.control
-
+        control = getattr(obj, 'control', None)
+        if not control:
+            return '-'
         url = reverse("admin:control_control_change", args=[control.id])
         return format_html(
             '<a href="{}">{}</a>',
@@ -144,7 +130,7 @@ class QuestionInline(OrderedTabularInline):
 class ThemeAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'title', 'link_to_questionnaire', 'link_to_control')
     search_fields = ('title',)
-    list_filter = ('questionnaire__control', 'questionnaire',)
+    list_filter = ('questionnaire__control',)
     fields = (
         'id', 'title', 'questionnaire', 'link_to_control')
     readonly_fields = ('id', 'link_to_control')
@@ -158,6 +144,12 @@ class QuestionFileInline(OrderedTabularInline):
     readonly_fields = ('order', 'move_up_down_links')
 
 
+class ResponseFileInline(OrderedTabularInline):
+    model = ResponseFile
+    max_num = 4
+    fields = ('file',)
+
+
 @admin.register(Question)
 class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinksMixin):
     list_display = ('id', 'numbering', 'description', 'link_to_theme', 'link_to_questionnaire',
@@ -166,25 +158,28 @@ class QuestionAdmin(OrderedInlineModelAdminMixin, OrderedModelAdmin, ParentLinks
         'id', 'description', 'theme', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = ('id', 'link_to_questionnaire', 'link_to_control')
     raw_id_fields = ('theme',)
-    list_filter = ('theme', 'theme__questionnaire', 'theme__questionnaire__control')
+    list_filter = ('theme__questionnaire__control',)
     search_fields = ('description',)
-    inlines = (QuestionFileInline,)
+    inlines = (QuestionFileInline, ResponseFileInline,)
 
 
 @admin.register(ResponseFile)
 class ResponseFileAdmin(ReadOnlyModelAdmin, admin.ModelAdmin, ParentLinksMixin):
+    def is_active(self, obj):
+        return not obj.is_deleted
+    is_active.boolean = True
+    is_active.short_description = u"Actif ou corbeille?"
+
     list_display = (
         'id', 'file_name', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
-        'link_to_control', 'created', 'author', 'is_deleted')
+        'link_to_control', 'created', 'author', 'is_active')
     list_display_links = ('id',)
     date_hierarchy = 'created'
-    list_filter = (
-        'question__theme__questionnaire__control', 'question__theme__questionnaire',
-        'author', 'question__theme')
+    list_filter = ('question__theme__questionnaire__control',)
     fields = (
         'id', 'author', 'file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control',
-        'created', 'modified', 'is_deleted')
-    readonly_fields = ('file_name', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
+        'created', 'modified', 'is_active')
+    readonly_fields = ('file_name', 'is_active', 'link_to_question', 'link_to_questionnaire', 'link_to_control')
     search_fields = (
         'file', 'question__description', 'author__first_name', 'author__last_name',
         'author__username')
@@ -196,9 +191,7 @@ class QuestionFileAdmin(admin.ModelAdmin, ParentLinksMixin):
         'id', 'file', 'link_to_question', 'link_to_theme', 'link_to_questionnaire',
         'link_to_control')
     list_display_links = ('id',)
-    list_filter = (
-        'question__theme__questionnaire__control', 'question__theme__questionnaire',
-        'question__theme')
+    list_filter = ('question__theme__questionnaire__control',)
     fields = (
         'id', 'file', 'question', 'order', 'link_to_questionnaire', 'link_to_control')
     readonly_fields = (

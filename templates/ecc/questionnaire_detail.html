@@ -15,7 +15,9 @@
 
 {% block page_main_container %}
   <div id="questionnaire-detail-app">
-    <questionnaire-detail-page :questionnaire="{{ questionnaire_json }}"></questionnaire-detail-page>
+    <questionnaire-detail-page :questionnaire="{{ questionnaire_json }}"
+                               :control="{{ control_json }}">
+    </questionnaire-detail-page>
   </div>
 {% endblock page_main_container %}
 

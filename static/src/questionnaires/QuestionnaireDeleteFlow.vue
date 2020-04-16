@@ -53,7 +53,7 @@
           <i class="fe fe-check-circle fg-success big-icon"></i>
         </p>
         <p class="text-center">
-          Le questionnaire à bien été supprimé.
+          Le questionnaire a bien été supprimé.
         </p>
       </div>
       <div class="modal-footer border-top-0 d-flex justify-content-center">

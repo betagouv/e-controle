@@ -7,7 +7,7 @@
     <label class="btn btn-primary">
       <i class="fe fe-upload mr-2"></i>
       Ajouter un fichier annexe
-      <input type="file" id="file" ref="file" v-on:change="handleFileUpload()" hidden/>
+      <input type="file" ref="fileInput" v-on:change="handleFileUpload()" hidden/>
     </label>
   </div>
   <div v-else>
@@ -53,7 +53,7 @@ export default Vue.extend({
       this.errorMessage = undefined
     },
     handleFileUpload() {
-      this.file = this.$refs.file.files[0]
+      this.file = this.$refs.fileInput.files[0]
       this.submitFile()
     },
     submitFile() {
