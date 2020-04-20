@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import SwapEditorModal from '../editors/SwapEditorModal'
 import SwapEditorSuccessModal from '../editors/SwapEditorSuccessModal'
@@ -82,7 +83,7 @@ export default Vue.extend({
     },
     callSwapEditorApi(editorUser, questionnaireId) {
       const url = backendUrls.swapEditor(questionnaireId)
-      return Vue.axios.put(url, {
+      return axios.put(url, {
         editor: editorUser,
       })
     },

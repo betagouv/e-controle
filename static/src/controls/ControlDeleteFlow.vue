@@ -85,6 +85,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import backendUrls from '../utils/backend.js'
 import ModalFlow from '../utils/ModalFlow'
 import Vue from 'vue'
@@ -106,7 +107,7 @@ export default Vue.extend({
     },
     callDeleteControlAPI() {
       const url = backendUrls.deleteControl(this.control.id)
-      return Vue.axios.post(url)
+      return axios.post(url)
     },
   },
 })
