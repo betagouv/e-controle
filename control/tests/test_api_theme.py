@@ -37,6 +37,13 @@ def test_inspector_can_update_theme_if_control_is_associated_with_the_user():
 def test_audited_cannot_update_theme():
     theme = factories.ThemeFactory()
     user = utils.make_audited_user(theme.questionnaire.control)
+    # Audited cannot update draft questionnaire
+    theme.questionnaire.is_draft = True
+    theme.questionnaire.save()
+    assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
+    # Audited cannot update published questionnaire
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
     assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
 
 
