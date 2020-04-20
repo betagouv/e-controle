@@ -136,9 +136,15 @@ export default Vue.extend({
       return this.config.webdav_url + '/' + this.referenceCode
     },
     videoUrlMp4() {
+      if (typeof this.config.static_files_url === 'undefined') {
+        return ''
+      }
       return this.config.static_files_url + VIDEO_FILE_PATH_MP4
     },
     videoUrlWebm() {
+      if (typeof this.config.static_files_url === 'undefined') {
+        return ''
+      }
       return this.config.static_files_url + VIDEO_FILE_PATH_WEBM
     },
   },
