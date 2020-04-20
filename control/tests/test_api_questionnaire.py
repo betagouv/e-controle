@@ -285,10 +285,22 @@ def create_questionnaire_through_api(user, control):
     return response.data
 
 
-def test_cannot_update_published_questionnaire():
+def test_inspector_cannot_update_published_questionnaire():
     increment_ids()
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
+    questionnaire = factories.QuestionnaireFactory(is_draft=False, control=control, editor=user)
+    payload = make_update_payload(questionnaire)
+    # Here we are trying to update a questionnaire that's already published
+    response = update_questionnaire(user, payload)
+    assert 400 <= response.status_code < 500
+
+
+def test_audited_cannot_update_published_questionnaire():
+    # In fact, draft or not, audited should not be able to update at all
+    increment_ids()
+    control = factories.ControlFactory()
+    user = utils.make_audited_user(control)
     questionnaire = factories.QuestionnaireFactory(is_draft=False, control=control, editor=user)
     payload = make_update_payload(questionnaire)
     # Here we are trying to update a questionnaire that's already published
