@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.apps import apps
 
 from annoying.fields import AutoOneToOneField
 
@@ -40,6 +41,18 @@ class UserProfile(models.Model):
     @property
     def is_audited(self):
         return self.profile_type == self.AUDITED
+
+    @property
+    def questionnaires(self):
+        """
+        Returns the questionnaires belonging to the user.
+        """
+        Questionnaire = apps.get_model('control.Questionnaire')
+        user_controls = self.controls.active()
+        user_questionnaires = Questionnaire.objects.filter(control__in=user_controls)
+        if self.is_audited:
+            user_questionnaires = user_questionnaires.filter(is_draft=False)
+        return user_questionnaires
 
     def __str__(self):
         return str(self.user)
