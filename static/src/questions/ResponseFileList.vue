@@ -75,9 +75,6 @@ import ConfirmModal from '../utils/ConfirmModal'
 import ErrorBar from '../utils/ErrorBar'
 import EventBus from '../events'
 import SuccessBar from '../utils/SuccessBar'
-import VueAxios from 'vue-axios'
-
-Vue.use(VueAxios, axios)
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -136,7 +133,7 @@ export default Vue.extend({
       this.clearSuccessMessage()
       const formData = new FormData()
       formData.append('is_deleted', true)
-      this.axios.put(backendUrls.responseFileTrash(fileId),
+      axios.put(backendUrls.responseFileTrash(fileId),
         formData,
         {
           headers: {
