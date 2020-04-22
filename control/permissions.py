@@ -13,6 +13,15 @@ class OnlyInspectorCanAccess(permissions.BasePermission):
         return request.user.profile.is_inspector
 
 
+class OnlyAuditedCanAccess(permissions.BasePermission):
+    message_format = 'Accessing this resource is not allowed.'
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        return request.user.profile.is_audited
+
+
 class OnlyInspectorCanChange(permissions.BasePermission):
     message_format = 'Adding or changing this resource is not allowed.'
 
