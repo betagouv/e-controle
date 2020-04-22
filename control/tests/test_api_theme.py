@@ -96,7 +96,7 @@ def test_inspector_can_update_theme_order():
     assert response.data['order'] == new_order
 
 
-def test_inspector_has_access_to_theme_api_for_deleted_control():
+def test_inspector_has_no_access_to_theme_api_for_deleted_control():
     theme = factories.ThemeFactory()
     user = utils.make_inspector_user(theme.questionnaire.control)
     theme.questionnaire.control.delete()
