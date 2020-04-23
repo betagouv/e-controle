@@ -243,8 +243,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.active()
-        return self.model.objects.filter(control__in=user_controls)
+        return self.request.user.profile.questionnaires
 
 
 class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
