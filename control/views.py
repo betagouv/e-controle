@@ -170,11 +170,10 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
             question_id = form.data['question_id']
         except KeyError:
             raise forms.ValidationError("Question ID was missing on file upload")
-        user_controls = self.request.user.profile.controls.active()
         get_object_or_404(
             Question,
             pk=question_id,
-            theme__questionnaire__control__in=user_controls
+            theme__questionnaire__in=self.request.user.profile.questionnaires
         )
         self.object = form.save(commit=False)
         self.object.question_id = question_id
