@@ -165,3 +165,27 @@ def test_cannot_trash_response_file_if_control_is_deleted():
     response_file.question.theme.questionnaire.control.delete()
     response = trash_response_file(user, response_file.id, payload)
     assert response.status_code == 404
+
+
+def test_audited_cannot_trash_response_file_if_already_deleted():
+    response_file = factories.ResponseFileFactory(is_deleted=True)
+    user = utils.make_audited_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+    assert ResponseFile.objects.get(id=response_file.id).is_deleted
+
+    response = trash_response_file(user, response_file.id, payload)
+
+    assert response.status_code == 400
+    assert ResponseFile.objects.get(id=response_file.id).is_deleted
+
+
+def test_inspector_cannot_trash_response_file_if_already_deleted():
+    response_file = factories.ResponseFileFactory(is_deleted=True)
+    user = utils.make_inspector_user(response_file.question.theme.questionnaire.control)
+    payload = { "is_deleted": "true" }
+    assert ResponseFile.objects.get(id=response_file.id).is_deleted
+
+    response = trash_response_file(user, response_file.id, payload)
+
+    assert response.status_code == 403
+    assert ResponseFile.objects.get(id=response_file.id).is_deleted
