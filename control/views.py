@@ -16,8 +16,8 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
-from .serializers import ControlSerializer, ControlDetailControlSerializer, ControlDetailUserSerializer
-from .serializers import QuestionnaireSerializer
+from .serializers import ControlDetailUserSerializer
+from .serializers import ControlSerializer, ControlDetailControlSerializer
 
 
 class WithListOfControlsMixin(object):
