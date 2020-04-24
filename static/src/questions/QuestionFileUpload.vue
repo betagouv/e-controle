@@ -32,7 +32,6 @@
 import axios from 'axios'
 import backendUrls from '../utils/backend'
 import ErrorBar from '../utils/ErrorBar'
-import EventBus from '../events'
 import Vue from 'vue'
 
 export default Vue.extend({

@@ -25,8 +25,8 @@
         <tbody>
           <tr v-for="file in files" :key="file.id">
             <td>
-              <div>{{  file.creation_date }}</div>
-              <div class="small text-muted">{{  file.creation_time }}</div>
+              <div>{{ file.creation_date }}</div>
+              <div class="small text-muted">{{ file.creation_time }}</div>
             </td>
             <td>
               <div>
@@ -40,8 +40,8 @@
             </td>
             <td v-if="isAudited">
               <button data-toggle="modal"
-                 :data-target="'#trash-confirm-modal-' + file.id"
-                 class="fe fe-trash-2 btn btn-outline-primary"
+                      :data-target="'#trash-confirm-modal-' + file.id"
+                      class="fe fe-trash-2 btn btn-outline-primary"
               >
               </button>
             </td>
