@@ -135,8 +135,10 @@ export default Vue.extend({
       file.previewElement.classList.add('dz-error')
       file.previewElement.classList.remove('dz-procession')
       file.previewElement.getElementsByClassName('dz-progress')[0].remove()
-      file.previewElement.getElementsByClassName('dz-error-message')[0]
-        .getElementsByTagName('span')[0].textContent = errorMessage
+      const errorMessageEl = file.previewElement
+        .getElementsByClassName('dz-error-message')[0]
+        .getElementsByTagName('span')[0]
+      $(errorMessageEl).text(errorMessage) // Use jQuery for setting text, because it escapes HTML.
       this.styleError(file)
     },
     dropzoneTimeoutCallback: function(file, error) {
