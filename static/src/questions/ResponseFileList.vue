@@ -39,12 +39,11 @@
               <div>{{ file.author.first_name }} {{ file.author.last_name }}</div>
             </td>
             <td v-if="isAudited">
-              <a href="javascript:void(0)"
-                 data-toggle="modal"
+              <button data-toggle="modal"
                  :data-target="'#trash-confirm-modal-' + file.id"
                  class="fe fe-trash-2 btn btn-outline-primary"
               >
-              </a>
+              </button>
             </td>
           </tr>
         </tbody>

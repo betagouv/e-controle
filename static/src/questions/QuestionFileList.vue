@@ -14,12 +14,11 @@
             {{ file.basename }}
           </a>
           <span v-if="withDelete">
-            <a href="javascript:void(0)"
-              @click.prevent="deleteFile(file.id)"
-              class="btn btn-link"
-              title="Supprimer le fichier">
+            <button @click.prevent="deleteFile(file.id)"
+                    class="btn btn-link"
+                    title="Supprimer le fichier">
               <i class="fe fe-trash-2"></i>
-            </a>
+            </button>
           </span>
         </li>
       </ul>
@@ -31,8 +30,6 @@
 import axios from 'axios'
 import backendUrls from '../utils/backend'
 import ErrorBar from '../utils/ErrorBar'
-import EventBus from '../events'
-import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
 
 export default Vue.extend({
