@@ -98,7 +98,8 @@
                 class="btn btn-primary"
                 @click="goHome"
         >
-          < Revenir à l'accueil
+          <i class="fa fa-chevron-left mr-2"></i>
+          Revenir à l'accueil
         </button>
       </div>
     </template>
