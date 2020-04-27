@@ -16,6 +16,7 @@ from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft, OnlyA
 from control.permissions import OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire
 from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
 from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
+from . import serializers as control_serializers
 from user_profiles.serializers import UserProfileSerializer
 
 
@@ -32,7 +33,9 @@ class ControlViewSet(mixins.CreateModelMixin,
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
             return ControlUpdateSerializer
-        return ControlSerializer
+        if self.request and self.request.user.profile.is_inspector:
+            return ControlSerializer
+        return control_serializers.ControlSerializerWithoutDraft
 
     def get_queryset(self):
         return self.request.user.profile.controls.active()
