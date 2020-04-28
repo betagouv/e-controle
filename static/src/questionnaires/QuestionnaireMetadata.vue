@@ -17,7 +17,7 @@
         <div class="flex-row justify-content-end">
           <div v-if="withTrash" class="mr-2">
             <a class="btn btn-secondary"
-              :href="'/questionnaire/corbeille/' + questionnaire.id"
+              :href="trashUrl"
               title="Aller à la corbeille">
               <i class="fe fe-trash-2 mr-2"></i>Aller à la corbeille
             </a>
@@ -52,6 +52,9 @@ export default Vue.extend({
   computed: {
     exportUrl() {
       return backendUrls['questionnaire-export'](this.questionnaire.id)
+    },
+    trashUrl() {
+      return backendUrls.trash(this.questionnaire.id)
     },
   },
 })

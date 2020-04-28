@@ -34,71 +34,71 @@
 </template>
 
 <script>
-  import EmptyModal from './EmptyModal'
-  import ErrorBar from './ErrorBar'
-  import reportValidity from 'report-validity';
-  import Vue from "vue"
+import EmptyModal from './EmptyModal'
+import ErrorBar from './ErrorBar'
+import reportValidity from 'report-validity'
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: [
-        'cancel-button',
-        'confirm-button',
-        'no-close',
-        'title',
-        'submitCallback',
-        'errorCallback',
-        'successCallback',
-    ],
-    data : function() {
-      return {
-        errorMessage: '',
-        processing: false,
+export default Vue.extend({
+  props: [
+    'cancel-button',
+    'confirm-button',
+    'no-close',
+    'title',
+    'submitCallback',
+    'errorCallback',
+    'successCallback',
+  ],
+  data: function() {
+    return {
+      errorMessage: '',
+      processing: false,
+    }
+  },
+  components: {
+    EmptyModal,
+    ErrorBar,
+  },
+  methods: {
+    confirmClicked () {
+      this.errorMessage = ''
+      if (!this.validateForm()) {
+        return
       }
-    },
-    components: {
-      EmptyModal,
-      ErrorBar,
-    },
-    methods: {
-      confirmClicked () {
-        this.errorMessage = ''
-        if (!this.validateForm()) {
+
+      const processingDoneCallback = (errorMessage, successMessage) => {
+        if (errorMessage) {
+          console.log('error!', errorMessage)
+          this.errorMessage = errorMessage
+          this.processing = false
           return
         }
+        console.debug('ConfirmModalWithWait : processing done', successMessage)
+      }
 
-        const processingDoneCallback = (errorMessage, successMessage) => {
-          if (errorMessage) {
-            console.log('error!', errorMessage)
-            this.errorMessage = errorMessage
-            this.processing = false
-            return
-          }
-          console.debug('ConfirmModalWithWait : processing done', successMessage)
-        }
+      this.processing = true
+      this.$emit('confirm', processingDoneCallback)
+    },
+    cancelClicked () {
+      this.processing = false
+      this.errorMessage = ''
+      this.$emit('cancel')
+    },
+    closeModal () {
+      this.processing = false
+      this.errorMessage = ''
+      this.$emit('close')
+    },
+    validateForm () {
+      const forms = this.$el.getElementsByTagName('form')
+      if (forms.length > 0) {
+        return reportValidity(forms[0])
+      }
+      return true
+    },
 
-        this.processing = true
-        this.$emit('confirm', processingDoneCallback)
-      },
-      cancelClicked () {
-        this.processing = false
-        this.errorMessage = ''
-        this.$emit('cancel')
-      },
-      closeModal () {
-        this.processing = false
-        this.errorMessage = ''
-        this.$emit('close')
-      },
-      validateForm () {
-        const forms = this.$el.getElementsByTagName('form')
-        if (forms.length > 0) {
-          return reportValidity(forms[0])
-        }
-        return true
-      },
-
-    }
-  })
+  },
+})
 
 </script>
 

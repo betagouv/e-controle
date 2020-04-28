@@ -1,12 +1,11 @@
 <template>
   <div>
-    <a href="javascript:void(0)"
-       class="btn btn-primary"
-       data-toggle="modal"
-       data-target="#controlcreate">
+    <button class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#controlcreate">
       <i class="fe fe-plus"></i>
       Ajouter un espace de dépôt
-    </a>
+    </button>
 
     <confirm-modal-with-wait id="controlcreate"
                              cancel-button="Annuler"

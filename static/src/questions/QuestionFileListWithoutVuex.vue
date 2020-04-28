@@ -18,8 +18,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-    questionId: Number | String,
-    questionNumber: String,
+    questionId: Number,
   },
   data() {
     return {
@@ -30,7 +29,7 @@ export default Vue.extend({
     getFiles() {
       if (this.questionId === undefined) {
         console.debug(
-          'No questionId for question', this.questionNumber, ', so cannot fetch file list.')
+          'No questionId for question, so cannot fetch file list.')
         return
       }
       axios.get(backendUrls.annexe(), {
