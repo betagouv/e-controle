@@ -272,7 +272,7 @@ export default Vue.extend({
     position: fixed;
     top: 90px;
     left: 350px;
-    z-index: 21;
+    z-index: 1000; /* Just above sidebar items at z-index 999, but under modals at 1050 */
     transition: left 0.3s;
   }
   .collapsed #sidebar-toggle-button {
