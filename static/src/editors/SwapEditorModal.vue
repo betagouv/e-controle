@@ -75,8 +75,10 @@ import ContactSupport from '../utils/ContactSupport'
 import EditorList from './EditorList'
 import ErrorBar from '../utils/ErrorBar'
 import Vue from 'vue'
+import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
 
+Vue.use(VueAxios, axios)
 Vue.use(Vuex)
 
 export default Vue.extend({
