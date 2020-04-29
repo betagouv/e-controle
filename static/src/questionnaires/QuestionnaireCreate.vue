@@ -260,7 +260,7 @@ export default Vue.extend({
     StickyBottomMixin,
   ],
   mounted() {
-    this.stickyBottom_makeStickyBottom('bottom-bar', 140, 103)
+    this.stickyBottom_makeStickyBottom('bottom-bar', 140, 103, 44)
 
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)

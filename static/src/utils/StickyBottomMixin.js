@@ -6,14 +6,16 @@ export default {
      * @param {*} bottomOffsetPx The distance from the bottom of the page at which the element
      * should become fixed and stop scrolling.
      * @param {*} elementHeightPx (optional) If the height of the element varies, the layout will
-     * not be moved accordingly. In this case, specify the element height that you want to use.
+     * not be moved accordingly. In this case, specify the (fixed) element height that you want to
+     * use.
+     * @param {*} extraWidthPx (optional) Hack alert! If you want to make your element a bit wider.
      */
-    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx, elementHeightPx) {
+    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx = 0) {
       const stickySupport = this.stickyBottom_isPositionStickySupported()
       console.log('stickySupport', stickySupport)
 
       if (!stickySupport) {
-        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx)
+        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx)
       }
     },
     stickyBottom_isPositionStickySupported() {
@@ -39,7 +41,7 @@ export default {
       }
       setInterval(pollFunc, pollPeriodMs)
     },
-    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx) {
+    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx = 0) {
       const element = document.getElementById(elementId)
       if (typeof elementHeightPx === 'undefined') {
         elementHeightPx = element.offsetHeight
@@ -58,7 +60,7 @@ export default {
 
       // Set the width. Needs to change if width of page changes (window resize of change in page)
       const setWidth = () => {
-        const elementWidthPx = placeholderElement.offsetWidth
+        const elementWidthPx = placeholderElement.offsetWidth + extraWidthPx
         stickyMenu.css('min-width', elementWidthPx + 'px')
       }
       setWidth()
