@@ -1,11 +1,19 @@
 export default {
   methods: {
-    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx) {
+    /**
+     *
+     * @param {*} elementId The HTML id of the element you want to make sticky.
+     * @param {*} bottomOffsetPx The distance from the bottom of the page at which the element
+     * should become fixed and stop scrolling.
+     * @param {*} elementHeightPx (optional) If the height of the element varies, the layout will
+     * not be moved accordingly. In this case, specify the element height that you want to use.
+     */
+    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx, elementHeightPx) {
       const stickySupport = this.stickyBottom_isPositionStickySupported()
       console.log('stickySupport', stickySupport)
 
       if (!stickySupport) {
-        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx)
+        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx)
       }
     },
     stickyBottom_isPositionStickySupported() {
@@ -31,9 +39,11 @@ export default {
       }
       setInterval(pollFunc, pollPeriodMs)
     },
-    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
+    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx) {
       const element = document.getElementById(elementId)
-      const elementHeightPx = element.offsetHeight
+      if (typeof elementHeightPx === 'undefined') {
+        elementHeightPx = element.offsetHeight
+      }
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')

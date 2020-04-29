@@ -61,8 +61,10 @@
     </div>
   </div>
 
+  <!-- Note : use v-show and not v-if for the bottom-bar, because the element needs to be in the DOM
+  from the start for the IE sticky-bottom to work. -->
   <div id="bottom-bar"
-       v-if="state !== STATES.LOADING"
+       v-show="state !== STATES.LOADING"
        class="flex-column bg-white sticky-bottom border-top p-4">
     <div id="button-bar" class="flex-row justify-content-between">
       <button id="go-home-button"
@@ -258,7 +260,7 @@ export default Vue.extend({
     StickyBottomMixin,
   ],
   mounted() {
-    this.stickyBottom_makeStickyBottom('bottom-bar', 140)
+    this.stickyBottom_makeStickyBottom('bottom-bar', 140, 103)
 
     console.debug('questionnaireId', this.questionnaireId)
     console.debug('controlId', this.controlId)
