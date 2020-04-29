@@ -27,8 +27,19 @@
         display: block;
     }
 
+    /*
+    Add explicit margin for IE to fix layout
+    */
     .ie-margin-for-footer {
         margin-bottom: 30em !important;
+    }
+
+    /*
+    Flex bug in IE : sometimes children of flex-row spread out horizontally instead of having the
+    appropriate width. (It caused some pages to display wider than the screen for example)
+    */
+    .ie-flex-row-child {
+        width:100%;
     }
 }
 
