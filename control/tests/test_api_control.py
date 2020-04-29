@@ -68,6 +68,16 @@ def test_draft_questionnaire_is_not_listed_in_controls_data_if_user_is_audited()
     assert 'MUST BE LISTED' in str(response.content)
     assert 'MUST NOT BE LISTED' not in str(response.content)
 
+def test_draft_questionnaire_is_listed_in_controls_data_if_user_is_inspector():
+    control = factories.ControlFactory()
+    factories.QuestionnaireFactory(control=control, is_draft=False, title='MUST BE LISTED')
+    factories.QuestionnaireFactory(control=control, is_draft=True, title='MUST ALSO BE LISTED')
+    user = utils.make_inspector_user(control)
+    response = list_control(user)
+    assert response.status_code == 200
+    assert 'MUST BE LISTED' in str(response.content)
+    assert 'MUST ALSO BE LISTED' in str(response.content)
+
 
 ### Create
 def create_control(user, payload):
