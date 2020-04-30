@@ -65,7 +65,7 @@
     "jest": "^24.9.0",
     "jest-serializer-vue": "^2.0.2",
     "jest-when": "^2.7.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "parcel-bundler": "^1.12.4",
     "popper.js": "^1.16.0",
     "typescript": "^3.7.5",
