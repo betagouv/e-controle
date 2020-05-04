@@ -97,13 +97,10 @@ export default Vue.extend({
   },
   methods: {
     getUsers() {
-      Vue.axios.get(backendUrls.user(), {
-        params: {
-          controls: this.controlId,
-        },
-      }).then((response) => {
-        this.users = response.data
-      })
+      axios.get(backendUrls.getUsersInControl(this.controlId))
+        .then((response) => {
+          this.users = response.data
+        })
     },
     inspectorUsers() {
       return this.users.filter(item => {

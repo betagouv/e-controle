@@ -9,131 +9,36 @@ pytestmark = mark.django_db
 client = APIClient()
 
 
-#### Theme API ####
-def get_theme(user, id):
-    return utils.get_resource(client, user, 'theme', id)
+### Get is disabled. It should never work.
 
-
-def test_can_access_theme_api_if_control_is_associated_with_the_user():
-    theme = factories.ThemeFactory()
-    user = utils.make_audited_user(theme.questionnaire.control)
-    assert get_theme(user, theme.id).status_code == 200
-
-
-def test_no_access_to_theme_api_if_control_is_not_associated_with_the_user():
-    theme_in = factories.ThemeFactory()
-    theme_out = factories.ThemeFactory()
-    user = utils.make_audited_user(theme_in.questionnaire.control)
-    assert get_theme(user, theme_out.id).status_code != 200
-
-
-def test_no_access_to_theme_api_for_anonymous():
-    theme = factories.ThemeFactory()
-    response = utils.get_resource_without_login(client, 'theme', theme.id)
-    assert response.status_code == 403
-
-
-def test_can_update_theme_order():
-    theme = factories.ThemeFactory()
-    user = utils.make_audited_user(theme.questionnaire.control)
-    original_order = theme.order
-    new_order = 123
-    assert new_order != original_order
-
-    payload = {
-        "id": str(theme.id),
-        "order": str(new_order),
-        "title": theme.title
-    }
-
-    response = utils.update_resource(client, user, 'theme', payload)
-
-    assert response.status_code == 200
-    assert response.data['order'] == new_order
-
-
-def test_no_access_to_theme_for_deleted_control():
-    theme = factories.ThemeFactory()
-    user = utils.make_audited_user(theme.questionnaire.control)
-    theme.questionnaire.control.delete()
-    assert get_theme(user, theme.id).status_code == 404
-
-
-#### Question API ####
-
-def get_question(user, id):
-    return utils.get_resource(client, user, 'question', id)
-
-
-def test_can_access_question_api_if_control_is_associated_with_the_user():
-    question = factories.QuestionFactory()
-    user = utils.make_audited_user(question.theme.questionnaire.control)
-    assert get_question(user, question.id).status_code == 200
-
-
-def test_no_access_to_question_api_if_control_is_not_associated_with_the_user():
-    question_in = factories.QuestionFactory()
-    question_out = factories.QuestionFactory()
-    user = utils.make_audited_user(question_in.theme.questionnaire.control)
-    assert get_question(user, question_out.id).status_code != 200
-
-
-def test_no_access_to_question_api_for_anonymous():
-    question = factories.QuestionFactory()
-    response = utils.get_resource_without_login(client, 'question', question.id)
-    assert response.status_code == 403
-
-
-def test_response_file_listed_in_question_endpoint():
-    response_file = factories.ResponseFileFactory()
-    question = response_file.question
-    user = response_file.author
-    user.profile.agreed_to_tos = True
-    user.profile.controls.add(question.theme.questionnaire.control)
-    user.profile.save()
-
-    response = get_question(user, question.id)
-    assert response_file.basename in str(response.content)
-
-
-def test_no_access_to_question_api_for_deleted_control():
-    question = factories.QuestionFactory()
-    user = utils.make_audited_user(question.theme.questionnaire.control)
-    question.theme.questionnaire.control.delete()
-    assert get_question(user, question.id).status_code == 404
-
-
-#### Control API ####
-
-### Get
 def get_control(user, id):
     return utils.get_resource(client, user, 'control', id)
 
 
-def test_can_access_control_get_api_if_control_is_associated_with_the_user():
+def test_cannot_get_control_even_if_control_is_associated_with_the_user():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
-    assert get_control(user, control.id).status_code == 200
+    assert get_control(user, control.id).status_code == 405
 
 
-def test_no_access_to_control_get_api_if_control_is_not_associated_with_the_user():
+def test_cannot_get_control_if_control_is_not_associated_with_the_user():
     control_in = factories.ControlFactory()
     control_out = factories.ControlFactory()
     user = utils.make_audited_user(control_in)
-    assert get_control(user, control_out.id).status_code != 200
+    assert get_control(user, control_out.id).status_code == 405
 
 
-def test_no_access_to_control_get_api_for_anonymous():
+def test_cannot_get_control_for_anonymous():
     control = factories.ControlFactory()
     response = utils.get_resource_without_login(client, 'control', control.id)
     assert response.status_code == 403
 
 
-def test_no_access_to_deleted_control():
+def test_cannot_get_deleted_control():
     control = factories.ControlFactory()
     user = utils.make_audited_user(control)
     control.delete()
-    assert get_control(user, control.id).status_code == 404
+    assert get_control(user, control.id).status_code == 405
 
 
 ### Create
@@ -241,7 +146,7 @@ def test_no_access_to_control_update_api_if_deleted():
     assert update_control(user, make_update_payload(), control).status_code == 404
 
 
-## Delete
+## Delete is never allowed
 
 def test_cannot_delete_a_control():
     """
@@ -251,8 +156,61 @@ def test_cannot_delete_a_control():
     control = factories.ControlFactory()
     user = utils.make_inspector_user(control)
     count_before = Control.objects.active().count()
-    assert get_control(user, control.id).status_code == 200
+
     response = utils.delete_resource(client, user, 'control', control.pk)
+
     count_after = Control.objects.active().count()
     assert count_before == count_after
     assert response.status_code == 405
+
+## Get users of a control
+
+
+def get_users_of_control(current_user, control):
+    utils.login(client, user=current_user)
+    url = reverse('api:control-users', args=[control.id])
+    return client.get(url)
+
+
+def test_can_get_users_of_control_if_control_belongs_to_user():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user(control)
+    audited = utils.make_audited_user(control)
+
+    assert get_users_of_control(inspector, control).status_code == 200
+    assert get_users_of_control(audited, control).status_code == 200
+
+
+def test_cannot_get_users_of_control_if_control_does_not_belong_to_user():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user()
+    audited = utils.make_audited_user()
+
+    assert get_users_of_control(inspector, control).status_code == 404
+    assert get_users_of_control(audited, control).status_code == 404
+
+
+def test_cannot_get_users_of_neigboring_control():
+    # testing for a specific bug we had.
+    control_1 = factories.ControlFactory()
+    inspector_1 = utils.make_inspector_user(control_1)
+
+    control_2 = factories.ControlFactory()
+    inspector_2 = utils.make_inspector_user(control_2)
+    inspector_2.profile.controls.add(control_1)
+
+    # control_2 is unknown to inspector_1.
+    # inspector_2 is known to inspector_1/
+    # So inspector_1 should not be able to get info on control_2.
+
+    assert get_users_of_control(inspector_1, control_2).status_code == 404
+
+
+def test_cannot_get_users_of_control_if_control_is_deleted():
+    control = factories.ControlFactory()
+    inspector = utils.make_inspector_user(control)
+    audited = utils.make_audited_user(control)
+    control.delete()
+
+    assert get_users_of_control(inspector, control).status_code == 404
+    assert get_users_of_control(audited, control).status_code == 404

@@ -11,12 +11,20 @@
           <small><a :href="'mailto:' + user.email">{{ user.email }}</a></small>
         </div>
         <template v-if="sessionUser.is_inspector">
-          <div class="flex-column mr-4">
-            <button class="fe fe-edit btn btn-outline-primary" title="Modifier" data-toggle="modal" data-target="#updateUserModal" @click="updateEditingState(user)"></button>
-          </div>
-          <div class="flex-column">
-            <button class="fe fe-user-x btn btn-outline-primary" title="Supprimer" data-toggle="modal" data-target="#removeUserModal" @click="updateEditingState(user)"></button>
-          </div>
+          <button class="fe fe-edit btn btn-outline-primary mr-4"
+                  title="Modifier l'utilisateur"
+                  aria-label="Modifier l'utilisateur"
+                  data-toggle="modal"
+                  data-target="#updateUserModal"
+                  @click="updateEditingState(user)">
+          </button>
+          <button class="fe fe-user-x btn btn-outline-primary mr-4"
+                  title="Supprimer l'utilisateur"
+                  aria-label="Supprimer l'utilisateur"
+                  data-toggle="modal"
+                  data-target="#removeUserModal"
+                  @click="updateEditingState(user)">
+          </button>
         </template>
       </div>
     </li>

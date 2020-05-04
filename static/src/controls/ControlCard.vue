@@ -1,6 +1,6 @@
 <template>
   <div>
-    <control-title :control="control" :webdavurl="webdavurl"></control-title>
+    <control-title :control="control"></control-title>
     <questionnaire-list :control="control" :user="user"></questionnaire-list>
     <user-section :control="control"></user-section>
   </div>
@@ -19,7 +19,6 @@
     props: [
       'control',
       'user',
-      'webdavurl',
     ],
     components: {
       ControlCreate,

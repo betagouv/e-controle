@@ -11,7 +11,10 @@
     <div class="card-body">
       <div class="card">
         <div class="card-header justify-content-between">
-          <h3 class="card-title"><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h3>
+          <h3 class="card-title">
+            <i class="fa fa-university mr-2"></i>
+            <strong>Équipe de contrôle</strong>
+          </h3>
           <a v-if="sessionUser.is_inspector"
              href="javascript:void(0)"
              data-toggle="modal"
@@ -22,12 +25,16 @@
             Ajouter un contrôleur
           </a>
         </div>
-        <user-list :users="inspectorUsers()" profile-type="inspector" :control="control"></user-list>
+        <user-list :users="inspectorUsers()" profile-type="inspector" :control="control">
+        </user-list>
       </div>
 
       <div class="card mb-0">
         <div class="card-header justify-content-between">
-          <h3 class="card-title"><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h3>
+          <h3 class="card-title">
+            <i class="fa fa-building mr-2"></i>
+            <strong>Organisme interrogé</strong>
+          </h3>
           <a v-if="sessionUser.is_inspector"
              href=""
              data-toggle="modal"
@@ -38,7 +45,8 @@
             Ajouter une personne
           </a>
         </div>
-        <user-list :users="auditedUsers()" profile-type="audited" :control="control"></user-list>
+        <user-list :users="auditedUsers()" profile-type="audited" :control="control">
+        </user-list>
       </div>
     </div>
   </div>
@@ -46,73 +54,63 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields'
-  import axios from "axios"
-  import Vue from "vue";
-  import VueAxios from "vue-axios"
+import axios from 'axios'
+import backendUrls from '../utils/backend'
+import EventBus from '../events'
+import { mapFields } from 'vuex-map-fields'
+import { store } from '../store'
+import UserList from './UserList'
+import Vue from 'vue'
 
-  import { store } from '../store'
-  import CollapsibleSection from '../utils/CollapsibleSection'
-  import EventBus from '../events'
-  import UserList from "./UserList"
-
-
-  Vue.use(VueAxios, axios)
-
-
-  export default Vue.extend({
-    store,
-    props: {
-      control: Object,
-    },
-    data() {
-      return {
-        users: []
-      }
-    },
-    computed: {
-      ...mapFields([
-        'editingControl',
-        'editingProfileType',
-        'sessionUser',
-      ]),
-    },
-    methods: {
-      getUsers() {
-        Vue.axios.get('/api/user/', {
-          params: {
-            controls: this.control.id
-          }
-        }).then((response) => {
+export default Vue.extend({
+  store,
+  props: {
+    control: Object,
+  },
+  data() {
+    return {
+      users: [],
+    }
+  },
+  computed: {
+    ...mapFields([
+      'editingControl',
+      'editingProfileType',
+      'sessionUser',
+    ]),
+  },
+  methods: {
+    getUsers() {
+      axios.get(backendUrls.getUsersInControl(this.control.id))
+        .then((response) => {
           this.users = response.data
         })
-      },
-      auditedUsers() {
-        return this.users.filter(item => {
-           return item.profile_type === 'audited'
-        })
-      },
-      inspectorUsers() {
-        return this.users.filter(item => {
-           return item.profile_type === 'inspector'
-        })
-      },
-      updateEditingState(profileType) {
-        this.editingControl = this.control
-        this.editingProfileType = profileType
-      }
     },
-    mounted() {
-      this.getUsers()
-      EventBus.$on('users-changed', () => {
-        this.getUsers()
+    auditedUsers() {
+      return this.users.filter(item => {
+        return item.profile_type === 'audited'
       })
     },
-    components: {
-      CollapsibleSection,
-      UserList,
-    }
-  });
+    inspectorUsers() {
+      return this.users.filter(item => {
+        return item.profile_type === 'inspector'
+      })
+    },
+    updateEditingState(profileType) {
+      this.editingControl = this.control
+      this.editingProfileType = profileType
+    },
+  },
+  mounted() {
+    this.getUsers()
+    EventBus.$on('users-changed', () => {
+      this.getUsers()
+    })
+  },
+  components: {
+    UserList,
+  },
+})
 </script>
 
 <style></style>

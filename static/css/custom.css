@@ -27,8 +27,19 @@
         display: block;
     }
 
+    /*
+    Add explicit margin for IE to fix layout
+    */
     .ie-margin-for-footer {
         margin-bottom: 30em !important;
+    }
+
+    /*
+    Flex bug in IE : sometimes children of flex-row spread out horizontally instead of having the
+    appropriate width. (It caused some pages to display wider than the screen for example)
+    */
+    .ie-flex-row-child {
+        width:100%;
     }
 }
 
@@ -256,4 +267,14 @@ table.trash-list {
     border-radius: 10rem;
     padding-left: 1em;
     padding-right: 1em;
+}
+
+/* Image displayed on top of icon (fake icon). Used for WebdavTip button. */
+.parent-fake-icon {
+    position: relative;
+}
+.fake-icon {
+    position: absolute;
+    top: 2px;
+    left: 5px;
 }

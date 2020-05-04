@@ -6,7 +6,27 @@
 {% endblock extra_static_header %}
 
 {% block page_main_container %}
-<div class="container">
+<div class="mx-3">
+  <!-- Code from Breadcrumbs.vue -->
+  <h5 class="flex-row mb-5 text-muted">
+    <div class="mx-2">
+      <i class="fa fa-archive"></i>
+    </div>
+    <div class="mx-2">
+      <i class="fa fa-chevron-right"></i>
+    </div>
+    <div class="mx-2">
+      <a href="{% url 'control-detail' %}#control-{{ questionnaire.control.id }}">
+        {{ questionnaire.control.reference_code }} -
+        {% if questionnaire.control.depositing_organization is not None %}
+          {{ questionnaire.control.depositing_organization }}
+        {% else %}
+          {{ questionnaire.control.title }}
+        {% endif %}
+      </a>
+    </div>
+  </h5>
+
   <div class="page-header">
     <div class="page-title">
       <i class="fe fe-trash-2 mr-2"></i>
@@ -45,7 +65,11 @@
               <div>{{ response_file.deletion_date }}</div>
             </td>
             <td>
-              <div><a target="_blank" href="{{ response_file.url }}">{{ response_file.basename }}</a></div>
+              <div>
+                <a target="_blank" rel="noopener noreferrer" href="{{ response_file.url }}">
+                  {{ response_file.basename }}
+                </a>
+              </div>
             </td>
             <td>
               <div>{{ response_file.deletion_user.first_name }} {{ response_file.deletion_user.last_name }}</div>
