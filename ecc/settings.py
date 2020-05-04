@@ -242,6 +242,7 @@ STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, 'node_modules', 'jquery', 'dist'),
 ]
 
 # Want forever-cacheable files and compression support?
