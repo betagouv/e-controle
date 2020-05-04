@@ -5,28 +5,35 @@
 {{ block.super }}
 {% endblock extra_static_header %}
 
-{% block page_main_container %}
+{% block page_main_container_with_sidebar %}
+  <div id="questionnaire-create-vm" class="page-main flex-row">
+    <div id="sidebar-vm" class="border-right">
+      sidebar in sub template
+      <sidebar></sidebar>
+    </div>
 
-<div id="questionnaire-create-vm">
-    {% if control is not None %}
-      <questionnaire-create
-        :control-id="{{ control.id }}"
-        :control-has-multiple-inspectors="{% if control.has_multiple_inspectors %}true{% else %}false{% endif %}"
-        :questionnaire-numbering="{{ control.next_questionnaire_numbering }}"
-      >
-      </questionnaire-create>
-    {% elif questionnaire is not None %}
-      <questionnaire-create
-        :questionnaire-id="{{ questionnaire.id }}"
-        :control-id="{{ questionnaire.control.id }}"
-        :control-has-multiple-inspectors="{% if questionnaire.control.has_multiple_inspectors %}true{% else %}false{% endif %}"
-        :questionnaire-numbering="{{ questionnaire.numbering }}"
-      >
-      </questionnaire-create>
-    {% endif %}
-</div>
-
-{% endblock page_main_container %}
+    <div class="mt-3 mt-md-5 flex-grow-1 ml-6 ie-flex-row-child">
+      <div>
+        {% if control is not None %}
+          <questionnaire-create
+            :control-id="{{ control.id }}"
+            :control-has-multiple-inspectors="{% if control.has_multiple_inspectors %}true{% else %}false{% endif %}"
+            :questionnaire-numbering="{{ control.next_questionnaire_numbering }}"
+          >
+          </questionnaire-create>
+        {% elif questionnaire is not None %}
+          <questionnaire-create
+            :questionnaire-id="{{ questionnaire.id }}"
+            :control-id="{{ questionnaire.control.id }}"
+            :control-has-multiple-inspectors="{% if questionnaire.control.has_multiple_inspectors %}true{% else %}false{% endif %}"
+            :questionnaire-numbering="{{ questionnaire.numbering }}"
+          >
+          </questionnaire-create>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock page_main_container_with_sidebar %}
 
 {% block js_bundle %}
   <link href="{% static 'dist/questionnaire-create-bundle.css' %}" rel="stylesheet" >

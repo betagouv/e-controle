@@ -48,23 +48,25 @@
         </div>  <!--// closing: top_header  //-->
       {% endblock page_top_row %}
 
-      <div id="page-main" class="page-main flex-row"> <!--// opening: main_page  //-->
+      {% block page_main_container_with_sidebar %}
+      <div class="page-main flex-row"> <!--// opening: main_page  //-->
 
         <div id="sidebar-vm" class="border-right">
           <sidebar></sidebar>
         </div>
+        <link href="{% static 'dist/sidebar-bundle.css' %}" rel="stylesheet" />
+        <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
         <div class="mt-3 mt-md-5 flex-grow-1 ml-6 ie-flex-row-child">
           {% block page_main_container %}
           {% endblock page_main_container %}
         </div>
       </div>  <!--// closing: main_page  //-->
+      {% endblock page_main_container_with_sidebar %}
+
     </div>
     {% include "footer.html" %}
   </div> <!--// closing: page  //-->
-
-  <link href="{% static 'dist/sidebar-bundle.css' %}" rel="stylesheet" />
-  <script src="{% static 'dist/sidebar-bundle.js' %}"></script>
 
 {% endblock content %}
 {% block session_management %}
