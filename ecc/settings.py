@@ -242,6 +242,8 @@ STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    # NPM modules that we need to link in <script> tags directly : add them to static files.
+    os.path.join(BASE_DIR, 'node_modules', 'bootstrap', 'dist', 'js'),
     os.path.join(BASE_DIR, 'node_modules', 'jquery', 'dist'),
 ]
 
