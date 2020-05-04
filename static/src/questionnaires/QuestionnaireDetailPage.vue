@@ -102,14 +102,21 @@ import ThemeBox from '../themes/ThemeBox'
 import WebdavTip from '../controls/WebdavTip'
 
 export default Vue.extend({
+  name: 'QuestionnaireDetailPage',
   props: {
     control: Object,
-    questionnaire: Object,
+    questionnaireId: Number,
   },
   data: function () {
     return {
       user: { is_audited: false },
     }
+  },
+  computed: {
+    questionnaire() {
+      return this.control.questionnaires.find(
+        questionnaire => questionnaire.id === this.questionnaireId)
+    },
   },
   mounted: function() {
     this.getSessionUser()

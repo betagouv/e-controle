@@ -10,12 +10,10 @@ from rest_framework.response import Response
 import django.dispatch
 from django.core.files import File
 
+from . import serializers as control_serializers
 from .models import Control, Question, Questionnaire, Theme, QuestionFile, ResponseFile
-from .serializers import ControlSerializer, ControlUpdateSerializer
-from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft
-from control.permissions import OnlyInspectorCanChange, ChangeQuestionnairePermission
-from .serializers import QuestionSerializer, QuestionUpdateSerializer, QuestionnaireSerializer, QuestionnaireUpdateSerializer
-from .serializers import ThemeSerializer, QuestionFileSerializer, ResponseFileSerializer, ResponseFileTrashSerializer
+from control.permissions import ControlIsNotDeleted, QuestionnaireIsDraft, OnlyAuditedCanAccess
+from control.permissions import OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire
 from user_profiles.serializers import UserProfileSerializer
 
 
@@ -31,8 +29,10 @@ class ControlViewSet(mixins.CreateModelMixin,
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
-            return ControlUpdateSerializer
-        return ControlSerializer
+            return control_serializers.ControlUpdateSerializer
+        if self.request and self.request.user.profile.is_inspector:
+            return control_serializers.ControlSerializer
+        return control_serializers.ControlSerializerWithoutDraft
 
     def get_queryset(self):
         return self.request.user.profile.controls.active()
@@ -66,11 +66,11 @@ class ControlViewSet(mixins.CreateModelMixin,
 
 
 class QuestionViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    serializer_class = QuestionSerializer
+    serializer_class = control_serializers.QuestionSerializer
 
     def get_queryset(self):
         queryset = Question.objects.filter(
-            theme__questionnaire__control__in=self.request.user.profile.controls.active())
+            theme__questionnaire__in=self.request.user.profile.questionnaires)
         return queryset
 
 
@@ -78,24 +78,14 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
                           mixins.ListModelMixin,
                           mixins.CreateModelMixin,
                           viewsets.GenericViewSet):
-    serializer_class = QuestionFileSerializer
+    serializer_class = control_serializers.QuestionFileSerializer
     parser_classes = (MultiPartParser, FormParser)
     filterset_fields = ('question',)
     permission_classes = (OnlyInspectorCanChange, ControlIsNotDeleted, QuestionnaireIsDraft)
 
-    def get_user_questionnaires(self):
-        """
-        Returns the questionnaires belonging to the user.
-        """
-        user_controls = self.request.user.profile.controls.active()
-        user_questionnaires = Questionnaire.objects.filter(control__in=user_controls)
-        if self.request.user.profile.is_audited:
-            user_questionnaires = user_questionnaires.filter(is_draft=False)
-        return user_questionnaires
-
     def get_queryset(self):
         queryset = QuestionFile.objects.filter(
-            question__theme__questionnaire__in=self.get_user_questionnaires())
+            question__theme__questionnaire__in=self.request.user.profile.questionnaires)
         return queryset
 
     def perform_create(self, serializer):
@@ -107,7 +97,8 @@ class QuestionFileViewSet(mixins.DestroyModelMixin,
 
 
 class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
-    serializer_class = ResponseFileTrashSerializer
+    serializer_class = control_serializers.ResponseFileTrashSerializer
+    permission_classes = (OnlyAuditedCanAccess,)
 
     def get_queryset(self):
         queryset = ResponseFile.objects.filter(
@@ -145,19 +136,20 @@ class ResponseFileTrash(mixins.UpdateModelMixin, generics.GenericAPIView):
 
 
 class ThemeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
-    serializer_class = ThemeSerializer
+    serializer_class = control_serializers.ThemeSerializer
+    permission_classes = (OnlyInspectorCanChange, QuestionnaireIsDraft)
 
     def get_queryset(self):
-        queryset = Theme.objects.filter(
-            questionnaire__control__in=self.request.user.profile.controls.active())
+        queryset = Theme.objects.filter(questionnaire__in=self.request.user.profile.questionnaires)
         return queryset
 
 
 class QuestionnaireViewSet(mixins.CreateModelMixin,
                            mixins.UpdateModelMixin,
                            viewsets.GenericViewSet):
-    serializer_class = QuestionnaireSerializer
-    permission_classes = (ChangeQuestionnairePermission,)
+    serializer_class = control_serializers.QuestionnaireSerializer
+    permission_classes = (
+        OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire, QuestionnaireIsDraft)
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(
@@ -203,7 +195,7 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
                                          log_func=log)
 
         # Use the read serializer to output the response data.
-        response.data = QuestionnaireSerializer(instance=saved_qr).data
+        response.data = control_serializers.QuestionnaireSerializer(instance=saved_qr).data
         questionnaire_api_post_save.send(sender=Questionnaire, instance=saved_qr)
         return response
 
@@ -224,7 +216,7 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
         :param questionnaire_in_db: questionnaire already saved in db.
         :return:
         """
-        serializer = QuestionnaireUpdateSerializer(questionnaire_in_db, data=request.data)
+        serializer = control_serializers.QuestionnaireUpdateSerializer(questionnaire_in_db, data=request.data)
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
@@ -318,15 +310,17 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
 
         for theme_request_data in themes_request_data:
             theme_in_db = self.__find_child_obj_by_id(qr_in_db, theme_request_data.get('id'), Theme)
-            theme_serializer = ThemeSerializer(theme_in_db, data=theme_request_data)
+            theme_serializer = control_serializers.ThemeSerializer(theme_in_db, data=theme_request_data)
             theme_serializer.is_valid(raise_exception=True)
             saved_theme = theme_serializer.save(questionnaire=qr_in_db)
             log_func(saved_theme)
 
             questions_data = theme_request_data.get('questions', [])
             for question_data in questions_data:
-                question_in_db = self.__find_child_obj_by_id(saved_theme, question_data.get('id'), Question)
-                question_serializer = QuestionUpdateSerializer(question_in_db, data=question_data)
+                question_in_db = self.__find_child_obj_by_id(
+                    saved_theme, question_data.get('id'), Question)
+                question_serializer = control_serializers.QuestionUpdateSerializer(
+                    question_in_db, data=question_data)
                 question_serializer.is_valid(raise_exception=True)
                 saved_question = question_serializer.save(theme=saved_theme)
                 log_func(saved_question)

@@ -34,7 +34,9 @@ def test_inspector_can_list_question_file_from_draft_questionnaire():
 
     published_question_file = factories.QuestionFileFactory()
     published_questionnaire = published_question_file.question.theme.questionnaire
-    assert not Questionnaire.objects.get(id=published_questionnaire.id).is_draft
+    published_questionnaire.is_draft = False
+    published_questionnaire.save()
+    assert Questionnaire.objects.get(id=published_questionnaire.id).is_published
     inspector.controls.add(published_questionnaire.control)
 
     draft_question_file = factories.QuestionFileFactory()
@@ -57,7 +59,9 @@ def test_audited_cannot_list_question_file_from_draft_questionnaire():
 
     published_question_file = factories.QuestionFileFactory()
     published_questionnaire = published_question_file.question.theme.questionnaire
-    assert not Questionnaire.objects.get(id=published_questionnaire.id).is_draft
+    published_questionnaire.is_draft = False
+    published_questionnaire.save()
+    assert Questionnaire.objects.get(id=published_questionnaire.id).is_published
     audited.controls.add(published_questionnaire.control)
 
     draft_question_file = factories.QuestionFileFactory()
@@ -134,9 +138,12 @@ def test_cannot_get_question_file_even_if_user_belongs_to_control():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     question_file = factories.QuestionFileFactory()
-    inspector.controls.add(question_file.question.theme.questionnaire.control)
-    audited.controls.add(question_file.question.theme.questionnaire.control)
-    assert not question_file.question.theme.questionnaire.is_draft
+    questionnaire = question_file.question.theme.questionnaire
+    inspector.controls.add(questionnaire.control)
+    audited.controls.add(questionnaire.control)
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert Questionnaire.objects.get(id=questionnaire.id).is_published
 
     # method not allowed
     assert get_question_file(inspector.user, question_file.id).status_code == 405
@@ -175,8 +182,11 @@ def test_audited_cannot_get_question_file_from_draft_questionnaire():
 def test_inspector_cannot_update_question_file_from_published_questionnaire():
     inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
     question_file = factories.QuestionFileFactory()
-    inspector.controls.add(question_file.question.theme.questionnaire.control)
-    assert not question_file.question.theme.questionnaire.is_draft
+    questionnaire = question_file.question.theme.questionnaire
+    inspector.controls.add(questionnaire.control)
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert Questionnaire.objects.get(id=questionnaire.id).is_published
 
     payload = {
         "id": question_file.id,
@@ -190,8 +200,11 @@ def test_inspector_cannot_update_question_file_from_published_questionnaire():
 def test_audited_cannot_update_question_file_from_published_questionnaire():
     audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     question_file = factories.QuestionFileFactory()
-    audited.controls.add(question_file.question.theme.questionnaire.control)
-    assert not question_file.question.theme.questionnaire.is_draft
+    questionnaire = question_file.question.theme.questionnaire
+    audited.controls.add(questionnaire.control)
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert Questionnaire.objects.get(id=questionnaire.id).is_published
 
     payload = {
         "id": question_file.id,
@@ -205,10 +218,11 @@ def test_audited_cannot_update_question_file_from_published_questionnaire():
 def test_audited_cannot_update_question_file_from_draft_questionnaire():
     audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
     question_file = factories.QuestionFileFactory()
-    audited.controls.add(question_file.question.theme.questionnaire.control)
-    question_file.question.theme.questionnaire.is_draft = True
-    question_file.question.theme.questionnaire.save()
-    assert Questionnaire.objects.get(id=question_file.question.theme.questionnaire.id).is_draft
+    questionnaire = question_file.question.theme.questionnaire
+    audited.controls.add(questionnaire.control)
+    questionnaire.is_draft = True
+    questionnaire.save()
+    assert Questionnaire.objects.get(id=questionnaire.id).is_draft
 
     payload = {
         "id": question_file.id,

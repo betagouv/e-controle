@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+import axios from 'axios'
 import { mapFields } from 'vuex-map-fields'
 import backend from '../utils/backend'
 import Vue from 'vue'
@@ -70,7 +71,7 @@ export default Vue.extend({
       this.error = undefined
 
       var postData = { control: this.editingControl.id }
-      this.axios.post(backend.removeUserFromControl(this.editingUser.id), postData)
+      axios.post(backend.removeUserFromControl(this.editingUser.id), postData)
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)

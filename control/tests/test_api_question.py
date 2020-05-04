@@ -14,7 +14,10 @@ def get_question(user, id):
 
 def test_can_access_question_api_if_control_is_associated_with_the_user():
     question = factories.QuestionFactory()
-    user = utils.make_audited_user(question.theme.questionnaire.control)
+    questionnaire = question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    user = utils.make_audited_user(questionnaire.control)
     assert get_question(user, question.id).status_code == 200
 
 
@@ -29,6 +32,13 @@ def test_no_access_to_question_api_for_anonymous():
     question = factories.QuestionFactory()
     response = utils.get_resource_without_login(client, 'question', question.id)
     assert response.status_code == 403
+
+
+def test_audited_cannot_get_a_question_if_questionnaire_is_draft():
+    question = factories.QuestionFactory()
+    user = utils.make_audited_user(question.theme.questionnaire.control)
+    response = get_question(user, question.id)
+    assert 400 <= response.status_code < 500
 
 
 def test_response_file_listed_in_question_endpoint():

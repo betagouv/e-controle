@@ -71,14 +71,12 @@ import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backend from '../utils/backend'
 import Vue from 'vue'
-import VueAxios from 'vue-axios'
 import Vuex from 'vuex'
 
 import { store } from '../store'
 import EventBus from '../events'
 
 Vue.use(Vuex)
-Vue.use(VueAxios, axios)
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -112,7 +110,7 @@ export default Vue.extend({
       this.errors = []
     },
     updateUser() {
-      this.axios.post(backend.user(), this.editingUser)
+      axios.post(backend.user(), this.editingUser)
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)

@@ -32,11 +32,10 @@
             </div>
           </fieldset>
           <div class="text-right">
-            <a href="javascript:void(0)"
-               @click="cancel"
-               class="btn btn-secondary">
+            <button @click="cancel"
+                    class="btn btn-secondary">
               Annuler
-            </a>
+            </button>
             <button id="control-title-submit-button"
                     type="submit"
                     class="btn btn-primary">

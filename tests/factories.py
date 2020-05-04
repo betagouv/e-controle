@@ -54,7 +54,7 @@ class QuestionnaireFactory(factory.DjangoModelFactory):
     title = factory.LazyFunction(faker.name)
     control = factory.SubFactory(ControlFactory)
     uploaded_file = dummy_file
-    is_draft = False
+    is_draft = True
 
     class Meta:
         model = 'control.Questionnaire'

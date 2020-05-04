@@ -15,15 +15,14 @@
             <i class="fa fa-university mr-2"></i>
             <strong>Équipe de contrôle</strong>
           </h3>
-          <a v-if="sessionUser.is_inspector"
-             href="javascript:void(0)"
-             data-toggle="modal"
-             data-target="#addUserModal"
-             @click="updateEditingState('inspector')"
-             class="btn btn-primary">
+          <button v-if="sessionUser.is_inspector"
+                  data-toggle="modal"
+                  data-target="#addUserModal"
+                  @click="updateEditingState('inspector')"
+                  class="btn btn-primary">
             <i class="fe fe-plus"></i>
             Ajouter un contrôleur
-          </a>
+          </button>
         </div>
         <user-list :users="inspectorUsers()" profile-type="inspector" :control="control">
         </user-list>
@@ -35,15 +34,14 @@
             <i class="fa fa-building mr-2"></i>
             <strong>Organisme interrogé</strong>
           </h3>
-          <a v-if="sessionUser.is_inspector"
-             href=""
-             data-toggle="modal"
-             data-target="#addUserModal"
-             @click="updateEditingState('audited')"
-             class="btn btn-primary">
+          <button v-if="sessionUser.is_inspector"
+                  data-toggle="modal"
+                  data-target="#addUserModal"
+                  @click="updateEditingState('audited')"
+                  class="btn btn-primary">
             <i class="fe fe-plus"></i>
             Ajouter une personne
-          </a>
+          </button>
         </div>
         <user-list :users="auditedUsers()" profile-type="audited" :control="control">
         </user-list>

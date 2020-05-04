@@ -42,6 +42,7 @@ import RemoveUserModal from '../users/RemoveUserModal'
 import UpdateUserModal from '../users/UpdateUserModal'
 
 export default Vue.extend({
+  name: 'ControlPage',
   props: [
     'controls',
     'user',

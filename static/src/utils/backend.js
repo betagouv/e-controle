@@ -25,6 +25,8 @@ const apiUrls = {
 const backendViewUrls = {
   home: 'accueil/',
   welcome: 'bienvenue/',
+  faq: 'faq/',
+  upload: 'upload/',
   // Questionnaire pages
   'questionnaire-detail': 'questionnaire/<int:pk>/',
   'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',

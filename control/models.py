@@ -201,6 +201,10 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     def description_rich_text(self):
         return self.to_rich_text(self.description)
 
+    @property
+    def is_published(self):
+        return not self.is_draft
+
     def __str__(self):
         display_text = f'[ID{self.id}]'
         if self.control:

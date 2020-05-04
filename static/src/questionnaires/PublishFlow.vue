@@ -40,6 +40,7 @@
                 data-dismiss="modal"
                 title="J'ai encore des modifications à faire"
         >
+          <i class="fa fa-chevron-left mr-2"></i>
           J'ai encore des modifications à faire
         </button>
         <button type="submit"
@@ -98,7 +99,8 @@
                 class="btn btn-primary"
                 @click="goHome"
         >
-          < Revenir à l'accueil
+          <i class="fa fa-chevron-left mr-2"></i>
+          Revenir à l'accueil
         </button>
       </div>
     </template>
