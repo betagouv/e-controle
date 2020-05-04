@@ -4,7 +4,9 @@
     <li class="list-separated-item" v-for="(user, index) in users" :key="index">
       <div class="flex-row align-items-center">
         <div class="flex-column mr-4">
-          <span class="avatar avatar-pink">{{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}</span>
+          <span class="avatar avatar-pink">
+            {{ user.first_name.charAt(0) }}{{ user.last_name.charAt(0) }}
+          </span>
         </div>
         <div class="flex-column mr-4 flex-grow-1">
           <div>{{ user.first_name }} {{ user.last_name }}</div>
@@ -33,40 +35,35 @@
 </template>
 
 <script lang="ts">
-  import { mapFields } from 'vuex-map-fields';
-  import Vue from 'vue';
-  import Vuex from 'vuex'
+import { mapFields } from 'vuex-map-fields'
+import Vue from 'vue'
+import Vuex from 'vuex'
 
-  import { store } from '../store'
+import { store } from '../store'
 
-  Vue.use(Vuex);
+Vue.use(Vuex)
 
-  export default Vue.extend({
-    store,
-    data: () => {
-      return {
-        postResult: {}
-      }
+export default Vue.extend({
+  store,
+  props: {
+    users: Array,
+    control: Object,
+  },
+  computed: {
+    ...mapFields([
+      'editingUser',
+      'editingControl',
+      'sessionUser',
+    ]),
+  },
+  methods: {
+    updateEditingState(user) {
+      this.editingControl = this.control
+      this.editingUser = {}
+      Object.assign(this.editingUser, user)
     },
-    props: {
-      users: Array,
-      control: Object,
-    },
-    computed: {
-      ...mapFields([
-        'editingUser',
-        'editingControl',
-        'sessionUser',
-      ]),
-    },
-    methods: {
-      updateEditingState(user) {
-        this.editingControl = this.control
-        this.editingUser = {}
-        Object.assign(this.editingUser, user)
-      }
-    }
-  });
+  },
+})
 </script>
 
 <style></style>

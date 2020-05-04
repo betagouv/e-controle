@@ -28,22 +28,22 @@
 </template>
 
 <script>
-  import Vue from "vue";
-  import QuestionBox from '../questions/QuestionBox.vue';
-  import QuestionFileList from "../questions/QuestionFileList"
-  import QuestionnaireMetadata from './QuestionnaireMetadata'
-  import ThemeBox from '../themes/ThemeBox'
+import Vue from 'vue'
+import QuestionBox from '../questions/QuestionBox.vue'
+import QuestionFileList from '../questions/QuestionFileList'
+import QuestionnaireMetadata from './QuestionnaireMetadata'
+import ThemeBox from '../themes/ThemeBox'
 
-  export default Vue.extend({
-    props: ['questionnaire'],
-    data: function () {
-      return {};
-    },
-    components: {
-      QuestionBox,
-      QuestionFileList,
-      QuestionnaireMetadata,
-      ThemeBox,
-    }
-  });
+export default Vue.extend({
+  props: ['questionnaire'],
+  data: function () {
+    return {}
+  },
+  components: {
+    QuestionBox,
+    QuestionFileList,
+    QuestionnaireMetadata,
+    ThemeBox,
+  },
+})
 </script>

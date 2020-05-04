@@ -87,7 +87,7 @@ const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0A' +
     'Je voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu.' +
     ' Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
 const ERROR_EMAIL_SUBJECT = 'Erreur de chargement des espaces de dépôt'
-const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr'
+const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr' // TODO : get from config
 
 export default Vue.extend({
   components: {
@@ -272,7 +272,7 @@ export default Vue.extend({
     position: fixed;
     top: 90px;
     left: 350px;
-    z-index: 21;
+    z-index: 1000; /* Just above sidebar items at z-index 999, but under modals at 1050 */
     transition: left 0.3s;
   }
   .collapsed #sidebar-toggle-button {

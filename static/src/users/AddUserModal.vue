@@ -90,12 +90,9 @@ import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backend from '../utils/backend'
 import Vue from 'vue'
-import VueAxios from 'vue-axios'
 
 import { store } from '../store'
 import EventBus from '../events'
-
-Vue.use(VueAxios, axios)
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -148,7 +145,7 @@ export default Vue.extend({
     addUser() {
       this.formData.control = this.editingControl.id
       this.formData.profile_type = this.editingProfileType
-      this.axios.post(backend.user(), this.formData)
+      axios.post(backend.user(), this.formData)
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)
@@ -160,7 +157,7 @@ export default Vue.extend({
         })
     },
     findUser() {
-      this.axios.get(backend.user(), {
+      axios.get(backend.user(), {
         params: {
           search: this.formData.email,
         },

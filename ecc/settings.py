@@ -162,11 +162,17 @@ FEATURE_POLICY = {
 # Strict-Transport-Security
 SECURE_BROWSER_XSS_FILTER = True
 CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'Strict'
+# CSRF_COOKIE_SAMESITE: We have to use Lax and not Strict, otherwise login is broken when you login
+# by clicking the magic link from gmail, orange mail, or other mail website with specific
+# referer-policy.
+CSRF_COOKIE_SAMESITE = 'Lax'
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
+# SESSION_COOKIE_SAMESITE: We have to use Lax and not Strict, otherwise CRSF is broken when you
+# login by clicking the magic link from gmail, orange mail, or other mail website with specific
+# referer-policy.
+SESSION_COOKIE_SAMESITE = 'Lax'
 X_FRAME_OPTIONS = 'DENY'
 SECURE_HSTS_SECONDS = 30
 # Content-Security-Policy

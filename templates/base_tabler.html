@@ -18,16 +18,16 @@
         <title>{{ request.site.name }}</title>
         {% endblock site_title %}
 
-        <link rel="icon" href="{% static "img/favicon.ico" %}" type="image/x-icon"/>
-        <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicon.ico" %}" />
+        <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon"/>
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />
 
-        <link href="{% static "tabler/dashboard.css" %}" rel="stylesheet" />
+        <link href="{% static 'tabler/dashboard.css' %}" rel="stylesheet" />
         {% if settings.DEBUG %}
           <link rel="stylesheet" type="text/css" href="{% static 'fonts/fontawesome/v5.8.1/css/all.css' %}">
         {% else %}
           <link rel="stylesheet" type="text/css" href="{% static 'fonts/fontawesome/v5.8.1/css/all.min.css' %}">
         {% endif %}
-        <link href="{% static "fonts/google/source_sans_pro/source_sans_pro.css" %}" rel="stylesheet" />
+        <link href="{% static 'fonts/google/source_sans_pro/source_sans_pro.css' %}" rel="stylesheet" />
 
         {% block extra_static_header %}{% endblock extra_static_header %}
 
@@ -37,10 +37,10 @@
         {% endblock content %}
         {% block js_in_script_tags %}
           <!-- We user Tabler. Tabler needs bootstrap. Bootstrap needs jquery and popper.-->
-          <script src="{% static "tabler/jquery-3.4.1.slim.min.js" %}"></script>
-          <script src="{% static "tabler/popper-1.16.0.min.js" %}"></script>
-          <script src="{% static "tabler/bootstrap-4.4.1.min.js" %}"></script>
-          <script src="{% static "tabler/core.js" %}"></script>
+          <script src="{% static 'tabler/jquery-3.4.1.slim.min.js' %}"></script>
+          <script src="{% static 'tabler/popper-1.16.0.min.js' %}"></script>
+          <script src="{% static 'tabler/bootstrap-4.4.1.min.js' %}"></script>
+          <script src="{% static 'tabler/core.js' %}"></script>
         {% endblock js_in_script_tags %}
         {% block js_bundle %}{% endblock js_bundle %}
         {% block session_management %}{% endblock session_management %}

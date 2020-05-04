@@ -16,9 +16,6 @@
   import axios from "axios"
   import ConfirmModal from "../utils/ConfirmModal"
   import Vue from "vue"
-  import VueAxios from "vue-axios"
-
-  Vue.use(VueAxios, axios)
 
   var timeout
   var gracePeriodMs = 30*1000 // In milliseconds. How long the warning modal stays opened.
@@ -50,7 +47,7 @@
         this.keepServerAlive()
       },
       keepServerAlive() {
-        Vue.axios.get('/api/session/keep-alive').then((response) => {
+        axios.get('/api/session/keep-alive').then((response) => {
           console.debug('Keep server alive')
         })
       },

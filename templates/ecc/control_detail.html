@@ -3,10 +3,16 @@
 {% load control_tags %}
 
 {% block page_main_container %}
+  <!-- No mixing of server templates + vue templates. Pass the server data outside of vue element-->
+  <div id="controls-data" style="display: none">
+    {{ controls_json }}
+  </div>
+  <div id="user-data" style="display: none">
+    {{ user_json }}
+  </div>
+  <!-- Vue element -->
   <div id="control-detail-vm">
-    <control-page :controls="{{ controls_json }}"
-                  :user="{{ user_json }}"
-    >
+    <control-page>
     </control-page>
   </div>
 {% endblock page_main_container %}

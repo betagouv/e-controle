@@ -10,7 +10,7 @@ pytestmark = mark.django_db
 
 class SendQuestionnaireRunner():
     def __init__(self, client):
-        questionnaire = factories.QuestionnaireFactory()
+        questionnaire = factories.QuestionnaireFactory(is_draft=False)
         self.filename = questionnaire.basename
 
         user = utils.make_audited_user(questionnaire.control)
@@ -33,7 +33,7 @@ def test_download_questionnaire_file_has_right_filename(client):
 
 
 def test_download_questionnaire_file_fails_if_the_control_is_not_associated_with_the_user(client):
-    questionnaire = factories.QuestionnaireFactory()
+    questionnaire = factories.QuestionnaireFactory(is_draft=False)
     unauthorized_control = factories.ControlFactory()
     assert unauthorized_control != questionnaire.control
     user = utils.make_audited_user(unauthorized_control)
@@ -42,3 +42,20 @@ def test_download_questionnaire_file_fails_if_the_control_is_not_associated_with
     response = client.get(url)
     assert response.status_code != 200
 
+
+def test_inspector_can_download_questionnaire_file_if_draft(client):
+    questionnaire = factories.QuestionnaireFactory(is_draft=True)
+    user = utils.make_inspector_user(questionnaire.control)
+    utils.login(client, user=user)
+    url = reverse('send-questionnaire-file', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+def test_audited_cannot_download_questionnaire_file_if_draft(client):
+    questionnaire = factories.QuestionnaireFactory(is_draft=True)
+    user = utils.make_audited_user(questionnaire.control)
+    utils.login(client, user=user)
+    url = reverse('send-questionnaire-file', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code == 404

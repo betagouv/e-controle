@@ -22,17 +22,17 @@
 </template>
 
 <script>
-  import Vue from "vue"
+import Vue from 'vue'
 
-  export default Vue.extend({
-    props: ['buttontext', 'buttonicon'],
-    data : function () {
-      return {
-        id: ''
-      }
-    },
-    mounted: function() {
-      this.id = 'collapsible-' + Math.floor(Math.random() * 1000000)
-    },
-  })
+export default Vue.extend({
+  props: ['buttontext', 'buttonicon'],
+  data: function () {
+    return {
+      id: '',
+    }
+  },
+  mounted: function() {
+    this.id = 'collapsible-' + Math.floor(Math.random() * 1000000)
+  },
+})
 </script>
