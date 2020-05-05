@@ -13,7 +13,7 @@
   {% endif %}
 {% endblock extra_static_header %}
 
-{% block page_main_container %}
+{% block page_main_container_with_sidebar %}
   <!-- No mixing of server templates + vue templates. Pass the server data outside of vue element-->
   <div id="control-data" style="display: none">
     {{ control_json }}
@@ -23,10 +23,10 @@
   </div>
   <!-- Vue element -->
   <div id="questionnaire-detail-app">
-    <questionnaire-detail-page>
-    </questionnaire-detail-page>
+    <questionnaire-detail>
+    </questionnaire-detail>
   </div>
-{% endblock page_main_container %}
+{% endblock page_main_container_with_sidebar %}
 
 {% block js_bundle %}
   <link href="{% static 'dist/questionnaire-detail-bundle.css' %}" rel="stylesheet" />

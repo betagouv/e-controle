@@ -1,7 +1,7 @@
 import '@babel/polyfill'
 import './utils/polyfills.js'
 
-import QuestionnaireDetailPage from './questionnaires/QuestionnaireDetailPage'
+import QuestionnaireDetail from './questionnaires/QuestionnaireDetail'
 import Vue from 'vue/dist/vue.js'
 import Vuex, { mapActions } from 'vuex'
 import { store } from './store'
@@ -31,7 +31,7 @@ new Vue({
   store,
   el: '#questionnaire-detail-app',
   render: h => h(
-    QuestionnaireDetailPage,
+    QuestionnaireDetail,
     {
       props: {
         control: control,
@@ -39,10 +39,13 @@ new Vue({
       },
     }),
   methods: {
-    ...mapActions(['fetchConfig', 'fetchSessionUser']),
+    ...mapActions(['fetchConfig', 'fetchControls', 'fetchSessionUser']),
   },
   created() {
     this.fetchConfig()
     this.fetchSessionUser()
+    // TODO : we are fetching all controls for the sidebar. We could pre-fetch them from server (in
+    // the Django template)
+    this.fetchControls()
   },
 })
