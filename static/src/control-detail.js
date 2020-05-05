@@ -4,7 +4,7 @@ import Vuex, { mapActions } from 'vuex'
 import Vue from 'vue/dist/vue.js'
 
 import { store } from './store'
-import ControlPage from './controls/ControlPage'
+import ControlDetail from './controls/ControlDetail'
 
 Vue.use(Vuex)
 
@@ -28,7 +28,7 @@ new Vue({ // eslint-disable-line no-new
   store,
   el: '#control-detail-vm',
   render: h => h(
-    ControlPage,
+    ControlDetail,
     {
       props: {
         controls: controls,
@@ -37,7 +37,7 @@ new Vue({ // eslint-disable-line no-new
     }),
   methods: {
     ...mapActions(['fetchConfig', 'fetchSessionUser']),
-
+    // Todo : we don't need to both fetch session user and get it from server data.
   },
   created() {
     this.fetchConfig()
