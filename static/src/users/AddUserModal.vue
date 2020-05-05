@@ -65,13 +65,21 @@
           <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
             <i class="fe fe-bell mr-2" aria-hidden="true"></i>
             <button type="button" class="close" data-dismiss="alert"></button>
-            <p>
-              Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-              avec son email. Voici le lien à lui envoyer :
-            </p>
-            <p style="word-wrap: break-word;">
-              https://e-controle-beta.ccomptes.fr
-            </p>
+            <template v-if="site_url">
+              <p>
+                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
+                avec son email. Voici le lien à lui envoyer :
+              </p>
+              <p style="word-wrap: break-word;">
+                {{ site_url }}
+              </p>
+            </template>
+            <template v-else>
+              <p>
+                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
+                avec son email.
+              </p>
+            </template>
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
@@ -121,6 +129,7 @@ export default Vue.extend({
     ...mapFields([
       'editingControl',
       'editingProfileType',
+      'config.site_url',
     ]),
   },
   methods: {

@@ -58,13 +58,19 @@
               Erreur : {{ errorMessage }}
             </div>
             <div class="mt-2">
-              Vous pouvez essayer de recharger la page, ou
-              <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                cliquez ici pour nous contacter
-              </a>.
+              Vous pouvez essayer de recharger la page
+              <template v-if="!errorEmailLink">
+                .
+              </template>
+              <template v-else>
+                , ou
+                <a :href="'mailto:' + errorEmailLink + JSON.stringify(error)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  cliquez ici pour nous contacter
+                </a>.
+              </template>
             </div>
           </error-bar>
         </template>
@@ -87,7 +93,6 @@ const ERROR_EMAIL_BODY = 'Bonjour,%0D%0A%0D%0A' +
     'Je voudrais vous signaler une erreur lors du chargement des espaces de dépôt dans le menu.' +
     ' Les détails sont ci-dessous.%0D%0A%0D%0ACordialement,%0D%0A%0D%0A%0D%0A-----------%0D%0A'
 const ERROR_EMAIL_SUBJECT = 'Erreur de chargement des espaces de dépôt'
-const ERROR_EMAIL_TO = 'e-controle@beta.gouv.fr' // TODO : get from config
 
 export default Vue.extend({
   components: {
@@ -109,8 +114,6 @@ export default Vue.extend({
       hasError: false,
       error: undefined,
       errorMessage: undefined,
-      errorEmailLink: ERROR_EMAIL_TO + '?subject=' + ERROR_EMAIL_SUBJECT +
-          '&body=' + ERROR_EMAIL_BODY,
       isMenuBuilt: false,
       menu: [],
       showSidebar: true,
@@ -118,6 +121,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapState({
+      config: 'config',
       user: 'sessionUser',
       userLoadStatus: 'sessionUserLoadStatus',
       controls: 'controls',
@@ -126,6 +130,13 @@ export default Vue.extend({
     isLoaded() {
       return this.controlsLoadStatus === loadStatuses.SUCCESS &&
           this.userLoadStatus === loadStatuses.SUCCESS
+    },
+    errorEmailLink() {
+      if (typeof this.config.support_team_email !== 'undefined') {
+        return this.config.support_team_email + '?subject=' + ERROR_EMAIL_SUBJECT +
+          '&body=' + ERROR_EMAIL_BODY
+      }
+      return undefined
     },
   },
   watch: {
