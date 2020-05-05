@@ -37,16 +37,13 @@ import Vue from 'vue'
 
 import AddUserModal from '../users/AddUserModal'
 import ControlCard from './ControlCard'
+import { mapState } from 'vuex'
 import NoControls from './NoControls'
 import RemoveUserModal from '../users/RemoveUserModal'
 import UpdateUserModal from '../users/UpdateUserModal'
 
 export default Vue.extend({
   name: 'ControlPage',
-  props: [
-    'controls',
-    'user',
-  ],
   data: function() {
     return {
       hash: '',
@@ -58,6 +55,13 @@ export default Vue.extend({
         return this.hash === '#control-' + control.id
       })
     },
+    ...mapState({
+      // Note : we don't map sessionUserLoadStatus and controlsLoadStatus, because the only use of
+      // ControlPage is within a page which pre-fetches the data from server, so we know it is
+      // already there.
+      user: 'sessionUser',
+      controls: 'controls',
+    }),
   },
   mounted() {
     const isValidHash = (hash) => {
