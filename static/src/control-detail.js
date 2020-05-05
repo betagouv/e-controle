@@ -3,8 +3,8 @@ import '@babel/polyfill'
 import Vuex, { mapActions } from 'vuex'
 import Vue from 'vue/dist/vue.js'
 
-import { store } from './store'
 import ControlDetail from './controls/ControlDetail'
+import { loadStatuses, store } from './store'
 
 Vue.use(Vuex)
 
@@ -42,5 +42,8 @@ new Vue({ // eslint-disable-line no-new
   created() {
     this.fetchConfig()
     this.fetchSessionUser()
+    // Store the controls in the Vuex store, for use for other components (e.g. Sidebar)
+    this.$store.commit('updateControls', controls)
+    this.$store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
   },
 })
