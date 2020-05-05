@@ -124,3 +124,22 @@ def test_audited_cannot_upload_exe_file(client):
     assert response.status_code == 403
     count_after = ResponseFile.objects.count()
     assert count_after == count_before
+
+
+def test_missing_question_id_raise_bad_request(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_file.open(),
+        'no_question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 400
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before
