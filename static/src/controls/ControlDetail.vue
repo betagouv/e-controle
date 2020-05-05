@@ -4,7 +4,7 @@
       <sidebar></sidebar>
     </div>
     <div class="mt-3 mt-md-5 flex-grow-1 ml-6 ie-flex-row-child">
-      <control-page :controls="controls" :user="user">
+      <control-page>
       </control-page>
     </div>
   </div>
@@ -17,10 +17,6 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'ControlDetail',
-  props: [
-    'controls',
-    'user',
-  ],
   components: {
     ControlPage,
     Sidebar,

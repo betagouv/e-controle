@@ -27,18 +27,14 @@ const user = JSON.parse(userDataEl.textContent)
 new Vue({ // eslint-disable-line no-new
   store,
   el: '#control-detail-vm',
-  render: h => h(
+  components: {
     ControlDetail,
-    {
-      props: {
-        controls: controls,
-        user: user,
-      },
-    }),
+  },
   methods: {
     ...mapActions(['fetchConfig']),
   },
   created() {
+    // Ask the store to fetch the config from server and store it.
     this.fetchConfig()
 
     // Store the controls in the Vuex store, for use for other components (e.g. Sidebar)
