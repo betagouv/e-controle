@@ -1,4 +1,7 @@
+import magic
+
 from django import forms
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
@@ -163,6 +166,22 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         }
         action.send(**action_details)
 
+    def add_invalid_file_log(self, invalid_mime_type):
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded invalid response-file',
+            'target': self.object.question,
+            'description': f'Detected invalid mime type: {invalid_mime_type}'
+            }
+        action.send(**action_details)
+
+    def file_type_is_valid(self, file_object):
+        mime_type = magic.from_buffer(file_object.read(2048), mime=True)
+        if any(match in mime_type.lower() for match in settings.MIME_TYPE_EXCLUDE_IF_MATCHES_ANY):
+            self.add_invalid_file_log(mime_type)
+            return False
+        return True
+
     def form_valid(self, form):
         if not self.request.user.profile.is_audited:
             return HttpResponseForbidden("User is not authorized to access this ressource")
@@ -178,6 +197,8 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.question_id = question_id
         self.object.author = self.request.user
+        if not self.file_type_is_valid(self.object.file):
+            return HttpResponseForbidden("Ce type de fichier n'est pas autorisé.")
         self.object.save()
         self.add_upload_action_log()
         data = {'status': 'success'}

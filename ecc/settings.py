@@ -232,6 +232,10 @@ except locale.Error as e:
 
 ADMIN_URL = env('ADMIN_URL', default='admin/')
 
+MIME_TYPE_EXCLUDE_IF_MATCHES_ANY = env(
+    'MIME_TYPE_EXCLUDE_IF_MATCHES_ANY',
+    default=('exe', 'msi', 'octet'))
+
 STATIC_URL = '/static/'
 
 # Collect static won't work if you haven't configured this

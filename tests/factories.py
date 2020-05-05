@@ -17,6 +17,12 @@ dummy_file = SimpleUploadedFile(
     content_type='application/pdf')
 
 
+dummy_exe_file = SimpleUploadedFile(
+    name='test.exe',
+    content=open(settings.BASE_DIR + '/tests/data/test.exe', 'rb').read(),
+    content_type='application/x-dosexec')
+
+
 @register
 class UserFactory(factory.DjangoModelFactory):
     first_name = factory.LazyFunction(faker.first_name)
