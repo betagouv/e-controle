@@ -36,10 +36,12 @@
         {% block content %}
         {% endblock content %}
         {% block js_in_script_tags %}
-          <!-- We user Tabler. Tabler needs bootstrap. Bootstrap needs jquery and popper.-->
-          <script src="{% static 'tabler/jquery-3.4.1.slim.min.js' %}"></script>
-          <script src="{% static 'tabler/popper-1.16.0.min.js' %}"></script>
-          <script src="{% static 'tabler/bootstrap-4.4.1.min.js' %}"></script>
+          <!-- We user Tabler.
+            Tabler needs bootstrap.
+            Bootstrap needs jquery (and also popper, included in bootstrap.bundle.min.js).-->
+          <!-- NPM dependencies linked from node_modules, see STATICFILES_DIRS in settings.py -->
+          <script src="{% static 'jquery.slim.min.js' %}"></script>
+          <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
           <script src="{% static 'tabler/core.js' %}"></script>
         {% endblock js_in_script_tags %}
         {% block js_bundle %}{% endblock js_bundle %}
