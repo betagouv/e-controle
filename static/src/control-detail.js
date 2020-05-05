@@ -36,14 +36,16 @@ new Vue({ // eslint-disable-line no-new
       },
     }),
   methods: {
-    ...mapActions(['fetchConfig', 'fetchSessionUser']),
-    // Todo : we don't need to both fetch session user and get it from server data.
+    ...mapActions(['fetchConfig']),
   },
   created() {
     this.fetchConfig()
-    this.fetchSessionUser()
+
     // Store the controls in the Vuex store, for use for other components (e.g. Sidebar)
     this.$store.commit('updateControls', controls)
     this.$store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
+    // Store the current user in the Vuex store, for use for other components (e.g. Sidebar)
+    this.$store.commit('updateSessionUser', user)
+    this.$store.commit('updateSessionUserLoadStatus', loadStatuses.SUCCESS)
   },
 })

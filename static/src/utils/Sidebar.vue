@@ -156,6 +156,11 @@ export default Vue.extend({
       this.showSidebar = false
       return
     }
+    // If the data is already there (because it was prefetched from server), build menu now.
+    // Else the watcher on isLoaded will trigger buildMenu when the data is loaded.
+    if (this.isLoaded) {
+      this.buildMenu()
+    }
   },
   methods: {
     displayError(err) {
