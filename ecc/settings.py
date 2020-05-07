@@ -262,6 +262,11 @@ PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 
 # UserReport : tool for gathering feedback from users
 SHOW_USERREPORT = env('SHOW_USERREPORT', default=False)
+# The name that appears in the URL of the launcher script :
+# https://sak.userreport.com/<name>/launcher.js
+USERREPORT_APP_NAME = env('USERREPORT_APP_NAME', default='')
+# The media id for this site. Search for "Add a media to your UserReport account"
+USERREPORT_MEDIA_ID = env('USERREPORT_MEDIA_ID', default='')
 
 SETTINGS_EXPORT = [
     'PIWIK_SITE_ID',
@@ -269,6 +274,8 @@ SETTINGS_EXPORT = [
     'SESSION_EXPIRE_SECONDS',
     'SUPPORT_TEAM_EMAIL',
     'SHOW_USERREPORT',
+    'USERREPORT_APP_NAME',
+    'USERREPORT_MEDIA_ID',
     'WEBDAV_URL',
     'DEBUG',
 ]
