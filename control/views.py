@@ -176,7 +176,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
 
     def file_type_is_valid(self, file_object):
         mime_type = magic.from_buffer(file_object.read(2048), mime=True)
-        if any(match in mime_type.lower() for match in settings.MIME_TYPE_EXCLUDE_IF_MATCHES_ANY):
+        if any(match in mime_type.lower() for match in settings.UPLOAD_FILE_MIME_TYPE_BLACKLIST):
             self.add_invalid_file_log(mime_type)
             return False
         return True
