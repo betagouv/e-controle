@@ -29,8 +29,10 @@
         {% endif %}
         <link href="{% static 'fonts/google/source_sans_pro/source_sans_pro.css' %}" rel="stylesheet" />
 
-        <script src="https://sak.userreport.com/econtrle/launcher.js" async id="userreport-launcher-script"></script>
-        <meta name="userreport:mediaId" value="c312298f-a094-442e-8ddb-feec37c8e2df"/>
+        {% if request.user.is_authenticated and request.user.profile.is_inspector %}
+          <script src="https://sak.userreport.com/econtrle/launcher.js" async id="userreport-launcher-script"></script>
+          <meta name="userreport:mediaId" value="c312298f-a094-442e-8ddb-feec37c8e2df"/>
+        {% endif %}
         {% block extra_static_header %}{% endblock extra_static_header %}
 
     </head>
