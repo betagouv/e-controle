@@ -260,11 +260,15 @@ SENDFILE_BACKEND = env('SENDFILE_BACKEND', default='sendfile.backends.simple')
 PIWIK_TRACKER_BASE_URL = env('PIWIK_TRACKER_BASE_URL', default=None)
 PIWIK_SITE_ID = env('PIWIK_SITE_ID', default=None)
 
+# UserReport : tool for gathering feedback from users
+SHOW_USERREPORT = env('SHOW_USERREPORT', default=False)
+
 SETTINGS_EXPORT = [
     'PIWIK_SITE_ID',
     'PIWIK_TRACKER_BASE_URL',
     'SESSION_EXPIRE_SECONDS',
     'SUPPORT_TEAM_EMAIL',
+    'SHOW_USERREPORT',
     'WEBDAV_URL',
     'DEBUG',
 ]
