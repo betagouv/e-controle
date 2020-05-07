@@ -92,6 +92,23 @@ def test_as_auditor_questionnaire_is_not_listed_if_not_associated_with_user_cont
     assert 'MUST NOT BE LISTED' not in str(response.content)
 
 
+def test_as_auditor_questionnaire_is_not_listed_if_associated_with_deleted_control():
+    control_active = factories.ControlFactory()
+    control_deleted = factories.ControlFactory()
+    factories.QuestionnaireFactory(
+        control=control_active, is_draft=False, title='MUST BE LISTED')
+    factories.QuestionnaireFactory(
+        control=control_deleted, is_draft=False, title='MUST NOT BE LISTED')
+    user = utils.make_audited_user(control_active)
+    user.profile.controls.add(control_deleted)
+    control_deleted.delete()
+
+    response = list_control(user)
+    assert response.status_code == 200
+    assert 'MUST BE LISTED' in str(response.content)
+    assert 'MUST NOT BE LISTED' not in str(response.content)
+
+
 ### Create
 def create_control(user, payload):
     return utils.create_resource(client, user, 'control', payload)
