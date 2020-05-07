@@ -68,6 +68,7 @@ def test_draft_questionnaire_is_not_listed_in_controls_data_if_user_is_audited()
     assert 'MUST BE LISTED' in str(response.content)
     assert 'MUST NOT BE LISTED' not in str(response.content)
 
+
 def test_draft_questionnaire_is_listed_in_controls_data_if_user_is_inspector():
     control = factories.ControlFactory()
     factories.QuestionnaireFactory(control=control, is_draft=False, title='MUST BE LISTED')
@@ -77,6 +78,18 @@ def test_draft_questionnaire_is_listed_in_controls_data_if_user_is_inspector():
     assert response.status_code == 200
     assert 'MUST BE LISTED' in str(response.content)
     assert 'MUST ALSO BE LISTED' in str(response.content)
+
+
+def test_as_auditor_questionnaire_is_not_listed_if_not_associated_with_user_control():
+    control_in = factories.ControlFactory()
+    control_out = factories.ControlFactory()
+    factories.QuestionnaireFactory(control=control_in, is_draft=False, title='MUST BE LISTED')
+    factories.QuestionnaireFactory(control=control_out, is_draft=False, title='MUST NOT BE LISTED')
+    user = utils.make_audited_user(control_in)
+    response = list_control(user)
+    assert response.status_code == 200
+    assert 'MUST BE LISTED' in str(response.content)
+    assert 'MUST NOT BE LISTED' not in str(response.content)
 
 
 ### Create
