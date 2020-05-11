@@ -136,6 +136,7 @@ export default Vue.extend({
   components: {
     Breadcrumbs,
     QuestionBox,
+    // TODO : we have vuex in this component now, so we could use the normal QuestionFileList
     QuestionFileListWithoutVuex,
     QuestionnaireMetadata,
     RequestEditorButton,
