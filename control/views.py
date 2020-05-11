@@ -105,6 +105,14 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         context = super().get_context_data(**kwargs)
         control = self.get_object().control
         context['control_json'] = json.dumps(ControlSerializer(instance=control).data)
+
+        control_list = context['controls']
+        controls_serialized = []
+        for control in control_list:
+            control_serialized = ControlDetailControlSerializer(instance=control).data
+            controls_serialized.append(control_serialized)
+        context['controls_json'] = json.dumps(controls_serialized)
+
         return context
 
     def add_access_log_entry(self):

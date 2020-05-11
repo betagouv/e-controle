@@ -4,7 +4,7 @@ import './utils/polyfills.js'
 import QuestionnaireDetail from './questionnaires/QuestionnaireDetail'
 import Vue from 'vue/dist/vue.js'
 import Vuex, { mapActions } from 'vuex'
-import { store } from './store'
+import { loadStatuses, store } from './store'
 
 Vue.use(Vuex)
 
@@ -19,8 +19,10 @@ instead of passing it through server templates.
 It does adds a delay for the user, since they will wait for the ajax-requested data.
 */
 const controlDataEl = document.getElementById('control-data')
+const controlsDataEl = document.getElementById('controls-data')
 // decode and parse the content of the div
 const control = JSON.parse(controlDataEl.textContent)
+const controls = JSON.parse(controlsDataEl.textContent)
 
 // This data is safe because not user-provided. But we have to get it like this too.
 const questionnaireIdDataEl = document.getElementById('questionnaire-id-data')
@@ -44,8 +46,9 @@ new Vue({
   created() {
     this.fetchConfig()
     this.fetchSessionUser()
-    // TODO : we are fetching all controls for the sidebar. We could pre-fetch them from server (in
-    // the Django template)
-    this.fetchControls()
+
+    // Store the controls in the Vuex store
+    this.$store.commit('updateControls', controls)
+    this.$store.commit('updateControlsLoadStatus', loadStatuses.SUCCESS)
   },
 })
