@@ -1,4 +1,3 @@
-from django.shortcuts import reverse
 from pytest import mark
 from rest_framework.test import APIClient
 

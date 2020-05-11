@@ -101,7 +101,7 @@ class ControlSerializerWithoutDraft(ControlSerializer):
     questionnaires = serializers.SerializerMethodField()
 
     def get_questionnaires(self, obj):
-        questionnaires = Questionnaire.objects.filter(is_draft=False)
+        questionnaires = obj.questionnaires.filter(is_draft=False)
         serializer = QuestionnaireSerializer(instance=questionnaires, many=True)
         return serializer.data
 
