@@ -265,8 +265,6 @@ SHOW_USERREPORT = env('SHOW_USERREPORT', default=False)
 # The name that appears in the URL of the launcher script :
 # https://sak.userreport.com/<name>/launcher.js
 USERREPORT_APP_NAME = env('USERREPORT_APP_NAME', default='')
-# The media id for this site. Search for "Add a media to your UserReport account"
-USERREPORT_MEDIA_ID = env('USERREPORT_MEDIA_ID', default='')
 # If you want to show UserReport to audited users as well. By default, it is only shown to
 # inspectors to avaoid leaking info about controls by accident.
 USERREPORT_FOR_AUDITED_USERS = env('USERREPORT_FOR_AUDITED_USERS', default=False)
@@ -278,7 +276,6 @@ SETTINGS_EXPORT = [
     'SUPPORT_TEAM_EMAIL',
     'SHOW_USERREPORT',
     'USERREPORT_APP_NAME',
-    'USERREPORT_MEDIA_ID',
     'USERREPORT_FOR_AUDITED_USERS',
     'WEBDAV_URL',
     'DEBUG',

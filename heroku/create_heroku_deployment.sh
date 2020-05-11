@@ -53,6 +53,8 @@ heroku config:set --app ${INSTANCE_NAME} STAGING_DATABASE_URL=postgres://ijrphgd
 # Add node buildpack, so that the frontend code gets built. The python buildback should be automatically installed by heroku.
 # heroku buildpacks:set --app ${INSTANCE_NAME} heroku/nodejs # This times out, I don't know why. Add in the dashboard on heroku website by hand.
 # Note : the node buildpack needs to be first in the list, and the python second. That's because the
+# python server has to fetch some files from node_modules into the static files, so you want
+# node_modules to be there before the puthon buildpack runs.
 
 # Next steps :
 # push code : it triggers deployment
