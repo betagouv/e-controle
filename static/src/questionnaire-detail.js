@@ -18,15 +18,15 @@ A simpler safe way to get unsafe server data into Vue would be to get it through
 instead of passing it through server templates.
 It does adds a delay for the user, since they will wait for the ajax-requested data.
 */
-const controlDataEl = document.getElementById('control-data')
 const controlsDataEl = document.getElementById('controls-data')
 // decode and parse the content of the div
-const control = JSON.parse(controlDataEl.textContent)
 const controls = JSON.parse(controlsDataEl.textContent)
 
 // This data is safe because not user-provided. But we have to get it like this too.
 const questionnaireIdDataEl = document.getElementById('questionnaire-id-data')
 const questionnaireId = Number(questionnaireIdDataEl.textContent.trim())
+const controlIdDataEl = document.getElementById('control-id-data')
+const controlId = Number(controlIdDataEl.textContent.trim())
 
 // eslint-disable-next-line no-new
 new Vue({
@@ -36,7 +36,7 @@ new Vue({
     QuestionnaireDetail,
     {
       props: {
-        control: control,
+        controlId: controlId,
         questionnaireId: questionnaireId,
       },
     }),

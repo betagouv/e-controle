@@ -15,11 +15,11 @@
 
 {% block page_main_container_with_sidebar %}
   <!-- No mixing of server templates + vue templates. Pass the server data outside of vue element-->
-  <div id="control-data" style="display: none">
-    {{ control_json }}
-  </div>
   <div id="controls-data" style="display: none">
     {{ controls_json }}
+  </div>
+  <div id="control-id-data" style="display: none">
+    {{ questionnaire.control.id }}
   </div>
   <div id="questionnaire-id-data" style="display: none">
     {{ questionnaire.id }}

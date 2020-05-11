@@ -2,7 +2,7 @@
   <div class="mx-3">
     <breadcrumbs :control="control"></breadcrumbs>
     <template v-if="isLoaded && user.is_inspector">
-      <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft">
+      <request-editor-button :questionnaire='questionnaire' v-if="questionnaire.is_draft">
       </request-editor-button>
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus
@@ -105,15 +105,22 @@ import WebdavTip from '../controls/WebdavTip'
 export default Vue.extend({
   name: 'QuestionnaireDetailPage',
   props: {
-    control: Object,
+    controlId: Number,
     questionnaireId: Number,
   },
   computed: {
+    control() {
+      return this.controls.find(control => control.id === this.controlId)
+    },
     questionnaire() {
       return this.control.questionnaires.find(
         questionnaire => questionnaire.id === this.questionnaireId)
     },
     ...mapState({
+      // Note : we don't map controlsLoadStatus, because the only use of
+      // this component is within a page which pre-fetches the data from server, so we know it is
+      // already there.
+      controls: 'controls',
       user: 'sessionUser',
       userLoadStatus: 'sessionUserLoadStatus',
     }),
