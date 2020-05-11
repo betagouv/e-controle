@@ -300,6 +300,9 @@ export default Vue.extend({
   /* Don't show elements sticking out of the sidebar */
   .sidebar-body {
     overflow: hidden;
+    /* Fix for IE : use inherit instead of unset, because IE doesn't know unset. This was breaking
+    the modals placed inside the sidebar. */
+    z-index: inherit;
   }
 
   /* Add borders to items */
