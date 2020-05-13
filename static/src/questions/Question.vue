@@ -60,9 +60,6 @@ export default Vue.extend({
     EventBus.$on('response-files-updated-' + this.question.id, responseFiles => {
       this.responseFileCount = numNotDeleted(responseFiles)
     })
-    EventBus.$on('question-file-count-changed-' + this.question.id, (questionFileCount) => {
-      this.questionFileCount = questionFileCount
-    })
   },
 })
 </script>
