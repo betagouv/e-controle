@@ -61,8 +61,8 @@
                         :question-numbering="qIndex + 1"
                         :question="question">
 
-            <question-file-list-without-vuex :question-id="question.id">
-            </question-file-list-without-vuex>
+            <question-file-list :files="question.question_files">
+            </question-file-list>
             <response-file-list :question="question"
                                 :questionnaire-id="questionnaire.id"
                                 :is-audited="isLoaded && user.is_audited">
@@ -93,7 +93,7 @@ import Breadcrumbs from '../utils/Breadcrumbs'
 import { loadStatuses } from '../store'
 import { mapState } from 'vuex'
 import QuestionBox from '../questions/QuestionBox'
-import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
+import QuestionFileList from '../questions/QuestionFileList'
 import QuestionnaireMetadata from './QuestionnaireMetadata'
 import RequestEditorButton from '../editors/RequestEditorButton'
 import ResponseDropzone from '../questions/ResponseDropzone'
@@ -136,8 +136,7 @@ export default Vue.extend({
   components: {
     Breadcrumbs,
     QuestionBox,
-    // TODO : we have vuex in this component now, so we could use the normal QuestionFileList
-    QuestionFileListWithoutVuex,
+    QuestionFileList,
     QuestionnaireMetadata,
     RequestEditorButton,
     ResponseDropzone,

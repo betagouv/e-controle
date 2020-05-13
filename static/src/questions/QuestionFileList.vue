@@ -35,7 +35,10 @@ import Vue from 'vue'
 export default Vue.extend({
   props: {
     files: Array,
-    withDelete: Boolean,
+    withDelete: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
