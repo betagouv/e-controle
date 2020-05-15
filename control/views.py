@@ -4,7 +4,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -188,7 +188,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         try:
             question_id = form.data['question_id']
         except KeyError:
-            raise forms.ValidationError("Question ID was missing on file upload")
+            return HttpResponseBadRequest("Question ID was missing on file upload")
         get_object_or_404(
             Question,
             pk=question_id,
