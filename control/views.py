@@ -170,14 +170,13 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
             'sender': self.request.user,
             'verb': 'uploaded invalid response-file',
             'target': self.object.question,
-            'description': f'Detected invalid mime type: {invalid_mime_type}'
+            'description': f'Detected invalid mime type: "{invalid_mime_type}"'
             }
         action.send(**action_details)
 
-    def file_type_is_valid(self, file_object):
-        mime_type = magic.from_buffer(file_object.read(2048), mime=True)
-        if any(match in mime_type.lower() for match in settings.UPLOAD_FILE_MIME_TYPE_BLACKLIST):
-            self.add_invalid_file_log(mime_type)
+    def file_mime_type_is_valid(self, mime_type):
+        blacklist = settings.UPLOAD_FILE_MIME_TYPE_BLACKLIST
+        if any(match.lower() in mime_type.lower() for match in blacklist):
             return False
         return True
 
@@ -197,8 +196,10 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object.question_id = question_id
         self.object.author = self.request.user
         file_object = self.object.file
-        if not self.file_type_is_valid(file_object):
-            return HttpResponseForbidden("Ce type de fichier n'est pas autorisé.")
+        mime_type = magic.from_buffer(file_object.read(2048), mime=True)
+        if not self.file_mime_type_is_valid(mime_type):
+            self.add_invalid_file_log(mime_type)
+            return HttpResponseForbidden(f"Ce type de fichier n'est pas autorisé: {mime_type}")
         MAX_SIZE_BYTES = 1048576 * settings.UPLOAD_FILE_MAX_SIZE_MB
         if file_object.file.size > MAX_SIZE_BYTES:
             return HttpResponseForbidden(
