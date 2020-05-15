@@ -235,7 +235,7 @@ ADMIN_URL = env('ADMIN_URL', default='admin/')
 # Exclude incoming file if its mime type contains any of the following text
 UPLOAD_FILE_MIME_TYPE_BLACKLIST = env(
     'UPLOAD_FILE_MIME_TYPE_BLACKLIST',
-    default=('exe', 'msi', 'octet'))
+    default=('exe', 'msi', 'octet', 'x-', 'script'))
 
 UPLOAD_FILE_MAX_SIZE_MB = env('UPLOAD_FILE_MAX_SIZE_MB', default=256)
 
