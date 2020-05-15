@@ -1,6 +1,5 @@
 import magic
 
-from django import forms
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -197,8 +196,14 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.question_id = question_id
         self.object.author = self.request.user
-        if not self.file_type_is_valid(self.object.file):
+        file_object = self.object.file
+        if not self.file_type_is_valid(file_object):
             return HttpResponseForbidden("Ce type de fichier n'est pas autorisé.")
+        MAX_SIZE_BYTES = 1048576 * settings.UPLOAD_FILE_MAX_SIZE_MB
+        if file_object.file.size > MAX_SIZE_BYTES:
+            return HttpResponseForbidden(
+                f"La taille du fichier dépasse la limite autorisée "
+                f"de {settings.UPLOAD_FILE_MAX_SIZE_MB}Mo.")
         self.object.save()
         self.add_upload_action_log()
         data = {'status': 'success'}

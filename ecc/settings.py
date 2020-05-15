@@ -236,6 +236,8 @@ MIME_TYPE_EXCLUDE_IF_MATCHES_ANY = env(
     'MIME_TYPE_EXCLUDE_IF_MATCHES_ANY',
     default=('exe', 'msi', 'octet'))
 
+UPLOAD_FILE_MAX_SIZE_MB = env('UPLOAD_FILE_MAX_SIZE_MB', default=256)
+
 STATIC_URL = '/static/'
 
 # Collect static won't work if you haven't configured this
