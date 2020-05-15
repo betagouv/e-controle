@@ -232,9 +232,10 @@ except locale.Error as e:
 
 ADMIN_URL = env('ADMIN_URL', default='admin/')
 
-MIME_TYPE_EXCLUDE_IF_MATCHES_ANY = env(
-    'MIME_TYPE_EXCLUDE_IF_MATCHES_ANY',
-    default=('exe', 'msi', 'octet'))
+# Exclude incoming file if its mime type contains any of the following text
+UPLOAD_FILE_MIME_TYPE_BLACKLIST = env(
+    'UPLOAD_FILE_MIME_TYPE_BLACKLIST',
+    default=('exe', 'msi', 'octet', 'x-', 'script'))
 
 UPLOAD_FILE_MAX_SIZE_MB = env('UPLOAD_FILE_MAX_SIZE_MB', default=256)
 
