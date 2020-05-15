@@ -163,3 +163,23 @@ def test_audited_cannot_upload_file_if_size_exceed(client):
     assert response.status_code == 403
     count_after = ResponseFile.objects.count()
     assert count_after == count_before
+
+
+@override_settings(UPLOAD_FILE_EXTENSION_BLACKLIST=('.sh',))
+def test_audited_cannot_upload_file_if_blaklist_extension(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_text_file_with_sh_extension.open(),
+        'question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 403
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before

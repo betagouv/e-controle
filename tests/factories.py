@@ -22,6 +22,11 @@ dummy_exe_file = SimpleUploadedFile(
     content=open(settings.BASE_DIR + '/tests/data/test.exe', 'rb').read(),
     content_type='application/x-dosexec')
 
+dummy_text_file_with_sh_extension = SimpleUploadedFile(
+    name='test.sh',
+    content=open(settings.BASE_DIR + '/tests/data/test.sh', 'rb').read(),
+    content_type='text/plain')
+
 
 @register
 class UserFactory(factory.DjangoModelFactory):
