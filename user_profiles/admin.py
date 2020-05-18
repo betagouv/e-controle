@@ -23,6 +23,7 @@ class UserProfileInline(admin.StackedInline):
 
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
+    list_display = ('id', 'username', 'first_name', 'last_name', 'is_staff',)
     list_filter = ('profile__profile_type', 'profile__controls')
 
 
