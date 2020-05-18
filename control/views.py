@@ -216,7 +216,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         if not self.file_extension_is_valid(file_extension):
             self.add_invalid_extension_log(file_extension)
             return HttpResponseForbidden(
-                f"Cet extension de fichier n'est pas autorisé: {file_extension}")
+                f"Cette extension de fichier n'est pas autorisée : {file_extension}")
         mime_type = magic.from_buffer(file_object.read(2048), mime=True)
         if not self.file_mime_type_is_valid(mime_type):
             self.add_invalid_mime_type_log(mime_type)
