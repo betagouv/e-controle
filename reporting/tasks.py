@@ -2,6 +2,7 @@ import logging
 import time
 from datetime import timedelta
 
+from django.conf import settings
 from django.utils import timezone
 
 from actstream import action
@@ -23,9 +24,6 @@ logger.addHandler(console_handler)
 
 ACTION_LOG_VERB_SENT = 'files report email sent'
 ACTION_LOG_VERB_NOT_SENT = 'files report email not sent'
-
-# Time we wait in between emails, to space them out and avoid going over our allowed email quota
-EMAIL_SPACING_TIME_SECONDS = 60
 
 
 def get_date_cutoff(control):
@@ -101,6 +99,7 @@ def send_files_report():
             logger.info(f'No email was sent for control {control.id}')
             action.send(sender=control, verb=ACTION_LOG_VERB_NOT_SENT)
 
+        EMAIL_SPACING_TIME_SECONDS = settings.EMAIL_SPACING_TIME_MILLIS / 1000
         logger.info(
             f'Waiting {EMAIL_SPACING_TIME_SECONDS}s after emailing for control {control.id}')
         time.sleep(EMAIL_SPACING_TIME_SECONDS)

@@ -195,6 +195,9 @@ EMAIL_TIMEOUT = env('EMAIL_TIMEOUT', default=3)
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 
+# Time we wait in between emails, to space them out and avoid going over our allowed email quota
+EMAIL_SPACING_TIME_MILLIS = env('EMAIL_SPACING_TIME_MILLIS', default=10000)
+
 SEND_EMAIL_WHEN_USER_ADDED = env('SEND_EMAIL_WHEN_USER_ADDED', default=False)
 SEND_EMAIL_WHEN_USER_REMOVED = env('SEND_EMAIL_WHEN_USER_REMOVED', default=False)
 
