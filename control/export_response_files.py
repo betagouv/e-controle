@@ -22,7 +22,7 @@ def generate_response_file_list_in_csv(questionnaire):
                       theme.title,
                       f'{theme.numbering}.{question.numbering}',
                       file.basename,
-                      'Mer 13 mai 2020 à 16:09:33',  # todo real formatted date
+                      file.created.strftime('%a %d %B %Y à %X'),
                       file.created,
                       f'{file.author.first_name} {file.author.last_name}'
                     ])
