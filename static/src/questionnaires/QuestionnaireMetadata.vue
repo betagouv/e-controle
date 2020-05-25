@@ -15,20 +15,29 @@
           {{ questionnaire.end_date | DateFormat}}
         </p>
         <div class="flex-row justify-content-end">
-          <div v-if="withTrash" class="mr-2">
+          <div v-if="withTrash" class="mx-2">
             <a class="btn btn-secondary"
               :href="trashUrl"
               title="Aller à la corbeille">
               <i class="fe fe-trash-2 mr-2"></i>Aller à la corbeille
             </a>
           </div>
-          <div>
+          <div class="mx-2">
             <a class="btn btn-secondary"
               :href="exportUrl"
               target="_blank"
               rel="noopener noreferrer"
               title="Exporter ce questionnaire">
               <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
+            </a>
+          </div>
+          <div class="mx-2">
+            <a class="btn btn-secondary"
+              :href="exportResponseFilesUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Exporter la liste des réponses">
+              <i class="far fa-file-excel mr-2"></i>Exporter la liste des réponses
             </a>
           </div>
         </div>
@@ -52,6 +61,9 @@ export default Vue.extend({
   computed: {
     exportUrl() {
       return backendUrls['questionnaire-export'](this.questionnaire.id)
+    },
+    exportResponseFilesUrl() {
+      return ''
     },
     trashUrl() {
       return backendUrls.trash(this.questionnaire.id)
