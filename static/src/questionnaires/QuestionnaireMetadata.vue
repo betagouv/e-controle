@@ -85,7 +85,7 @@ export default Vue.extend({
       return backendUrls['questionnaire-export'](this.questionnaire.id)
     },
     exportResponseFilesXlsxUrl() {
-      return '/static/docs/réponses_questionnaire_1.xlsx'
+      return backendUrls['responses-export'](this.questionnaire.id)
     },
     exportResponseFilesPdfUrl() {
       return '/static/docs/réponses_questionnaire_1.pdf'

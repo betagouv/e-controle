@@ -18,6 +18,7 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
+from .export_response_files import generate_response_file_list_in_csv
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
 from .serializers import ControlDetailUserSerializer
 from .serializers import ControlSerializer, ControlDetailControlSerializer
@@ -310,3 +311,24 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
     file_type = 'response-file'
+
+
+class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
+    model = Questionnaire
+
+    def get_queryset(self):
+        # todo : restrict access to inspectors only
+        user_controls = self.request.user.profile.controls.active()
+        queryset = Questionnaire.objects.filter(control__in=user_controls)
+        queryset = queryset.filter(is_draft=False)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        questionnaire = self.get_object()
+        file = generate_response_file_list_in_csv(questionnaire)
+        # todo log action ?
+        return sendfile(
+            request,
+            file.name,
+            attachment=True,
+            attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.csv')
