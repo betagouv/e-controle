@@ -22,41 +22,43 @@
               <i class="fe fe-trash-2 mr-2"></i>Aller à la corbeille
             </a>
           </div>
-          <div class="mx-2">
-            <a class="btn btn-secondary"
-              :href="exportUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Exporter ce questionnaire">
-              <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
-            </a>
-          </div>
 
           <button type="button"
                   class="btn btn-secondary dropdown-toggle dropdown-toggle-split mx-2"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false">
+            <i class="fas fa-file-export mr-2"></i>
             <span class="mr-2">
-              Exporter la liste des réponses
+              Exporter
             </span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-header">Questionnaire</div>
+            <a class="dropdown-item"
+              :href="exportUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Format Word (.docx)">
+              <i class="fe fe-file-text mr-2"></i>Format Word (.docx)
+            </a>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-header">Liste des réponses déposées</div>
             <a class="dropdown-item"
                :href="exportResponseFilesXlsxUrl"
                target="_blank"
                rel="noopener noreferrer"
-               title="Format xlsx">
+               title="Format Excel (.xlsx)">
               <i class="far fa-file-excel mr-2"></i>
-              Format xlsx
+              Format Excel (.xlsx)
             </a>
             <a class="dropdown-item"
                :href="exportResponseFilesPdfUrl"
                target="_blank"
                rel="noopener noreferrer"
-               title="Format PDF">
+               title="Format PDF (.pdf)">
               <i class="far fa-file-pdf mr-2"></i>
-              Format PDF
+              Format PDF (.pdf)
             </a>
           </div>
 
@@ -83,10 +85,10 @@ export default Vue.extend({
       return backendUrls['questionnaire-export'](this.questionnaire.id)
     },
     exportResponseFilesXlsxUrl() {
-      return '/static/docs/réponses_q1.xlsx'
+      return '/static/docs/réponses_questionnaire_1.xlsx'
     },
     exportResponseFilesPdfUrl() {
-      return '/static/docs/réponses_q1.pdf'
+      return '/static/docs/réponses_questionnaire_1.pdf'
     },
     trashUrl() {
       return backendUrls.trash(this.questionnaire.id)
