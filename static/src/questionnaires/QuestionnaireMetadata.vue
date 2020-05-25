@@ -31,15 +31,35 @@
               <i class="fe fe-file-text mr-2"></i>Exporter ce questionnaire
             </a>
           </div>
-          <div class="mx-2">
-            <a class="btn btn-secondary"
-              :href="exportResponseFilesUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Exporter la liste des réponses">
-              <i class="far fa-file-excel mr-2"></i>Exporter la liste des réponses
+
+          <button type="button"
+                  class="btn btn-secondary dropdown-toggle dropdown-toggle-split mx-2"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">
+            <span class="mr-2">
+              Exporter la liste des réponses
+            </span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <a class="dropdown-item"
+               :href="exportResponseFilesXlsxUrl"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Format xlsx">
+              <i class="far fa-file-excel mr-2"></i>
+              Format xlsx
+            </a>
+            <a class="dropdown-item"
+               :href="exportResponseFilesPdfUrl"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Format PDF">
+              <i class="far fa-file-pdf mr-2"></i>
+              Format PDF
             </a>
           </div>
+
         </div>
 
       </div>
@@ -62,8 +82,11 @@ export default Vue.extend({
     exportUrl() {
       return backendUrls['questionnaire-export'](this.questionnaire.id)
     },
-    exportResponseFilesUrl() {
-      return ''
+    exportResponseFilesXlsxUrl() {
+      return '/static/docs/réponses_q1.xlsx'
+    },
+    exportResponseFilesPdfUrl() {
+      return '/static/docs/réponses_q1.pdf'
     },
     trashUrl() {
       return backendUrls.trash(this.questionnaire.id)
