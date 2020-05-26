@@ -325,10 +325,13 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         questionnaire = self.get_object()
-        file = generate_response_file_list_in_csv(questionnaire)
-        # todo log action ?
-        return sendfile(
-            request,
-            file.name,
-            attachment=True,
-            attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.csv')
+        try:
+            file = generate_response_file_list_in_csv(questionnaire)
+            # todo log action ?
+            return sendfile(
+                request,
+                file.name,
+                attachment=True,
+                attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.csv')
+        finally:
+            os.remove(file.name)

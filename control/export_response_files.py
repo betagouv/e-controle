@@ -3,6 +3,9 @@ from tempfile import NamedTemporaryFile
 
 
 def generate_response_file_list_in_csv(questionnaire):
+    """
+    This creates a temp file. Delete it when you are done with it.
+    """
     with NamedTemporaryFile(delete=False, mode='w') as f:
         csvwriter = csv.writer(f, quoting=csv.QUOTE_ALL)
         csvwriter.writerow([
@@ -28,4 +31,3 @@ def generate_response_file_list_in_csv(questionnaire):
                     ])
 
         return f
-    # todo delete temp file when we are done
