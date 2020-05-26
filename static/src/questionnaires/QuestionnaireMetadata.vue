@@ -45,12 +45,12 @@
             <div class="dropdown-divider"></div>
             <div class="dropdown-header">Liste des réponses déposées</div>
             <a class="dropdown-item"
-               :href="exportResponseFilesCsvUrl"
+               :href="exportResponseFilesXlsxUrl"
                target="_blank"
                rel="noopener noreferrer"
-               title="Format Excel (.csv)">
+               title="Format Excel (.xlsx)">
               <i class="far fa-file-excel mr-2"></i>
-              Format Excel (.csv)
+              Format Excel (.xlsx)
             </a>
             <a class="dropdown-item"
                :href="exportResponseFilesPdfUrl"
@@ -84,7 +84,7 @@ export default Vue.extend({
     exportUrl() {
       return backendUrls['questionnaire-export'](this.questionnaire.id)
     },
-    exportResponseFilesCsvUrl() {
+    exportResponseFilesXlsxUrl() {
       return backendUrls['responses-export'](this.questionnaire.id)
     },
     exportResponseFilesPdfUrl() {

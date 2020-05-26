@@ -18,7 +18,7 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
-from .export_response_files import generate_response_file_list_in_csv
+from .export_response_files import generate_response_file_list_in_xlsx
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
 from .serializers import ControlDetailUserSerializer
 from .serializers import ControlSerializer, ControlDetailControlSerializer
@@ -326,12 +326,12 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         questionnaire = self.get_object()
         try:
-            file = generate_response_file_list_in_csv(questionnaire)
+            file = generate_response_file_list_in_xlsx(questionnaire)
             # todo log action ?
             return sendfile(
                 request,
                 file.name,
                 attachment=True,
-                attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.csv')
+                attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.xlsx')
         finally:
             os.remove(file.name)
