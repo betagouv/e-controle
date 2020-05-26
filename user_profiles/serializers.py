@@ -37,8 +37,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
         profile_data = validated_data
         control = profile_data.pop('control', None)
         user_data = profile_data.pop('user')
-        user_data['username'] = user_data['email']
-        profile = UserProfile.objects.filter(user__username=user_data.get('email')).first()
+
+        # lowercase the email
+        email = user_data.get('email')
+        if email:
+            email = email.lower()
+        user_data['username'] = email
+
+        # Find if user already exists.
+        profile = UserProfile.objects.filter(user__username=email).first()
+
         session_user = self.context['request'].user
         if control and control not in session_user.profile.controls.active():
             raise serializers.ValidationError(
