@@ -42,15 +42,27 @@ def generate_response_file_list_in_xlsx(questionnaire):
         nonlocal row_counter
         worksheet.write_row(row_counter, 0, row_contents)
         row_counter += 1
+        return row_counter - 1
 
     with NamedTemporaryFile(delete=False, mode='w') as f:
         with xlsxwriter.Workbook(f.name, {'remove_timezone': True}) as workbook:
             worksheet = workbook.add_worksheet()
+
+            add_row(worksheet, [ f'Procédure : { questionnaire.control.title}' ])
+            add_row(worksheet, [ f'Organisme : { questionnaire.control.depositing_organization}' ])
+            add_row(worksheet, [ f'Dossier : { questionnaire.control.reference_code}' ])
+            add_row(worksheet, [])
+            add_row(worksheet, [ f'Questionnaire { questionnaire.numbering } : { questionnaire.title}' ])
+            if questionnaire.end_date:
+                add_row(worksheet, [ f'Date limite de dépôt : { questionnaire.end_date_display}' ])
+            add_row(worksheet, [])
+
+            header_row = add_row(worksheet, HEADER)
+            # Set row widths
             worksheet.set_column(1, 1, 30)
             worksheet.set_column(3, 6, 30)
-            worksheet.set_row(0, None, workbook.add_format({'text_wrap': True}))
-
-            add_row(worksheet, HEADER)
+            # Set text wrapping for headers
+            worksheet.set_row(header_row, None, workbook.add_format({'text_wrap': True}))
 
             for theme in questionnaire.themes.all():
                 for question in theme.questions.all():
