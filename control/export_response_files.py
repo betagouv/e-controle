@@ -37,22 +37,24 @@ def generate_response_file_list_in_csv(questionnaire):
 
 
 def generate_response_file_list_in_xlsx(questionnaire):
-    # todo write function like write_and_increment_counter
+    row_counter = 0
+    def add_row(worksheet, row_contents):
+        nonlocal row_counter
+        worksheet.write_row(row_counter, 0, row_contents)
+        row_counter += 1
+
     with NamedTemporaryFile(delete=False, mode='w') as f:
         with xlsxwriter.Workbook(f.name, {'remove_timezone': True}) as workbook:
             worksheet = workbook.add_worksheet()
-            rowCounter = 0
 
-            worksheet.write_row(rowCounter, 0, HEADER)
-            rowCounter += 1
+            add_row(worksheet, HEADER)
             # todo set row width for readability
 
             for theme in questionnaire.themes.all():
                 for question in theme.questions.all():
                     for file in question.response_files.all():
-                        worksheet.write_row(
-                          rowCounter,
-                          0,
+                        add_row(
+                          worksheet,
                           [
                             theme.numbering,
                             theme.title,
@@ -62,6 +64,5 @@ def generate_response_file_list_in_xlsx(questionnaire):
                             file.created.strftime('%Y-%m-%d %H:%M:%S'),
                             f'{file.author.first_name} {file.author.last_name}'
                           ])
-                        rowCounter += 1
 
         return f
