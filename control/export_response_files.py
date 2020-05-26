@@ -46,9 +46,11 @@ def generate_response_file_list_in_xlsx(questionnaire):
     with NamedTemporaryFile(delete=False, mode='w') as f:
         with xlsxwriter.Workbook(f.name, {'remove_timezone': True}) as workbook:
             worksheet = workbook.add_worksheet()
+            worksheet.set_column(1, 1, 30)
+            worksheet.set_column(3, 6, 30)
+            worksheet.set_row(0, None, workbook.add_format({'text_wrap': True}))
 
             add_row(worksheet, HEADER)
-            # todo set row width for readability
 
             for theme in questionnaire.themes.all():
                 for question in theme.questions.all():
