@@ -238,7 +238,7 @@ ADMIN_URL = env('ADMIN_URL', default='admin/')
 # Exclude incoming file if its mime type contains any of the following text
 UPLOAD_FILE_MIME_TYPE_BLACKLIST = env(
     'UPLOAD_FILE_MIME_TYPE_BLACKLIST',
-    default=('exe', 'msi', 'x-', 'script'))
+    default=('exe', 'msi', 'script'))
 
 UPLOAD_FILE_EXTENSION_BLACKLIST = env('UPLOAD_FILE_EXTENSION_BLACKLIST', default=(
     '.exe', '.com', '.dll', '.pif', '.vbs', '.vb', '.vbe', '.ps1', '.ps1xml', '.ps2', '.ps2xml',
