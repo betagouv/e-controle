@@ -1,16 +1,17 @@
 import csv
 import xlsxwriter
 
+from datetime import date
 from tempfile import NamedTemporaryFile
 
 HEADER = [
-          'Thème (numéro)',
-          'Thème (titre)',
-          'Question (numéro)',
+          'N° de thème',
+          'Thème',
+          'N° de question',
+          'Question',
           'Nom du fichier',
+          'Déposé par',
           'Horodatage de dépôt',
-          'Horodatage de dépôt, format triable par ordre chronologique',
-          'Personne qui a déposé',
         ]
 
 def generate_response_file_list_in_csv(questionnaire):
@@ -48,13 +49,14 @@ def generate_response_file_list_in_xlsx(questionnaire):
         with xlsxwriter.Workbook(f.name, {'remove_timezone': True}) as workbook:
             worksheet = workbook.add_worksheet()
 
-            add_row(worksheet, [ f'Procédure : { questionnaire.control.title}' ])
             add_row(worksheet, [ f'Organisme : { questionnaire.control.depositing_organization}' ])
-            add_row(worksheet, [ f'Dossier : { questionnaire.control.reference_code}' ])
+            add_row(worksheet, [ f'Procédure : { questionnaire.control.title}' ])
+            add_row(worksheet, [ f'Dossier : /{ questionnaire.control.reference_code}' ])
             add_row(worksheet, [])
             add_row(worksheet, [ f'Questionnaire { questionnaire.numbering } : { questionnaire.title}' ])
             if questionnaire.end_date:
-                add_row(worksheet, [ f'Date limite de dépôt : { questionnaire.end_date_display}' ])
+                add_row(worksheet, [ f'Date limite de dépôt : { questionnaire.end_date_display }' ])
+            add_row(worksheet, [ f'Exporté le : { date.today().strftime("%A %d %B %Y") }' ])
             add_row(worksheet, [])
 
             header_row = add_row(worksheet, HEADER)
@@ -73,10 +75,10 @@ def generate_response_file_list_in_xlsx(questionnaire):
                             theme.numbering,
                             theme.title,
                             f'{theme.numbering}.{question.numbering}',
+                            question.description,
                             file.basename,
-                            file.created.strftime('%a %d %B %Y à %X'),
-                            file.created.strftime('%Y-%m-%d %H:%M:%S'),
-                            f'{file.author.first_name} {file.author.last_name}'
+                            f'{file.author.first_name} {file.author.last_name}',
+                            file.created.strftime('%Y-%m-%d %H:%M:%S')
                           ])
 
         return f
