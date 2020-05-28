@@ -15,6 +15,7 @@ export const loadStatuses = {
 export const store = new Vuex.Store({
   state: {
     config: {},
+    configLoadStatus: loadStatuses.LOADING,
     controls: [],
     controlsLoadStatus: loadStatuses.LOADING,
     currentQuestionnaire: {},
@@ -38,6 +39,9 @@ export const store = new Vuex.Store({
     updateConfig(state, config) {
       state.config = config
     },
+    updateConfigLoadStatus(state, newStatus) {
+      state.configLoadStatus = newStatus
+    },
     updateControls(state, controls) {
       state.controls = controls
     },
@@ -50,6 +54,10 @@ export const store = new Vuex.Store({
       axios.get(backendUrls.config()).then((response) => {
         console.debug('Store got config', response.data)
         commit('updateConfig', response.data)
+        commit('updateConfigLoadStatus', loadStatuses.SUCCESS)
+      }).catch(err => {
+        console.error('Store got error fetching config', err)
+        commit('updateConfigLoadStatus', loadStatuses.ERROR)
       })
     },
     fetchSessionUser({ commit }) {
