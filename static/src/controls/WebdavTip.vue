@@ -83,6 +83,7 @@
       </div>
     </empty-modal>
     <video-modal
+      v-if="canDisplayVideoPlayer"
       :id="'file-explorer-video-modal-' + controlId"
       :video-versions="[
         {
@@ -102,6 +103,7 @@
 <script>
 import { mapFields } from 'vuex-map-fields'
 import EmptyModal from '../utils/EmptyModal'
+import { loadStatuses } from '../store'
 import VideoModal from '../utils/VideoModal'
 import Vue from 'vue'
 import Vuex from 'vuex'
@@ -129,22 +131,22 @@ export default Vue.extend({
     }
   },
   computed: {
-    // Note : we don't deal with the case where config has not been fetched yet. It doesn't cause
-    // any problems for now.
-    ...mapFields(['config']),
+    ...mapFields([
+      'config',
+      'configLoadStatus',
+    ]),
+    // Wait for the config to load (so that we have the video urls) before displaying the video
+    // player. Otherwise it breaks on some browsers and machines.
+    canDisplayVideoPlayer() {
+      return this.configLoadStatus === loadStatuses.SUCCESS
+    },
     webdavurl: function() {
       return this.config.webdav_url + '/' + this.referenceCode
     },
     videoUrlMp4() {
-      if (typeof this.config.static_files_url === 'undefined') {
-        return ''
-      }
       return this.config.static_files_url + VIDEO_FILE_PATH_MP4
     },
     videoUrlWebm() {
-      if (typeof this.config.static_files_url === 'undefined') {
-        return ''
-      }
       return this.config.static_files_url + VIDEO_FILE_PATH_WEBM
     },
   },
