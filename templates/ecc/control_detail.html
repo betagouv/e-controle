@@ -2,7 +2,7 @@
 {% load static %}
 {% load control_tags %}
 
-{% block page_main_container %}
+{% block page_main_container_with_sidebar %}
   <!-- No mixing of server templates + vue templates. Pass the server data outside of vue element-->
   <div id="controls-data" style="display: none">
     {{ controls_json }}
@@ -12,10 +12,10 @@
   </div>
   <!-- Vue element -->
   <div id="control-detail-vm">
-    <control-page>
-    </control-page>
+    <control-detail>
+    </control-detail>
   </div>
-{% endblock page_main_container %}
+{% endblock page_main_container_with_sidebar %}
 
 {% block js_bundle %}
 <link href="{% static 'dist/control-detail-bundle.css' %}" rel="stylesheet" />

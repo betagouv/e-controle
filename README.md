@@ -1,7 +1,7 @@
 # e-controle
 “e.contrôle” est un service numérique permettant de faciliter les échanges de documents durant les contrôles, audits ou inspections.
 
-Les activités de transmission et de réception de documents durant les audits ne sont facilitées par aucun outil suffisamment adapté, si bien qu’une marge d’optimisation existe. 
+Les activités de transmission et de réception de documents durant les audits ne sont facilitées par aucun outil suffisamment adapté, si bien qu’une marge d’optimisation existe.
 
 e.contrôle propose de répondre aux nombreux problèmes rencontrés par les audités et les auditeurs.
 
@@ -212,6 +212,12 @@ Et lancez le serveur :
 `python -m smtpd -n -c DebuggingServer localhost:1025`
 
 (Merci à https://gist.github.com/andreagrandi/7027319)
+
+### libmagic
+Le serveur Django utilise libmagic (pour vérifier les types des fichiers uploadés), qui doit être présent sur la machine. Vous pouvez essayer de démarrer sans, et si le serveur raise une erreur c'est qu'il faut l'installer à la main sur votre machine.
+
+Instructions d'installation données par django-magic, le package que nous utilisons : https://github.com/ahupp/python-magic#installation
+
 
 ### Des commandes utiles
 

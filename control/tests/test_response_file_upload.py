@@ -1,9 +1,9 @@
 from pytest import mark
 
 from django.shortcuts import reverse
+from django.test import override_settings
 
 from control.models import ResponseFile
-from control.tests import test_api_questionnaire
 from tests import factories, utils
 from user_profiles.models import UserProfile
 
@@ -103,5 +103,83 @@ def test_inspector_cannot_upload_question_file(client):
     }
     response = client.post(url, post_data, format='multipart')
     assert 400 <= response.status_code < 500
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before
+
+
+def test_audited_cannot_upload_exe_file(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_exe_file.open(),
+        'question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 403
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before
+
+
+def test_missing_question_id_raise_bad_request(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_file.open(),
+        'no_question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 400
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before
+
+
+@override_settings(UPLOAD_FILE_MAX_SIZE_MB=0.01)
+def test_audited_cannot_upload_file_if_size_exceed(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_file.open(),
+        'question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 403
+    count_after = ResponseFile.objects.count()
+    assert count_after == count_before
+
+
+@override_settings(UPLOAD_FILE_EXTENSION_BLACKLIST=('.sh',))
+def test_audited_cannot_upload_file_if_blaklist_extension(client):
+    audited = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    question = factories.QuestionFactory()
+    audited.controls.add(question.theme.questionnaire.control)
+    question.theme.questionnaire.is_draft = False
+    question.theme.questionnaire.save()
+    utils.login(client, user=audited.user)
+    url = reverse('response-upload')
+    count_before = ResponseFile.objects.count()
+    post_data = {
+        'file': factories.dummy_text_file_with_sh_extension.open(),
+        'question_id': [question.id]
+    }
+    response = client.post(url, post_data, format='multipart')
+    assert response.status_code == 403
     count_after = ResponseFile.objects.count()
     assert count_after == count_before

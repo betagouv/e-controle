@@ -11,6 +11,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_filter = ('profile_type', 'controls')
     raw_id_fields = ('user',)
     filter_horizontal = ('controls',)
+    search_fields = ('user__username',)
 
 
 class UserProfileInline(admin.StackedInline):
@@ -22,6 +23,7 @@ class UserProfileInline(admin.StackedInline):
 
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline,)
+    list_display = ('id', 'username', 'first_name', 'last_name', 'is_staff',)
     list_filter = ('profile__profile_type', 'profile__controls')
 
 

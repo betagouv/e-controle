@@ -1,7 +1,10 @@
-from django import forms
+import magic
+import os
+
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
@@ -163,13 +166,43 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         }
         action.send(**action_details)
 
+    def add_invalid_extension_log(self, invalid_extension):
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded invalid response-file extension',
+            'target': self.object.question,
+            'description': f'Detected invalid file extension: "{invalid_extension}"'
+            }
+        action.send(**action_details)
+
+    def add_invalid_mime_type_log(self, invalid_mime_type):
+        action_details = {
+            'sender': self.request.user,
+            'verb': 'uploaded invalid response-file',
+            'target': self.object.question,
+            'description': f'Detected invalid response-file mime type: "{invalid_mime_type}"'
+            }
+        action.send(**action_details)
+
+    def file_extension_is_valid(self, extension):
+        blacklist = settings.UPLOAD_FILE_EXTENSION_BLACKLIST
+        if any(match.lower() == extension.lower() for match in blacklist):
+            return False
+        return True
+
+    def file_mime_type_is_valid(self, mime_type):
+        blacklist = settings.UPLOAD_FILE_MIME_TYPE_BLACKLIST
+        if any(match.lower() in mime_type.lower() for match in blacklist):
+            return False
+        return True
+
     def form_valid(self, form):
         if not self.request.user.profile.is_audited:
             return HttpResponseForbidden("User is not authorized to access this ressource")
         try:
             question_id = form.data['question_id']
         except KeyError:
-            raise forms.ValidationError("Question ID was missing on file upload")
+            return HttpResponseBadRequest("Question ID was missing on file upload")
         get_object_or_404(
             Question,
             pk=question_id,
@@ -178,6 +211,21 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.question_id = question_id
         self.object.author = self.request.user
+        file_object = self.object.file
+        file_extension = os.path.splitext(file_object.name)[1]
+        if not self.file_extension_is_valid(file_extension):
+            self.add_invalid_extension_log(file_extension)
+            return HttpResponseForbidden(
+                f"Cette extension de fichier n'est pas autorisée : {file_extension}")
+        mime_type = magic.from_buffer(file_object.read(2048), mime=True)
+        if not self.file_mime_type_is_valid(mime_type):
+            self.add_invalid_mime_type_log(mime_type)
+            return HttpResponseForbidden(f"Ce type de fichier n'est pas autorisé: {mime_type}")
+        MAX_SIZE_BYTES = 1048576 * settings.UPLOAD_FILE_MAX_SIZE_MB
+        if file_object.file.size > MAX_SIZE_BYTES:
+            return HttpResponseForbidden(
+                f"La taille du fichier dépasse la limite autorisée "
+                f"de {settings.UPLOAD_FILE_MAX_SIZE_MB}Mo.")
         self.object.save()
         self.add_upload_action_log()
         data = {'status': 'success'}

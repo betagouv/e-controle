@@ -3,6 +3,7 @@ import './utils/polyfills.js'
 
 import { store } from './store'
 import QuestionnaireCreate from './questionnaires/QuestionnaireCreate.vue'
+import Sidebar from './utils/Sidebar.vue'
 import Vue from 'vue/dist/vue.js'
 import Vuex, { mapActions } from 'vuex'
 
@@ -17,6 +18,7 @@ new Vue({
   el: '#questionnaire-create-vm',
   components: {
     QuestionnaireCreate,
+    Sidebar,
   },
   methods: {
     ...mapActions(['fetchConfig', 'fetchControls', 'fetchSessionUser']),

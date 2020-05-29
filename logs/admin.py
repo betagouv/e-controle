@@ -62,7 +62,7 @@ action_object_display.short_description = 'action_object'
 class ActionAdmin(ReadOnlyModelAdmin, admin.ModelAdmin):
     date_hierarchy = 'timestamp'
     list_display = (
-        action_display, actor_display, 'verb', target_display, 'target_content_type',
+        'id', action_display, actor_display, 'verb', target_display, 'target_content_type',
         action_object_display, 'action_object_content_type', 'timestamp')
     list_filter = ('timestamp', 'verb')
     fieldsets = (

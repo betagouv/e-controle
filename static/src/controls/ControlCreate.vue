@@ -1,13 +1,11 @@
 <template>
   <div>
-    <button class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#controlcreate">
+    <button class="btn btn-primary" @click="showModal">
       <i class="fe fe-plus"></i>
       Ajouter un espace de dépôt
     </button>
 
-    <confirm-modal-with-wait id="controlcreate"
+    <confirm-modal-with-wait ref="modal"
                              cancel-button="Annuler"
                              confirm-button="Créer l'espace de dépôt"
                              title="Créer un nouvel espace de dépôt"
@@ -120,6 +118,9 @@ export default Vue.extend({
     InfoBar,
   },
   methods: {
+    showModal() {
+      $(this.$refs.modal.$el).modal('show')
+    },
     createControl: function(processingDoneCallback) {
       const payload = {
         title: this.title,

@@ -1,6 +1,8 @@
 import logging
+import time
 from datetime import timedelta
 
+from django.conf import settings
 from django.utils import timezone
 
 from actstream import action
@@ -55,21 +57,22 @@ def send_files_report():
     html_template = 'reporting/email/files_report.html'
     text_template = 'reporting/email/files_report.txt'
     for control in Control.objects.all():
-        logger.info(f'Processing control: {control}')
+        logger.info(f'Processing control: {control.id}')
         if control.depositing_organization:
             subject = control.depositing_organization
         else:
             subject = control.title
         subject += ' - de nouveaux documents déposés !'
-        logger.debug(f"Email subject: {subject}")
         files = get_files(control)
         if not files:
+            logger.info(f'No new documents, aborting.')
             continue
         recipients = control.user_profiles.filter(send_files_report=True)
         recipient_list = recipients.values_list('user__email', flat=True)
-        logger.info(f'Recipients: {recipient_list}')
         if not recipient_list:
+            logger.info(f'No recipients, aborting.')
             continue
+        logger.debug(f'Recipients: {len(recipient_list)}')
         date_cutoff = get_date_cutoff(control)
         context = {
             'control': control,
@@ -90,8 +93,13 @@ def send_files_report():
                 f'There was {number_of_recipients} recipient(s), '
                 f'but {number_of_sent_email} email(s) sent.')
         if number_of_sent_email > 0:
-            logger.info(f'Email sent for {control}')
+            logger.info(f'Email sent for control {control.id}')
             action.send(sender=control, verb=ACTION_LOG_VERB_SENT)
         else:
-            logger.info(f'No email was sent for "{control}"')
+            logger.info(f'No email was sent for control {control.id}')
             action.send(sender=control, verb=ACTION_LOG_VERB_NOT_SENT)
+
+        EMAIL_SPACING_TIME_SECONDS = settings.EMAIL_SPACING_TIME_MILLIS / 1000
+        logger.info(
+            f'Waiting {EMAIL_SPACING_TIME_SECONDS}s after emailing for control {control.id}')
+        time.sleep(EMAIL_SPACING_TIME_SECONDS)

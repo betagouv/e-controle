@@ -195,6 +195,9 @@ EMAIL_TIMEOUT = env('EMAIL_TIMEOUT', default=3)
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 
+# Time we wait in between emails, to space them out and avoid going over our allowed email quota
+EMAIL_SPACING_TIME_MILLIS = env('EMAIL_SPACING_TIME_MILLIS', default=10000)
+
 SEND_EMAIL_WHEN_USER_ADDED = env('SEND_EMAIL_WHEN_USER_ADDED', default=False)
 SEND_EMAIL_WHEN_USER_REMOVED = env('SEND_EMAIL_WHEN_USER_REMOVED', default=False)
 
@@ -232,6 +235,15 @@ except locale.Error as e:
 
 ADMIN_URL = env('ADMIN_URL', default='admin/')
 
+# Exclude incoming file if its mime type contains any of the following text
+UPLOAD_FILE_MIME_TYPE_BLACKLIST = env(
+    'UPLOAD_FILE_MIME_TYPE_BLACKLIST',
+    default=('exe', 'msi', 'script'))
+
+UPLOAD_FILE_EXTENSION_BLACKLIST = env('UPLOAD_FILE_EXTENSION_BLACKLIST', default=('.exe', '.dll'))
+
+UPLOAD_FILE_MAX_SIZE_MB = env('UPLOAD_FILE_MAX_SIZE_MB', default=256)
+
 STATIC_URL = '/static/'
 
 # Collect static won't work if you haven't configured this
@@ -242,6 +254,9 @@ STATIC_ROOT = env('STATIC_ROOT', default=DEFAULT_STATIC_ROOT)
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
+    # NPM modules that we need to link in <script> tags directly : add them to static files.
+    os.path.join(BASE_DIR, 'node_modules', 'bootstrap', 'dist', 'js'),
+    os.path.join(BASE_DIR, 'node_modules', 'jquery', 'dist'),
 ]
 
 # Want forever-cacheable files and compression support?
