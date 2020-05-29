@@ -17,3 +17,7 @@ export const toBackendFormat = (value) => {
     return `${year}-${month}-${day}`
   }
 }
+
+export const nowTimeString = () => {
+  return new Date().toLocaleTimeString(LOCALE)
+}
