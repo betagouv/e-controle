@@ -93,6 +93,19 @@ class ControlSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'depositing_organization', 'reference_code', 'questionnaires')
 
 
+class ControlSerializerWithoutDraft(ControlSerializer):
+    """
+    Questionnaires are filtered to exclude draft.
+    This is suiatable for audited users.
+    """
+    questionnaires = serializers.SerializerMethodField()
+
+    def get_questionnaires(self, obj):
+        questionnaires = obj.questionnaires.filter(is_draft=False)
+        serializer = QuestionnaireSerializer(instance=questionnaires, many=True)
+        return serializer.data
+
+
 class ControlUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Control

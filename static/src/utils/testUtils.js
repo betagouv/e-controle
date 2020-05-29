@@ -8,7 +8,7 @@ const assertHasEmmitted = (obj, eventName, numTimes) => {
     return assertNotEmitted(obj, eventName)
   }
   expect(obj.emitted()).toHaveProperty(eventName)
-  expect(obj.emitted()[eventName].length).toEqual(numTimes)
+  expect(obj.emitted()[eventName]).toHaveLength(numTimes)
 }
 
 const assertNothingEmitted = function(obj) {

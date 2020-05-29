@@ -27,7 +27,8 @@
           </div>
           <div class="form-group">
             <label class="form-label" id="questionnaireDescription">
-              Vous pouvez modifier le texte d'introduction du questionnaire n°{{ questionnaireNumbering }}, si vous le souhaitez :
+              Vous pouvez modifier le texte d'introduction du questionnaire
+              n°{{ questionnaireNumbering }}, si vous le souhaitez :
             </label>
             <textarea class="form-control"
                       aria-labelledby="questionnaireDescription"
@@ -41,7 +42,9 @@
             </p>
           </div>
           <div class="form-group">
-            <label class="form-label" id="questionnaireEndDate">Vous pouvez indiquer la date limite de réponse :</label>
+            <label class="form-label" id="questionnaireEndDate">
+              Vous pouvez indiquer la date limite de réponse :
+            </label>
             <datepicker class="blue"
                         aria-labelledby="questionnaireEndDate"
                         v-model="end_date"

@@ -16,8 +16,8 @@ import json
 
 from .docx import generate_questionnaire_file
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
-from .serializers import ControlSerializer, ControlDetailControlSerializer, ControlDetailUserSerializer
-from .serializers import QuestionnaireSerializer
+from .serializers import ControlDetailUserSerializer
+from .serializers import ControlSerializer, ControlDetailControlSerializer
 
 
 class WithListOfControlsMixin(object):
@@ -103,12 +103,8 @@ class QuestionnaireDetail(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['questionnaire_json'] = \
-            json.dumps(QuestionnaireSerializer(instance=self.get_object()).data)
-
         control = self.get_object().control
         context['control_json'] = json.dumps(ControlSerializer(instance=control).data)
-
         return context
 
     def add_access_log_entry(self):
@@ -174,11 +170,10 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
             question_id = form.data['question_id']
         except KeyError:
             raise forms.ValidationError("Question ID was missing on file upload")
-        user_controls = self.request.user.profile.controls.active()
         get_object_or_404(
             Question,
             pk=question_id,
-            theme__questionnaire__control__in=user_controls
+            theme__questionnaire__in=self.request.user.profile.questionnaires
         )
         self.object = form.save(commit=False)
         self.object.question_id = question_id
@@ -248,8 +243,7 @@ class SendQuestionnaireFile(SendFileMixin, LoginRequiredMixin, View):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        user_controls = self.request.user.profile.controls.active()
-        return self.model.objects.filter(control__in=user_controls)
+        return self.request.user.profile.questionnaires
 
 
 class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):

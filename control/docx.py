@@ -29,7 +29,9 @@ def generate_questionnaire_file(questionnaire):
         'questionnaire': questionnaire,
         'description': RichText(questionnaire.description)
     }
-    doc.render(context)
+    # Note : autoescape is for HTML-escaping the user-provided questionnaire data, for XSS
+    # protection.
+    doc.render(context, autoescape=True)
     filename = f'Questionnaire-{questionnaire.numbering}.docx'
     # Why do we need both relative and absolte path?
     # For django's FileField, we need a relative path from the root of the MEDIA_ROOT.

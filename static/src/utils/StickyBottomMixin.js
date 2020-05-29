@@ -1,11 +1,21 @@
 export default {
   methods: {
-    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx) {
+    /**
+     *
+     * @param {*} elementId The HTML id of the element you want to make sticky.
+     * @param {*} bottomOffsetPx The distance from the bottom of the page at which the element
+     * should become fixed and stop scrolling.
+     * @param {*} elementHeightPx (optional) If the height of the element varies, the layout will
+     * not be moved accordingly. In this case, specify the (fixed) element height that you want to
+     * use.
+     * @param {*} extraWidthPx (optional) Hack alert! If you want to make your element a bit wider.
+     */
+    stickyBottom_makeStickyBottom(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx = 0) {
       const stickySupport = this.stickyBottom_isPositionStickySupported()
       console.log('stickySupport', stickySupport)
 
       if (!stickySupport) {
-        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx)
+        this.stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx)
       }
     },
     stickyBottom_isPositionStickySupported() {
@@ -31,9 +41,11 @@ export default {
       }
       setInterval(pollFunc, pollPeriodMs)
     },
-    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx) {
+    stickyBottom_makeStickyByHand(elementId, bottomOffsetPx, elementHeightPx, extraWidthPx = 0) {
       const element = document.getElementById(elementId)
-      const elementHeightPx = element.offsetHeight
+      if (typeof elementHeightPx === 'undefined') {
+        elementHeightPx = element.offsetHeight
+      }
 
       // Create a placeholder element of the same height as the fixed element.
       const placeholderElement = document.createElement('div')
@@ -48,7 +60,7 @@ export default {
 
       // Set the width. Needs to change if width of page changes (window resize of change in page)
       const setWidth = () => {
-        const elementWidthPx = placeholderElement.offsetWidth
+        const elementWidthPx = placeholderElement.offsetWidth + extraWidthPx
         stickyMenu.css('min-width', elementWidthPx + 'px')
       }
       setWidth()

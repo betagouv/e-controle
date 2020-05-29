@@ -28,17 +28,47 @@ def make_update_theme_payload(theme):
     }
 
 
-def test_can_access_theme_api_if_control_is_associated_with_the_user():
+def test_inspector_can_update_theme_if_control_is_associated_with_the_user():
     theme = factories.ThemeFactory()
-    user = utils.make_audited_user(theme.questionnaire.control)
+    user = utils.make_inspector_user(theme.questionnaire.control)
     assert update_theme(user, make_update_theme_payload(theme)).status_code == 200
 
 
-def test_no_access_to_theme_api_if_control_is_not_associated_with_the_user():
+def test_audited_cannot_update_theme():
+    theme = factories.ThemeFactory()
+    user = utils.make_audited_user(theme.questionnaire.control)
+    # Audited cannot update draft questionnaire
+    theme.questionnaire.is_draft = True
+    theme.questionnaire.save()
+    assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
+    # Audited cannot update published questionnaire
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
+    assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
+
+
+def test_no_update_to_theme_if_control_is_not_associated_with_the_user():
     theme_in = factories.ThemeFactory()
     theme_out = factories.ThemeFactory()
-    user = utils.make_audited_user(theme_in.questionnaire.control)
-    assert update_theme(user, make_update_theme_payload(theme_out)).status_code != 200
+    user = utils.make_inspector_user(theme_in.questionnaire.control)
+    assert 400 <= update_theme(user, make_update_theme_payload(theme_out)).status_code < 500
+
+
+def test_inspector_cannot_update_theme_if_questionnaire_is_published():
+    theme = factories.ThemeFactory()
+    questionnaire = theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    user = utils.make_inspector_user(questionnaire.control)
+    assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
+
+
+def test_inspector_cannot_update_theme_if_control_is_deleted():
+    theme = factories.ThemeFactory()
+    control = theme.questionnaire.control
+    control.delete()
+    user = utils.make_inspector_user(control)
+    assert 400 <= update_theme(user, make_update_theme_payload(theme)).status_code < 500
 
 
 def test_no_access_to_theme_api_for_anonymous():
@@ -47,9 +77,9 @@ def test_no_access_to_theme_api_for_anonymous():
     assert response.status_code == 403
 
 
-def test_can_update_theme_order():
+def test_inspector_can_update_theme_order():
     theme = factories.ThemeFactory()
-    user = utils.make_audited_user(theme.questionnaire.control)
+    user = utils.make_inspector_user(theme.questionnaire.control)
     original_order = theme.order
     new_order = 123
     assert new_order != original_order
@@ -66,11 +96,18 @@ def test_can_update_theme_order():
     assert response.data['order'] == new_order
 
 
-def test_no_access_to_theme_for_deleted_control():
+def test_inspector_has_no_access_to_theme_api_for_deleted_control():
+    theme = factories.ThemeFactory()
+    user = utils.make_inspector_user(theme.questionnaire.control)
+    theme.questionnaire.control.delete()
+    assert update_theme(user, make_update_theme_payload(theme)).status_code == 404
+
+
+def test_audited_has_access_to_theme_api_for_deleted_control():
     theme = factories.ThemeFactory()
     user = utils.make_audited_user(theme.questionnaire.control)
     theme.questionnaire.control.delete()
-    assert update_theme(user, make_update_theme_payload(theme)).status_code == 404
+    assert update_theme(user, make_update_theme_payload(theme)).status_code == 403
 
 
 def test_cannot_list_themes():
@@ -82,7 +119,8 @@ def test_cannot_retrieve_theme_even_if_user_belongs_to_control():
     theme = factories.ThemeFactory()
     audited_user = utils.make_audited_user(theme.questionnaire.control)
     inspector_user = utils.make_inspector_user(theme.questionnaire.control)
-    assert not theme.questionnaire.is_draft
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
 
     assert get_theme(audited_user, theme.id).status_code == 405
     assert get_theme(inspector_user, theme.id).status_code == 405
@@ -98,13 +136,14 @@ def test_audited_cannot_retrieve_theme_from_draft_questionnaire():
     assert get_theme(audited_user, theme.id).status_code == 405
 
 
-def test_cannot_delete_theme_even_if_user_belongs_to_control():
+def test_cannot_delete_theme_if_questionnaire_is_published():
     theme = factories.ThemeFactory()
     audited_user = utils.make_audited_user(theme.questionnaire.control)
     inspector_user = utils.make_inspector_user(theme.questionnaire.control)
-    assert not theme.questionnaire.is_draft
+    theme.questionnaire.is_draft = False
+    theme.questionnaire.save()
 
-    assert delete_theme(audited_user, theme.id).status_code == 405
+    assert delete_theme(audited_user, theme.id).status_code == 403
     assert delete_theme(inspector_user, theme.id).status_code == 405
 
 
@@ -115,4 +154,4 @@ def test_audited_cannot_delete_theme_from_draft_questionnaire():
     theme.questionnaire.save()
     assert Questionnaire.objects.get(id=theme.questionnaire.id).is_draft
 
-    assert delete_theme(audited_user, theme.id).status_code == 405
+    assert delete_theme(audited_user, theme.id).status_code == 403

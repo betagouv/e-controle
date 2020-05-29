@@ -13,6 +13,15 @@ class OnlyInspectorCanAccess(permissions.BasePermission):
         return request.user.profile.is_inspector
 
 
+class OnlyAuditedCanAccess(permissions.BasePermission):
+    message_format = 'Accessing this resource is not allowed.'
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        return request.user.profile.is_audited
+
+
 class OnlyInspectorCanChange(permissions.BasePermission):
     message_format = 'Adding or changing this resource is not allowed.'
 
@@ -24,22 +33,15 @@ class OnlyInspectorCanChange(permissions.BasePermission):
         return request.user.profile.is_inspector
 
 
-class ChangeQuestionnairePermission(OnlyInspectorCanChange):
+class OnlyEditorCanChangeQuestionnaire(permissions.BasePermission):
 
-    def has_permission(self, request, view):
-        if not super(ChangeQuestionnairePermission, self).has_permission(request, view):
-            return False
-        if request.parser_context.get('kwargs') is None or request.parser_context['kwargs'].get('pk') is None:
-            return True
-        questionnaire_id = request.parser_context['kwargs']['pk']
-        questionnaire = Questionnaire.objects.get(id=questionnaire_id)
-        if not questionnaire.editor:
-            return False
-        if not questionnaire.is_draft:
-            return True
+    def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if questionnaire.editor.pk == request.user.pk:
+        questionnaire = obj
+        if not questionnaire.editor:
+            return False
+        if questionnaire.editor == request.user:
             return True
         return False
 
@@ -57,6 +59,15 @@ class QuestionnaireIsDraft(permissions.BasePermission):
     message_format = 'Accessing this resource is not allowed.'
 
     def has_object_permission(self, request, view, obj):
-        if not hasattr(obj, 'questionnaire'):
-            raise ParseError(detail='Missing attribute "questionnaire" during permission check')
-        return obj.questionnaire.is_draft
+        """
+        Checks if the questionnaire is draft.
+        Expects either an instance of a questionnaire object, or an object
+        that relate to a questionnaire via its `questionnaire` attribute.
+        """
+        if isinstance(obj, Questionnaire):
+            questionnaire = obj
+        elif hasattr(obj, 'questionnaire'):
+            questionnaire = obj.questionnaire
+        else:
+            raise ParseError(detail='Could not get "questionnaire" during permission check')
+        return questionnaire.is_draft

@@ -19,7 +19,10 @@
           <tr>
             <th v-if="user.is_inspector">
               Statut
-              <help-tooltip text="Un questionnaire est d'abord en Brouillon : il est modifiable et l'organisme interrogé ne le voit pas. Puis il est Publié : il n'est plus modifiable et l'organisme interrogé le voit."></help-tooltip>
+              <help-tooltip text="Un questionnaire est d'abord en Brouillon : il est modifiable et
+                                  l'organisme interrogé ne le voit pas. Puis il est Publié : il
+                                  n'est plus modifiable et l'organisme interrogé le voit.">
+              </help-tooltip>
             </th>
             <th>Titre</th>
             <th>Date de réponse</th>
@@ -30,7 +33,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="questionnaire in accessibleQuestionnaires" :key="'questionnaire-' + questionnaire.id">
+          <tr v-for="questionnaire in accessibleQuestionnaires"
+              :key="'questionnaire-' + questionnaire.id">
             <td class="tag-column" v-if="user.is_inspector">
               <div v-if="questionnaire.is_draft">
                 <div class="tag tag-azure round-tag font-italic">Brouillon</div>
@@ -53,9 +57,10 @@
             <td v-if="user.is_inspector" class="editor-column">
               <div v-if="questionnaire.is_draft && questionnaire.editor">
                 <help-tooltip v-if="questionnaire.editor.id !== user.id"
-                              text="Cette personne dispose des droits pour modifier ce questionnaire.
-                                    Vous pourrez modifier ce questionnaire en cliquant sur 'consulter',
-                                    puis 'Obtenir les droits de rédaction'"
+                              text="Cette personne dispose des droits pour modifier ce
+                                    questionnaire. Vous pourrez modifier ce questionnaire en
+                                    cliquant sur 'Consulter', puis 'Obtenir les droits de
+                                    rédaction'."
                               icon-class="fe fe-lock">
                 </help-tooltip>
                 <small>
@@ -80,10 +85,12 @@
                 </div>
               </template>
               <template v-else>
-                <template v-if="questionnaire.is_draft && !!questionnaire.editor && questionnaire.editor.id === user.id">
+                <template v-if="questionnaire.is_draft &&
+                                !!questionnaire.editor &&
+                                questionnaire.editor.id === user.id">
                   <div class="text-right">
                     <a class="btn btn-primary"
-                      :href="'/questionnaire/modifier/' + questionnaire.id"
+                      :href="questionnaireEditUrl(questionnaire.id)"
                       title="Modifier le brouillon de questionnaire">
                       <i class="fe fe-edit"></i>
                       Modifier
@@ -109,7 +116,7 @@
     </div>
 
     <div v-if="user.is_inspector" class="card-footer flex-row justify-content-end">
-      <a :href="'/questionnaire/controle-' + control.id + '/creer'" class="btn btn-primary">
+      <a :href="questionnaireCreateUrl" class="btn btn-primary">
         <i class="fe fe-plus"></i>
         Ajouter un questionnaire
       </a>
@@ -122,7 +129,6 @@
 import backendUrls from '../utils/backend'
 import DateFormat from '../utils/DateFormat.js'
 import HelpTooltip from '../utils/HelpTooltip'
-import QuestionnaireDeleteFlow from './QuestionnaireDeleteFlow'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -138,7 +144,6 @@ export default Vue.extend({
   },
   components: {
     HelpTooltip,
-    QuestionnaireDeleteFlow,
   },
   computed: {
     accessibleQuestionnaires: function () {
@@ -147,8 +152,14 @@ export default Vue.extend({
       }
       return this.control.questionnaires.filter(questionnaire => !questionnaire.is_draft)
     },
+    questionnaireCreateUrl() {
+      return backendUrls['questionnaire-create'](this.control.id)
+    },
   },
   methods: {
+    questionnaireEditUrl(questionnaireId) {
+      return backendUrls['questionnaire-edit'](questionnaireId)
+    },
     startQuestionnaireDeleteFlow(questionnaireId) {
       this.$refs['questionnaireDeleteFlow' + questionnaireId][0].start()
     },

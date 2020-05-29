@@ -4,24 +4,24 @@
 </template>
 
 <script>
-  import Vue from "vue"
+import Vue from 'vue'
 
-  const color_classes = [
-    'bg-blue',
-    'bg-red',
-    'bg-yellow',
-    'bg-purple',
-    'bg-green',
-    'bg-teal',
-  ]
+const colorClasses = [
+  'bg-blue',
+  'bg-red',
+  'bg-yellow',
+  'bg-purple',
+  'bg-green',
+  'bg-teal',
+]
 
-  export default Vue.extend({
-    props: [ 'id' ],
-    computed: {
-      colorClass: function () {
-        return color_classes[this.id % color_classes.length]
-      }
+export default Vue.extend({
+  props: ['id'],
+  computed: {
+    colorClass: function () {
+      return colorClasses[this.id % colorClasses.length]
     },
-  })
+  },
+})
 
 </script>

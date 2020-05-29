@@ -4,8 +4,8 @@
       {{ errorMessage }}
     </error-bar>
     <div v-if="files && files.length" class="question-box-child">
-      <div v-if="files.length > 1" class="form-label">Fichiers annexes à la question:</div>
-      <div v-else class="form-label">Fichier annexe à la question:</div>
+      <div v-if="files.length > 1" class="form-label">Fichiers annexes à la question :</div>
+      <div v-else class="form-label">Fichier annexe à la question :</div>
       <ul>
         <li v-for="(file, index) in files"
             :key="index"
@@ -14,12 +14,11 @@
             {{ file.basename }}
           </a>
           <span v-if="withDelete">
-            <a href="javascript:void(0)"
-              @click.prevent="deleteFile(file.id)"
-              class="btn btn-link"
-              title="Supprimer le fichier">
+            <button @click.prevent="deleteFile(file.id)"
+                    class="btn btn-link"
+                    title="Supprimer le fichier">
               <i class="fe fe-trash-2"></i>
-            </a>
+            </button>
           </span>
         </li>
       </ul>
@@ -31,8 +30,6 @@
 import axios from 'axios'
 import backendUrls from '../utils/backend'
 import ErrorBar from '../utils/ErrorBar'
-import EventBus from '../events'
-import { mapFields } from 'vuex-map-fields'
 import Vue from 'vue'
 
 export default Vue.extend({
