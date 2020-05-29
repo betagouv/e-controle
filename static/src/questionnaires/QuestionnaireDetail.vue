@@ -4,7 +4,7 @@
       <sidebar></sidebar>
     </div>
     <div class="mt-3 mt-md-5 flex-grow-1 ml-6 ie-flex-row-child">
-      <questionnaire-detail-page :control="control" :questionnaire-id="questionnaireId">
+      <questionnaire-detail-page :control-id="controlId" :questionnaire-id="questionnaireId">
       </questionnaire-detail-page>
     </div>
   </div>
@@ -18,7 +18,7 @@ import Vue from 'vue'
 export default Vue.extend({
   name: 'QuestionnaireDetail',
   props: {
-    control: Object,
+    controlId: Number,
     questionnaireId: Number,
   },
   components: {

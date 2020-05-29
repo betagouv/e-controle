@@ -1,8 +1,8 @@
 <template>
   <div class="mx-3">
     <breadcrumbs :control="control"></breadcrumbs>
-    <template v-if="user.is_inspector">
-      <request-editor-button :questionnaire='questionnaire'  v-if="questionnaire.is_draft">
+    <template v-if="isLoaded && user.is_inspector">
+      <request-editor-button :questionnaire='questionnaire' v-if="questionnaire.is_draft">
       </request-editor-button>
       <success-bar v-else>
         Ce questionnaire est publié : il est visible par l'organisme contrôlé et n'est donc plus
@@ -13,7 +13,7 @@
     <div class="page-header">
       <div class="page-title">
         <i class="fe fe-list mr-2"></i>
-        <template v-if="user.is_inspector">
+        <template v-if="isLoaded && user.is_inspector">
           <span v-if="questionnaire.is_draft"
                 class="tag tag-azure big-tag round-tag font-italic mr-2">
             Brouillon
@@ -27,7 +27,8 @@
       <questionnaire-metadata :questionnaire="questionnaire" :with-trash="!questionnaire.is_draft">
       </questionnaire-metadata>
 
-      <div v-if="user.is_inspector && !questionnaire.is_draft" class="alert alert-info alert-icon">
+      <div v-if="isLoaded && user.is_inspector && !questionnaire.is_draft"
+           class="alert alert-info alert-icon">
         <i class="fe fe-info" aria-hidden="true"></i>
         <div class="flex-row justify-content-end">
           <div>
@@ -60,13 +61,13 @@
                         :question-numbering="qIndex + 1"
                         :question="question">
 
-            <question-file-list-without-vuex :question-id="question.id">
-            </question-file-list-without-vuex>
+            <question-file-list :files="question.question_files">
+            </question-file-list>
             <response-file-list :question="question"
                                 :questionnaire-id="questionnaire.id"
-                                :is-audited="user.is_audited">
+                                :is-audited="isLoaded && user.is_audited">
             </response-file-list>
-            <response-dropzone :is-audited="user.is_audited"
+            <response-dropzone :is-audited="isLoaded && user.is_audited"
                                :question-id="question.id">
             </response-dropzone>
 
@@ -88,11 +89,11 @@
 <script>
 import Vue from 'vue'
 
-import axios from 'axios'
-import backendUrls from '../utils/backend'
 import Breadcrumbs from '../utils/Breadcrumbs'
+import { loadStatuses } from '../store'
+import { mapState } from 'vuex'
 import QuestionBox from '../questions/QuestionBox'
-import QuestionFileListWithoutVuex from '../questions/QuestionFileListWithoutVuex'
+import QuestionFileList from '../questions/QuestionFileList'
 import QuestionnaireMetadata from './QuestionnaireMetadata'
 import RequestEditorButton from '../editors/RequestEditorButton'
 import ResponseDropzone from '../questions/ResponseDropzone'
@@ -104,30 +105,30 @@ import WebdavTip from '../controls/WebdavTip'
 export default Vue.extend({
   name: 'QuestionnaireDetailPage',
   props: {
-    control: Object,
+    controlId: Number,
     questionnaireId: Number,
   },
-  data: function () {
-    return {
-      user: { is_audited: false },
-    }
-  },
   computed: {
+    control() {
+      return this.controls.find(control => control.id === this.controlId)
+    },
     questionnaire() {
       return this.control.questionnaires.find(
         questionnaire => questionnaire.id === this.questionnaireId)
     },
-  },
-  mounted: function() {
-    this.getSessionUser()
+    ...mapState({
+      // Note : we don't map controlsLoadStatus, because the only use of
+      // this component is within a page which pre-fetches the data from server, so we know it is
+      // already there.
+      controls: 'controls',
+      user: 'sessionUser',
+      userLoadStatus: 'sessionUserLoadStatus',
+    }),
+    isLoaded() {
+      return this.userLoadStatus === loadStatuses.SUCCESS
+    },
   },
   methods: {
-    // todo reuse the Vuex store ?
-    getSessionUser: function() {
-      axios.get(backendUrls.currentUser()).then(response => {
-        this.user = response.data
-      })
-    },
     showWebdavTip() {
       this.$refs.webdavTip.start()
     },
@@ -135,7 +136,7 @@ export default Vue.extend({
   components: {
     Breadcrumbs,
     QuestionBox,
-    QuestionFileListWithoutVuex,
+    QuestionFileList,
     QuestionnaireMetadata,
     RequestEditorButton,
     ResponseDropzone,
