@@ -94,15 +94,50 @@ def test_inspector_can_update_an_existing_user():
         'organization': '',
         'email': existing_user.user.email,
     }
+    assert existing_user.user.first_name != 'Marcel'
+    assert existing_user.user.last_name != 'Proust'
+
     utils.login(client, user=inspector.user)
     url = reverse('api:user-list')
     count_before = User.objects.count()
     client.post(url, post_data)
+
     count_after = User.objects.count()
     modified_user = UserProfile.objects.get(pk=existing_user.pk)
     assert count_after == count_before
     assert modified_user.user.first_name == 'Marcel'
     assert modified_user.user.last_name == 'Proust'
+
+
+def test_inspector_can_update_an_existing_user_with_different_casing():
+    inspector = factories.UserProfileFactory(profile_type=UserProfile.INSPECTOR)
+    control = factories.ControlFactory()
+    existing_user = factories.UserProfileFactory(profile_type=UserProfile.AUDITED)
+    inspector.controls.add(control)
+    existing_user.controls.add(control)
+    post_data = {
+        'first_name': 'Marcel',
+        'last_name': 'Proust',
+        'profile_type': UserProfile.AUDITED,
+        'organization': '',
+        'email': existing_user.user.email.upper(),  # uppercase the email
+    }
+    assert existing_user.user.first_name != 'Marcel'
+    assert existing_user.user.last_name != 'Proust'
+
+    utils.login(client, user=inspector.user)
+    url = reverse('api:user-list')
+    count_before = User.objects.count()
+    client.post(url, post_data)
+
+    count_after = User.objects.count()
+    modified_user = UserProfile.objects.get(pk=existing_user.pk)
+    # Update has happened successfully
+    assert count_after == count_before
+    assert modified_user.user.first_name == 'Marcel'
+    assert modified_user.user.last_name == 'Proust'
+    # Email is still lowercase
+    assert modified_user.user.email.lower() == modified_user.user.email
 
 
 def test_can_associate_a_control_to_an_existing_user():
