@@ -3,14 +3,6 @@
 
 {% block extra_static_header %}
   {{ block.super }}
-
-  {% if settings.DEBUG %}
-    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.css' %}">
-  {% else %}
-    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/basic.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'dropzone/5.5.1/dropzone.min.css' %}">
-  {% endif %}
 {% endblock extra_static_header %}
 
 {% block page_main_container_with_sidebar %}
