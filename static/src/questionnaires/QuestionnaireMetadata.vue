@@ -42,24 +42,26 @@
               title="Format Word (.docx)">
               <i class="fe fe-file-text mr-2"></i>Format Word (.docx)
             </a>
-            <div class="dropdown-divider"></div>
-            <div class="dropdown-header">Liste des réponses déposées</div>
-            <a class="dropdown-item"
-               :href="exportResponseFilesXlsxUrl"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="Format Excel (.xlsx)">
-              <i class="far fa-file-excel mr-2"></i>
-              Format Excel (.xlsx)
-            </a>
-            <a class="dropdown-item"
-               :href="exportResponseFilesPdfUrl"
-               target="_blank"
-               rel="noopener noreferrer"
-               title="Format PDF (.pdf)">
-              <i class="far fa-file-pdf mr-2"></i>
-              Format PDF (.pdf)
-            </a>
+            <div v-if="!questionnaire.is_draft">
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-header">Liste des réponses déposées</div>
+              <a class="dropdown-item"
+                :href="exportResponseFilesXlsxUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Format Excel (.xlsx)">
+                <i class="far fa-file-excel mr-2"></i>
+                Format Excel (.xlsx)
+              </a>
+              <a class="dropdown-item"
+                :href="exportResponseFilesPdfUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Format PDF (.pdf)">
+                <i class="far fa-file-pdf mr-2"></i>
+                Format PDF (.pdf)
+              </a>
+            </div>
           </div>
 
         </div>
