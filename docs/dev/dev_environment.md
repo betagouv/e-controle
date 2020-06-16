@@ -136,6 +136,7 @@ Pour l'installation sans docker :
 Le mot de passe est `ecc` (défini dans docker-compose.yml pour Docker, et créé plus haut si pas de Docker)
 
 Voilà des utilisateurs admin qui existent par défaut quand on utilise le dump de démo:
+- Admin: admin@demo.com / demo12345
 - Controlé: robert@demo.com / demo12345
 - Contrôleur: martine@demo.com / demo12345
 
