@@ -3,6 +3,7 @@ from django.db import models
 from django.apps import apps
 
 from annoying.fields import AutoOneToOneField
+from fernet_fields import EncryptedCharField, EncryptedEmailField
 
 from .managers import UserProfileQuerySet
 
@@ -17,6 +18,9 @@ class UserProfile(models.Model):
     user = AutoOneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE,
         related_name='profile')
+    first_name = EncryptedCharField(max_length=255, verbose_name='prénom', default='')
+    last_name = EncryptedCharField(max_length=255, verbose_name='nom', default='')
+    email = EncryptedEmailField(default='')
     profile_type = models.CharField(max_length=255, choices=PROFILE_TYPE)
     controls = models.ManyToManyField(
         to='control.Control', verbose_name='controles', related_name='user_profiles', blank=True)

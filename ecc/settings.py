@@ -211,6 +211,7 @@ MAGICAUTH_EMAIL_HTML_TEMPLATE = 'login/email.html'
 MAGICAUTH_EMAIL_TEXT_TEMPLATE = 'login/email.txt'
 MAGICAUTH_LOGIN_VIEW_TEMPLATE = 'login/login.html'
 MAGICAUTH_EMAIL_SENT_VIEW_TEMPLATE = 'login/email_sent.html'
+MAGICAUTH_EMAIL_FIELD = 'profile__email'
 
 LOGIN_URL = 'login'
 
