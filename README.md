@@ -56,21 +56,44 @@ Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/d
 ## Architecture du code et du repo
 Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
 
+
 ## Environnement de développement
+### Principes
+Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Il existe
+  une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
+
+Notre code review process pour collaborer dans la bonne humeur :
+https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
+
+### Variables d'environnement
+
+Certaines variables d'environnement doivent être positionnées pour que l'application fonctionne.
+
+On définit les variables d'environnement dans le fichier `.env`.
+On peut utiliser le fichier d'example comme ceci:
+
+    cd /my/project/folder/
+    cp .env.sample .env
+
+Les variables d'environnement sont automatiquement intégrées au process uWSGI via
+le fichier `ecc/wsgi.py` - de même pour le fichier `ecc/manage.py`.
+
+
+## Environnement de développement avec Docker
+On peut utiliser Docker pour gagner du temps d'installation. Par contre ca utilise plus de mémoire. C'est un choix!
+
+Si vous ne voulez pas utiliser Docker, voir le paragraphe suivant.
+
 ### Prérequis
 
 - Nous utilisons [Docker](https://www.docker.com/) pour installer l'environnement de dévelopement
-- Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Il existe
-  une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
 
 Autres technos utilisées (pas besoin de les installer localement, elles sont sur docker):
  - Python
  - Django
 
-Notre code review process pour collaborer dans la bonne humeur :
-https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
 
-### Présentation des services
+### Présentation des containers
 Nous utilisons deux containers Dockers : un pour postgres, un pour django (définis dans https://github.com/betagouv/e-controle/blob/develop/docker-compose.yml).
 
 Le container postgres a une image standard, le django une image faite maison (défini par la https://github.com/betagouv/e-controle/blob/develop/Dockerfile).
@@ -78,7 +101,6 @@ Le container postgres a une image standard, le django une image faite maison (d�
 Quand on lance le container django avec `docker-compose run django`, il commence par exécuter https://github.com/betagouv/e-controle/blob/develop/docker-entrypoint.sh. Ce script source l'environnement, migre la base postgres si necessaire, puis exécute une commande si elle est donnée (par exemple la commande `dev`, avec `docker-compose run django dev`, lance le serveur django.).
 
 Le filesystem de la machine hôte est partagé avec le container django : le dossier `.` en local (root du repo github) est le même que le dossier `\app` sur le container. Les modifs en local apparaissent dans le container sans le relancer.
-
 
 ### Notre Docker Django
 
@@ -88,20 +110,6 @@ L'image docker pour Django peut être construite à partir de plusieurs images :
 - sur la base une image Python/Node
 
 Pour changer l'image de base, il faut changer l'option `dockerfile` specifiée dans `docker-compose.yml`.
-
-
-### Variables d'environnement
-
-Certaines variables d'environnement doivent être positionnées pour que l'application fonctionne.
-
-On définit les variables d'environnement dans le fichier `.env`.
-On peut utiliser le fichier d'example comme ceci:
-
-    cd /project/folder/
-    cp .env.sample .env
-
-Les variables d'environnement sont automatiquement intégrées au process uWSGI via
-le fichier `ecc/wsgi.py` - de même pour le fichier `ecc/manage.py`.
 
 ### Lancement en dev avec docker-compose
 
@@ -127,9 +135,9 @@ On doit pouvoir se connecter au serveur django, en utilisant soit :
  - (linux only, ne marche pas sur macos) l'adresse IP et le numéro de port du serveur qui s'affiche sur le terminal. Par example : http://172.18.0.3:8080/admin/
  - le port forwarding. Pour cela, lancer le serveur avec le flag `-p` : `docker-compose run -p 8080:8080 django dev`. On peut accéder sur le port 8080 de localhost, qui forwarde au port 8080 du container django : http://localhost:8080/admin
 
-### Lancement en dev sans docker
+## Environnement de développement sans Docker
 
-Surtout utile si Docker utilise trop de mémoire (2 GB).
+Surtout utile si Docker utilise trop de mémoire (2 GB). C'est aussi plus simple pour connecter un IDE (comme VSCode ou autre).
 
 ### Postgres
 Suivre ce tutorial pour installer postgres, et créer un user nommé `ecc` et une database nommée `ecc`.
@@ -166,19 +174,25 @@ Lancer le serveur local sur le port 8080 : `python manage.py runserver 0:8080`
 Aller sur `http://localhost:8080/admin` et se logger avec un des utilisateurs mentionnés ci-dessous.
 
 
-### Restaurer/Sauvegarder la base de données en dev
+## Restaurer/Sauvegarder la base de données en dev
 
+### Docker only : Se connecter à postgres
 Pour se connecter à postgres avec l'installation docker, une méthode simple est de lancer un autre container, depuis lequel on se connecte à postgres. Par exemple le container `django`, sans la commande `dev` (on ne lance pas le serveur), avec la commande `bash` pour obtenir un terminal :
 
     docker-compose run django bash
 
-Ensuite charger le dump dans la base :
+### Charger le dump dans la base
+Ensuite charger le dump dans la base.
+
+Pour l'installation avec docker :
 
     psql -h postgres -U ecc -d ecc < db.dump
 
-(si l'installation postgres est locale, sans docker, utiliser `localhost` au lieu de `postgres` dans la commande)
+Pour l'installation sans docker :
 
-Le mot de passe est `ecc` (défini dans docker-compose.yml)
+    psql -h localhost -U ecc -d ecc < db.dump
+
+Le mot de passe est `ecc` (défini dans docker-compose.yml pour Docker, et créé plus haut si pas de Docker)
 
 Voilà des utilisateurs admin qui existent par défaut quand on utilise le dump de démo:
 - Controlé: robert@demo.com / demo12345
@@ -190,14 +204,14 @@ Note : Pour créer un nouveau dump :
 
 Ensuite, ajouter dezipper les fichiers de `media.zip` dans un dossier `media` à la racine de ce projet.
 
-### Login et envoi d'emails
+## Login et envoi d'emails
 
 Les utlisateurs admin peuvent se logger sans envoi d'email à http://localhost:8080/admin.
 (Si vous avez utilisé le dump ci-dessus, essayez admin@demo.com / demo12345)
 
 Les utilisateurs non-admin n'ont pas de mot de passe, ils recoivent un email contenant un lien de connexion. Votre serveur doit donc être configuré pour envoyer des mails.
 
-#### Serveur d'email en local
+### Serveur d'email en local
 Python contient un petit serveur SMTP, qui printe les mail dans la console au lieu de les envoyer. C'est le plus simple pour developper.
 Ajoutez les settings suivants dans `.env` :
 ```
@@ -213,13 +227,13 @@ Et lancez le serveur :
 
 (Merci à https://gist.github.com/andreagrandi/7027319)
 
-### libmagic
+## libmagic
 Le serveur Django utilise libmagic (pour vérifier les types des fichiers uploadés), qui doit être présent sur la machine. Vous pouvez essayer de démarrer sans, et si le serveur raise une erreur c'est qu'il faut l'installer à la main sur votre machine.
 
 Instructions d'installation données par django-magic, le package que nous utilisons : https://github.com/ahupp/python-magic#installation
 
 
-### Des commandes utiles
+## Des commandes utiles
 
     docker-compose run django dev
     docker-compose run django uwsgi
@@ -233,12 +247,12 @@ Instructions d'installation données par django-magic, le package que nous utili
     pytest
 
 
-### Lancement en prod
+## Lancement en prod
 
 - Une base PostgreSQL 10 doit être fournie.
 
 
-### Définition des locales
+## Définition des locales
 
 Cette plateforme utilise l'encodage UTF-8 à plusieurs endroit, notament pour les nom de
 fichiers uploadés.
@@ -250,7 +264,7 @@ par example comme ceci:
     export LANG=fr_FR.UTF-8
     export LC_ALL=fr_FR.UTF-8
 
-### Envoi d'emails périodiques
+## Envoi d'emails périodiques
 
 On utilise Celery Beat et Redis pour gérer l'envoi d'emails périodiques.
 
@@ -280,11 +294,11 @@ Si le serveur Redis n'est pas fournit, on peut l'installer:
     systemctl enable redis
     redis-cli ping
 
-### uWSGI
+## uWSGI
 Le server d'application uWSGI est utilisé sur Heroku.
 Pour plus de détail : https://uwsgi-docs.readthedocs.io/en/latest/
 
-### Parcel : Bundler JS
+## Parcel : Bundler JS
 
 Nous avons fait le choix d'utiliser le bundler parcel qui est une alternative à Webpack.
 Voir le fichier ``package.json`` pour plus de détails.
@@ -302,16 +316,16 @@ Quelques commandes bash utiles:
     npm run watch-questionnaire-detail
     npm run watch-session-management
 
-### Tests
+## Tests
 
-#### Backend tests
+### Backend tests
 
 Lancer les tests :
 `pytest -s <dossier>`
 (le flag -s sert a laisser le debugger prendre le controle si besoin).
 
 
-#### Frontend tests
+### Frontend tests
 Ils se situent dans `static/src/` avec le code, dans des dossiers `test`. Ce sont des tests Jest, pour trouver de la doc googler "test Vue with Jest" par exemple.
 
 Lancer les tests : `npm test`
