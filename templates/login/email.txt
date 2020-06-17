@@ -8,6 +8,8 @@ Des difficultés pour vous connecter ?
 Nous vous recommandons de copier-coller ce lien dans Mozilla Firefox ou Chrome :
 https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
 
+Ce lien n'est valable que 5 minutes. Il est à usage unique.
+
 Si vous rencontrez toujours des difficultés pour vous connecter, répondez directement à cet email.
 
 Merci beaucoup,
