@@ -13,7 +13,10 @@ Voici un message type:
 
 * * *
 Bonjour {{ target_user.first_name }} {{ target_user.last_name }},
-Dans le cadre de la procédure "{{ control.title_display }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur https://{{ site.domain }}.
+Dans le cadre de la procédure "{{ control.title_display }}", vous pouvez accéder à l’espace de dépôt en vous connectant sur :
+
+https://{{ site.domain }}
+
 Cordialement,
 * * *
 
