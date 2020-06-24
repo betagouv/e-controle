@@ -76,12 +76,12 @@ class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
             .order_by('timestamp')
 
         response_file_list = []
-        for action in stream:
-            response_file = response_files.get(id=action.target_object_id)
-            response_file.deletion_date = action.timestamp
-            response_file.deletion_user = User.objects.get(id=action.actor_object_id)
+        for act in stream:
+            response_file = response_files.get(id=act.target_object_id)
+            response_file.deletion_date = act.timestamp
+            response_file.deletion_user = User.objects.get(id=act.actor_object_id)
             response_file.question_number = str(response_file.question.theme.numbering) + \
-                                            '.' + str(response_file.question.numbering)
+                '.' + str(response_file.question.numbering)
             response_file_list.append(response_file)
         response_file_list.sort(key=lambda x: x.question_number)
         context['response_file_list'] = response_file_list
@@ -317,7 +317,6 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
     model = Questionnaire
 
     def get_queryset(self):
-        # todo : restrict access to inspectors only
         user_controls = self.request.user.profile.controls.active()
         queryset = Questionnaire.objects.filter(control__in=user_controls)
         queryset = queryset.filter(is_draft=False)
@@ -327,11 +326,25 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
         questionnaire = self.get_object()
         try:
             file = generate_response_file_list_in_xlsx(questionnaire)
-            # todo log action ?
+            self.add_log_entry(verb='xls file exported', questionnaire=questionnaire)
             return sendfile(
                 request,
                 file.name,
                 attachment=True,
                 attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.xlsx')
-        finally:
+        except Exception as e:
+            self.add_log_entry(
+                verb='xls file export failed', questionnaire=questionnaire, description=e
+            )
             os.remove(file.name)
+
+    def add_log_entry(self, verb, questionnaire, description=""):
+        action_details = {
+            'description': description,
+            'sender': self.request.user,
+            'verb': verb,
+            'action_object': questionnaire.control,
+            'target': questionnaire
+        }
+
+        action.send(**action_details)
