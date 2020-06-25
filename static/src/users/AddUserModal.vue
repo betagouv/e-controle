@@ -154,6 +154,7 @@ export default Vue.extend({
     addUser() {
       this.formData.control = this.editingControl.id
       this.formData.profile_type = this.editingProfileType
+      this.formData.email = this.formData.email.toLowerCase()
       axios.post(backend.user(), this.formData)
         .then(response => {
           this.postResult = response.data
@@ -166,6 +167,7 @@ export default Vue.extend({
         })
     },
     findUser() {
+      this.formData.email = this.formData.email.toLowerCase()
       axios.get(backend.user(), {
         params: {
           search: this.formData.email,
