@@ -326,7 +326,7 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
         questionnaire = self.get_object()
         try:
             file = generate_response_file_list_in_xlsx(questionnaire)
-            self.add_log_entry(verb='xls file exported', questionnaire=questionnaire)
+            self.add_log_entry(verb='exported responses in xls', questionnaire=questionnaire)
             return sendfile(
                 request,
                 file.name,
@@ -334,8 +334,9 @@ class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
                 attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.xlsx')
         except Exception as e:
             self.add_log_entry(
-                verb='xls file export failed', questionnaire=questionnaire, description=e
+                verb='exported responses in xls - fail', questionnaire=questionnaire, description=e
             )
+        finally:
             os.remove(file.name)
 
     def add_log_entry(self, verb, questionnaire, description=""):

@@ -53,14 +53,6 @@
                 <i class="far fa-file-excel mr-2"></i>
                 Format Excel (.xlsx)
               </a>
-              <a class="dropdown-item"
-                :href="exportResponseFilesPdfUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Format PDF (.pdf)">
-                <i class="far fa-file-pdf mr-2"></i>
-                Format PDF (.pdf)
-              </a>
             </div>
           </div>
 
