@@ -134,9 +134,9 @@
 <script>
 import axios from 'axios'
 import backend from '../utils/backend'
+import { nowTimeString, toBackendFormat } from '../utils/DateFormat'
 import Breadcrumbs from '../utils/Breadcrumbs'
 import { loadStatuses } from '../store'
-import moment from 'moment'
 import { mapFields } from 'vuex-map-fields'
 import PublishFlow from './PublishFlow'
 import QuestionnaireBodyCreate from './QuestionnaireBodyCreate'
@@ -359,8 +359,7 @@ export default Vue.extend({
     _doSave() {
       const cleanPreSave = () => {
         if (this.currentQuestionnaire.end_date) {
-          this.currentQuestionnaire.end_date =
-            moment(String(this.currentQuestionnaire.end_date)).format('YYYY-MM-DD')
+          this.currentQuestionnaire.end_date = toBackendFormat(this.currentQuestionnaire.end_date)
         } else {
           // remove empty strings, it throws date format error.
           delete this.currentQuestionnaire.end_date
@@ -416,8 +415,7 @@ export default Vue.extend({
           this.currentQuestionnaire = response.data
           this.emitQuestionnaireUpdated()
 
-          const timeString = moment(new Date()).format('HH:mm:ss')
-          this.saveMessage = 'Votre dernière sauvegarde a eu lieu à ' + timeString + '.'
+          this.saveMessage = 'Votre dernière sauvegarde a eu lieu à ' + nowTimeString() + '.'
           return response.data
         })
         .catch((error) => {

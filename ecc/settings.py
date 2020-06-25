@@ -186,6 +186,7 @@ if DEBUG:
     SESSION_COOKIE_SECURE = False
 
 # Email
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER',)
@@ -238,17 +239,9 @@ ADMIN_URL = env('ADMIN_URL', default='admin/')
 # Exclude incoming file if its mime type contains any of the following text
 UPLOAD_FILE_MIME_TYPE_BLACKLIST = env(
     'UPLOAD_FILE_MIME_TYPE_BLACKLIST',
-    default=('exe', 'msi', 'x-', 'script'))
+    default=('exe', 'msi', 'script'))
 
-UPLOAD_FILE_EXTENSION_BLACKLIST = env('UPLOAD_FILE_EXTENSION_BLACKLIST', default=(
-    '.exe', '.com', '.dll', '.pif', '.vbs', '.vb', '.vbe', '.ps1', '.ps1xml', '.ps2', '.ps2xml',
-    '.psc1', '.psc2', '.psd1', '.psdm1', '.pssc', '.cdxml', '.msh', '.msh1', '.mshxml', '.msh1xml',
-    '.msh2xml', '.lnk', '.inf', '.application', '.appref-ms', '.appcontent-ms', '.msi', '.msp',
-    '.mst', '.msix', '.msixbundle', '.scr', '.hta', '.cpl', '.msc', '.jar', '.jnlp', '.bat', '.cmd',
-    '.js', '.jse', '.ws', '.wsf', '.wsh', '.wsc', '.scf', '.reg', '.cer', '.crt', '.der', '.pfx',
-    '.pem', '.cert', '.p7b', '.p7bs', '.p12', '.wsb', '.py', '.pyc', '.pyo', '.pyw', '.pyz',
-    '.pyzw', '.cab', '.sys', '.sh', '.bash', '.shell',
-))
+UPLOAD_FILE_EXTENSION_BLACKLIST = env('UPLOAD_FILE_EXTENSION_BLACKLIST', default=('.exe', '.dll'))
 
 UPLOAD_FILE_MAX_SIZE_MB = env('UPLOAD_FILE_MAX_SIZE_MB', default=256)
 

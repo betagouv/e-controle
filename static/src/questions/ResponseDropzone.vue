@@ -31,14 +31,15 @@
 </template>
 
 <script>
+import axios from 'axios'
 import backendUrls from '../utils/backend'
 import { clearCache } from '../utils/utils'
 import Dropzone from 'dropzone'
+import 'dropzone/dist/basic.css'
+import 'dropzone/dist/dropzone.css'
 import ErrorBar from '../utils/ErrorBar'
 import EventBus from '../events'
 import Vue from 'vue'
-
-import axios from 'axios'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
