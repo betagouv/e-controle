@@ -32,6 +32,7 @@ const backendViewUrls = {
   'questionnaire-create': 'questionnaire/controle-<int:pk>/creer',
   'questionnaire-edit': 'questionnaire/modifier/<int:pk>/',
   'questionnaire-export': 'fichier-questionnaire/<int:pk>/',
+  'responses-export': 'fichier-reponses-deposees/<int:pk>/',
   trash: 'questionnaire/corbeille/<int:pk>/',
   // Control pages
   'control-detail': 'accueil/#control-<int:pk>',
