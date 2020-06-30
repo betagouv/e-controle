@@ -42,3 +42,4 @@ soft-delete==0.2.2
 coverage==5.1
 pyasn1==0.4.8
 python-magic==0.4.18
+xlsxwriter==1.2.8

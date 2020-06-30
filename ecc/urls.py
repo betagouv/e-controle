@@ -55,6 +55,7 @@ urlpatterns = [
          name='send-questionnaire-file'),
     path('fichier-question/<int:pk>/', control_views.SendQuestionFile.as_view(), name='send-question-file'),
     path('fichier-reponse/<int:pk>/', control_views.SendResponseFile.as_view(), name='send-response-file'),
+    path('fichier-reponses-deposees/<int:pk>/', control_views.SendResponseFileList.as_view(), name='send-response-file-list'),
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
     path('faq/', control_views.FAQ.as_view(), name='faq'),
