@@ -1,41 +1,7 @@
-import csv
 import xlsxwriter
 
 from datetime import date
 from tempfile import NamedTemporaryFile
-
-HEADER = [
-    'N° de thème',
-    'Thème',
-    'N° de question',
-    'Question',
-    'Nom du fichier',
-    'Déposé par',
-    'Horodatage de dépôt',
-]
-
-
-def generate_response_file_list_in_csv(questionnaire):
-    """
-    This creates a temp file. Delete it when you are done with it.
-    """
-    with NamedTemporaryFile(delete=False, mode='w') as f:
-        csvwriter = csv.writer(f, quoting=csv.QUOTE_ALL)
-        csvwriter.writerow(HEADER)
-        for theme in questionnaire.themes.all():
-            for question in theme.questions.all():
-                for file in question.response_files.all():
-                    csvwriter.writerow([
-                        theme.numbering,
-                        theme.title,
-                        f'{theme.numbering}.{question.numbering}',
-                        file.basename,
-                        file.created.strftime('%a %d %B %Y à %X'),
-                        file.created.strftime('%Y-%m-%d %H:%M:%S'),
-                        f'{file.author.first_name} {file.author.last_name}'
-                    ])
-
-        return f
 
 
 def generate_response_file_list_in_xlsx(questionnaire):
