@@ -1,4 +1,4 @@
-# Architecture of the repo
+# Architecture of e.contrôle
 Created 9 Dec 2019 - things could have changed since then, sorry :) Please add a date when you change sections of this doc. Place the date directly in the section you edited.
 
 The README.md file also contains info on how things work, check it out.
@@ -90,3 +90,12 @@ Root file : https://github.com/betagouv/e-controle/blob/develop/static/src/quest
 
 ### Vue subcomponents
 In the folders in static/src, the Vue components.
+
+
+## Webdav server
+The e.contrôle server implements the Webdav protocol, to serve files according to users' permissions.
+This feature is specifically used by inspectors who access files through their Windows File Explorer, that acts as a webdav client.
+You can watch the
+[demo of the webdav feature](https://drive.google.com/file/d/1rzZ5LqJnMkHTjmYajHxvZqDyqHafRQL9/view).
+
+
