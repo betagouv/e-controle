@@ -98,4 +98,15 @@ This feature is specifically used by inspectors who access files through their W
 You can watch the
 [demo of the webdav feature](https://drive.google.com/file/d/1rzZ5LqJnMkHTjmYajHxvZqDyqHafRQL9/view).
 
+### WSGI : one for Django, one for Webdav
+The Django part of e.contrôle is a python app that uses the WSGI interface to communicate with the webserver (for example Apache or Nginx). See ecc/wsgi.py. When a request comes in to the webserver, it sends it over to the DJango python code.
+See the Django doc for details : https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
+
+The webdav part of e.contrôle is not a Django app. It is a python app, which uses a different wsgi.py file to communicate
+with the webserver (see webdav/wsgi.py).
+
+When a request is sent by a web client to e.controle's main URL (for instance https://app.e-contrôle.com), the webserver sends the request to the Django app for processing. If the request is sent to e.contrôle's webdav url (for instance https://webdav.e-controle.com), the webserver sends it to the webdav app. (This routing of requests is done in the webserver's config, which is not in this repo.)
+
+### How the webdav app identifies users
+The webdav app is built on wsgidav package (https://wsgidav.readthedocs.io/en/latest/), a python Webdav server.
 
