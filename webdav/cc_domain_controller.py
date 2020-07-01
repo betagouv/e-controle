@@ -99,7 +99,7 @@ class CCDomainController(BaseDomainController):
       """
       The format for REMOTE_USER is samaccount@CCOMPTES.FR.
       Example : for Caroline Elbourki : celbourki@CCOMPTES.fr
-      TODO where does this variable come from ?
+      The REMOTE_USER environment variable was set by the webserver.
       """
       username = environ['REMOTE_USER']
       samaccount = username.split('@', 1)[0]
@@ -110,12 +110,14 @@ class CCDomainController(BaseDomainController):
       Query the LDAP server (e.g. Active Directory) to get the email of the user corresponding to
       the samaccount.
       Raise exception if not found.
+      TODO : create proper exception classes extending Exception
       """
       logging.info(f'Basic magicauth: LDAP Sever (samaccount: {samaccount})')
       server = Server(settings.LDAP_SERVER, get_info=ALL)
       conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
       logging.debug('Basic magicauth: LDAP Binding')
+
       if conn.bind():
         conn.search(settings.LDAP_DC,
                     f'(&(objectClass=user)(sAMAccountName={samaccount}))',
@@ -124,12 +126,10 @@ class CCDomainController(BaseDomainController):
         if len(conn.entries) == 1:
           email = conn.entries[0].mail.value
           return email
+        elif len(conn.entries) == 0:
+          raise Exception(f"sAMAccount name {samaccount} not found in LDAP server")
         else:
-          if len(conn.entries) == 0:
-            raise Exception(f"sAMAccount name {samaccount} not found in LDAP server")
-          elif len(conn.entries) > 1:
-            raise Exception(f"sAMAccount name has several email addresses linked to.({samaccount})")
-          # TODO else ?
+          raise Exception(f"sAMAccount name has several email addresses linked to.({samaccount})")
       else:
         raise Exception(f"Cannot access LDAP server ({settings.LDAP_SERVER})")
 
@@ -146,7 +146,7 @@ class CCDomainController(BaseDomainController):
       The realm in our case is the directory where the control's files are, which is
       control.reference_code
       """
-      environ["wsgidav.magicauth.roles"] = ("reader") # TODO where does this go ?
+      environ["wsgidav.magicauth.roles"] = ("reader") # TODO is this useful ?
       # TODO : isolate case realm == "", it was necessary for windows 7 only
       if django_user.profile.controls.filter(reference_code=realm).exists() or realm == "":
         return True
