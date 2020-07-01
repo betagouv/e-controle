@@ -50,6 +50,6 @@ config.update({
 app = WsgiDAVApp(config)
 
 
-# ?
+# TODO what is this ?
 def application(environ, start_response):
     return app(environ, start_response)
