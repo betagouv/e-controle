@@ -1,7 +1,49 @@
 # Environnement de développement
 ## Principes
-Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Il existe
-  une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
+Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/).
+Ce modèle de développement s'appuie deux branches central qui sont *develop* et *master*.
+La branche *master* reflète toujours l'état actuel en production, tandis que *develop* pointe sur les
+derniers changements opérés en vue de la prochaine release.
+Ces deux branches sont les principales branches du projet. Elles sont centralisées et illimitées dans le
+temps.
+
+D'autre part, le projet s'articule autour de trois autres types de branches :
+ - feature/
+ - release/
+ - bugfix/
+
+ Ces branches sont appelées branches de support, et elles intéragissent avec les branches principales
+ de façon très codifiée. Par exemple :
+ - feature/ doit provenir de *develop* et être mergée dans *develop*
+ - release/ doit provenir de *develop* et être mergée dans *develop* et *master*
+ - bugfix/ doit provenir de *master* et être mergée dans *develop* et *master*
+
+ Pour créer une branche de feature, on suivra le processus suivant :
+    $ git checkout -b feature/update-user-form develop
+
+ Une fois la feature terminée, il faut incorporer la branche dans develop:
+    $ git checkout develop
+    $ git merge --no-ff feature/update-user-form
+    $ git branch -d feature/update-user-form
+    $ git push origin develop
+
+Note : le flag -no-ff permet de préserver l'historique de commit de votre branche
+
+Pour créer une branche de release, on suivra le processus suivant :
+    $ git checkout -b release/1.20 develop
+
+Faites les modifications afférentes à votre nouvelle release, comme modifier le footer du site e-controle
+pour afficher la nouvelle version. Puis :
+    $ git commit -am "Updated version number"
+    $ git checkout master
+    $ git merge -no-ff release/1.20
+    $ git tag -a 1.20
+
+Pour créer une branche de bugfix, on suivra le processus suivant :
+    $ git checkout -b bugfix/fix-dates-in-french master
+    $ git commit -am "Applied fix"
+
+...
 
 Notre code review process pour collaborer dans la bonne humeur :
 https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
