@@ -11,7 +11,7 @@
         <table border="0" cellpadding="0" cellspacing="0">
           <tbody>
             <tr>
-              <td align="center"> <a href="https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}">Connexion</a> </td>
+              <td align="center"> <a href="https://{{ site.domain }}{% url 'magicauth-wait' token.key %}">Connexion</a> </td>
             </tr>
           </tbody>
         </table>
@@ -36,7 +36,7 @@
   </p>
   <p class="mb-6 align-center">
     <strong>
-      https://{{ site.domain }}{% url 'magicauth-validate-token' token.key %}
+      https://{{ site.domain }}{% url 'magicauth-wait' token.key %}
     </strong>
   </p>
   <p>Si vous rencontrez toujours des difficultés pour vous connecter, répondez directement à cet email.</p>
