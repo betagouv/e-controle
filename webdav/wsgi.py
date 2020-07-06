@@ -6,7 +6,13 @@ from wsgidav.fs_dav_provider import FilesystemProvider
 from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
-# Load the Django settings
+# Load the .env settings file to get environment variables
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path=env_path, override=True)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings' # TODO is this necessary ?
+# Load the Django settings (needs the .env variables, otherwise it will crash)
 from ecc import settings
 
 def load_django_environment():
@@ -15,12 +21,6 @@ def load_django_environment():
   DB to get user permissions and allow or deby access to files.
   TODO can we move some imports to the top of the file ?
   """
-  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
-  # Load the .env settings file to get environment variables
-  BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-  env_path = os.path.join(BASE_DIR, '.env')
-  load_dotenv(dotenv_path=env_path, override=True)
-  os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
   import django # TODO : this may need settings
   # Load Django
   django.setup()
