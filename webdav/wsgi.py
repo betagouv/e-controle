@@ -1,11 +1,11 @@
 __docformat__ = "reStructuredText"
+import django
 from dotenv import load_dotenv
 import logging
 import os
 from wsgidav.fs_dav_provider import FilesystemProvider
 from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
-import django # TODO can this move to the top ?
 
 
 # Load the .env settings file to get environment variables
