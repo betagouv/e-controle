@@ -8,6 +8,17 @@ from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
 
+# TODO needs settings to be imported ?
+def load_django_environment():
+  """
+  The webdav app is not a Django app, but it needs to query the django
+  DB to get user permissions and allow or deby access to files.
+  """
+  django.setup()
+load_django_environment()
+print('loaded django')
+
+
 # Load the .env settings file to get environment variables
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_path = os.path.join(BASE_DIR, '.env')
@@ -33,15 +44,6 @@ def make_filesystem_provider(django_settings):
 provider = make_filesystem_provider(settings)
 print('made filesystem provider')
 
-# TODO needs settings to be imported ?
-def load_django_environment():
-  """
-  The webdav app is not a Django app, but it needs to query the django
-  DB to get user permissions and allow or deby access to files.
-  """
-  django.setup()
-load_django_environment()
-print('loaded django')
 
 logging.basicConfig(level=logging.DEBUG)
 
