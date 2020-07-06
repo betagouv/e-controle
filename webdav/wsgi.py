@@ -17,11 +17,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
 from ecc import settings
 
 
-# Needs to import ecc.settings, otherwise it crashes.
-# Needs Django to be imported (but not setup), otherwise crashes.
-from webdav.cc_domain_controller import CCDomainController
-
-
 # Needs the settings to be imported.
 def load_django_environment():
   """
@@ -31,6 +26,10 @@ def load_django_environment():
   django.setup()
 load_django_environment()
 print('loaded django')
+
+# Needs to import ecc.settings, otherwise it crashes.
+# Needs Django to be imported and setup, otherwise crashes.
+from webdav.cc_domain_controller import CCDomainController
 
 
 def make_filesystem_provider(django_settings):
