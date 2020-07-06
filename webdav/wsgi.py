@@ -17,6 +17,11 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
 from ecc import settings
 
 
+# Needs to import ecc.settings, otherwise it crashes.
+# Needs Django to be loaded, otherwise crashes. # TODO test. Just django import is enough ?
+from webdav.cc_domain_controller import CCDomainController
+
+
 def make_filesystem_provider(django_settings):
   """
   Set up filesystem : we will serve the files that the Django server has saved to the MEDIA_ROOT
@@ -39,9 +44,6 @@ print('loaded django')
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Needs to import ecc.settings, otherwise it crashes.
-# Needs Django to be loaded, otherwise crashes. # TODO test. Just django import is enough ?
-from webdav.cc_domain_controller import CCDomainController
 
 def make_config(filesystem_provider, domain_controller_class):
   """
