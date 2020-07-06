@@ -6,7 +6,9 @@ from wsgidav.fs_dav_provider import FilesystemProvider
 from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
-# TODO : are imports limited to function scope ?
+# Load the Django settings
+from ecc import settings
+
 def load_django_environment():
   """
   The webdav app is not a Django app, but it needs to query the django
@@ -18,13 +20,13 @@ def load_django_environment():
   BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
   env_path = os.path.join(BASE_DIR, '.env')
   load_dotenv(dotenv_path=env_path, override=True)
-  # Load the Django settings
-  from ecc import settings  # TODO : this may need setup for ecc.settings
   os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
   import django # TODO : this may need settings
   # Load Django
   django.setup()
 load_django_environment()
+
+print('loaded django')
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -38,6 +40,8 @@ def make_filesystem_provider(django_settings):
   return provider
 # TODO : does Django need to be loaded for this to work ?
 provider = make_filesystem_provider(settings)
+
+print('made filesystem provider')
 
 # TODO : does django need to be loaded for this import to work ?
 # Needs to import ecc and django.contrib
@@ -63,9 +67,12 @@ def make_config(filesystem_provider, domain_controller_class):
   return config
 config = make_config(provider, CCDomainController)
 
+print('made config')
 
 # Create WsgiDAVApp app
 app = WsgiDAVApp(config)
+
+print('made app. DONE')
 
 
 # The webserver calls this function for each request in order to process it.
