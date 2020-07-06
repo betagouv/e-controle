@@ -19,13 +19,11 @@ def load_django_settings():
   return settings
 
 
-def load_django_environment(django_settings):
+def load_django_environment():
   """
   The webdav app is not a Django app, but it needs to query the django
   DB to get user permissions and allow or deby access to files.
   """
-  # Note : You need to run load_django_settings first, otherwise this function will crash.
-  # That is why the settings are required as argument to this function.
   django.setup()
 
 
@@ -59,14 +57,22 @@ def make_config(filesystem_provider, domain_controller_class):
   return config
 
 
+##########################
 # Create WsgiDAVApp app
+##########################
 logging.basicConfig(level=logging.DEBUG)
+
 settings = load_django_settings()
-load_django_environment(settings)
-# Needs to import ecc.settings, otherwise it crashes.
-# Needs Django to be imported and setup, otherwise crashes.
+
+# For django to load without crashing, you need to run load_django_settings before it.
+load_django_environment()
+
+# For this import to work without crashing, you need to run load_django_settings and
+# load_django_environment before it.
 from webdav.cc_domain_controller import CCDomainController
+
 provider = make_filesystem_provider(settings)
+
 config = make_config(provider, CCDomainController)
 app = WsgiDAVApp(config)
 
