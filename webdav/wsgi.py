@@ -18,7 +18,7 @@ from ecc import settings
 
 
 # Needs to import ecc.settings, otherwise it crashes.
-# Needs Django to be loaded, otherwise crashes. # TODO test. Just django import is enough ?
+# Needs Django to be imported, otherwise crashes.
 from webdav.cc_domain_controller import CCDomainController
 
 
@@ -33,6 +33,7 @@ def make_filesystem_provider(django_settings):
 provider = make_filesystem_provider(settings)
 print('made filesystem provider')
 
+# TODO needs settings to be imported ?
 def load_django_environment():
   """
   The webdav app is not a Django app, but it needs to query the django
