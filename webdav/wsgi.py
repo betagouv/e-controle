@@ -6,6 +6,10 @@ from wsgidav.fs_dav_provider import FilesystemProvider
 from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
+# TODO : does django need to be loaded for this import to work ?
+# Needs to import ecc and django.contrib -> should fail before settings
+from webdav.cc_domain_controller import CCDomainController
+
 # Load the .env settings file to get environment variables
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_path = os.path.join(BASE_DIR, '.env')
@@ -22,7 +26,6 @@ def make_filesystem_provider(django_settings):
   rootpath = django_settings.MEDIA_ROOT
   provider = FilesystemProvider(rootpath, readonly=True)
   return provider
-# TODO : does Django need to be loaded for this to work ?
 provider = make_filesystem_provider(settings)
 print('made filesystem provider')
 
@@ -38,10 +41,6 @@ print('loaded django')
 
 logging.basicConfig(level=logging.DEBUG)
 
-
-# TODO : does django need to be loaded for this import to work ?
-# Needs to import ecc and django.contrib
-from webdav.cc_domain_controller import CCDomainController
 
 def make_config(filesystem_provider, domain_controller_class):
   """
