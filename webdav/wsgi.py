@@ -8,17 +8,6 @@ from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
 
-# TODO needs settings to be imported ?
-def load_django_environment():
-  """
-  The webdav app is not a Django app, but it needs to query the django
-  DB to get user permissions and allow or deby access to files.
-  """
-  django.setup()
-load_django_environment()
-print('loaded django')
-
-
 # Load the .env settings file to get environment variables
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_path = os.path.join(BASE_DIR, '.env')
@@ -29,8 +18,19 @@ from ecc import settings
 
 
 # Needs to import ecc.settings, otherwise it crashes.
-# Needs Django to be imported, otherwise crashes.
+# Needs Django to be imported (but not setup), otherwise crashes.
 from webdav.cc_domain_controller import CCDomainController
+
+
+# Needs the settings to be imported.
+def load_django_environment():
+  """
+  The webdav app is not a Django app, but it needs to query the django
+  DB to get user permissions and allow or deby access to files.
+  """
+  django.setup()
+load_django_environment()
+print('loaded django')
 
 
 def make_filesystem_provider(django_settings):
