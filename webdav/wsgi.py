@@ -1,4 +1,5 @@
 __docformat__ = "reStructuredText"
+import django
 from dotenv import load_dotenv
 import logging
 import os
@@ -6,27 +7,25 @@ from wsgidav.fs_dav_provider import FilesystemProvider
 from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
-# TODO : are imports limited to function scope ?
-def load_django_environment():
-  """
-  The webdav app is not a Django app, but it needs to query the django
-  DB to get user permissions and allow or deby access to files.
-  TODO can we move some imports to the top of the file ?
-  """
-  os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")
+
+def load_django_settings():
   # Load the .env settings file to get environment variables
   BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
   env_path = os.path.join(BASE_DIR, '.env')
   load_dotenv(dotenv_path=env_path, override=True)
-  # Load the Django settings
-  from ecc import settings  # TODO : this may need setup for ecc.settings
+  # Load the Django settings (needs the .env variables, otherwise it will crash)
   os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
-  import django # TODO : this may need settings
-  # Load Django
-  django.setup()
-load_django_environment()
+  from ecc import settings
+  return settings
 
-logging.basicConfig(level=logging.DEBUG)
+
+def load_django_environment():
+  """
+  The webdav app is not a Django app, but it needs to query the django
+  DB to get user permissions and allow or deby access to files.
+  """
+  django.setup()
+
 
 def make_filesystem_provider(django_settings):
   """
@@ -36,12 +35,7 @@ def make_filesystem_provider(django_settings):
   rootpath = django_settings.MEDIA_ROOT
   provider = FilesystemProvider(rootpath, readonly=True)
   return provider
-# TODO : does Django need to be loaded for this to work ?
-provider = make_filesystem_provider(settings)
 
-# TODO : does django need to be loaded for this import to work ?
-# Needs to import ecc and django.contrib
-from webdav.cc_domain_controller import CCDomainController
 
 def make_config(filesystem_provider, domain_controller_class):
   """
@@ -61,10 +55,25 @@ def make_config(filesystem_provider, domain_controller_class):
     "lock_manager": True,  # True: use lock_manager.LockManager
   })
   return config
-config = make_config(provider, CCDomainController)
 
 
+##########################
 # Create WsgiDAVApp app
+##########################
+logging.basicConfig(level=logging.DEBUG)
+
+settings = load_django_settings()
+
+# For django to load without crashing, you need to run load_django_settings before it.
+load_django_environment()
+
+# For this import to work without crashing, you need to run load_django_settings and
+# load_django_environment before it.
+from webdav.cc_domain_controller import CCDomainController
+
+provider = make_filesystem_provider(settings)
+
+config = make_config(provider, CCDomainController)
 app = WsgiDAVApp(config)
 
 
