@@ -7,26 +7,12 @@ from wsgidav._version import __version__
 from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
 
 # Load the .env settings file to get environment variables
-#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ecc.settings")  # TODO is this necessary ?
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_path = os.path.join(BASE_DIR, '.env')
 load_dotenv(dotenv_path=env_path, override=True)
 # Load the Django settings (needs the .env variables, otherwise it will crash)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ecc.settings'
 from ecc import settings
-
-def load_django_environment():
-  """
-  The webdav app is not a Django app, but it needs to query the django
-  DB to get user permissions and allow or deby access to files.
-  """
-  import django
-  django.setup()
-load_django_environment()
-
-print('loaded django')
-
-logging.basicConfig(level=logging.DEBUG)
 
 def make_filesystem_provider(django_settings):
   """
@@ -38,8 +24,20 @@ def make_filesystem_provider(django_settings):
   return provider
 # TODO : does Django need to be loaded for this to work ?
 provider = make_filesystem_provider(settings)
-
 print('made filesystem provider')
+
+def load_django_environment():
+  """
+  The webdav app is not a Django app, but it needs to query the django
+  DB to get user permissions and allow or deby access to files.
+  """
+  import django
+  django.setup()
+load_django_environment()
+print('loaded django')
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 # TODO : does django need to be loaded for this import to work ?
 # Needs to import ecc and django.contrib
