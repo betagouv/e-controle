@@ -154,3 +154,27 @@ def test_send_response_file_list_has_files_in_order_of_question_numbering(client
     assert files[0].file.name == response_file_1.file.name
     assert files[1].file.name == response_file_2.file.name
     assert files[2].file.name == response_file_3.file.name
+
+
+def test_send_response_file_list_does_not_contais_files_from_other_questionnaire(client):
+    response_file_1 = factories.ResponseFileFactory(is_deleted=False)
+    questionnaire_1 = response_file_1.question.theme.questionnaire
+    questionnaire_1.is_draft = False
+    questionnaire_1.save()
+    assert not questionnaire_1.is_draft
+
+    # Questionnaire 2 in same control as questionnaire 1
+    questionnaire_2 = factories.QuestionnaireFactory(control=questionnaire_1.control)
+    questionnaire_2.is_draft = False
+    questionnaire_2.save()
+    assert not questionnaire_2.is_draft
+    theme_2 = factories.ThemeFactory(questionnaire=questionnaire_2)
+    question_2 = factories.QuestionFactory(theme=theme_2)
+    response_file_2 = factories.ResponseFileFactory(is_deleted=False, question=question_2)
+
+    user = utils.make_audited_user(questionnaire_1.control)
+
+    files = get_files_for_export(questionnaire_1)
+
+    assert len(files) == 1
+    assert files[0].file.name == response_file_1.file.name
