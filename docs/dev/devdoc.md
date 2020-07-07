@@ -11,7 +11,9 @@ Here is the database schema - december 2019 :
 https://github.com/betagouv/e-controle/blob/develop/docs/dev/e-controle-database.png
 
 ## Backend
-The backend is in python, using Django. It is split up into several Django apps. We also have an API with Django Rest Framework.
+The backend is in python, using Django. It is split up into several Django apps.
+
+We also have an API with Django Rest Framework. You can see the documentation (list of API endpoints and helpers to call them) /api/docs (works on localhost too). Here is an example of documentation (could be outdated) :  https://github.com/betagouv/e-controle/blob/develop/docs/dev/e-controle_API_30-06-2020.pdf.
 
 ### ecc
 Root app. Contains the urls.py file (https://github.com/betagouv/e-controle/blob/develop/ecc/urls.py) which is useful to see how views are mapped to urls.
