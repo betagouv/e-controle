@@ -35,8 +35,13 @@ class CCDomainController(BaseDomainController):
     str
     """
     logging.debug('Get domain realm: Start')
-    # TODO what is this ?
     if environ is not None:
+      # Pretend that the incoming request uses Basic authentication HTTP header, because it's easier
+      # to make it work with wsgidav.
+      # (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+      # Since Apache passes vars through environment variable, we write an environment variable to
+      # imitate a HTTP Authorization header with Basic.
+      # TODO : make kerberos requests work (instead of prentending the requests are Basic)
       environ['HTTP_AUTHORIZATION'] = settings.HTTP_AUTHORIZATION
 
     # We return the realm, which corresponds to the control reference_code.
@@ -46,7 +51,7 @@ class CCDomainController(BaseDomainController):
     if len(realms) != 0:
       return realms[0]
     else:
-      # TODO : what is this case ?
+      # The root ("/") has been requested
       return ""
 
 
@@ -146,7 +151,8 @@ class CCDomainController(BaseDomainController):
       The realm in our case is the directory where the control's files are, which is
       control.reference_code
       """
-      environ["wsgidav.magicauth.roles"] = ("reader") # TODO is this useful ?
+      # The request is readonly (files should never be edited)
+      environ["wsgidav.magicauth.roles"] = ("reader")
       # TODO : isolate case realm == "", it was necessary for windows 7 only
       if django_user.profile.controls.filter(reference_code=realm).exists() or realm == "":
         return True
