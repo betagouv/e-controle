@@ -8,7 +8,7 @@ from tests import factories, utils
 pytestmark = mark.django_db
 
 
-def test_download_response_file_list_works_for_audited_if_the_control_is_associated_with_the_user(client):
+def test_send_response_file_list_works_for_audited_if_the_control_is_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory(is_draft=False)
     user = utils.make_audited_user(questionnaire.control)
     utils.login(client, user=user)
@@ -17,7 +17,7 @@ def test_download_response_file_list_works_for_audited_if_the_control_is_associa
     assert response.status_code == 200
 
 
-def test_download_response_file_list_fails_for_audited_if_the_control_is_not_associated_with_the_user(client):
+def test_send_response_file_list_fails_for_audited_if_the_control_is_not_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory(is_draft=False)
     unauthorized_control = factories.ControlFactory()
     user = utils.make_audited_user(unauthorized_control)
@@ -26,7 +26,7 @@ def test_download_response_file_list_fails_for_audited_if_the_control_is_not_ass
     response = client.get(url)
     assert response.status_code != 200
 
-def test_download_response_file_list_works_for_inspector_if_the_control_is_associated_with_the_user(client):
+def test_send_response_file_list_works_for_inspector_if_the_control_is_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory(is_draft=False)
     user = utils.make_inspector_user(questionnaire.control)
     utils.login(client, user=user)
@@ -35,10 +35,28 @@ def test_download_response_file_list_works_for_inspector_if_the_control_is_assoc
     assert response.status_code == 200
 
 
-def test_download_response_file_list_fails_for_inspector_if_the_control_is_not_associated_with_the_user(client):
+def test_send_response_file_list_fails_for_inspector_if_the_control_is_not_associated_with_the_user(client):
     questionnaire = factories.QuestionnaireFactory(is_draft=False)
     unauthorized_control = factories.ControlFactory()
     user = utils.make_inspector_user(unauthorized_control)
+    utils.login(client, user=user)
+    url = reverse('send-response-file-list', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code != 200
+
+
+def test_send_response_file_list_fails_for_draft_questionnaire_for_inspector(client):
+    questionnaire = factories.QuestionnaireFactory(is_draft=True)
+    user = utils.make_inspector_user(questionnaire.control)
+    utils.login(client, user=user)
+    url = reverse('send-response-file-list', args=[questionnaire.id])
+    response = client.get(url)
+    assert response.status_code != 200
+
+
+def test_send_response_file_list_fails_for_draft_questionnaire_for_audited(client):
+    questionnaire = factories.QuestionnaireFactory(is_draft=True)
+    user = utils.make_audited_user(questionnaire.control)
     utils.login(client, user=user)
     url = reverse('send-response-file-list', args=[questionnaire.id])
     response = client.get(url)
