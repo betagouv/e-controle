@@ -57,20 +57,22 @@ def generate_response_file_list_in_xlsx(questionnaire):
                 }
                 for theme in questionnaire.themes.all()
                 for question in theme.questions.all()
-                for file in question.response_files.all()
+                for file in question.response_files.filter(is_deleted=False)
             ]
 
-            data = [(
-                row['theme'].numbering,
-                row['theme'].title,
-                f"{row['theme'].numbering}.{row['question'].numbering}",
-                row['question'].description,
-                row['file'].basename,
-                f"{row['file'].author.first_name} {row['file'].author.last_name}",
-                row['file'].created.strftime('%Y-%m-%d'),
-                row['file'].created.strftime('%H:%M:%S')
-            )
-                for row in table]
+            data = [
+                (
+                    row['theme'].numbering,
+                    row['theme'].title,
+                    f"{row['theme'].numbering}.{row['question'].numbering}",
+                    row['question'].description,
+                    row['file'].basename,
+                    f"{row['file'].author.first_name} {row['file'].author.last_name}",
+                    row['file'].created.strftime('%Y-%m-%d'),
+                    row['file'].created.strftime('%H:%M:%S')
+                )
+                for row in table
+            ]
 
             opts = {
                 'data': data,
