@@ -71,3 +71,23 @@ def test_send_response_file_list_fails_for_draft_questionnaire_for_audited(clien
     response = get_response_list(client, user, questionnaire.id)
 
     assert response.status_code != 200
+
+
+###################################
+# Tests for contents of file list
+###################################
+# Decoding the xlsx file is too complicated, so we test the file list before it is written to file.
+from control.export_response_files import get_files_for_export
+
+def test_send_response_file_list_contains_file(client):
+    response_file = factories.ResponseFileFactory(is_deleted=False)
+    questionnaire = response_file.question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert not questionnaire.is_draft
+    user = utils.make_audited_user(questionnaire.control)
+
+    files = get_files_for_export(questionnaire)
+
+    assert len(files) == 1
+    assert files[0].file.name == response_file.file.name

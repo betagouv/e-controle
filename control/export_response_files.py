@@ -1,7 +1,16 @@
 import xlsxwriter
 
 from datetime import date
+from .models import ResponseFile
 from tempfile import NamedTemporaryFile
+
+
+def get_files_for_export(questionnaire):
+    queryset = ResponseFile.objects \
+            .filter(question__theme__questionnaire=questionnaire) \
+            .filter(is_deleted=False) \
+            .all()
+    return queryset
 
 
 def generate_response_file_list_in_xlsx(questionnaire):
@@ -51,13 +60,11 @@ def generate_response_file_list_in_xlsx(questionnaire):
 
             table = [
                 {
-                    'theme': theme,
-                    'question': question,
+                    'theme': file.question.theme,
+                    'question': file.question,
                     'file': file
                 }
-                for theme in questionnaire.themes.all()
-                for question in theme.questions.all()
-                for file in question.response_files.filter(is_deleted=False)
+                for file in get_files_for_export(questionnaire)
             ]
 
             data = [
