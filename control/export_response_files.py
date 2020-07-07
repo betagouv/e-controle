@@ -9,6 +9,7 @@ def get_files_for_export(questionnaire):
     queryset = ResponseFile.objects \
             .filter(question__theme__questionnaire=questionnaire) \
             .filter(is_deleted=False) \
+            .order_by('created') \
             .all()
     return queryset
 

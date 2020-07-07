@@ -104,3 +104,26 @@ def test_send_response_file_list_does_not_contain_deleted_file(client):
     files = get_files_for_export(questionnaire)
 
     assert len(files) == 0
+
+
+def test_send_response_file_list_has_files_in_order_of_creation_date(client):
+    response_file_1 = factories.ResponseFileFactory(is_deleted=False)
+    question = response_file_1.question
+    response_file_2 = factories.ResponseFileFactory(question=question, is_deleted=False)
+    assert response_file_1.question == response_file_2.question
+    assert response_file_1.file.name != response_file_2.file.name
+    assert response_file_1.created < response_file_2.created
+
+    questionnaire = response_file_1.question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert not questionnaire.is_draft
+
+    user = utils.make_audited_user(questionnaire.control)
+
+    files = get_files_for_export(questionnaire)
+
+    assert len(files) == 2
+    assert files[0].file.name == response_file_1.file.name
+    assert files[1].file.name == response_file_2.file.name
+    assert files[0].created < files[1].created
