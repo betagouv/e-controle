@@ -91,3 +91,16 @@ def test_send_response_file_list_contains_file(client):
 
     assert len(files) == 1
     assert files[0].file.name == response_file.file.name
+
+
+def test_send_response_file_list_does_not_contain_deleted_file(client):
+    response_file = factories.ResponseFileFactory(is_deleted=True)
+    questionnaire = response_file.question.theme.questionnaire
+    questionnaire.is_draft = False
+    questionnaire.save()
+    assert not questionnaire.is_draft
+    user = utils.make_audited_user(questionnaire.control)
+
+    files = get_files_for_export(questionnaire)
+
+    assert len(files) == 0
