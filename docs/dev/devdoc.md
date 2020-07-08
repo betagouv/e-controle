@@ -1,4 +1,4 @@
-# Architecture of the repo
+# Architecture of e.contrôle
 Created 9 Dec 2019 - things could have changed since then, sorry :) Please add a date when you change sections of this doc. Place the date directly in the section you edited.
 
 The README.md file also contains info on how things work, check it out.
@@ -90,3 +90,39 @@ Root file : https://github.com/betagouv/e-controle/blob/develop/static/src/quest
 
 ### Vue subcomponents
 In the folders in static/src, the Vue components.
+
+
+## Webdav server
+When audited users upload files to e.contrôle, they can be accessed from within the e.contrôle interface,
+but can also be served by the webdav protocole. The e.contrôle server implements the Webdav protocol to act as a file server, granting or denying access to specific files for specific users.
+
+This feature is specifically used by inspectors who access files through their Windows File Explorer, that acts as a webdav client.
+You can watch the
+[demo of the webdav feature](https://drive.google.com/file/d/1rzZ5LqJnMkHTjmYajHxvZqDyqHafRQL9/view).
+
+### WSGI : one for Django, one for Webdav
+The Django part of e.contrôle is a python app that uses the WSGI interface to communicate with the webserver (for example Apache or Nginx). See ecc/wsgi.py. When a request comes in to the webserver, it sends it over to the DJango python code.
+See the Django doc for details : https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
+
+The webdav part of e.contrôle is not a Django app. It is a python app, which uses a different wsgi.py file to communicate
+with the webserver (see webdav/wsgi.py).
+
+When a request is sent by a web client to e.controle's main URL (for instance https://app.e-contrôle.com), the webserver sends the request to the Django app for processing. If the request is sent to e.contrôle's webdav url (for instance https://webdav.e-controle.com), the webserver sends it to the webdav app. (This routing of requests is done in the webserver's config, which is not in this repo.)
+
+### How the webdav app identifies users and grants or denies access to files
+The webdav app is built on the wsgidav package (https://wsgidav.readthedocs.io/en/latest/), a python Webdav server.
+
+We have configured it with our own domain controller (see webdav/cc_domain_controller.py).
+When a request comes in, the domain controller checks the user's permission and grants or denies access to the requested realm. A realm is a sub-part of the filesystem. In our case, a realm is the directory of files belonging a control.
+The domain controller checks that request's user is allowed to access the files for the given control.
+
+When requests come from Windows File Explorer or other Windows apps, we get the user from the Kerberos token. It is passed by the webserver to the webdav app using an environment variable (this is implemented by webserver config, not in this repo).
+
+From the kerberos token, the domain controller queries the LDAP server (for example Active Directory)
+to get the corresponding user email. Then, from the user email, the domain controller uses the Django ORM to find
+the e.contrôle user and their associated controls. If the user URI of the requested file corresponds to a file from
+a control that the user can access, the domain controller grants access.
+
+Note : In order to user the Django ORM (you can see that in code like `User.objects.get(username=email)`, see `webdav/cc_domain_controller.py`), the webdav app needs to load Django, with the appropriate environment. That setup is done in webdav/wsgi.py. So the webdav app is not a Django app, but it does use Django ORM as a helper.
+
+
