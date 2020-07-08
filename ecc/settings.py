@@ -282,6 +282,9 @@ SETTINGS_EXPORT = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -290,6 +293,11 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
