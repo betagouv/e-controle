@@ -105,6 +105,8 @@ class CCDomainController(BaseDomainController):
       The format for REMOTE_USER is samaccount@CCOMPTES.FR.
       Example : for Caroline Elbourki : celbourki@CCOMPTES.fr
       The REMOTE_USER environment variable was set by the webserver.
+      param: environ: Environ Variable from apache and WSGI context
+      return: SamAccount Name as ecomment
       """
       username = environ['REMOTE_USER']
       samaccount = username.split('@', 1)[0]
