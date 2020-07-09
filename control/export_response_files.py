@@ -59,27 +59,18 @@ def generate_response_file_list_in_xlsx(questionnaire):
                 {'header': 'Commentaires'}
             ]
 
-            table = [
-                {
-                    'theme': file.question.theme,
-                    'question': file.question,
-                    'file': file
-                }
-                for file in get_files_for_export(questionnaire)
-            ]
-
             data = [
                 (
-                    row['theme'].numbering,
-                    row['theme'].title,
-                    f"{row['theme'].numbering}.{row['question'].numbering}",
-                    row['question'].description,
-                    row['file'].basename,
-                    f"{row['file'].author.first_name} {row['file'].author.last_name}",
-                    row['file'].created.strftime('%Y-%m-%d'),
-                    row['file'].created.strftime('%H:%M:%S')
+                    file.question.theme.numbering,
+                    file.question.theme.title,
+                    f"{file.theme.numbering}.{file.question.numbering}",
+                    file.question.description,
+                    file.basename,
+                    f"{file.author.first_name} {file.author.last_name}",
+                    file.created.strftime('%Y-%m-%d'),
+                    file.created.strftime('%H:%M:%S')
                 )
-                for row in table
+                for file in get_files_for_export(questionnaire)
             ]
 
             opts = {
