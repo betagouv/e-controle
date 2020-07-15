@@ -21,8 +21,8 @@
           </div>
 
           {% block nav_items %}
-            {% if user.is_authenticated %}
-              <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
+            <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
+              {% if user.is_authenticated %}
                 <div class="nav-item">
                   {% url 'faq' as faq_url %}
                   <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
@@ -30,11 +30,16 @@
                     <i class="fe fe-help-circle"></i> FAQ
                   </a>
                 </div>
-              </div>
-            {% else %}
-              <!-- add a placeholder to maintain the topbar height. -->
-              <div style="min-height: 56px;"></div>
-            {% endif %}
+              {% else %}
+                <div class="nav-item mx-6">
+                  {% url 'login' as login_url %}
+                  <a class="nav-link nav-link-thick-line {% if request.path == login_url %}active{% endif %}"
+                    href="{% url 'login'%}">
+                    Se connecter
+                  </a>
+                </div>
+              {% endif %}
+            </div>
           {% endblock nav_items %}
 
           {% block current_user %}
@@ -52,9 +57,6 @@
                   </a>
                 </div>
               </div>
-            {% else %}
-              <!-- add a placeholder to maintain the topbar height. -->
-              <div style="min-height: 56px;"></div>
             {% endif %}
           {% endblock current_user %}
         </div>  <!--// closing: top_header  //-->
