@@ -7,6 +7,7 @@ from django.urls import path, include
 
 from rest_framework import routers
 
+from backoffice import views as backoffice_views
 from config import api_views as config_api_views
 from control import admin as admin_views
 from control import api_views as control_api_views
@@ -38,6 +39,7 @@ router.register(r'deletion', deletion_api_views.DeleteViewSet, basename='deletio
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', tos_views.tos, name='tos'),
+    path(settings.ADMIN_URL + 'login/', backoffice_views.LoginView.as_view(), name='admin:login'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
