@@ -39,7 +39,9 @@ router.register(r'deletion', deletion_api_views.DeleteViewSet, basename='deletio
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', tos_views.tos, name='tos'),
-    path(settings.ADMIN_URL + 'login/', backoffice_views.LoginView.as_view(), name='admin:login'),
+    path(settings.ADMIN_URL + 'login/',
+         backoffice_views.AdminLoginView.as_view(),
+         name='admin:login'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
