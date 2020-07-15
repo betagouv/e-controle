@@ -41,7 +41,7 @@ urlpatterns = [
     path('cgu/', tos_views.tos, name='tos'),
     path(settings.ADMIN_URL + 'login/',
          backoffice_views.AdminLoginView.as_view(),
-         name='admin:login'),
+         name='admin-login'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
