@@ -32,19 +32,21 @@
             </div>   <!--// closing: nav_items  //-->
           {% endblock nav_items %}
 
-          <div class="dropdown p-3"> <!--// opening: main_profile_dropdown  //-->
-            <a href="#" class="nav-link" data-toggle="dropdown">
-              <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-              <span class="ml-2 text-default">
-                {{ user.get_full_name }}
-              </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-              <a class="dropdown-item" href="{% url 'logout' %}">
-                <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+          {% block current_user %}
+            <div class="dropdown p-3">
+              <a href="#" class="nav-link" data-toggle="dropdown">
+                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                <span class="ml-2 text-default">
+                  {{ user.get_full_name }}
+                </span>
               </a>
+              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+                </a>
+              </div>
             </div>
-          </div> <!--// closing: main_profile_dropdown  //-->
+          {% endblock current_user %}
         </div>  <!--// closing: top_header  //-->
       {% endblock page_top_row %}
 
@@ -65,7 +67,9 @@
       {% endblock page_main_container_with_sidebar %}
 
     </div>
-    {% include "footer.html" %}
+    {% block footer %}
+      {% include "footer.html" %}
+    {% endblock footer %}
   </div> <!--// closing: page  //-->
 
 {% endblock content %}

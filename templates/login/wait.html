@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block nav_items %}
+{% endblock nav_items %}
+
+{% block current_user %}
+<!-- No current user, so add a placeholder to maintain the topbar height. -->
+<div style="min-height: 56px;"></div>
+{% endblock current_user %}
+
+{% block page_main_container_with_sidebar %}
+  <script>
+    var url = '{{ next_step_url }}'
+    var waitSeconds = {{ WAIT_SECONDS }}
+
+    console.debug('Redirecting to', url, 'in', waitSeconds, 'seconds')
+    setTimeout(function(){
+      window.location.replace(url);
+    }, waitSeconds * 1000);
+
+  </script>
+  <div class="page">
+    <div class="mt-9 flex-column justify-content-center align-items-center">
+      <div class="card col-login">
+        <div class="card-body flex-column align-items-center bg-info text-white">
+          <h1>En chargement...</h1>
+          <div class="mb-6">Veuillez patienter quelques instants</div>
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock page_main_container_with_sidebar %}
+
+{% block footer %}
+{% endblock footer %}
