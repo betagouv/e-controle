@@ -58,7 +58,13 @@
             </form>
             <div class="text-center text-muted small mt-2 mt-lg-5">
               Vous rencontrez des difficultés pour vous connecter?
+            </div>
+            <div class="text-center text-muted small">
               {{ settings.SUPPORT_TEAM_EMAIL|obfuscate_mailto:"Demandez de l'aide" }}
+              ou
+              <a href="{% url 'faq' %}">
+                consultez la Foire aux Questions
+              </a>
             </div>
           </div>
         </div>
