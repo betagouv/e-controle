@@ -21,31 +21,41 @@
           </div>
 
           {% block nav_items %}
-            <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
-              <div class="nav-item">
-                {% url 'faq' as faq_url %}
-                <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
-                  href="{% url 'faq'%}">
-                  <i class="fe fe-help-circle"></i> FAQ
-                </a>
+            {% if user.is_authenticated %}
+              <div class="nav nav-tabs border-0 flex-row flex-grow-1 justify-content-end"> <!--// opening: nav_items  //-->
+                <div class="nav-item">
+                  {% url 'faq' as faq_url %}
+                  <a class="nav-link nav-link-thick-line {% if request.path == faq_url %}active{% endif %}"
+                    href="{% url 'faq'%}">
+                    <i class="fe fe-help-circle"></i> FAQ
+                  </a>
+                </div>
               </div>
-            </div>   <!--// closing: nav_items  //-->
+            {% else %}
+              <!-- add a placeholder to maintain the topbar height. -->
+              <div style="min-height: 56px;"></div>
+            {% endif %}
           {% endblock nav_items %}
 
           {% block current_user %}
-            <div class="dropdown p-3">
-              <a href="#" class="nav-link" data-toggle="dropdown">
-                <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
-                <span class="ml-2 text-default">
-                  {{ user.get_full_name }}
-                </span>
-              </a>
-              <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                <a class="dropdown-item" href="{% url 'logout' %}">
-                  <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+            {% if user.is_authenticated %}
+              <div class="dropdown p-3">
+                <a href="#" class="nav-link" data-toggle="dropdown">
+                  <span class="avatar avatar-pink">{{ user.first_name|first }}{{ user.last_name|first }}</span>
+                  <span class="ml-2 text-default">
+                    {{ user.get_full_name }}
+                  </span>
                 </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                  <a class="dropdown-item" href="{% url 'logout' %}">
+                    <i class="dropdown-icon fe fe-log-out"></i> Se déconnecter
+                  </a>
+                </div>
               </div>
-            </div>
+            {% else %}
+              <!-- add a placeholder to maintain the topbar height. -->
+              <div style="min-height: 56px;"></div>
+            {% endif %}
           {% endblock current_user %}
         </div>  <!--// closing: top_header  //-->
       {% endblock page_top_row %}

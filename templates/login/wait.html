@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block nav_items %}
-<!-- No nav items because not logged it yet. -->
-{% endblock nav_items %}
-
-{% block current_user %}
-<!-- No current user, so add a placeholder to maintain the topbar height. -->
-<div style="min-height: 56px;"></div>
-{% endblock current_user %}
-
 {% block page_main_container_with_sidebar %}
   <script>
     var url = '{{ next_step_url }}'
@@ -33,7 +24,3 @@
     </div>
   </div>
 {% endblock page_main_container_with_sidebar %}
-
-{% block footer %}
-<!-- No footer because not logged it yet (footer contains links). -->
-{% endblock footer %}
