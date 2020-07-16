@@ -1,35 +1,37 @@
 <template>
   <empty-modal :no-close="noClose">
-    <div class="modal-header border-bottom-0">
-      <h5 class="modal-title">{{ title }}</h5>
-      <button v-if="!noClose"
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-              @click="closeModal">
-      </button>
-    </div>
-    <div class="modal-body">
-      <error-bar v-if="errorMessage">
-        {{ errorMessage }}
-      </error-bar>
-      <slot></slot>
-    </div>
-    <div class="modal-footer border-top-0">
-      <button v-if="confirmButton" type="button" class="btn btn-primary"
-              @click="confirmClicked"
-              :class="{'btn-loading': processing}"
-      >
-        {{ confirmButton }}
-      </button>
-      <button v-if="cancelButton" type="button" class="btn btn-secondary"
-              data-dismiss="modal"
-              @click="cancelClicked"
-      >
-        {{ cancelButton }}
-      </button>
-    </div>
+    <form>
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title">{{ title }}</h5>
+        <button v-if="!noClose"
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+                @click="closeModal">
+        </button>
+      </div>
+      <div class="modal-body">
+        <error-bar v-if="errorMessage">
+          {{ errorMessage }}
+        </error-bar>
+        <slot></slot>
+      </div>
+      <div class="modal-footer border-top-0">
+        <button v-if="confirmButton" type="submit" class="btn btn-primary"
+                @click="confirmClicked"
+                :class="{'btn-loading': processing}"
+        >
+          {{ confirmButton }}
+        </button>
+        <button v-if="cancelButton" type="button" class="btn btn-secondary"
+                data-dismiss="modal"
+                @click="cancelClicked"
+        >
+          {{ cancelButton }}
+        </button>
+      </div>
+    </form>
   </empty-modal>
 </template>
 
