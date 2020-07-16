@@ -55,7 +55,8 @@
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
                 Exemple : "Ressources Humaines". 255 caractères maximum.
               </div>
-              <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
+              <confirm-modal v-if="themes.length"
+                            :id="'deleteThemeConfirmModal' + themeIndex"
                              title="Confirmer la suppression de ce thème"
                              confirm-button="Oui, supprimer"
                              cancel-button="Non, retour"
@@ -68,6 +69,17 @@
                   <span v-else>
                     Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
                     seront également supprimées.
+                  </span>
+                </p>
+              </confirm-modal>
+              <confirm-modal v-else
+                            :id="'deleteThemeConfirmModal' + themeIndex"
+                             title="Suppression impossible"
+                             confirm-button="Oui, retour"
+              >
+                <p>
+                  <span>
+                    Vous ne pouvez pas créer de question sans au moins un thème.
                   </span>
                 </p>
               </confirm-modal>
