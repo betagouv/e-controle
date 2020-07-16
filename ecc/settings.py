@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'softdelete',
 
     # Project's apps
+    'backoffice',
     'config',
     'control',
     'demo',
