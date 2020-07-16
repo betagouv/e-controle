@@ -13,6 +13,7 @@ from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
 from editor import api_views as editor_api_views
+from faq import views as faq_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from session import api_views as session_api_views
@@ -58,7 +59,7 @@ urlpatterns = [
     path('fichier-reponses-deposees/<int:pk>/', control_views.SendResponseFileList.as_view(), name='send-response-file-list'),
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
-    path('faq/', control_views.FAQ.as_view(), name='faq'),
+    path('faq/', faq_views.FAQ.as_view(), name='faq'),
     path('questionnaire/corbeille/<int:pk>/', control_views.Trash.as_view(), name='trash'),
 
     path('megacontrole-confirmer/<int:pk>/',

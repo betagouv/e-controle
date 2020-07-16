@@ -159,10 +159,6 @@ class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         return Control.objects.filter(id__in=user_controls)
 
 
-class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    template_name = "ecc/faq.html"
-
-
 class UploadResponseFile(LoginRequiredMixin, CreateView):
     model = ResponseFile
     fields = ('file',)
