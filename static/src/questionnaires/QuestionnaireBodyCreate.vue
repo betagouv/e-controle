@@ -141,6 +141,7 @@
                             class="btn btn-link"
                             role="button"
                             type="button"
+                            title="Supprimer la question"
                             data-toggle="modal"
                             :data-target="'#deleteQuestion'"
                     >
