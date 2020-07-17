@@ -55,7 +55,7 @@
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
                 Exemple : "Ressources Humaines". 255 caractères maximum.
               </div>
-              <confirm-modal v-if="themes.length"
+              <confirm-modal v-if="themes.length > 1"
                             :id="'deleteThemeConfirmModal' + themeIndex"
                              title="Confirmer la suppression de ce thème"
                              confirm-button="Oui, supprimer"
@@ -79,7 +79,7 @@
               >
                 <p>
                   <span>
-                    Vous ne pouvez pas créer de question sans au moins un thème.
+                    Vous ne pouvez pas supprimer tous les thèmes.
                   </span>
                 </p>
               </confirm-modal>
@@ -128,13 +128,35 @@
                   </textarea>
 
                   <span>
-                    <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                    <button v-if="themes[themeIndex].questions.length > 1"
+                            @click.prevent="deleteQuestion(themeIndex, qIndex)"
                             class="btn btn-link"
                             role="button"
                             type="button"
-                            title="Supprimer la question">
+                            title="Supprimer la question"
+                    >
                       <i class="fe fe-trash-2"></i>
                     </button>
+                    <button v-else
+                            class="btn btn-link"
+                            role="button"
+                            type="button"
+                            data-toggle="modal"
+                            :data-target="'#deleteQuestion'"
+                    >
+                      <i class="fe fe-trash-2"></i>
+                    </button>
+                    <confirm-modal
+                            :id="'deleteQuestion'"
+                             title="Suppression impossible"
+                             confirm-button="Oui, retour"
+                    >
+                      <p>
+                        <span>
+                          Vous ne pouvez pas supprimer toutes les questions.
+                        </span>
+                      </p>
+                    </confirm-modal>
                   </span>
                   <question-file-upload :question="question"></question-file-upload>
                 </div>
@@ -215,7 +237,6 @@ export default Vue.extend({
   ],
   methods: {
     addQuestion: function(themeIndex) {
-      console.debug('addQuestion', themeIndex)
       this.themes[themeIndex].questions.push({
         description: '',
         order: this.themes[themeIndex].questions.length,
