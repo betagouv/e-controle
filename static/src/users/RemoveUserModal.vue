@@ -19,7 +19,7 @@
             {{ editingControl.title }}.
           </p>
           <div class="btn-list">
-            <button @click="remove()" class="btn btn-danger" type="button">
+            <button @click="remove()" class="btn btn-danger" type="submit">
               Supprimer
             </button>
             <button @click="cancel()" class="btn btn-secondary" type="button" data-dismiss="modal">
