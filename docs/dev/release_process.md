@@ -1,16 +1,19 @@
 # Processus de développement et de release avec git
 
 Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/).
+
 Ce modèle de développement s'appuie deux branches central qui sont *develop* et *master*.
+
 La branche *master* reflète toujours l'état actuel en production, tandis que *develop* pointe sur les
 derniers changements opérés en vue de la prochaine release.
+
 Ces deux branches sont les principales branches du projet. Elles sont centralisées et illimitées dans le
 temps.
 
 D'autre part, le projet s'articule autour de trois autres types de branches :
- - feature/ ou /bugfix (on peut les utiliser de façon interchangeable, selon qu'on juge qu'on est en train de rajouter une nouvelle fonctionnalité ou de fixer un bug)
- - release/
- - hotfix/
+ - feature/ ou /bugfix : utilisées pour l'addition d'une nouvelle feature, ou un bugfix. On peut utiliser les préfixes "feature" ou "bugfix" de façon interchangeable, au jugé. (bugfix n'est pas dans le git-flow standard, si on veut coller au standard, utiliser feature!)
+ - release/ : utilisée pour mettre en prod les nouvelles modifications de dévelop.
+ - hotfix/ : utilisée pour fixer un bug déjà présent en prod, avec une procédure accélérée par rapport à la procédure de release.
 
  Ces branches sont appelées branches de support, et elles intéragissent avec les branches principales
  de façon très codifiée. Par exemple :
@@ -18,7 +21,11 @@ D'autre part, le projet s'articule autour de trois autres types de branches :
  - release/ doit provenir de *develop* et être mergée dans *develop* et *master*
  - hotfix/ doit provenir de *master* et être mergée dans *develop* et *master*
 
-Par exemple, pour une feature qui fait "Update the user form", on crée une branche de feature en suivant le processus suivant :
+# Réaliser une feature
+
+On prendra l'exemple d'une feature qui fait des changements dans le user form.
+
+On crée une branche de feature en suivant le processus suivant :
 ```
     $ git checkout develop
     $ git pull
@@ -41,6 +48,8 @@ Optionnel : supprimer la branche locale. On ne supprime pas la branche remote su
 ```
     $ git branch -d feature/update-user-form
 ```
+
+# Réaliser une release
 
 Pour créer une branche de release (par exemple pour la version 1.20), on suivra le processus suivant :
 ```
@@ -90,6 +99,8 @@ Ensuite, il faut "backmerger" dans develop : comme on a ajouté des commits de b
     $ git pull
     $ git merge --no-ff release/1.20
 ```
+
+# Réaliser un hotfix
 
 Dans le cas où on trouve un bug en prod, après le déploiement, si on décide qu'il est important, on le fixe tout de suite. On fait un hotfix. : c'est une procédure plus rapide que de faire une release complète. Le hotfix se fait directement sur master, sans passer par develop. C'est le seul cas où le code ne commence pas par develop.
 
