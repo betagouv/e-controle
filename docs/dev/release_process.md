@@ -38,7 +38,7 @@ Le développement de la feature se fait dans la nouvelle branche feature/update-
 ## Valider
 Une fois le code écrit, il faut qu'il soit reviewé, pour ca il faut ouvrir une PR dans github.
 
-Il faut aussi qu'il soit testé par l'intrapreneur/PO pour aider à dénicher les bugs. (pour ca, on peut déployer la branche sur heroku ou sur DEV).
+Il faut aussi qu'il soit testé par l'intrapreneur/PO (ou par un autre dev, mais en tout cas par une personne différente que celle qui a écrit le code) pour aider à dénicher les bugs. Pour ca, on peut déployer la branche sur heroku ou sur DEV.
 
 La feature doit aussi être testée auprès des utilisateurs pour vérifier qu'elle est compréhensible et utile (si c'est un changement mineur ou un bugfix, on peut juger que ce n'est pas nécessaire).
 
@@ -60,7 +60,10 @@ Optionnel : supprimer la branche locale. On ne supprime pas la branche remote su
 
 # Réaliser une release
 
-Pour créer une branche de release (par exemple pour la version 1.20), on suivra le processus suivant :
+Quand il y a des nouveautés dans develop qu'on veut mettre en production, on va faire une release. On prendra l'exemple de la version 1.20.
+
+## Créer la release
+Pour créer une branche de release, on suivra le processus suivant :
 ```
     $ git checkout develop
     $ git pull develop
@@ -76,20 +79,27 @@ On met ces deux tâches dans un commit dans la branche release/1.20 :
     $ git commit -m "Updated version number"
 ```
 
-Ensuite on teste la release.
+## Tester la release
 
-On réalise les tests de recette sur au moins 2 navigateurs (3 c'est encore mieux!), dont Intenet Explorer (parce qu'il pose toujours plus de problèmes). Un test de recette doit idéalement cliquer une fois sur chaque bouton de l'interface pour vérifier qu'il marche. On peut suivre la [liste des fonctionnalités à tester](https://docs.google.com/spreadsheets/d/1YAj0BITC4nq3_IDijhncNniTphC55zr3uBrLyzeFE1A/edit#gid=638845062), qui n'est pas exhaustive. On peut aussi tester de façon plus détaillée les parties de l'interface qui ont été modifiées dans la release.
+On réalise les tests de recette sur au moins 2 navigateurs (3 c'est encore mieux!), dont Intenet Explorer (parce qu'il pose toujours plus de problèmes).
 
-On réalise les tests de recette sur la machine de DEV. Si ils passent (on ne trouve pas de bugs), on déploie en PPROD et on refait les tests de recette en PPROD. Si ils passent, on déploie en PROD.
+Un test de recette doit idéalement cliquer une fois sur chaque bouton de l'interface pour vérifier qu'il marche. On peut suivre la [liste des fonctionnalités à tester](https://docs.google.com/spreadsheets/d/1YAj0BITC4nq3_IDijhncNniTphC55zr3uBrLyzeFE1A/edit#gid=638845062), qui n'est pas exhaustive. On peut aussi tester de façon plus détaillée les parties de l'interface qui ont été modifiées dans la release.
+
+On réalise les tests de recette sur la machine de DEV. Si ils passent (on ne trouve pas de bugs), on déploie en PPROD et on refait les tests de recette en PPROD.
 
 Dans le cas où les tests de recette trouvent des bugs, il faut les fixer dans la branche release/1.20 puis recommencer le processus de tests.
 
 Pour ajouter le fix dans release/1.20, on peut committer directement dans release/1.20. (Si c'est un gros fix, on peut brancher depuis release/1.20 pour que ca soit plus propre, et ne laisser que le commit de merge dans release/1.20)
 ```
-    $ git commit -m "Fixed bug with the stuff and the things"
+  $ git checkout release/1.20
+  $ git pull
+  $ git commit -m 'Forgot to do the thing, fixed now'
 ```
 
-Une fois que tous les tests sont passés et que la release est déployée en prod, on merge la branche release dans la branche master. La branche master ne contient que des commits qui correspondent à un release.
+## Déployer
+Une fois que tous les tests sont passés en DEV et en PPROD, on déploie en PROD.
+
+Pour garder la trace de cette release, on merge la branche release dans la branche master. La branche master ne contient que des commits qui correspondent à un release.
 ```
     $ git checkout master
     $ git pull
@@ -111,9 +121,14 @@ Ensuite, il faut "backmerger" dans develop : comme on a ajouté des commits de b
 
 # Réaliser un hotfix
 
-Dans le cas où on trouve un bug en prod, après le déploiement, si on décide qu'il est important, on le fixe tout de suite. On fait un hotfix. : c'est une procédure plus rapide que de faire une release complète. Le hotfix se fait directement sur master, sans passer par develop. C'est le seul cas où le code ne commence pas par develop.
+Dans le cas où on trouve un bug en prod, après le déploiement, si on décide qu'il est important, on le fixe tout de suite. On fait un hotfix : c'est une procédure plus rapide que de faire une release complète.
 
-Par exemple, on se rend compte que les dates sont affichées en anglais, et on décide que c'est très grave. Pour créer une branche de hotfix, on suivra le processus suivant :
+Par exemple, on se rend compte que les dates sont affichées en anglais en prod, et on décide que c'est très grave. (On aurait pu aussi décider que ca peut attendre calmement la prochaine release...)
+
+## Créer le hotfix
+Le hotfix se fait directement sur master, sans passer par develop. C'est le seul cas où le code ne commence pas sa vie dans develop.
+
+ Pour créer une branche de hotfix, on suivra le processus suivant :
 ```
     $ git checkout master
     $ git pull
@@ -125,9 +140,12 @@ On commit le fix dans la branche (ou ou plusieurs commits) :
     $ git commit -m "Display the dates in french"
 ```
 
-Le fix doit aussi changer le numéro de version et faire des release notes pour cette nouvelle version. Si on était précédemment à la version 1.20, alors on fait une version 1.20.1. S'inspirer de [ce commit](https://github.com/betagouv/e-controle/commit/85a165b8) (les release notes sont faciles : il n'y a que le fix qui a changé!)
+Le fix doit aussi changer le numéro de version et faire des release notes pour cette nouvelle version. Si on était précédemment à la version 1.20, alors on fait une version 1.20.1 (version "patch"). S'inspirer de [ce commit](https://github.com/betagouv/e-controle/commit/85a165b8) (les release notes sont faciles : il n'y a que le fix qui a changé!)
 
-On déploie cette branche sur heroku ou sur DEV et on teste que le bug est parti. On fait aussi la code review (c'est pas le moment de bacler, ca va aller directement en prod!)
+## Tester le hotfix
+On fait un processus similaire à quand on teste une feature.
+
+On déploie la branche de hotfix sur heroku ou sur DEV et fait tester par l'intra/PO que le bug est parti. On fait aussi la code review (c'est pas le moment de bacler, ca va aller directement en prod!)
 
 Quand on est satisfait du fix, on merge la branche dans master :
 ```
@@ -140,7 +158,7 @@ On déploie master sur la machine de DEV, et on teste que le bug est parti. On n
 
 Ensuite on fait un déploiement en prod.
 
-On tagge master pour garder un historique des releases :
+On tagge master pour garder un historique de cette release :
 ```
     $ git checkout master
     $ git pull
