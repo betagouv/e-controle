@@ -98,6 +98,21 @@ Dans le cas où les tests de recette trouvent des bugs, il faut les fixer dans l
 
 Puis on recommence le processus de tests, jusqu'à ce qu'on soit content.
 
+### Déployer en DEV, PPROD, PROD
+On utilise jenkins pour les déploiement sur dev, pprod et prod.
+
+Pour les déploiements en dev, on a accès au jenkins de dev. On peut déployer la branche qu'on veut, il suffit de remplir les champs dans jenkins.
+
+Pour les déploiements en pprod et prod, on demande à Christophe qui a accès au jenkins de prod. Le script déploie par défaut la branche "prod" (on peut changer ce défaut en demandant à Christophe, mais c'est plus simple de juste déployer la branche par défaut). Donc pour chaque déploiement, avant de le demander à Christophe, on bouge la branche "prod" au bon endroit.
+
+Par exemple, je veux déployer la branche release/1.20 en pprod. Je mets la branche prod au bon endroit :
+```
+    $ git checkout release/1.20
+    $ git pull
+    $ git checkout -B prod
+    $ git push
+```
+puis je demande le déploiement en pprod.
 
 ## Déployer
 Une fois que tous les tests sont passés en DEV et en PPROD, on déploie en PROD.
