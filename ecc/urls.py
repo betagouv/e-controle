@@ -7,12 +7,14 @@ from django.urls import path, include
 
 from rest_framework import routers
 
+from backoffice import views as backoffice_views
 from config import api_views as config_api_views
 from control import admin as admin_views
 from control import api_views as control_api_views
 from control import views as control_views
 from demo import views as demo_views
 from editor import api_views as editor_api_views
+from faq import views as faq_views
 from magicauth import views as magicauth_views
 from magicauth.urls import urlpatterns as magicauth_urls
 from session import api_views as session_api_views
@@ -38,6 +40,9 @@ router.register(r'deletion', deletion_api_views.DeleteViewSet, basename='deletio
 urlpatterns = [
     path('', magicauth_views.LoginView.as_view(), name='login'),
     path('cgu/', tos_views.tos, name='tos'),
+    path(settings.ADMIN_URL + 'login/',
+         backoffice_views.AdminLoginView.as_view(),
+         name='admin-login'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
 
@@ -58,7 +63,7 @@ urlpatterns = [
     path('fichier-reponses-deposees/<int:pk>/', control_views.SendResponseFileList.as_view(), name='send-response-file-list'),
 
     path('upload/', control_views.UploadResponseFile.as_view(), name='response-upload'),
-    path('faq/', control_views.FAQ.as_view(), name='faq'),
+    path('faq/', faq_views.FAQ.as_view(), name='faq'),
     path('questionnaire/corbeille/<int:pk>/', control_views.Trash.as_view(), name='trash'),
 
     path('megacontrole-confirmer/<int:pk>/',

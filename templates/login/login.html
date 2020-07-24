@@ -4,7 +4,8 @@
 {% block content %}
 <div id="page" class="page white">
   <div id="non-footer" class="container">
-    <div class="row">
+    <div class="row"
+         id="connectez-vous-a-e-controle">
       <div class="col-md d-none d-md-block">
         <img src="{% static 'img/photo_cour_des_comptes.jpg' %}" alt="Photo de la Cour des comptes" />
       </div>
@@ -57,7 +58,13 @@
             </form>
             <div class="text-center text-muted small mt-2 mt-lg-5">
               Vous rencontrez des difficultés pour vous connecter?
+            </div>
+            <div class="text-center text-muted small">
               {{ settings.SUPPORT_TEAM_EMAIL|obfuscate_mailto:"Demandez de l'aide" }}
+              ou
+              <a href="{% url 'faq' %}">
+                consultez la Foire aux Questions
+              </a>
             </div>
           </div>
         </div>
@@ -67,10 +74,11 @@
         <img src="{% static 'img/logo-cc.png' %}" class="img resize-bug" alt="logo-cc"/>
       </div>
     </div>
-    <div class="mt-9">
+    <div class="mt-9"
+         id="a-quoi-sert-e-controle">
       <div class="row">
         <div class="col-sm text-center">
-          <h1 id="a-quoi-sert-e-controle">À quoi sert e-contrôle ?</h1>
+          <h1>À quoi sert e-contrôle ?</h1>
         </div>
       </div>
       <div class="row">
@@ -127,6 +135,19 @@
               <strong>Visualisez vos réponses</strong> sur la plateforme
             </li>
           </ol>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="m-6">
+          Pour en savoir plus, consultez la
+          <a href="{% url 'faq' %}">
+            Foire aux Questions
+          </a>
+          ou
+          <a href="#connectez-vous-a-e-controle">
+            connectez-vous
+          </a>
+          !
         </div>
       </div>
     </div>

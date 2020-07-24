@@ -18,4 +18,5 @@ class Welcome(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+# TOS view is accessible without login.
 tos = TemplateView.as_view(template_name='tos/tos.html')

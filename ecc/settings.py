@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'softdelete',
 
     # Project's apps
+    'backoffice',
     'config',
     'control',
     'demo',
@@ -212,6 +213,7 @@ MAGICAUTH_EMAIL_HTML_TEMPLATE = 'login/email.html'
 MAGICAUTH_EMAIL_TEXT_TEMPLATE = 'login/email.txt'
 MAGICAUTH_LOGIN_VIEW_TEMPLATE = 'login/login.html'
 MAGICAUTH_EMAIL_SENT_VIEW_TEMPLATE = 'login/email_sent.html'
+MAGICAUTH_WAIT_VIEW_TEMPLATE = 'login/wait.html'
 
 LOGIN_URL = 'login'
 
@@ -282,6 +284,9 @@ SETTINGS_EXPORT = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -290,6 +295,11 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     )
 }
+
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 HTTP_AUTHORIZATION = env('HTTP_AUTHORIZATION', default=None)
