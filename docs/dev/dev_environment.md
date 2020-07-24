@@ -8,7 +8,7 @@ Ces deux branches sont les principales branches du projet. Elles sont centralis�
 temps.
 
 D'autre part, le projet s'articule autour de trois autres types de branches :
- - feature/ ou /bugfix
+ - feature/ ou /bugfix (on peut les utiliser de façon interchangeable, selon qu'on juge qu'on est en train de rajouter une nouvelle fonctionnalité ou de fixer un bug)
  - release/
  - hotfix/
 
@@ -19,35 +19,44 @@ D'autre part, le projet s'articule autour de trois autres types de branches :
  - hotfix/ doit provenir de *master* et être mergée dans *develop* et *master*
 
 Par exemple, pour une feature qui fait "Update the user form", on crée une branche de feature en suivant le processus suivant :
+```
     $ git checkout develop
     $ git pull
     $ git checkout -b feature/update-user-form develop
+```
 
 Le développement de la feature se fait dans la nouvelle branche feature/update-user-form. On peut ajouter autant de commits que necessaire, il est encouragé de committer souvent même pour des versions intermédiaires et moches.
 
 Une fois la feature terminée, il faut incorporer la branche dans develop:
+```
     $ git checkout develop
     $ git pull develop
     $ git merge --no-ff feature/update-user-form
     $ git push origin develop
+```
 
-Note : Le flag --no-ff (no fast-forward) crée un commit de merge dans la branche develop. Si on ne le met pas, il y a des cas (le cas fast-forward) où tous les commits de la branche feature vont être ajoutés dans develop. Ce n'est pas souhaitable, car la branche feature est une branche de travail, qui peut avoir bcp de commits brouillons et pas interessants à garder. Donc on utilise toujours --no-ff
+Note : Le flag --no-ff (no fast-forward) crée un commit de merge dans la branche develop. Si on ne le met pas, il y a des cas (le cas fast-forward) où tous les commits de la branche feature vont être ajoutés dans develop. Ce n'est pas souhaitable, car la branche feature est une branche de travail, qui peut avoir bcp de commits brouillons et pas interessants à garder. Donc on utilise toujours --no-ff.
 
 Optionnel : supprimer la branche locale. On ne supprime pas la branche remote sur github, pour garder l'historique. (On pourra décider plus tard qu'il y a trop de branches et les supprimer, si c'est nécessaire.)
+```
     $ git branch -d feature/update-user-form
-
+```
 
 Pour créer une branche de release (par exemple pour la version 1.20), on suivra le processus suivant :
+```
     $ git checkout develop
     $ git pull develop
     $ git checkout -b release/1.20 develop
+```
 
-Il y a 2 taches à faire (on peut regarder [ce commit](https://github.com/betagouv/e-controle/commit/85a165b8) pour avoir un exemple):
+Il y a 2 taches à faire dans cette nouvelle branche (on peut regarder [ce commit](https://github.com/betagouv/e-controle/commit/85a165b8) pour avoir un exemple) :
  - Ajouter des release notes dans le dossier docs/releases. On peut imiter le format des releases precedentes. On peut décider d'un nom pour la release dans ce fichier.
  - Mettre à jour la version affichée sur le site : dans templates/footer.html.
 
 On met ces deux tâches dans un commit dans la branche release/1.20 :
+```
     $ git commit -m "Updated version number"
+```
 
 Ensuite on teste la release.
 
@@ -57,58 +66,74 @@ On réalise les tests de recette sur la machine de DEV. Si ils passent (on ne tr
 
 Dans le cas où les tests de recette trouvent des bugs, il faut les fixer dans la branche release/1.20 puis recommencer le processus de tests.
 
-Pour ajouter le fix dans release/1.20, on peut committer directement dans release/1.20.
+Pour ajouter le fix dans release/1.20, on peut committer directement dans release/1.20. (Si c'est un gros fix, on peut brancher depuis release/1.20 pour que ca soit plus propre, et ne laisser que le commit de merge dans release/1.20)
+```
     $ git commit -m "Fixed bug with the stuff and the things"
+```
 
 Une fois que tous les tests sont passés et que la release est déployée en prod, on merge la branche release dans la branche master. La branche master ne contient que des commits qui correspondent à un release.
+```
     $ git checkout master
     $ git pull
     $ git merge --no-ff release/1.20
+```
 
 On va aussi tagger le commit de master : ca fait apparaitre [une release dans la page de github](https://github.com/betagouv/e-controle/releases), et ca nous permet de garder des traces. On crée le tag en local, puis on le push sur github.
+```
     $ git tag -a 1.20
     $ git push origin 1.20
+```
 
 Ensuite, il faut "backmerger" dans develop : comme on a ajouté des commits de bugfix dans release/1.20, il faut que ces commits soient ramenés aussi dans develop, pour qu'ils soient présents dans les versions suivantes.
+```
     $ git checkout develop
     $ git pull
     $ git merge --no-ff release/1.20
-
+```
 
 Dans le cas où on trouve un bug en prod, après le déploiement, si on décide qu'il est important, on le fixe tout de suite. On fait un hotfix. : c'est une procédure plus rapide que de faire une release complète. Le hotfix se fait directement sur master, sans passer par develop. C'est le seul cas où le code ne commence pas par develop.
 
 Par exemple, on se rend compte que les dates sont affichées en anglais, et on décide que c'est très grave. Pour créer une branche de hotfix, on suivra le processus suivant :
+```
     $ git checkout master
     $ git pull
     $ git checkout -b hotfix/fix-dates-in-french
+```
 
 On commit le fix dans la branche (ou ou plusieurs commits) :
-    $ git commit -m "Applied fix"
+```
+    $ git commit -m "Display the dates in french"
+```
 
 Le fix doit aussi changer le numéro de version et faire des release notes pour cette nouvelle version. Si on était précédemment à la version 1.20, alors on fait une version 1.20.1. S'inspirer de [ce commit](https://github.com/betagouv/e-controle/commit/85a165b8) (les release notes sont faciles : il n'y a que le fix qui a changé!)
 
 On déploie cette branche sur heroku ou sur DEV et on teste que le bug est parti. On fait aussi la code review (c'est pas le moment de bacler, ca va aller directement en prod!)
 
 Quand on est satisfait du fix, on merge la branche dans master :
+```
     $ git checkout master
     $ git pull
     $ git merge --no-ff hotfix/fix-dates-in-french
+```
 
 On déploie master sur la machine de DEV, et on teste que le bug est parti. On n'est pas obligé de refaire tous les tests de recette. Ensuite on déploie sur pprod et on reteste. S'il y a encore des problèmes on les fixe.
 
 Ensuite on fait un déploiement en prod.
 
-On tagge pour garder un historique des releases :
+On tagge master pour garder un historique des releases :
+```
     $ git checkout master
     $ git pull
     $ git tag -a 1.20.1
     $ git push origin 1.20.1
+```
 
 Et on backmerge dans develop.
+```
     $ git checkout develop
     $ git pull
     $ git merge --no-ff release/1.20.1
-
+```
 
 ...
 
