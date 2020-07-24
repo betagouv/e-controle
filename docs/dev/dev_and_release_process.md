@@ -61,6 +61,8 @@ Optionnel : supprimer la branche locale. On ne supprime pas la branche remote su
 
 Quand il y a des nouveautés dans develop qu'on veut les mettre en production, on va faire une release. On prendra l'exemple de la version 1.20.
 
+Quand est-ce qu'on release ? Dès qu'on veut. Dès qu'on a quelque chose de nouveau. Il n'y a pas de contrainte spécifique d'en faire un certain nombre par sprint.
+
 ## Créer la release
 Pour créer une branche de release, on suivra le processus suivant :
 ```
@@ -114,7 +116,7 @@ Par exemple, je veux déployer la branche release/1.20 en pprod. Je mets la bran
 ```
 puis je demande le déploiement en pprod.
 
-## Déployer
+## Déployer et nettoyer
 Une fois que tous les tests sont passés en DEV et en PPROD, on déploie en PROD.
 
 Pour garder la trace de cette release, on merge la branche release dans la branche master. La branche master ne contient que des commits qui correspondent à un release.
