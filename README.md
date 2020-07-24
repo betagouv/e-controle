@@ -54,7 +54,7 @@ Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/d
 - ["Je dépose des documents de réponse à une question"](https://drive.google.com/open?id=1KPcRKKeS_HriJpciNE6GZmiuIF5OA-y2)
 
 ## Architecture du code et du repo
-Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
+Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/architecture.md
 
 
 ## Pour développer
