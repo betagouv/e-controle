@@ -25,6 +25,7 @@ D'autre part, le projet s'articule autour de trois autres types de branches :
 
 On prendra l'exemple d'une feature qui fait des changements dans le user form.
 
+## Developper
 On crée une branche de feature en suivant le processus suivant :
 ```
     $ git checkout develop
@@ -34,6 +35,14 @@ On crée une branche de feature en suivant le processus suivant :
 
 Le développement de la feature se fait dans la nouvelle branche feature/update-user-form. On peut ajouter autant de commits que necessaire, il est encouragé de committer souvent même pour des versions intermédiaires et moches.
 
+## Valider
+Une fois le code écrit, il faut qu'il soit reviewé, pour ca il faut ouvrir une PR dans github.
+
+Il faut aussi qu'il soit testé par l'intrapreneur/PO pour aider à dénicher les bugs. (pour ca, on peut déployer la branche sur heroku ou sur DEV).
+
+La feature doit aussi être testée auprès des utilisateurs pour vérifier qu'elle est compréhensible et utile (si c'est un changement mineur ou un bugfix, on peut juger que ce n'est pas nécessaire).
+
+## Merger
 Une fois la feature terminée, il faut incorporer la branche dans develop:
 ```
     $ git checkout develop
