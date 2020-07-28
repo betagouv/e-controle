@@ -75,11 +75,11 @@
               <confirm-modal v-else
                             :id="'deleteThemeConfirmModal' + themeIndex"
                              title="Suppression impossible"
-                             confirm-button="Oui, retour"
+                             confirm-button="OK"
               >
                 <p>
                   <span>
-                    Vous ne pouvez pas supprimer tous les thèmes.
+                    Le questionnaire doit contenir au moins un thème.
                   </span>
                 </p>
               </confirm-modal>
@@ -143,18 +143,18 @@
                             type="button"
                             title="Supprimer la question"
                             data-toggle="modal"
-                            :data-target="'#deleteQuestion'"
+                            :data-target="'#cannot-delete-question' + themeIndex + '-' + qIndex"
                     >
                       <i class="fe fe-trash-2"></i>
                     </button>
                     <confirm-modal
-                            :id="'deleteQuestion'"
+                            :id="'cannot-delete-question' + themeIndex + '-' + qIndex"
                              title="Suppression impossible"
-                             confirm-button="Oui, retour"
+                             confirm-button="OK"
                     >
                       <p>
                         <span>
-                          Vous ne pouvez pas supprimer toutes les questions.
+                          Vous ne pouvez pas supprimer toutes les questions de ce thème.
                         </span>
                       </p>
                     </confirm-modal>
