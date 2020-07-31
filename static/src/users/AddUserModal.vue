@@ -62,17 +62,40 @@
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
           </fieldset>
-          <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
-            <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-            <button type="button" class="close" data-dismiss="alert"></button>
+          <div class="text-right">
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+          </div>
+        </form>
+
+        <div v-if="stepShown === 3" class="flex-column align-items-center">
+
+          <div class="flex-row align-items-center">
+            <i class="fe fe-check-circle fg-success big-icon mr-4"></i>
+            <h4 class="mb-0"> Utilisateur ajouté</h4>
+          </div>
+
+          <div class="mt-5">
             <template v-if="site_url">
               <p>
                 Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-                avec son email. Voici le lien à lui envoyer :
+                avec son email.
               </p>
-              <p style="word-wrap: break-word;">
-                {{ site_url }}
-              </p>
+              <div class="flex-row justify-content-end">
+                <button type="button" class="btn btn-secondary" @click="hideThisModal">
+                  Continuer sans l'informer
+                </button>
+                <a class="btn btn-primary ml-2"
+                   :href="'mailto:' + postResult.email +
+                          '?subject=Bienvenue sur e-controle' +
+                          '&body=Voici le lien : ' +
+                          site_url"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                >
+                  Créer un mail pour l'informer
+                </a>
+              </div>
             </template>
             <template v-else>
               <p>
@@ -81,12 +104,7 @@
               </p>
             </template>
           </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-          </div>
-        </form>
-
+        </div>
       </div>
     </div>
   </div>
@@ -157,7 +175,7 @@ export default Vue.extend({
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)
-          this.hideThisModal()
+          this.stepShown = 3
         })
         .catch((error) => {
           this.hasErrors = true
