@@ -121,7 +121,10 @@
            style="min-height: 1.5rem;">
         Enregistrement en cours ...
       </div>
-      <div v-else class="text-muted" style="min-height: 1.5rem;">
+      <div v-else
+           :class="{ 'text-danger': hasErrors, 'text-muted': !hasErrors }"
+           style="min-height: 1.5rem;">
+        <i v-if="hasErrors" class="fe fe-alert-triangle mr-2"></i>
         {{ saveMessage.text }}
       </div>
     </div>
@@ -425,6 +428,12 @@ export default Vue.extend({
       this.saveMessage.text = 'Enregistrement fait à ' + dateDone + '.'
       this.saveMessage.isSaveHappening = false
     },
+    displaySavingDoneWithError() {
+      this.saveMessage.text =
+        'Erreur lors de la sauvegarde : les modifications ne sont pas enregistrées.'
+      this.saveMessage.isWaitingForMinDisplayTime = false
+      this.saveMessage.isSaveHappening = false
+    },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true
       this.displaySaveInProgress()
@@ -442,6 +451,7 @@ export default Vue.extend({
           const errorToDisplay =
             (error.response && error.response.data) ? error.response.data : error
           this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
+          this.displaySavingDoneWithError()
         })
     },
     startPublishFlow() {
