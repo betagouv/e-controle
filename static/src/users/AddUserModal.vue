@@ -17,7 +17,7 @@
             <h4><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h4>
         </div>
 
-        <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
+        <form @submit.prevent="findUser" v-if="stepShown === 1" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <div class="form-group">
               <label id="email-label" class="form-label">
@@ -42,7 +42,7 @@
           </div>
         </form>
 
-        <form @submit.prevent="addUser" v-if="showStep2" @keydown.esc="resetFormData">
+        <form @submit.prevent="addUser" v-if="stepShown === 2" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <p class="form-label">Email : {{ formData.email}}</p>
           </div>
@@ -121,8 +121,7 @@ export default Vue.extend({
       hasErrors: false,
       searchResult: {},
       foundUser: false,
-      showStep1: true,
-      showStep2: false,
+      stepShown: 1,
     }
   },
   computed: {
@@ -145,8 +144,7 @@ export default Vue.extend({
         control: '',
         profile_type: '',
       }
-      this.showStep1 = true
-      this.showStep2 = false
+      this.stepShown = 1
       this.foundUser = false
       this.hasErrors = false
       this.errors = []
@@ -179,8 +177,7 @@ export default Vue.extend({
             this.foundUser = true
             Object.assign(this.formData, response.data[0])
           }
-          this.showStep1 = false
-          this.showStep2 = true
+          this.stepShown = 2
         })
     },
   },
