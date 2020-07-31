@@ -1,10 +1,4 @@
 # Environnement de développement
-## Principes
-Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Il existe
-  une extention git permet de standardiser ce process: https://danielkummer.github.io/git-flow-cheatsheet/
-
-Notre code review process pour collaborer dans la bonne humeur :
-https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
 
 ## Variables d'environnement
 

@@ -54,8 +54,14 @@ Les descriptions fonctionnelles sont disponibles [ici](https://docs.google.com/d
 - ["Je dépose des documents de réponse à une question"](https://drive.google.com/open?id=1KPcRKKeS_HriJpciNE6GZmiuIF5OA-y2)
 
 ## Architecture du code et du repo
-Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/devdoc.md
+Voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/architecture.md
 
 
-## Environnement de dev
+## Pour développer
+
+Notre code review process pour collaborer dans la bonne humeur :
+https://docs.google.com/document/d/1N3ulNnQYNUhoizEeBYqnp2ndeRYn8_QKjxQS5pQmVmQ/edit
+
 Comment installer son environnement pour développer e-controle : https://github.com/betagouv/e-controle/blob/develop/docs/dev/dev_environment.md
+
+Nous utilisons [git-flow](https://nvie.com/posts/a-successful-git-branching-model/). Pour plus de détails sur comment commencer une nouvelle feature, et pour le processus de release, voir https://github.com/betagouv/e-controle/blob/develop/docs/dev/dev_and_release_process.md
