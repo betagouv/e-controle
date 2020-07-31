@@ -88,8 +88,7 @@
                 <a class="btn btn-primary ml-2"
                    :href="'mailto:' + postResult.email +
                           '?subject=Bienvenue sur e-controle' +
-                          '&body=Voici le lien : ' +
-                          site_url"
+                          '&body=' + emailBody"
                    target="_blank"
                    rel="noopener noreferrer"
                 >
@@ -148,6 +147,30 @@ export default Vue.extend({
       'editingProfileType',
       'config.site_url',
     ]),
+    emailBody: function() {
+      if (this.stepShown !== 3) {
+        return ''
+      }
+
+      const newline = '%0d%0a'
+      const body = 'Bonjour ' + this.postResult.first_name + ' ' + this.postResult.last_name + ',' +
+        newline + newline + 'Je viens de vous ajouter au contrôle "' +
+        this.editingControl.title +
+        '" pour l\'organisme "' +
+        this.editingControl.depositing_organization +
+        '", en tant que membre de ' +
+        (this.editingProfileType === 'inspector'
+          ? 'l\'équipe de contrôle.'
+          : 'l\'organisme contrôlé.') +
+        newline + newline +
+        'Pour vous connecter, rendez-vous sur le site d\'e.contrôle :' +
+        newline + newline +
+        this.site_url +
+        newline + newline +
+        'Cordialement,'
+
+      return body
+    },
   },
   methods: {
     hideThisModal() {
