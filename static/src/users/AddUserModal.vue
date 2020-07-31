@@ -76,32 +76,26 @@
           </div>
 
           <div class="mt-5">
-            <template v-if="site_url">
-              <p>
-                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-                avec son email.
-              </p>
-              <div class="flex-row justify-content-end">
-                <button type="button" class="btn btn-secondary" @click="hideThisModal">
-                  Je l'ai informé
-                </button>
-                <a class="btn btn-primary ml-2"
-                   :href="'mailto:' + postResult.email +
-                          '?subject=Bienvenue sur e-controle' +
-                          '&body=' + emailBody"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                >
-                  Créer un mail pour l'informer
-                </a>
-              </div>
-            </template>
-            <template v-else>
-              <p>
-                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-                avec son email.
-              </p>
-            </template>
+            Vous avez ajouté {{ this.postResult.first_name }} {{ this.postResult.last_name }}.
+          </div>
+
+          <div class="mt-5">
+            Pensez à l'informer qu'elle.il pourra désormais se connecter avec son email.
+          </div>
+
+          <div class="mt-5 flex-row justify-content-end">
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">
+              Je l'ai informé.e
+            </button>
+            <a class="btn btn-primary ml-2"
+                :href="'mailto:' + postResult.email +
+                      '?subject=Bienvenue sur e-controle' +
+                      '&body=' + emailBody"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+              Créer un mail pour l'informer
+            </a>
           </div>
         </div>
       </div>
