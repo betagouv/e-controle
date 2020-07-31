@@ -117,11 +117,12 @@
       </div>
     </div>
     <div class="flex-row justify-content-end mt-2">
-      <div v-if="isSavingMessageDelayOn || isSaveHappening" class="" style="min-height: 1.5rem;">
+      <div v-if="saveMessage.isWaitingForMinDisplayTime || saveMessage.isSaveHappening"
+           style="min-height: 1.5rem;">
         Enregistrement en cours ...
       </div>
       <div v-else class="text-muted" style="min-height: 1.5rem;">
-        {{ saveMessage }}
+        {{ saveMessage.text }}
       </div>
     </div>
   </div>
@@ -157,6 +158,7 @@ const STATES = {
   CREATING_BODY: 2,
   PREVIEW: 3,
 }
+const SAVING_MESSAGE_MIN_DISPLAY_TIME_MILLIS = 2000
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -179,9 +181,11 @@ export default Vue.extend({
       hasErrors: false,
       STATES: STATES,
       state: STATES.LOADING,
-      saveMessage: '',
-      isSavingMessageDelayOn: false,
-      isSaveHappening: false,
+      saveMessage: {
+        text: '',
+        isWaitingForMinDisplayTime: false,
+        isSaveHappening: false,
+      },
     }
   },
   computed: {
@@ -410,16 +414,15 @@ export default Vue.extend({
       this.saveDraft()
     },
     startSavingMessageDisplay() {
-      const SAVING_MESSAGE_MIN_DISPLAY_TIME_MILLIS = 2000
-      this.isSavingMessageDelayOn = true
+      this.saveMessage.isWaitingForMinDisplayTime = true
       setTimeout(
-        () => { this.isSavingMessageDelayOn = false },
+        () => { this.saveMessage.isWaitingForMinDisplayTime = false },
         SAVING_MESSAGE_MIN_DISPLAY_TIME_MILLIS)
 
-      this.isSaveHappening = true
+      this.saveMessage.isSaveHappening = true
     },
     stopSavingMessageDisplay() {
-      this.isSaveHappening = false
+      this.saveMessage.isSaveHappening = false
     },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true
@@ -430,7 +433,7 @@ export default Vue.extend({
           this.currentQuestionnaire = response.data
           this.emitQuestionnaireUpdated()
 
-          this.saveMessage = 'Enregistrement fait à ' + nowTimeString() + '.'
+          this.saveMessage.text = 'Enregistrement fait à ' + nowTimeString() + '.'
           this.stopSavingMessageDisplay()
           return response.data
         })
