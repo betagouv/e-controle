@@ -83,7 +83,7 @@
               </p>
               <div class="flex-row justify-content-end">
                 <button type="button" class="btn btn-secondary" @click="hideThisModal">
-                  Continuer sans l'informer
+                  Je l'ai informé
                 </button>
                 <a class="btn btn-primary ml-2"
                    :href="'mailto:' + postResult.email +
