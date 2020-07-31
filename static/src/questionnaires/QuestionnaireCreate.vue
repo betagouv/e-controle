@@ -119,6 +119,7 @@
     <div class="flex-row justify-content-end mt-2">
       <div v-if="saveMessage.isWaitingForMinDisplayTime || saveMessage.isSaveHappening"
            style="min-height: 1.5rem;">
+        <i class="fas fa-sync-alt mr-2"></i>
         Enregistrement en cours ...
       </div>
       <div v-else
