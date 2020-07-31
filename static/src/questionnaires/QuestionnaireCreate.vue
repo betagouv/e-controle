@@ -123,8 +123,10 @@
       </div>
       <div v-else
            :class="{ 'text-danger': hasErrors, 'text-muted': !hasErrors }"
+           class="flex-row align-items-center"
            style="min-height: 1.5rem;">
         <i v-if="hasErrors" class="fe fe-alert-triangle mr-2"></i>
+        <i v-else class="fe fe-check-circle mr-2"></i>
         {{ saveMessage.text }}
       </div>
     </div>
