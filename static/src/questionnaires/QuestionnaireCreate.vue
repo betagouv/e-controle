@@ -413,7 +413,7 @@ export default Vue.extend({
       }
       this.saveDraft()
     },
-    startSavingMessageDisplay() {
+    displaySaveInProgress() {
       this.saveMessage.isWaitingForMinDisplayTime = true
       setTimeout(
         () => { this.saveMessage.isWaitingForMinDisplayTime = false },
@@ -421,20 +421,20 @@ export default Vue.extend({
 
       this.saveMessage.isSaveHappening = true
     },
-    stopSavingMessageDisplay() {
+    displaySavingDone(dateDone) {
+      this.saveMessage.text = 'Enregistrement fait à ' + dateDone + '.'
       this.saveMessage.isSaveHappening = false
     },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true
-      this.startSavingMessageDisplay()
+      this.displaySaveInProgress()
       return this._doSave()
         .then((response) => {
           console.log('Successful draft save.')
           this.currentQuestionnaire = response.data
           this.emitQuestionnaireUpdated()
 
-          this.saveMessage.text = 'Enregistrement fait à ' + nowTimeString() + '.'
-          this.stopSavingMessageDisplay()
+          this.displaySavingDone(nowTimeString())
           return response.data
         })
         .catch((error) => {
