@@ -17,7 +17,7 @@
             <h4><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h4>
         </div>
 
-        <form @submit.prevent="findUser" v-if="showStep1" @keydown.esc="resetFormData">
+        <form @submit.prevent="findUser" v-if="stepShown === 1" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <div class="form-group">
               <label id="email-label" class="form-label">
@@ -42,7 +42,7 @@
           </div>
         </form>
 
-        <form @submit.prevent="addUser" v-if="showStep2" @keydown.esc="resetFormData">
+        <form @submit.prevent="addUser" v-if="stepShown === 2" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <p class="form-label">Email : {{ formData.email}}</p>
           </div>
@@ -62,31 +62,42 @@
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
           </fieldset>
-          <div class="alert alert-icon alert-primary alert-dismissible" role="alert">
-            <i class="fe fe-bell mr-2" aria-hidden="true"></i>
-            <button type="button" class="close" data-dismiss="alert"></button>
-            <template v-if="site_url">
-              <p>
-                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-                avec son email. Voici le lien à lui envoyer :
-              </p>
-              <p style="word-wrap: break-word;">
-                {{ site_url }}
-              </p>
-            </template>
-            <template v-else>
-              <p>
-                Pensez à informer la personne ajoutée qu'elle pourra désormais se connecter
-                avec son email.
-              </p>
-            </template>
-          </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
 
+        <div v-if="stepShown === 3" class="flex-column align-items-center">
+
+          <div class="flex-row align-items-center">
+            <i class="fe fe-check-circle fg-success big-icon mr-4"></i>
+            <h4 class="mb-0"> Utilisateur ajouté</h4>
+          </div>
+
+          <div class="mt-5">
+            Vous avez ajouté {{ this.postResult.first_name }} {{ this.postResult.last_name }}.
+          </div>
+
+          <div class="mt-5">
+            Pensez à l'informer qu'elle.il pourra désormais se connecter avec son email.
+          </div>
+
+          <div class="mt-5 flex-row justify-content-end">
+            <button type="button" class="btn btn-secondary" @click="hideThisModal">
+              Je l'ai informé.e
+            </button>
+            <a class="btn btn-primary ml-2"
+                :href="'mailto:' + postResult.email +
+                      '?subject=Bienvenue sur e-controle' +
+                      '&body=' + emailBody"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+              Créer un mail pour l'informer
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -121,8 +132,7 @@ export default Vue.extend({
       hasErrors: false,
       searchResult: {},
       foundUser: false,
-      showStep1: true,
-      showStep2: false,
+      stepShown: 1,
     }
   },
   computed: {
@@ -131,6 +141,30 @@ export default Vue.extend({
       'editingProfileType',
       'config.site_url',
     ]),
+    emailBody: function() {
+      if (this.stepShown !== 3) {
+        return ''
+      }
+
+      const newline = '%0d%0a'
+      const body = 'Bonjour ' + this.postResult.first_name + ' ' + this.postResult.last_name + ',' +
+        newline + newline + 'Je viens de vous ajouter au contrôle "' +
+        this.editingControl.title +
+        '" pour l\'organisme "' +
+        this.editingControl.depositing_organization +
+        '", en tant que membre de ' +
+        (this.editingProfileType === 'inspector'
+          ? 'l\'équipe de contrôle.'
+          : 'l\'organisme contrôlé.') +
+        newline + newline +
+        'Pour vous connecter, rendez-vous sur le site d\'e.contrôle :' +
+        newline + newline +
+        this.site_url +
+        newline + newline +
+        'Cordialement,'
+
+      return body
+    },
   },
   methods: {
     hideThisModal() {
@@ -145,8 +179,7 @@ export default Vue.extend({
         control: '',
         profile_type: '',
       }
-      this.showStep1 = true
-      this.showStep2 = false
+      this.stepShown = 1
       this.foundUser = false
       this.hasErrors = false
       this.errors = []
@@ -159,7 +192,7 @@ export default Vue.extend({
         .then(response => {
           this.postResult = response.data
           EventBus.$emit('users-changed', this.postResult)
-          this.hideThisModal()
+          this.stepShown = 3
         })
         .catch((error) => {
           this.hasErrors = true
@@ -179,8 +212,7 @@ export default Vue.extend({
             this.foundUser = true
             Object.assign(this.formData, response.data[0])
           }
-          this.showStep1 = false
-          this.showStep2 = true
+          this.stepShown = 2
         })
     },
   },

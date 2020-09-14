@@ -7,6 +7,11 @@ from wsgidav.dc.base_dc import BaseDomainController
 
 
 class CCDomainController(BaseDomainController):
+  """
+  This domain controller grants access to requested URIs based on the permissions associated to the
+  Django user. If fetches the corresponding Django user and queries the DJango ORM to know if user
+  should have access.
+  """
 
   def __init__(self, wsgidav_app, config):
     super(CCDomainController, self).__init__(wsgidav_app, config)
@@ -29,14 +34,24 @@ class CCDomainController(BaseDomainController):
     Returns:
     str
     """
-    # we only send the control code
     logging.debug('Get domain realm: Start')
     if environ is not None:
+      # Pretend that the incoming request uses Basic authentication HTTP header, because it's easier
+      # to make it work with wsgidav.
+      # (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+      # Since Apache passes vars through environment variable, we write an environment variable to
+      # imitate a HTTP Authorization header with Basic.
+      # Note : we are going towards OpenIdConnect and away from Kerberos.
       environ['HTTP_AUTHORIZATION'] = settings.HTTP_AUTHORIZATION
+
+    # We return the realm, which corresponds to the control reference_code.
+    # Example : path_info = '2020_control_of_the_city/Q01/T01/Q01-T01-03-important_document.pdf'
+    # The realm is : '2020_control_of_the_city'
     realms = list(filter(None, path_info.split('/')))
     if len(realms) != 0:
       return realms[0]
     else:
+      # The root ("/") has been requested
       return ""
 
 
@@ -84,38 +99,80 @@ class CCDomainController(BaseDomainController):
     True if user is authorized
     """
     logging.debug('Start basic magicauth user')
-    username = environ['REMOTE_USER'] # example avalingot@CCOMPTES.FR
-    username = username.split('@', 1)[0]
 
-    # We know that the following user exists in the LDAP
-    # We now check the realm
-    try:
-      logging.info(f'Basic magicauth: LDAP Sever (username: {username})')
+    def get_samaccount_from_env(environ):
+      """
+      Extract the SamAccount from the REMOTE_USER environment variable.
+      The REMOTE_USER environment variable was set by the webserver when it received the request
+      from the user.
+
+      The format for REMOTE_USER is samaccount@CCOMPTES.FR.
+      Example : for Caroline Elbourki : celbourki@CCOMPTES.fr
+
+      param: environ: Environment variables, set by apache and WSGI context
+      return: SamAccount Name as celbourki
+      """
+      username = environ['REMOTE_USER']
+      samaccount = username.split('@', 1)[0]
+      return samaccount
+
+    def get_email_from_samacount(samaccount):
+      """
+      Query the LDAP server (e.g. Active Directory) to get the email of the user corresponding to
+      the samaccount.
+      Raise exception if not found.
+      TODO : create proper exception classes extending Exception
+      """
+      logging.info(f'Basic magicauth: LDAP Sever (samaccount: {samaccount})')
       server = Server(settings.LDAP_SERVER, get_info=ALL)
       conn = Connection(server, user=settings.LDAP_DOMAIN + "\\" + settings.LDAP_USER,
                         password=settings.LDAP_PASSWORD, authentication=NTLM)
       logging.debug('Basic magicauth: LDAP Binding')
+
       if conn.bind():
         conn.search(settings.LDAP_DC,
-                    f'(&(objectClass=user)(sAMAccountName={username}))',
+                    f'(&(objectClass=user)(sAMAccountName={samaccount}))',
                     attributes=['mail'])
         logging.debug('Basic magicauth: LDAP search')
         if len(conn.entries) == 1:
           email = conn.entries[0].mail.value
-          user = User.objects.get(username=email.lower())
-          environ["wsgidav.magicauth.roles"] = ("reader")
-          if user.profile.controls.filter(reference_code=realm).exists() or realm == "":
-            return True
+          return email
+        elif len(conn.entries) == 0:
+          raise Exception(f"sAMAccount name {samaccount} not found in LDAP server")
         else:
-          if len(conn.entries) == 0:
-            raise Exception(f"sAMAccount name doesnt exist {username}")
-          elif len(conn.entries) > 1:
-            raise Exception(f"sAMAccount name has several email addresses linked to.({username})")
+          raise Exception(f"sAMAccount name has several email addresses linked to.({samaccount})")
       else:
-        raise Exception(f"Can't not access to Active directory server ({settings.LDAP_SERVER})")
+        raise Exception(f"Cannot access LDAP server ({settings.LDAP_SERVER})")
+
+    def get_django_user_from_email(email):
+      """
+      Use the Django ORM to fetch the user object corresponding to this email.
+      """
+      user = User.objects.get(username=email.lower())
+      return user
+
+    def can_user_access_realm(django_user, realm):
+      """
+      Check if the django user has access to the control corresponding to the realm.
+      The realm in our case is the directory where the control's files are, which is
+      control.reference_code
+      """
+      # TODO : isolate case realm == "", it was necessary for windows 7 only
+      if django_user.profile.controls.filter(reference_code=realm).exists() or realm == "":
+        # The request is readonly (files should never be edited)
+        environ["wsgidav.magicauth.roles"] = ("reader")
+        return True
+      return False
+
+    samaccount = get_samaccount_from_env(environ)
+    try:
+      email = get_email_from_samacount(samaccount)
+      user = get_django_user_from_email(email)
+      return can_user_access_realm(user, realm)
     except Exception as e:
       logging.error(e)
       return False
+
 
   def supports_http_digest_auth(self):
     """Signal if this DC instance supports the HTTP digest magicauth theme.
@@ -129,7 +186,6 @@ class CCDomainController(BaseDomainController):
     return False
 
   def digest_auth_user(self, realm, user_name, environ):
-    pass
     """Check access permissions for realm/user_name.
 
     Called by http_authenticator for basic magicauth requests.
@@ -163,3 +219,4 @@ class CCDomainController(BaseDomainController):
         str: MD5("{usern_name}:{realm}:{password}")
         or false if user is unknown or rejected
     """
+    pass

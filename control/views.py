@@ -18,6 +18,7 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
+from .export_response_files import generate_response_file_list_in_xlsx
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
 from .serializers import ControlDetailUserSerializer, ControlSerializerWithoutDraft
 from .serializers import ControlSerializer, ControlDetailControlSerializer
@@ -75,12 +76,12 @@ class Trash(LoginRequiredMixin, WithListOfControlsMixin, DetailView):
             .order_by('timestamp')
 
         response_file_list = []
-        for action in stream:
-            response_file = response_files.get(id=action.target_object_id)
-            response_file.deletion_date = action.timestamp
-            response_file.deletion_user = User.objects.get(id=action.actor_object_id)
+        for act in stream:
+            response_file = response_files.get(id=act.target_object_id)
+            response_file.deletion_date = act.timestamp
+            response_file.deletion_user = User.objects.get(id=act.actor_object_id)
             response_file.question_number = str(response_file.question.theme.numbering) + \
-                                            '.' + str(response_file.question.numbering)
+                '.' + str(response_file.question.numbering)
             response_file_list.append(response_file)
         response_file_list.sort(key=lambda x: x.question_number)
         context['response_file_list'] = response_file_list
@@ -156,10 +157,6 @@ class QuestionnaireCreate(LoginRequiredMixin, WithListOfControlsMixin, DetailVie
         if not self.request.user.profile.is_inspector:
             return Control.objects.none()
         return Control.objects.filter(id__in=user_controls)
-
-
-class FAQ(LoginRequiredMixin, WithListOfControlsMixin, TemplateView):
-    template_name = "ecc/faq.html"
 
 
 class UploadResponseFile(LoginRequiredMixin, CreateView):
@@ -319,3 +316,41 @@ class SendQuestionFile(SendFileMixin, LoginRequiredMixin, View):
 class SendResponseFile(SendQuestionFile):
     model = ResponseFile
     file_type = 'response-file'
+
+
+class SendResponseFileList(SingleObjectMixin, LoginRequiredMixin, View):
+    model = Questionnaire
+
+    def get_queryset(self):
+        user_controls = self.request.user.profile.controls.active()
+        queryset = Questionnaire.objects.filter(control__in=user_controls)
+        queryset = queryset.filter(is_draft=False)
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        questionnaire = self.get_object()
+        try:
+            file = generate_response_file_list_in_xlsx(questionnaire)
+            self.add_log_entry(verb='exported responses in xls', questionnaire=questionnaire)
+            return sendfile(
+                request,
+                file.name,
+                attachment=True,
+                attachment_filename=f'réponses_questionnaire_{questionnaire.numbering}.xlsx')
+        except Exception as e:
+            self.add_log_entry(
+                verb='exported responses in xls - fail', questionnaire=questionnaire, description=e
+            )
+        finally:
+            os.remove(file.name)
+
+    def add_log_entry(self, verb, questionnaire, description=""):
+        action_details = {
+            'description': description,
+            'sender': self.request.user,
+            'verb': verb,
+            'action_object': questionnaire.control,
+            'target': questionnaire
+        }
+
+        action.send(**action_details)

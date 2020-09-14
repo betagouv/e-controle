@@ -33,6 +33,7 @@
           </fieldset>
           <div class="text-right">
             <button @click="cancel"
+                    type="button"
                     class="btn btn-secondary">
               Annuler
             </button>
