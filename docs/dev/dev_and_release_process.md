@@ -101,7 +101,25 @@ Dans le cas où les tests de recette trouvent des bugs, il faut les fixer dans l
 Puis on recommence le processus de tests, jusqu'à ce qu'on soit content.
 
 ### Déployer en DEV, PPROD, PROD
-Voir la [page sur le wiki interne](http://wiki-dea.ccomptes.fr/doku.php/dev/e-controle#jenkins).
+On utilise Jenkins pour deployer sur les machines de la cour (DEV, PPROD, PROD).
+
+Les jobs jenkins pour déployer en PPROD et PROD déploient par défaut la branche `prod`. Donc on placera le HEAD de la branche `prod` sur le commit qu'on veut déployer en PPROD ou PROD. Dans notre exemple, on veut déployer la branche `release/1.20`, donc c'est là qu'on met la branche `prod`.
+
+```
+git checkout release/1.20
+git pull
+git checkout -B prod
+git push prod
+```
+On peut au besoin utiliser `git push --force prod`.
+
+On peut aussi vérifier que ça a bien marché : `git log` doit donner quelque chose comme ça : 
+```
+commit 35ab1e277d6f38c18a964427b7d9827d13c0812c (HEAD -> prod, origin/release/1.20, origin/prod, release/1.20)
+```
+On voit que la branche locale `prod` et la branche remote `origin/prod` sont au même point que `release/1.20` et `origin/release/1.20`. Donc quand on lancera le jenkins de pprod ou prod, il déploiera la branche `prod`, qui correspond bien à `release/1.20`.
+
+Pour plus d'infos sur les jobs jenkins et comment les lancer, voir la [page sur le wiki interne](http://wiki-dea.ccomptes.fr/doku.php/dev/e-controle#jenkins).
 
 ## Déployer et nettoyer
 Une fois que tous les tests sont passés en DEV et en PPROD, on déploie en PROD.
