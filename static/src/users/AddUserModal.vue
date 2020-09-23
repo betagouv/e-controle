@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'ajout d'utilisateur n'a pas fonctionné.
+          L'ajout d'utilisateur n'a pas fonctionné. Vous pouvez réessayer.
         </div>
         <div v-if="editingProfileType==='inspector'" class="text-center">
             <h4><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h4>
@@ -38,8 +38,8 @@
               </p>
             </div>
           </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
             <button type="submit" class="btn btn-primary">Suivant</button>
           </div>
         </form>
@@ -48,7 +48,11 @@
           <div class="alert alert-warning alert-icon my-8">
             <i class="fa fa-exclamation-circle mr-2" aria-hidden="true"></i>
             <div class="mb-4">
-              Vous allez ajouter <strong>{{ formData.email }}</strong> comme contrôleur.
+              Vous allez ajouter
+              <strong>{{ formData.email }}</strong>
+              comme
+              <strong>contrôleur</strong>
+              .
             </div>
             <div> Cet email ne finit pas par
               <strong>@ccomptes.fr</strong>
@@ -57,13 +61,16 @@
               .
             </div>
           </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="back">
-              C'est une erreur, Retour
-            </button>
-            <button type="submit" class="btn btn-primary">
-              C'est volontaire, Suivant
-            </button>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
+            <div class="text-right">
+              <button type="button" class="btn btn-secondary" @click="back">
+                C'est une erreur,<br/>Retour
+              </button>
+              <button type="submit" class="btn btn-primary">
+                C'est volontaire,<br/>Suivant
+              </button>
+            </div>
           </div>
         </form>
 
@@ -87,8 +94,8 @@
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
           </fieldset>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
@@ -109,7 +116,7 @@
           </div>
 
           <div class="mt-5 flex-row justify-content-end">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">
+            <button type="button" class="btn btn-secondary" @click="cancel">
               Je l'ai informé.e
             </button>
             <a class="btn btn-primary ml-2"
@@ -192,7 +199,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    hideThisModal() {
+    cancel() {
       this.resetFormData()
       $('#addUserModal').modal('hide')
     },
