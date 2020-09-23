@@ -17,7 +17,7 @@
             <h4><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h4>
         </div>
 
-        <form @submit.prevent="findUser" v-if="stepShown === 1" @keydown.esc="resetFormData">
+        <form @submit.prevent="validateEmail" v-if="stepShown === 1" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <div class="form-group">
               <label id="email-label" class="form-label">
@@ -40,6 +40,23 @@
           </div>
           <div class="text-right">
             <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
+            <button type="submit" class="btn btn-primary">Suivant</button>
+          </div>
+        </form>
+
+        <form @submit.prevent="findUser" v-if="stepShown === 1.5" @keydown.esc="resetFormData">
+          <div>
+            Vous allez ajouter un contrôleur dont l'email ne finit pas par
+            <strong>@ccomptes.fr</strong>
+            ou
+            <strong>@crtc.ccomptes.fr</strong>
+            . Etes-vous sûr.e ?
+          </div>
+          <div>
+            {{ formData.email }}
+          </div>
+          <div class="text-right">
+            <button type="button" class="btn btn-secondary" @click="back">Retour</button>
             <button type="submit" class="btn btn-primary">Suivant</button>
           </div>
         </form>
@@ -185,6 +202,32 @@ export default Vue.extend({
       this.foundUser = false
       this.hasErrors = false
       this.errors = []
+    },
+    back() {
+      switch (this.stepShown) {
+        case 1.5:
+          this.stepShown = 1
+          break
+        case 2:
+          this.stepShown = 1
+          break
+        case 3:
+          this.stepShown = 2
+          break
+        default:
+          break
+      }
+    },
+    validateEmail() {
+      const isInspectorEmail = email => {
+        return email.endsWith('@ccomptes.fr') || email.endsWith('@crtc.ccomptes.fr')
+      }
+
+      if (this.editingProfileType === 'inspector' && !isInspectorEmail(this.formData.email)) {
+        this.stepShown = 1.5
+      } else {
+        this.findUser()
+      }
     },
     addUser() {
       this.formData.control = this.editingControl.id
