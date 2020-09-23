@@ -45,7 +45,7 @@
         </form>
 
         <form @submit.prevent="findUser" v-if="stepShown === 1.5" @keydown.esc="resetFormData">
-          <div class="alert alert-warning alert-icon">
+          <div class="alert alert-warning alert-icon my-8">
             <i class="fa fa-exclamation-circle mr-2" aria-hidden="true"></i>
             <div class="mb-4">
               Vous allez ajouter <strong>{{ formData.email }}</strong> comme contrôleur.
