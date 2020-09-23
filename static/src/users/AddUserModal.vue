@@ -96,7 +96,10 @@
           </fieldset>
           <div class="flex-row justify-content-between">
             <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
+            <div class="text-right">
+              <button type="button" class="btn btn-secondary" @click="back">Retour</button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
           </div>
         </form>
 
