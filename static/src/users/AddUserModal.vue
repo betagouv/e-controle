@@ -39,8 +39,14 @@
             </div>
           </div>
           <div class="flex-row justify-content-between">
-            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
-            <button type="submit" class="btn btn-primary">Suivant</button>
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Suivant
+              <i class="fa fa-chevron-right ml-2"></i>
+            </button>
           </div>
         </form>
 
@@ -62,13 +68,19 @@
             </div>
           </div>
           <div class="flex-row justify-content-between">
-            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
             <div class="text-right">
               <button type="button" class="btn btn-secondary" @click="back">
-                C'est une erreur,<br/>Retour
+                C'est une erreur,<br/>
+                <i class="fa fa-chevron-left mr-2"></i>
+                Retour
               </button>
               <button type="submit" class="btn btn-primary">
                 C'est volontaire,<br/>Suivant
+                <i class="fa fa-chevron-right ml-2"></i>
               </button>
             </div>
           </div>
@@ -95,9 +107,15 @@
             </div>
           </fieldset>
           <div class="flex-row justify-content-between">
-            <button type="button" class="btn btn-secondary" @click="cancel">Annuler</button>
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
             <div class="text-right">
-              <button type="button" class="btn btn-secondary" @click="back">Retour</button>
+              <button type="button" class="btn btn-secondary" @click="back">
+                <i class="fa fa-chevron-left mr-2"></i>
+                Retour
+              </button>
               <button type="submit" class="btn btn-primary">Ajouter</button>
             </div>
           </div>
