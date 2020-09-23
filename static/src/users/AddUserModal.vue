@@ -45,19 +45,25 @@
         </form>
 
         <form @submit.prevent="findUser" v-if="stepShown === 1.5" @keydown.esc="resetFormData">
-          <div>
-            Vous allez ajouter un contrôleur dont l'email ne finit pas par
-            <strong>@ccomptes.fr</strong>
-            ou
-            <strong>@crtc.ccomptes.fr</strong>
-            . Etes-vous sûr.e ?
-          </div>
-          <div>
-            {{ formData.email }}
+          <div class="alert alert-warning alert-icon">
+            <i class="fa fa-exclamation-circle mr-2" aria-hidden="true"></i>
+            <div class="mb-4">
+              Vous allez ajouter <strong>{{ formData.email }}</strong> comme contrôleur.
+            </div>
+            <div> Cet email ne finit pas par
+              <strong>@ccomptes.fr</strong>
+              ou
+              <strong>@crtc.ccomptes.fr</strong>
+              .
+            </div>
           </div>
           <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="back">Retour</button>
-            <button type="submit" class="btn btn-primary">Suivant</button>
+            <button type="button" class="btn btn-secondary" @click="back">
+              C'est une erreur, Retour
+            </button>
+            <button type="submit" class="btn btn-primary">
+              C'est volontaire, Suivant
+            </button>
           </div>
         </form>
 
