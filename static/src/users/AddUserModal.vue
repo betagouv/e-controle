@@ -25,6 +25,8 @@
                 <span class="form-required"></span>
               </label>
               <input type="email"
+                     autocapitalize=off
+                     autocorrect=off
                      class="form-control"
                      v-bind:class="{ 'state-invalid': errors.email }"
                      v-model="formData.email"
