@@ -61,9 +61,11 @@
               .
             </div>
             <div> Cet email ne finit pas par
-              <strong>@ccomptes.fr</strong>
-              ou
-              <strong>@crtc.ccomptes.fr</strong>
+              <template v-for="(ending, index) in expectedEndingsArray">
+                <strong>{{ ending }}</strong>
+                <span v-if="index < expectedEndingsArray.length - 2">,</span>
+                <span v-if="index === expectedEndingsArray.length - 2" class="mr-1">ou</span>
+              </template>
               .
             </div>
           </div>
@@ -186,12 +188,14 @@ export default Vue.extend({
       searchResult: {},
       foundUser: false,
       stepShown: 1,
+      expectedEndingsArray: [],
     }
   },
   computed: {
     ...mapFields([
       'editingControl',
       'editingProfileType',
+      'config.expected_inspector_email_endings',
       'config.site_url',
     ]),
     emailBody: function() {
@@ -253,11 +257,16 @@ export default Vue.extend({
       }
     },
     validateEmail() {
+      const expectedEndingsArray = this.expected_inspector_email_endings.split(',')
       const isInspectorEmail = email => {
-        return email.endsWith('@ccomptes.fr') || email.endsWith('@crtc.ccomptes.fr')
+        // At least one ending should match.
+        return expectedEndingsArray.some(ending => {
+          return email.endsWith(ending)
+        })
       }
 
       if (this.editingProfileType === 'inspector' && !isInspectorEmail(this.formData.email)) {
+        this.expectedEndingsArray = expectedEndingsArray
         this.stepShown = 1.5
       } else {
         this.findUser()
