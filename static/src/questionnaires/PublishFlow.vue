@@ -87,8 +87,22 @@
         <h4 class="text-center">
           Bravo, votre questionnaire est publié!
         </h4>
+        <div class="mt-5">
+            Pensez à informer l'organisme contrôlé.
+        </div>
       </div>
       <div class="modal-body text-center">
+        <div class="mt-5 flex-row justify-content-end">
+          <a class="btn btn-primary ml-2"
+              :href="'mailto:' +
+                    '?subject=Questionnaire publié' +
+                    '&body=' + emailBody"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            Créer un mail pour l'informer
+          </a>
+        </div>
         <p>
           Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
           notification dès le lendemain 8 heures.
@@ -111,6 +125,7 @@
 <script>
 import backend from '../utils/backend'
 import { mapFields } from 'vuex-map-fields'
+import { mapState } from 'vuex'
 import ModalFlow from '../utils/ModalFlow'
 import Vue from 'vue'
 
@@ -130,6 +145,18 @@ export default Vue.extend({
     ...mapFields([
       'config',
     ]),
+    ...mapState({
+      controls: 'controls',
+    }),
+    emailBody: function() {
+      const currentControl = this.controls.find(control => control.id === this.controlId)
+
+      if (currentControl) {
+        return 'Je viens de publier un questionnaire au contrôle ' + currentControl.title + '. Il est désormais disponible sur la plate-forme e-contrôle.'
+      }
+
+      return ''
+    },
   },
   methods: {
     start() {
