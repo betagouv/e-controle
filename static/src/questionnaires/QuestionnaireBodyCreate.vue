@@ -55,7 +55,8 @@
               <div class="text-muted pb-2 pl-6" :id="'theme' + (themeIndex + 1) + 'Help'">
                 Exemple : "Ressources Humaines". 255 caractères maximum.
               </div>
-              <confirm-modal :id="'deleteThemeConfirmModal' + themeIndex"
+              <confirm-modal v-if="themes.length > 1"
+                            :id="'deleteThemeConfirmModal' + themeIndex"
                              title="Confirmer la suppression de ce thème"
                              confirm-button="Oui, supprimer"
                              cancel-button="Non, retour"
@@ -68,6 +69,17 @@
                   <span v-else>
                     Les {{ themes[themeIndex].questions.length }} questions associées à ce thème
                     seront également supprimées.
+                  </span>
+                </p>
+              </confirm-modal>
+              <confirm-modal v-else
+                            :id="'deleteThemeConfirmModal' + themeIndex"
+                             title="Suppression impossible"
+                             confirm-button="OK"
+              >
+                <p>
+                  <span>
+                    Le questionnaire doit contenir au moins un thème.
                   </span>
                 </p>
               </confirm-modal>
@@ -116,13 +128,36 @@
                   </textarea>
 
                   <span>
-                    <button @click.prevent="deleteQuestion(themeIndex, qIndex)"
+                    <button v-if="themes[themeIndex].questions.length > 1"
+                            @click.prevent="deleteQuestion(themeIndex, qIndex)"
                             class="btn btn-link"
                             role="button"
                             type="button"
-                            title="Supprimer la question">
+                            title="Supprimer la question"
+                    >
                       <i class="fe fe-trash-2"></i>
                     </button>
+                    <button v-else
+                            class="btn btn-link"
+                            role="button"
+                            type="button"
+                            title="Supprimer la question"
+                            data-toggle="modal"
+                            :data-target="'#cannot-delete-question' + themeIndex + '-' + qIndex"
+                    >
+                      <i class="fe fe-trash-2"></i>
+                    </button>
+                    <confirm-modal
+                            :id="'cannot-delete-question' + themeIndex + '-' + qIndex"
+                             title="Suppression impossible"
+                             confirm-button="OK"
+                    >
+                      <p>
+                        <span>
+                          Vous ne pouvez pas supprimer toutes les questions de ce thème.
+                        </span>
+                      </p>
+                    </confirm-modal>
                   </span>
                   <question-file-upload :question="question"></question-file-upload>
                 </div>
@@ -203,7 +238,6 @@ export default Vue.extend({
   ],
   methods: {
     addQuestion: function(themeIndex) {
-      console.debug('addQuestion', themeIndex)
       this.themes[themeIndex].questions.push({
         description: '',
         order: this.themes[themeIndex].questions.length,
