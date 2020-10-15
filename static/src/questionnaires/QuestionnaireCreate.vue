@@ -117,8 +117,18 @@
       </div>
     </div>
     <div class="flex-row justify-content-end mt-2">
-      <div class="text-muted" style="min-height: 1.5rem;">
-        {{ saveMessage }}
+      <div v-if="saveMessage.isWaitingForMinDisplayTime || saveMessage.isSaveHappening"
+           style="min-height: 1.5rem;">
+        <i class="fas fa-sync-alt mr-2"></i>
+        Enregistrement en cours ...
+      </div>
+      <div v-else
+           :class="{ 'text-danger': hasErrors, 'text-muted': !hasErrors }"
+           class="flex-row align-items-center"
+           style="min-height: 1.5rem;">
+        <i v-if="hasErrors" class="fe fe-alert-triangle mr-2"></i>
+        <i v-else class="fe fe-check-circle mr-2"></i>
+        {{ saveMessage.text }}
       </div>
     </div>
   </div>
@@ -154,6 +164,7 @@ const STATES = {
   CREATING_BODY: 2,
   PREVIEW: 3,
 }
+const SAVING_MESSAGE_MIN_DISPLAY_TIME_MILLIS = 2000
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -176,7 +187,11 @@ export default Vue.extend({
       hasErrors: false,
       STATES: STATES,
       state: STATES.LOADING,
-      saveMessage: '',
+      saveMessage: {
+        text: '',
+        isWaitingForMinDisplayTime: false,
+        isSaveHappening: false,
+      },
     }
   },
   computed: {
@@ -353,9 +368,6 @@ export default Vue.extend({
       this.errors = []
       this.errorMessage = ''
     },
-    clearSaveMessage() {
-      this.saveMessage = ''
-    },
     _doSave() {
       const cleanPreSave = () => {
         if (this.currentQuestionnaire.end_date) {
@@ -407,15 +419,34 @@ export default Vue.extend({
       }
       this.saveDraft()
     },
+    displaySaveInProgress() {
+      this.saveMessage.isWaitingForMinDisplayTime = true
+      setTimeout(
+        () => { this.saveMessage.isWaitingForMinDisplayTime = false },
+        SAVING_MESSAGE_MIN_DISPLAY_TIME_MILLIS)
+
+      this.saveMessage.isSaveHappening = true
+    },
+    displaySavingDone(dateDone) {
+      this.saveMessage.text = 'Enregistrement fait à ' + dateDone + '.'
+      this.saveMessage.isSaveHappening = false
+    },
+    displaySavingDoneWithError() {
+      this.saveMessage.text =
+        'Erreur lors de la sauvegarde : les modifications ne sont pas enregistrées.'
+      this.saveMessage.isWaitingForMinDisplayTime = false
+      this.saveMessage.isSaveHappening = false
+    },
     saveDraft() {
       this.currentQuestionnaire.is_draft = true
+      this.displaySaveInProgress()
       return this._doSave()
         .then((response) => {
           console.log('Successful draft save.')
           this.currentQuestionnaire = response.data
           this.emitQuestionnaireUpdated()
 
-          this.saveMessage = 'Votre dernière sauvegarde a eu lieu à ' + nowTimeString() + '.'
+          this.displaySavingDone(nowTimeString())
           return response.data
         })
         .catch((error) => {
@@ -423,6 +454,7 @@ export default Vue.extend({
           const errorToDisplay =
             (error.response && error.response.data) ? error.response.data : error
           this.displayErrors('Erreur lors de la sauvegarde du brouillon.', errorToDisplay)
+          this.displaySavingDoneWithError()
         })
     },
     startPublishFlow() {
