@@ -8,7 +8,7 @@
       </div>
       <div class="modal-body">
         <div v-if="hasErrors" class="alert alert-danger">
-          L'ajout d'utilisateur n'a pas fonctionné.
+          L'ajout d'utilisateur n'a pas fonctionné. Vous pouvez réessayer.
         </div>
         <div v-if="editingProfileType==='inspector'" class="text-center">
             <h4><i class="fa fa-university mr-2"></i><strong>Équipe de contrôle</strong></h4>
@@ -17,7 +17,7 @@
             <h4><i class="fa fa-building mr-2"></i><strong>Organisme interrogé</strong></h4>
         </div>
 
-        <form @submit.prevent="findUser" v-if="stepShown === 1" @keydown.esc="resetFormData">
+        <form @submit.prevent="validateEmail" v-if="stepShown === 1" @keydown.esc="resetFormData">
           <div class="form-fieldset">
             <div class="form-group">
               <label id="email-label" class="form-label">
@@ -25,6 +25,8 @@
                 <span class="form-required"></span>
               </label>
               <input type="email"
+                     autocapitalize=off
+                     autocorrect=off
                      class="form-control"
                      v-bind:class="{ 'state-invalid': errors.email }"
                      v-model="formData.email"
@@ -36,9 +38,53 @@
               </p>
             </div>
           </div>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
-            <button type="submit" class="btn btn-primary">Suivant</button>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Suivant
+              <i class="fa fa-chevron-right ml-2"></i>
+            </button>
+          </div>
+        </form>
+
+        <form @submit.prevent="findUser" v-if="stepShown === 1.5" @keydown.esc="resetFormData">
+          <div class="alert alert-warning alert-icon my-8">
+            <i class="fa fa-exclamation-circle mr-2" aria-hidden="true"></i>
+            <div class="mb-4">
+              Vous allez ajouter
+              <strong>{{ formData.email }}</strong>
+              comme
+              <strong>contrôleur</strong>
+              .
+            </div>
+            <div> Cet email ne finit pas par
+              <template v-for="(ending, index) in expectedEndingsArray">
+                <strong>{{ ending }}</strong>
+                <span v-if="index < expectedEndingsArray.length - 2">,</span>
+                <span v-if="index === expectedEndingsArray.length - 2" class="mr-1">ou</span>
+              </template>
+              .
+            </div>
+          </div>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
+            <div class="text-right">
+              <button type="button" class="btn btn-secondary" @click="back">
+                C'est une erreur,<br/>
+                <i class="fa fa-chevron-left mr-2"></i>
+                Retour
+              </button>
+              <button type="submit" class="btn btn-primary">
+                C'est volontaire,<br/>Suivant
+                <i class="fa fa-chevron-right ml-2"></i>
+              </button>
+            </div>
           </div>
         </form>
 
@@ -62,9 +108,18 @@
               <p class="text-muted pl-2" v-if="errors.last_name"><i class="fa fa-warning"></i> {{ errors.last_name.join(' / ')}}</p>
             </div>
           </fieldset>
-          <div class="text-right">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">Annuler</button>
-            <button type="submit" class="btn btn-primary">Ajouter</button>
+          <div class="flex-row justify-content-between">
+            <button type="button" class="btn btn-secondary" @click="cancel">
+              <i class="fa fa-times mr-2"></i>
+              Annuler
+            </button>
+            <div class="text-right">
+              <button type="button" class="btn btn-secondary" @click="back">
+                <i class="fa fa-chevron-left mr-2"></i>
+                Retour
+              </button>
+              <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
           </div>
         </form>
 
@@ -84,7 +139,7 @@
           </div>
 
           <div class="mt-5 flex-row justify-content-end">
-            <button type="button" class="btn btn-secondary" @click="hideThisModal">
+            <button type="button" class="btn btn-secondary" @click="cancel">
               Je l'ai informé.e
             </button>
             <a class="btn btn-primary ml-2"
@@ -133,12 +188,14 @@ export default Vue.extend({
       searchResult: {},
       foundUser: false,
       stepShown: 1,
+      expectedEndingsArray: [],
     }
   },
   computed: {
     ...mapFields([
       'editingControl',
       'editingProfileType',
+      'config.expected_inspector_email_endings',
       'config.site_url',
     ]),
     emailBody: function() {
@@ -167,7 +224,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    hideThisModal() {
+    cancel() {
       this.resetFormData()
       $('#addUserModal').modal('hide')
     },
@@ -183,6 +240,37 @@ export default Vue.extend({
       this.foundUser = false
       this.hasErrors = false
       this.errors = []
+    },
+    back() {
+      switch (this.stepShown) {
+        case 1.5:
+          this.stepShown = 1
+          break
+        case 2:
+          this.stepShown = 1
+          break
+        case 3:
+          this.stepShown = 2
+          break
+        default:
+          break
+      }
+    },
+    validateEmail() {
+      const expectedEndingsArray = this.expected_inspector_email_endings.split(',')
+      const isInspectorEmail = email => {
+        // At least one ending should match.
+        return expectedEndingsArray.some(ending => {
+          return email.endsWith(ending)
+        })
+      }
+
+      if (this.editingProfileType === 'inspector' && !isInspectorEmail(this.formData.email)) {
+        this.expectedEndingsArray = expectedEndingsArray
+        this.stepShown = 1.5
+      } else {
+        this.findUser()
+      }
     },
     addUser() {
       this.formData.control = this.editingControl.id

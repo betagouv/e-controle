@@ -19,19 +19,19 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.10.1",
+    "@babel/polyfill": "^7.10.4",
     "autoprefixer": "^9.8.3",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
-    "dropzone": "^5.7.1",
+    "dropzone": "^5.7.2",
     "jquery": "^3.5.1",
     "report-validity": "^1.0.1",
     "store": "^2.0.12",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4",
-    "vue-sidebar-menu": "^4.6.0",
+    "vue-sidebar-menu": "^4.6.2",
     "vuejs-datepicker": "^1.6.2",
-    "vuex": "^3.4.0",
+    "vuex": "^3.5.1",
     "vuex-map-fields": "^1.4.0"
   },
   "devDependencies": {
