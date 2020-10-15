@@ -19,8 +19,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.10.1",
-    "autoprefixer": "^9.8.6",
+    "@babel/polyfill": "^7.10.4",
+    "autoprefixer": "^9.8.3",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "dropzone": "^5.7.1",
