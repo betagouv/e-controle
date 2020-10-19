@@ -135,7 +135,7 @@
 
   <publish-flow ref="publishFlow"
                 :publishFunction="publish"
-                :controlId="currentQuestionnaire.control">
+                :questionnaire="currentQuestionnaire">
   </publish-flow>
 
 </div>

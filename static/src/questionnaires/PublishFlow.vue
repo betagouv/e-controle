@@ -87,21 +87,31 @@
         <h4 class="text-center">
           Bravo, votre questionnaire est publié!
         </h4>
+        <div class="mt-5">
+            <p>Pensez à informer l'organisme contrôlé.</p>
+            <p>Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
+          notification dès le lendemain 8 heures.</p>
+        </div>
       </div>
       <div class="modal-body text-center">
-        <p>
-          Si des réponses sont déposées par l'organisme interrogé, vous recevrez un email de
-          notification dès le lendemain 8 heures.
-        </p>
-      </div>
-      <div class="modal-footer border-top-0 d-flex justify-content-center">
-        <button type="button"
-                class="btn btn-primary"
-                @click="goHome"
-        >
-          <i class="fa fa-chevron-left mr-2"></i>
-          Revenir à l'accueil
-        </button>
+        <div class="mt-5 flex-row justify-content-center">
+          <button type="button"
+            class="btn btn-primary ml-2"
+            @click="goHome"
+          >
+            <i class="fa fa-chevron-left mr-2"></i>
+            Revenir à l'accueil
+          </button>
+          <a class="btn btn-primary ml-2"
+              :href="'mailto:' +
+                    '?subject=Questionnaire publié' +
+                    '&body=' + emailBody"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            Créer un mail pour l'informer
+          </a>
+        </div>
       </div>
     </template>
 
@@ -111,6 +121,7 @@
 <script>
 import backend from '../utils/backend'
 import { mapFields } from 'vuex-map-fields'
+import { mapState } from 'vuex'
 import ModalFlow from '../utils/ModalFlow'
 import Vue from 'vue'
 
@@ -119,7 +130,7 @@ export default Vue.extend({
     ModalFlow,
   },
   props: {
-    controlId: Number,
+    questionnaire: Object,
     publishFunction: Function,
     // Pass window dependency for testing
     window: {
@@ -130,6 +141,20 @@ export default Vue.extend({
     ...mapFields([
       'config',
     ]),
+    ...mapState({
+      controls: 'controls',
+    }),
+    emailBody: function() {
+      const currentControl = this.controls.find(control => control.id === this.questionnaire.control)
+      const expiryDateString = this.questionnaire.end_date === null ? '' : ' La date limite de réponse est le' + this.questionnaire.end_date + '.'
+
+      if (currentControl) {
+        const newline = '%0d%0a'
+        return `Bonjour,${newline}${newline}Un nouveau questionnaire vient d'être ajouté au contrôle ${currentControl.title}. Il s'agit du questionnaire numéro ${this.questionnaire.id} : ${this.questionnaire.title}.${expiryDateString}${newline}${newline}Nous vous invitons à vous connecter à e-contrôle pour le voir, au lien ci-dessous :${newline}${newline}https://e-controle-beta.ccomptes.fr${newline}${newline}Cordialement,`
+      }
+
+      return ''
+    },
   },
   methods: {
     start() {
@@ -137,7 +162,7 @@ export default Vue.extend({
       this.$refs.modalFlow.start()
     },
     goHome() {
-      this.window.location.href = backend['control-detail'](this.controlId)
+      this.window.location.href = backend['control-detail'](this.questionnaire.control)
     },
   },
 })
