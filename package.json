@@ -19,7 +19,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.10.4",
+    "@babel/polyfill": "^7.11.5",
     "autoprefixer": "^9.8.3",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.0",
@@ -29,7 +29,7 @@
     "store": "^2.0.12",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4",
-    "vue-sidebar-menu": "^4.6.2",
+    "vue-sidebar-menu": "^4.7.1",
     "vuejs-datepicker": "^1.6.2",
     "vuex": "^3.5.1",
     "vuex-map-fields": "^1.4.0"
