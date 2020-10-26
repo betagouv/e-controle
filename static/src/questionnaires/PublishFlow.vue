@@ -103,8 +103,9 @@
             Revenir à l'accueil
           </button>
           <a class="btn btn-primary ml-2"
-              :href="'mailto:' +
-                    '?subject=Questionnaire publié' +
+              :href="'mailto:' + emailHeader.audited +
+                    '?cc=' + emailHeader.editors +
+                    '&subject=Questionnaire publié' +
                     '&body=' + emailBody"
               target="_blank"
               rel="noopener noreferrer"
@@ -119,6 +120,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import backend from '../utils/backend'
 import { mapFields } from 'vuex-map-fields'
 import { mapState } from 'vuex'
@@ -129,8 +131,14 @@ export default Vue.extend({
   components: {
     ModalFlow,
   },
+  data() {
+    return {
+      users: [],
+    }
+  },
   props: {
     questionnaire: Object,
+    controlId: Number,
     publishFunction: Function,
     // Pass window dependency for testing
     window: {
@@ -144,19 +152,37 @@ export default Vue.extend({
     ...mapState({
       controls: 'controls',
     }),
-    emailBody: function() {
+    emailHeader: function() {
+      const uniq = (arrArg) => arrArg.filter((elem, pos, arr) => arr.indexOf(elem) === pos)
       const currentControl = this.controls.find(control => control.id === this.questionnaire.control)
-      const expiryDateString = this.questionnaire.end_date === null ? '' : ' La date limite de réponse est le' + this.questionnaire.end_date + '.'
 
       if (currentControl) {
-        const newline = '%0d%0a'
-        return `Bonjour,${newline}${newline}Un nouveau questionnaire vient d'être ajouté au contrôle ${currentControl.title}. Il s'agit du questionnaire numéro ${this.questionnaire.id} : ${this.questionnaire.title}.${expiryDateString}${newline}${newline}Nous vous invitons à vous connecter à e-contrôle pour le voir, au lien ci-dessous :${newline}${newline}https://e-controle-beta.ccomptes.fr${newline}${newline}Cordialement,`
+        const editors = uniq(currentControl.questionnaires.map(q => q.editor.email)).join(', ')
+        const audited = this.users.filter(u => u.profile_type === 'audited').map(u => u.email).join(', ')
+        return { editors, audited }
+      }
+
+      return {}
+    },
+    emailBody: function() {
+      const newline = '%0d%0a'
+      const currentControl = this.controls.find(control => control.id === this.questionnaire.control)
+      const expiryDateString = this.questionnaire.end_date === null ? '' : `${newline}${newline}La date limite de réponse est le ${this.questionnaire.end_date}.`
+
+      if (currentControl) {
+        return `Bonjour,${newline}${newline}Un nouveau questionnaire vient d'être ajouté au contrôle ${currentControl.title}. Il s'agit du questionnaire numéro ${this.questionnaire.id} : ${this.questionnaire.title}.${expiryDateString}${newline}${newline}Nous vous invitons à vous connecter à e-contrôle pour le voir et apporter vos réponses, au lien ci-dessous :${newline}${newline}https://e-controle-beta.ccomptes.fr${newline}${newline}Cordialement,`
       }
 
       return ''
     },
   },
   methods: {
+    getUsers() {
+      axios.get(backend.getUsersInControl(this.controlId))
+        .then((response) => {
+          this.users = response.data
+        })
+    },
     start() {
       console.debug('outer start!')
       this.$refs.modalFlow.start()
@@ -164,6 +190,9 @@ export default Vue.extend({
     goHome() {
       this.window.location.href = backend['control-detail'](this.questionnaire.control)
     },
+  },
+  mounted() {
+    this.getUsers()
   },
 })
 </script>
