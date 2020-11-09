@@ -32,6 +32,20 @@
                      v-model="formData.email"
                      required
                      aria-labelledby="email-label">
+            </div>
+            <div class='form-group'>
+              <label id="email-confirm-label" class="form-label">
+                Confirmer l'Email
+                <span class="form-required"></span>
+              </label>
+              <input type="email"
+                     autocapitalize=off
+                     autocorrect=off
+                     class="form-control"
+                     v-bind:class="{ 'state-invalid': errors.email }"
+                     v-model="formData.email_confirm"
+                     required
+                     aria-labelledby="email-label">
               <p class="text-muted pl-2" v-if="errors.email">
                 <i class="fa fa-warning"></i>
                 {{ errors.email.join(' / ')}}
@@ -179,6 +193,7 @@ export default Vue.extend({
         first_name: '',
         last_name: '',
         email: '',
+        email_confirm: '',
         control: '',
         profile_type: '',
       },
@@ -233,6 +248,7 @@ export default Vue.extend({
         first_name: '',
         last_name: '',
         email: '',
+        email_confirm: '',
         control: '',
         profile_type: '',
       }
@@ -269,7 +285,13 @@ export default Vue.extend({
         this.expectedEndingsArray = expectedEndingsArray
         this.stepShown = 1.5
       } else {
-        this.findUser()
+        if (this.formData.email !== this.formData.email_confirm) {
+          this.hasErrors = true
+          this.errors.email = ['Les deux champs e-mail doivent correspondre.']
+        } else {
+          this.hasErrors = false
+          this.findUser()
+        }
       }
     },
     addUser() {
