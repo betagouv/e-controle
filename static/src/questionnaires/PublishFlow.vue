@@ -157,8 +157,8 @@ export default Vue.extend({
       const currentControl = this.controls.find(control => control.id === this.questionnaire.control)
 
       if (currentControl) {
-        const editors = uniq(currentControl.questionnaires.map(q => q.editor.email)).join(', ')
-        const audited = this.users.filter(u => u.profile_type === 'audited').map(u => u.email).join(', ')
+        const editors = uniq(currentControl.questionnaires.map(q => q.editor.email)).join(',')
+        const audited = this.users.filter(u => u.profile_type === 'audited').map(u => u.email).join(',')
         return { editors, audited }
       }
 
