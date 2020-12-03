@@ -31,11 +31,12 @@ new Vue({ // eslint-disable-line no-new
     ControlDetail,
   },
   methods: {
-    ...mapActions(['fetchConfig']),
+    ...mapActions(['fetchConfig', 'fetchControls']),
   },
   created() {
     // Ask the store to fetch the config from server and store it.
     this.fetchConfig()
+    this.fetchControls()
 
     // Store the controls in the Vuex store, for use for other components (e.g. Sidebar)
     this.$store.commit('updateControls', controls)
