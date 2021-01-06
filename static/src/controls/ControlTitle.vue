@@ -1,5 +1,55 @@
 <template>
   <div class="card">
+    <confirm-modal
+      ref="modal"
+      cancel-button="Annuler"
+      confirm-button="Dupliquer l'espace de dépôt"
+      title="Dupliquer un espace de dépôt"
+      @confirm="cloneControl"
+    >
+      <info-bar>
+        Veuillez sélectionner les questionnaires que vous souhaitez dupliquer.
+      </info-bar>
+      <form>
+        <div class="form-group mb-6">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" @click="checkAllQuestionnaires" v-model="allChecked">
+            <span class="custom-control-label font-weight-bold">Sélectionner Tout
+          </label>
+          <label v-for="q in accessibleQuestionnaires"
+                :key="q.id"
+                class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" :value="q.id" v-model="checkedQuestionnaires">
+            <span class="custom-control-label">Questionnaire {{ q.numbering }} - {{ q.title }}</span>
+          </label>
+        </div>
+      </form>
+    </confirm-modal>
+    <confirm-modal
+      ref="modalexp"
+      cancel-button="Annuler"
+      confirm-button="Exporter l'espace de dépôt"
+      title="Exporter un espace de dépôt"
+      @confirm="exportControl"
+    >
+      <info-bar>
+        Veuillez sélectionner les questionnaires dont vous souhaitez exporter les fichiers-réponses.
+      </info-bar>
+      <form>
+        <div class="form-group mb-6">
+          <label class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" @click="checkAllQuestionnaires" v-model="allChecked">
+            <span class="custom-control-label font-weight-bold">Sélectionner Tout
+          </label>
+          <label v-for="q in accessibleQuestionnaires"
+                :key="q.id"
+                class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" :value="q.id" v-model="checkedQuestionnaires">
+            <span class="custom-control-label">Questionnaire {{ q.numbering }} - {{ q.title }}</span>
+          </label>
+        </div>
+      </form>
+    </confirm-modal>
     <div class="card-status card-status-top bg-blue"></div>
     <template v-if="editMode">
       <div class="card-body">
@@ -101,6 +151,21 @@
               <span class="sr-only">Menu d'actions</span>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
+              <button class="dropdown-item"
+                      type="button"
+                      @click="showCloneModal"
+              >
+                <i class="fas fa-file-export mr-2"></i>
+                Dupliquer
+              </button>
+               <button class="dropdown-item"
+                      type="button"
+                      @click="showExportModal"
+                      v-show="false"
+              >
+                <i class="fas fa-file-export mr-2"></i>
+                Exporter (.zip)
+              </button>
               <button class="dropdown-item text-danger"
                       type="button"
                       @click="startControlDeleteFlow"
@@ -126,6 +191,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { mapFields } from 'vuex-map-fields'
 import axios from 'axios'
 import backendUrls from '../utils/backend'
@@ -133,7 +199,13 @@ import Vue from 'vue'
 import WebdavTip from '../controls/WebdavTip'
 import ControlDeleteFlow from './ControlDeleteFlow'
 
+import ConfirmModal from '../utils/ConfirmModal'
+import InfoBar from '../utils/InfoBar'
 import ErrorBar from '../utils/ErrorBar'
+
+import JSZip from 'jszip'
+import JSZipUtils from 'jszip-utils'
+import { saveAs } from 'file-saver'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -149,22 +221,131 @@ export default Vue.extend({
       organization: '',
       errors: '',
       hasErrors: false,
+      allChecked: false,
+      checkedQuestionnaires: [],
     }
   },
   computed: {
+    ...mapState({
+      controls: 'controls',
+    }),
     ...mapFields([
       'sessionUser',
     ]),
+    accessibleQuestionnaires() {
+      return this.control.questionnaires.filter(q => !q.is_draft)
+    },
   },
   components: {
+    InfoBar,
     ErrorBar,
     WebdavTip,
     ControlDeleteFlow,
+    ConfirmModal,
   },
   mounted() {
     this.restoreForm()
   },
   methods: {
+    showCloneModal() {
+      $(this.$refs.modal.$el).modal('show')
+    },
+    cloneControl() {
+      const getCreateMethodCtrl = () => axios.post.bind(this, backendUrls.control())
+      if (this.checkedQuestionnaires.length) {
+        const newRefCode = this.control.reference_code + '_copie'
+
+        const cloneQuestionnaires = this.accessibleQuestionnaires
+          .filter(aq => this.checkedQuestionnaires.includes(aq.id))
+          .map(q => { return { ...q, is_draft: null, id: null, control: null } })
+        console.log('questionnaires', cloneQuestionnaires)
+        const ctrl = {
+          title: this.control.title,
+          depositing_organization: this.control.depositing_organization,
+          reference_code: newRefCode,
+          questionnaires: cloneQuestionnaires,
+        }
+
+        getCreateMethodCtrl()(ctrl).then(response => {
+          console.log(response.data)
+        })
+      }
+    },
+    showExportModal() {
+      $(this.$refs.modalexp.$el).modal('show')
+    },
+    checkAllQuestionnaires() {
+      this.checkedQuestionnaires = []
+      this.allChecked = !this.allChecked
+
+      if (this.allChecked) {
+        this.accessibleQuestionnaires.map(q => {
+          this.checkedQuestionnaires.push(q.id)
+        })
+      }
+    },
+    exportControl() {
+      const formatFilename = (rf) => {
+        const questionnaireId = String(rf.questionnaireId).padStart(2, '0')
+        const themeId = String(rf.themeId).padStart(2, '0')
+        const questionId = String(rf.questionId).padStart(2, '0')
+        const filename = `Q${questionnaireId}-T${themeId}-${questionId}-${rf.basename}`
+
+        return { questionnaireId, themeId, filename }
+      }
+
+      const responseFiles = this.accessibleQuestionnaires
+        .filter(aq => this.checkedQuestionnaires.includes(aq.id))
+        .flatMap(fq => {
+          if (fq.themes) {
+            return fq.themes.flatMap(t => {
+              if (t.questions) {
+                return t.questions.flatMap(q => {
+                  return q.response_files.flatMap(rf => {
+                    return {
+                      questionnaireId: fq.id,
+                      themeId: t.id,
+                      questionId: q.id,
+                      basename: rf.basename,
+                      url: rf.url,
+                    }
+                  })
+                })
+              }
+            })
+          }
+        })
+
+      const zipFilename = this.control.reference_code + '.zip'
+
+      responseFiles.map(rf => {
+        const url = window.location.origin + rf.url
+
+        axios({
+          url: 'http://localhost:8080/fichier-reponse/1',
+          method: 'GET',
+          responseType: 'blob',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/pdf',
+          },
+        }).then(response => console.log(response.data))
+
+        JSZipUtils.getBinaryContent(url, (err, data) => {
+          if (err) throw err
+
+          const zip = new JSZip()
+          const formatted = formatFilename(rf)
+          zip.file(formatted.filename, data, { binary: true })
+        })
+        // create filename
+        // create folder
+      })
+
+      // zip.generateAsync({ type: 'blob' }).then((content) => {
+      //   saveAs(content, zipFilename)
+      // })
+    },
     restoreForm() {
       this.title = this.control.title
       this.organization = this.control.depositing_organization

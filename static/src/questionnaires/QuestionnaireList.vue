@@ -104,7 +104,7 @@
               <template v-if="!user.is_inspector">
                 <div class="text-right">
                   <a
-                    :href="questionnaire.url"
+                    :href="questionnaireDetailUrl(questionnaire.id)"
                     class="btn btn-primary"
                     title="Déposer et consulter vos réponses"
                   >
@@ -134,7 +134,7 @@
                                     questionnaire.editor.id !== user.id"
                 >
                   <div class="text-right">
-                    <a :href="questionnaire.url"
+                    <a :href="questionnaireDetailUrl(questionnaire.id)"
                       class="btn btn-primary ml-2"
                       title="Voir le brouillon de questionnaire"
                     >
@@ -147,8 +147,8 @@
                   <div class="text-right">
                     <div class="btn-group">
                     <a
-                      :href="questionnaire.url"
-                      title="Modifier le brouillon de questionnaire"
+                      :href="questionnaireDetailUrl(questionnaire.id)"
+                      title="Voir le questionnaire publié"
                       class="btn btn-secondary"
                     >
                       <i class="fe fe-eye"></i>
@@ -226,8 +226,8 @@ export default Vue.extend({
     ...mapState({
       controls: 'controls',
     }),
-    accessibleControls(excludeCtrls) {
-      return this.controls.filter((control) => control.id !== this.control.id)
+    accessibleControls() {
+      return this.controls
     },
     accessibleQuestionnaires() {
       if (this.user.is_inspector) {
@@ -242,6 +242,9 @@ export default Vue.extend({
     },
   },
   methods: {
+    questionnaireDetailUrl(questionnaireId) {
+      return backendUrls['questionnaire-detail'](questionnaireId)
+    },
     questionnaireEditUrl(questionnaireId) {
       return backendUrls['questionnaire-edit'](questionnaireId)
     },
@@ -265,7 +268,6 @@ export default Vue.extend({
         const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
         destCtrls.map(ctrl => {
           curQuestionnaire[0] = { ...curQuestionnaire[0], control: ctrl.id, is_draft: true, id: null }
-          console.log(curQuestionnaire[0])
           getCreateMethod()(curQuestionnaire[0])
         })
       }
