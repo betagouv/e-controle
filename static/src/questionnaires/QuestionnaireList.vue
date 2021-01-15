@@ -262,13 +262,13 @@ export default Vue.extend({
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
       const curCtrl = this.controls.find(ctrl => ctrl.id === this.control.id)
 
-      const curQuestionnaire = curCtrl.questionnaires.filter(q => q.id === this.questionnaireId)
+      let curQuestionnaire = curCtrl.questionnaires.find(q => q.id === this.questionnaireId)
 
       if (this.checkedCtrls.length) {
         const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
         destCtrls.map(ctrl => {
-          curQuestionnaire[0] = { ...curQuestionnaire[0], control: ctrl.id, is_draft: true, id: null }
-          getCreateMethod()(curQuestionnaire[0])
+          curQuestionnaire = { ...curQuestionnaire, control: ctrl.id, is_draft: true, id: null }
+          getCreateMethod()(curQuestionnaire)
         })
       }
     },
