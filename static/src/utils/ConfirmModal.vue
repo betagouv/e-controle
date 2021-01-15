@@ -23,6 +23,11 @@
       >
         {{ confirmButton }}
       </button>
+      <button v-if="confirmButtonPrevent" type="button" class="btn btn-primary"
+        @click="confirmClicked"
+      >
+        {{ confirmButtonPrevent }}
+      </button>
       <button v-if="cancelButton" type="button" class="btn btn-secondary"
               data-dismiss="modal"
               @click="cancelClicked"
@@ -41,6 +46,7 @@ export default Vue.extend({
   props: [
     'cancel-button',
     'confirm-button',
+    'confirm-button-prevent',
     'icon-class',
     'no-close',
     'title',

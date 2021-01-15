@@ -3,14 +3,33 @@
     <confirm-modal
       ref="modal"
       cancel-button="Annuler"
-      confirm-button="Dupliquer l'espace de dépôt"
+      confirm-button-prevent="Dupliquer l'espace de dépôt"
       title="Dupliquer un espace de dépôt"
       @confirm="cloneControl"
     >
       <info-bar>
         Veuillez sélectionner les questionnaires que vous souhaitez dupliquer.
       </info-bar>
+      <error-bar v-if="referenceError" :noclose="true">
+        Ce nom abrégé est vide ou existe déjà. Veuillez saisir un nouveau nom abrégé.
+      </error-bar>
       <form>
+        <div class="form-group mb-4">
+          <label id="reference-label" class="form-label">
+            Nom abrégé<span class="form-required">*</span>
+          </label>
+          <div class="flex-row align-items-center">
+            <span class="input-group-prepend" id="prepend">
+              <span class="input-group-text">{{control.reference_code}}_</span>
+            </span>
+            <input type="text"
+                   class="form-control"
+                   v-model="reference_code"
+                   required aria-labelledby="reference-label"
+                   maxlength="255"
+                   @focus="referenceChanged">
+          </div>
+        </div>
         <div class="form-group mb-6">
           <label class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" @click="checkAllQuestionnaires" v-model="allChecked">
@@ -28,7 +47,7 @@
     <confirm-modal
       ref="modalexp"
       cancel-button="Annuler"
-      confirm-button="Exporter l'espace de dépôt"
+      confirm-button-prevent="Exporter l'espace de dépôt"
       title="Exporter un espace de dépôt"
       @confirm="exportControl"
     >
@@ -161,7 +180,6 @@
                <button class="dropdown-item"
                       type="button"
                       @click="showExportModal"
-                      v-show="false"
               >
                 <i class="fas fa-file-export mr-2"></i>
                 Exporter (.zip)
@@ -221,6 +239,8 @@ export default Vue.extend({
       organization: '',
       errors: '',
       hasErrors: false,
+      referenceError: false,
+      reference_code: '',
       allChecked: false,
       checkedQuestionnaires: [],
     }
@@ -250,29 +270,53 @@ export default Vue.extend({
     showCloneModal() {
       $(this.$refs.modal.$el).modal('show')
     },
+    hideCloneModal() {
+      $(this.$refs.modal.$el).modal('hide')
+    },
+    referenceChanged() {
+      this.referenceError = false
+    },
     cloneControl() {
+      const newRefCode = this.control.reference_code + '_' + this.reference_code
+      const valid = this.reference_code &&
+                    !this.controls.find(ctrl => ctrl.reference_code === newRefCode)
+
+      if (!valid) {
+        this.referenceError = true
+        return
+      }
+
       const getCreateMethodCtrl = () => axios.post.bind(this, backendUrls.control())
       if (this.checkedQuestionnaires.length) {
-        const newRefCode = this.control.reference_code + '_copie'
-
-        const cloneQuestionnaires = this.accessibleQuestionnaires
-          .filter(aq => this.checkedQuestionnaires.includes(aq.id))
-          .map(q => { return { ...q, is_draft: null, id: null, control: null } })
-        console.log('questionnaires', cloneQuestionnaires)
         const ctrl = {
           title: this.control.title,
           depositing_organization: this.control.depositing_organization,
           reference_code: newRefCode,
-          questionnaires: cloneQuestionnaires,
         }
 
         getCreateMethodCtrl()(ctrl).then(response => {
-          console.log(response.data)
+          const controlId = response.data.id
+          const cloneQuestionnaires = this.accessibleQuestionnaires
+            .filter(aq => this.checkedQuestionnaires.includes(aq.id))
+            .map(q => { return { ...q, is_draft: true, id: null, control: controlId } })
+
+          cloneQuestionnaires.map(q => {
+            this.cloneQuestionnaire(q)
+          })
         })
+
+        this.hideCloneModal()
       }
+    },
+    cloneQuestionnaire(questionnaire) {
+      const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
+      getCreateMethod()(questionnaire)
     },
     showExportModal() {
       $(this.$refs.modalexp.$el).modal('show')
+    },
+    hideExportModal() {
+      $(this.$refs.modalexp.$el).modal('hide')
     },
     checkAllQuestionnaires() {
       this.checkedQuestionnaires = []
@@ -285,6 +329,8 @@ export default Vue.extend({
       }
     },
     exportControl() {
+      if (!this.checkedQuestionnaires.length) return
+
       const formatFilename = (rf) => {
         const questionnaireId = String(rf.questionnaireId).padStart(2, '0')
         const themeId = String(rf.themeId).padStart(2, '0')
@@ -302,12 +348,14 @@ export default Vue.extend({
               if (t.questions) {
                 return t.questions.flatMap(q => {
                   return q.response_files.flatMap(rf => {
-                    return {
-                      questionnaireId: fq.id,
-                      themeId: t.id,
-                      questionId: q.id,
-                      basename: rf.basename,
-                      url: rf.url,
+                    if (rf) {
+                      return {
+                        questionnaireId: fq.id,
+                        themeId: t.id,
+                        questionId: q.id,
+                        basename: rf.basename,
+                        url: rf.url,
+                      }
                     }
                   })
                 })
@@ -317,34 +365,41 @@ export default Vue.extend({
         })
 
       const zipFilename = this.control.reference_code + '.zip'
+      const zip = new JSZip()
+      let cnt = 0
 
       responseFiles.map(rf => {
         const url = window.location.origin + rf.url
 
         axios({
-          url: 'http://localhost:8080/fichier-reponse/1',
+          url: url,
           method: 'GET',
           responseType: 'blob',
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/pdf',
           },
-        }).then(response => console.log(response.data))
+        }).then(response => console.log('axios', response.data))
 
         JSZipUtils.getBinaryContent(url, (err, data) => {
           if (err) throw err
 
-          const zip = new JSZip()
           const formatted = formatFilename(rf)
-          zip.file(formatted.filename, data, { binary: true })
+
+          zip.folder(`Q${formatted.questionnaireId}`)
+            .folder(`T${formatted.themeId}`)
+            .file(formatted.filename, data, { binary: true })
+
+          cnt++
+          if (cnt === responseFiles.length) {
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+              saveAs(content, zipFilename)
+            })
+          }
         })
-        // create filename
-        // create folder
       })
 
-      // zip.generateAsync({ type: 'blob' }).then((content) => {
-      //   saveAs(content, zipFilename)
-      // })
+      this.hideExportModal()
     },
     restoreForm() {
       this.title = this.control.title
