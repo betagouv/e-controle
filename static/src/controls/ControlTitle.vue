@@ -332,12 +332,13 @@ export default Vue.extend({
       if (!this.checkedQuestionnaires.length) return
 
       const formatFilename = (rf) => {
-        const questionnaireId = String(rf.questionnaireId).padStart(2, '0')
-        const themeId = String(rf.themeId).padStart(2, '0')
-        const questionId = String(rf.questionId).padStart(2, '0')
-        const filename = `Q${questionnaireId}-T${themeId}-${questionId}-${rf.basename}`
-
-        return { questionnaireId, themeId, filename }
+        const questionnaireNb = String(rf.questionnaireNb).padStart(2, '0')
+        const themeId = String(rf.themeId + 1).padStart(2, '0')
+        const questionId = String(rf.questionId + 1).padStart(2, '0')
+        const filename = `Q${questionnaireNb}-T${themeId}-${questionId}-${rf.basename}`
+        console.log('rf', rf)
+        console.log('nb,', questionnaireNb)
+        return { questionnaireNb, themeId, filename }
       }
 
       const responseFiles = this.accessibleQuestionnaires
@@ -350,9 +351,9 @@ export default Vue.extend({
                   return q.response_files.flatMap(rf => {
                     if (rf) {
                       return {
-                        questionnaireId: fq.id,
-                        themeId: t.id,
-                        questionId: q.id,
+                        questionnaireNb: fq.numbering,
+                        themeId: t.order,
+                        questionId: q.order,
                         basename: rf.basename,
                         url: rf.url,
                       }
@@ -371,22 +372,12 @@ export default Vue.extend({
       responseFiles.map(rf => {
         const url = window.location.origin + rf.url
 
-        axios({
-          url: url,
-          method: 'GET',
-          responseType: 'blob',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/pdf',
-          },
-        }).then(response => console.log('axios', response.data))
-
         JSZipUtils.getBinaryContent(url, (err, data) => {
           if (err) throw err
 
           const formatted = formatFilename(rf)
 
-          zip.folder(`Q${formatted.questionnaireId}`)
+          zip.folder(`Q${formatted.questionnaireNb}`)
             .folder(`T${formatted.themeId}`)
             .file(formatted.filename, data, { binary: true })
 
