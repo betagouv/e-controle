@@ -260,15 +260,24 @@ export default Vue.extend({
     },
     cloneQuestionnaire() {
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
-      const curCtrl = this.controls.find(ctrl => ctrl.id === this.control.id)
-
-      let curQuestionnaire = curCtrl.questionnaires.find(q => q.id === this.questionnaireId)
+      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
 
       if (this.checkedCtrls.length) {
+        let curQ = this.control.questionnaires.find(q => q.id === this.questionnaireId)
         const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
+
         destCtrls.map(ctrl => {
-          curQuestionnaire = { ...curQuestionnaire, control: ctrl.id, is_draft: true, id: null }
-          getCreateMethod()(curQuestionnaire)
+          const themes = curQ.themes.map(t => {
+            const qq = t.questions.map(q => { return { description: q.description } })
+            return { title: t.title, questions: qq }
+          })
+          curQ = { ...curQ, control: ctrl.id, is_draft: true, id: null, themes: [] }
+
+          getCreateMethod()(curQ).then(response => {
+            const qId = response.data.id
+            const newQ = { ...curQ, themes: themes }
+            getUpdateMethod(qId)(newQ)
+          })
         })
       }
     },
