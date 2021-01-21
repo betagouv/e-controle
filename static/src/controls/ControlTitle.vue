@@ -296,21 +296,33 @@ export default Vue.extend({
 
         getCreateMethodCtrl()(ctrl).then(response => {
           const controlId = response.data.id
+          let themes
+
           const cloneQuestionnaires = this.accessibleQuestionnaires
             .filter(aq => this.checkedQuestionnaires.includes(aq.id))
-            .map(q => { return { ...q, is_draft: true, id: null, control: controlId } })
+            .map(q => {
+              themes = q.themes.map(t => {
+                const qq = t.questions.map(q => { return { description: q.description } })
+                return { title: t.title, questions: qq }
+              })
 
-          cloneQuestionnaires.map(q => {
-            this.cloneQuestionnaire(q)
-          })
+              const newQ = { ...q, control: controlId, is_draft: true, id: null, themes: [] }
+              this.cloneQuestionnaire(newQ, themes)
+            })
         })
 
         this.hideCloneModal()
       }
     },
-    cloneQuestionnaire(questionnaire) {
+    cloneQuestionnaire(questionnaire, themes) {
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
-      getCreateMethod()(questionnaire)
+      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+
+      getCreateMethod()(questionnaire).then(response => {
+        const qId = response.data.id
+        const newQ = { ...questionnaire, themes: themes }
+        getUpdateMethod(qId)(newQ)
+      })
     },
     showExportModal() {
       $(this.$refs.modalexp.$el).modal('show')
@@ -336,8 +348,6 @@ export default Vue.extend({
         const themeId = String(rf.themeId + 1).padStart(2, '0')
         const questionId = String(rf.questionId + 1).padStart(2, '0')
         const filename = `Q${questionnaireNb}-T${themeId}-${questionId}-${rf.basename}`
-        console.log('rf', rf)
-        console.log('nb,', questionnaireNb)
         return { questionnaireNb, themeId, filename }
       }
 
