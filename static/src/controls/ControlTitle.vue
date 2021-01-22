@@ -243,6 +243,7 @@ export default Vue.extend({
       reference_code: '',
       allChecked: false,
       checkedQuestionnaires: [],
+      users: [],
     }
   },
   computed: {
@@ -264,6 +265,7 @@ export default Vue.extend({
     ConfirmModal,
   },
   mounted() {
+    this.getUsers()
     this.restoreForm()
   },
   methods: {
@@ -276,6 +278,12 @@ export default Vue.extend({
     referenceChanged() {
       this.referenceError = false
     },
+    getUsers() {
+      axios.get(backendUrls.getUsersInControl(this.control.id))
+        .then((response) => {
+          this.users = response.data
+        })
+    },
     cloneControl() {
       const newRefCode = this.control.reference_code + '_' + this.reference_code
       const valid = this.reference_code &&
@@ -287,42 +295,58 @@ export default Vue.extend({
       }
 
       const getCreateMethodCtrl = () => axios.post.bind(this, backendUrls.control())
+
       if (this.checkedQuestionnaires.length) {
+        const questionnaires = this.accessibleQuestionnaires
+          .filter(aq => this.checkedQuestionnaires.includes(aq.id))
         const ctrl = {
           title: this.control.title,
           depositing_organization: this.control.depositing_organization,
           reference_code: newRefCode,
+          questionnaires: questionnaires,
         }
 
         getCreateMethodCtrl()(ctrl).then(response => {
+          // Copy users for new control
           const controlId = response.data.id
-          let themes
 
-          const cloneQuestionnaires = this.accessibleQuestionnaires
+          this.users
+            .filter(u => u.profile_type === 'inspector')
+            .map(i => {
+              const inspector = { ...i, control: controlId }
+              axios.post(backendUrls.user(), inspector)
+            })
+
+          // Copy questionnaires for new control
+          const promises = this.accessibleQuestionnaires
             .filter(aq => this.checkedQuestionnaires.includes(aq.id))
             .map(q => {
-              themes = q.themes.map(t => {
+              const themes = q.themes.map(t => {
                 const qq = t.questions.map(q => { return { description: q.description } })
                 return { title: t.title, questions: qq }
               })
 
               const newQ = { ...q, control: controlId, is_draft: true, id: null, themes: [] }
-              this.cloneQuestionnaire(newQ, themes)
+              return this.cloneQuestionnaire(newQ, themes)
             })
+
+          Promise.all(promises)
         })
 
         this.hideCloneModal()
       }
     },
-    cloneQuestionnaire(questionnaire, themes) {
+    async cloneQuestionnaire(questionnaire, themes) {
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
       const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
 
-      getCreateMethod()(questionnaire).then(response => {
+      const promise = await getCreateMethod()(questionnaire).then(async response => {
         const qId = response.data.id
         const newQ = { ...questionnaire, themes: themes }
-        getUpdateMethod(qId)(newQ)
+        await getUpdateMethod(qId)(newQ)
       })
+
+      return promise
     },
     showExportModal() {
       $(this.$refs.modalexp.$el).modal('show')
