@@ -1,10 +1,10 @@
-Django==2.2.16
+Django==2.2.18
 ipdb==0.13.3
 pytest-django==3.9.0
 pytest-cov==2.10.0
 django-debug-toolbar==1.11
 psycopg2-binary==2.8.5
-Jinja2==2.11.2
+Jinja2==2.11.3
 uwsgi==2.0.19.1
 django-model-utils==4.0.0
 django-ordered-model==3.4.1
