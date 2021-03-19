@@ -263,20 +263,47 @@ export default Vue.extend({
       const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
 
       if (this.checkedCtrls.length) {
-        let curQ = this.control.questionnaires.find(q => q.id === this.questionnaireId)
+        const curQ = this.control.questionnaires.find(q => q.id === this.questionnaireId)
         const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
 
         destCtrls.map(ctrl => {
+          const questions = []
           const themes = curQ.themes.map(t => {
-            const qq = t.questions.map(q => { return { description: q.description } })
+            const qq = t.questions.map(q => {
+              return { description: q.description }
+            })
             return { title: t.title, questions: qq }
           })
-          curQ = { ...curQ, control: ctrl.id, is_draft: true, id: null, themes: [] }
 
-          getCreateMethod()(curQ).then(response => {
+          let newQ = { ...curQ, control: ctrl.id, is_draft: true, id: null, themes: [] }
+          getCreateMethod()(newQ).then(response => {
             const qId = response.data.id
-            const newQ = { ...curQ, themes: themes }
-            getUpdateMethod(qId)(newQ)
+            newQ = { ...newQ, themes: themes }
+
+            getUpdateMethod(qId)(newQ).then(response => {
+              const updatedQ = response.data
+
+              curQ.themes.map(t => {
+                t.questions.map(q => {
+                  const qId = updatedQ.themes.find(updatedT => updatedT.order === t.order)
+                    .questions.find(updatedQ => updatedQ.order === q.order).id
+
+                  q.question_files.map(qf => {
+                    axios.get(qf.url, { responseType: 'blob' }).then(response => {
+                      const formData = new FormData()
+                      formData.append('file', response.data, qf.basename)
+                      formData.append('question', qId)
+
+                      axios.post(backendUrls.annexe(), formData, {
+                        headers: {
+                          'Content-Type': 'multipart/form-data',
+                        },
+                      })
+                    })
+                  })
+                })
+              })
+            })
           })
         })
       }

@@ -7,12 +7,12 @@
         <p v-if="questionnaire.sent_date">
           <i class="fe fe-send"></i>
           Date de transmission du questionnaire :
-          {{ questionnaire.sent_date}}
+          {{ questionnaire.sent_date | DateFormat }}
         </p>
         <p v-if="questionnaire.end_date">
           <i class="fe fe-clock"></i>
           Date de réponse souhaitée :
-          {{ questionnaire.end_date | DateFormat}}
+          {{ questionnaire.end_date | DateFormat }}
         </p>
         <div class="flex-row justify-content-end">
           <div v-if="withTrash" class="mx-2">

@@ -463,6 +463,7 @@ export default Vue.extend({
     },
     publish() {
       this.currentQuestionnaire.is_draft = false
+      this.currentQuestionnaire.sent_date = toBackendFormat(new Date())
       return this._doSave()
     },
     saveDraftAndGoHome(event) {
