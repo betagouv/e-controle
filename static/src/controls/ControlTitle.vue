@@ -327,7 +327,7 @@ export default Vue.extend({
               })
 
               const newQ = { ...q, control: controlId, is_draft: true, id: null, themes: [] }
-              return this.cloneQuestionnaire(newQ, themes)
+              return this.cloneQuestionnaire(newQ, themes, q.themes)
             })
 
           Promise.all(promises)
@@ -336,14 +336,38 @@ export default Vue.extend({
         this.hideCloneModal()
       }
     },
-    async cloneQuestionnaire(questionnaire, themes) {
+    async cloneQuestionnaire(questionnaire, themes, oldThemes) {
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
       const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
 
       const promise = await getCreateMethod()(questionnaire).then(async response => {
         const qId = response.data.id
         const newQ = { ...questionnaire, themes: themes }
-        await getUpdateMethod(qId)(newQ)
+
+        await getUpdateMethod(qId)(newQ).then(response => {
+          const updatedQ = response.data
+
+          oldThemes.map(t => {
+            t.questions.map(q => {
+              const qId = updatedQ.themes.find(updatedT => updatedT.order === t.order)
+                .questions.find(updatedQ => updatedQ.order === q.order).id
+
+              q.question_files.map(qf => {
+                axios.get(qf.url, { responseType: 'blob' }).then(response => {
+                  const formData = new FormData()
+                  formData.append('file', response.data, qf.basename)
+                  formData.append('question', qId)
+                  console.log('fileresponse', response.data)
+                  axios.post(backendUrls.annexe(), formData, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                    },
+                  })
+                })
+              })
+            })
+          })
+        })
       })
 
       return promise

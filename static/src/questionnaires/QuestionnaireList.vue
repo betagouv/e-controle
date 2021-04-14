@@ -267,7 +267,6 @@ export default Vue.extend({
         const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
 
         destCtrls.map(ctrl => {
-          const questions = []
           const themes = curQ.themes.map(t => {
             const qq = t.questions.map(q => {
               return { description: q.description }

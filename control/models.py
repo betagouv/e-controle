@@ -192,6 +192,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
         return f"Questionnaire n°{self.numbering} - {self.title}"
 
     @property
+    def sent_date_display(self):
+        if not self.end_date:
+            return None
+        return self.sent_date.strftime("%A %d %B %Y")
+
+    @property
     def end_date_display(self):
         if not self.end_date:
             return None
