@@ -35,6 +35,8 @@ def generate_response_file_list_in_xlsx(questionnaire):
                                 f'/{questionnaire.control.reference_code}'])
             add_row(worksheet, ['Fichier exporté le',
                                 date.today().strftime("%A %d %B %Y")])
+            add_row(worksheet, ['Fichier publié le',
+                                questionnaire.sent_date_display])
             add_row(worksheet, [])
             add_row(worksheet, [])
             add_row(worksheet, ['Questionnaire',
