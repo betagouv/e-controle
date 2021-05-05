@@ -6,6 +6,14 @@ from annoying.fields import AutoOneToOneField
 
 from .managers import UserProfileQuerySet
 
+class UserIpAddress(models.Model):
+    ip = models.CharField(max_length=30)
+    username = models.EmailField(max_length=254)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Adresse IP Utilisateur"
+        verbose_name_plural = "Adresses IP Utilisateurs"
 
 class UserProfile(models.Model):
     AUDITED = 'audited'
