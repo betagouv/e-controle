@@ -18,8 +18,6 @@ def get_client_ip(request):
 def save_ip_address(request):
     userIp = UserIpAddress(ip=get_client_ip(request), username=request.user)
     userIp.save()
-    for ip in UserIpAddress.objects.all():
-        print(ip.ip, " ", ip.username, " ", ip.created_at)
 
 @receiver(user_logged_in, sender=User)
 def add_action_log_for_login(sender, user, request, **kwargs):
