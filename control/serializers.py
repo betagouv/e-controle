@@ -139,7 +139,7 @@ class QuestionnaireUpdateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'control': {
                 'required': True,
-                'allow_null': False,
+                'allow_null': True,
             }
         }
 
