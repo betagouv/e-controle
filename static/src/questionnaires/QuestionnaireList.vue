@@ -122,12 +122,32 @@
                   "
                 >
                   <div class="text-right">
-                    <a class="btn btn-primary"
-                      :href="questionnaireEditUrl(questionnaire.id)"
-                      title="Modifier le brouillon de questionnaire">
-                      <i class="fe fe-edit"></i>
-                      Modifier
-                    </a>
+                    <div class="btn-group">
+                      <a class="btn btn-secondary"
+                        :href="questionnaireEditUrl(questionnaire.id)"
+                        title="Modifier le brouillon de questionnaire">
+                        <i class="fe fe-edit"></i>
+                        Modifier
+                      </a>
+                       <button
+                      type="button"
+                      class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="sr-only">Menu d'actions</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <button
+                        class="dropdown-item text-danger"
+                        type="button"
+                        @click="startQuestionnaireDeleteFlow(questionnaire.id)"
+                      >
+                        <i class="fe fe-trash-2"></i>
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
                 </template>
                 <template v-else-if="questionnaire.is_draft &&
@@ -249,7 +269,13 @@ export default Vue.extend({
       return backendUrls['questionnaire-edit'](questionnaireId)
     },
     startQuestionnaireDeleteFlow(questionnaireId) {
-      this.$refs['questionnaireDeleteFlow' + questionnaireId][0].start()
+      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+      const curQ = this.control.questionnaires.find(q => q.id === questionnaireId)
+      const newQ = { ...curQ, control: null }
+
+      getUpdateMethod(questionnaireId)(newQ).then(response => {
+        console.log(response.data)
+      })
     },
     exportUrl(questionnaire) {
       return backendUrls['questionnaire-export'](questionnaire.id)

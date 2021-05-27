@@ -285,7 +285,11 @@ export default Vue.extend({
         })
     },
     cloneControl() {
-      const newRefCode = this.control.reference_code + '_' + this.reference_code
+      // old reference code with year updated to current year (2021_CCG_)
+      const prefix = new Date().getFullYear() + this.control.reference_code.substring(4)
+      // reference code given by user (2021_CCG_DUPLI)
+      const newRefCode = prefix + '_' + this.reference_code
+
       const valid = this.reference_code &&
                     !this.controls.find(ctrl => ctrl.reference_code === newRefCode)
 

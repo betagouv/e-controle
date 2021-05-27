@@ -196,7 +196,8 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
 
         # Use the read serializer to output the response data.
         response.data = control_serializers.QuestionnaireSerializer(instance=saved_qr).data
-        questionnaire_api_post_save.send(sender=Questionnaire, instance=saved_qr)
+        if not is_update:
+            questionnaire_api_post_save.send(sender=Questionnaire, instance=saved_qr)
         return response
 
     def create(self, request, *args, **kwargs):
@@ -220,7 +221,7 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
         serializer.is_valid(raise_exception=True)
 
         control = serializer.validated_data['control']
-        if not request.user.profile.controls.active().filter(id=control.id).exists():
+        if control is not None and not request.user.profile.controls.active().filter(id=control.id).exists():
             e = PermissionDenied(
                 detail=(
                     'Users can only create questionnaires '
