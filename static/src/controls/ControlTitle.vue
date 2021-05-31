@@ -20,7 +20,7 @@
           </label>
           <div class="flex-row align-items-center">
             <span class="input-group-prepend" id="prepend">
-              <span class="input-group-text">{{control.reference_code}}_</span>
+              <span class="input-group-text">{{new Date().getFullYear() + control.reference_code.substring(4)}}_</span>
             </span>
             <input type="text"
                    class="form-control"
