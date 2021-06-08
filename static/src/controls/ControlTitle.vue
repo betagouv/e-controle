@@ -20,7 +20,7 @@
           </label>
           <div class="flex-row align-items-center">
             <span class="input-group-prepend" id="prepend">
-              <span class="input-group-text">{{new Date().getFullYear() + control.reference_code.substring(4)}}_</span>
+              <span class="input-group-text">{{new Date().getFullYear()}}_</span>
             </span>
             <input type="text"
                    class="form-control"
@@ -285,10 +285,8 @@ export default Vue.extend({
         })
     },
     cloneControl() {
-      // old reference code with year updated to current year (2021_CCG_)
-      const prefix = new Date().getFullYear() + this.control.reference_code.substring(4)
-      // reference code given by user (2021_CCG_DUPLI)
-      const newRefCode = prefix + '_' + this.reference_code
+      // reference code given by user (2021_SOMETHING)
+      const newRefCode = new Date().getFullYear() + '_' + this.reference_code
 
       const valid = this.reference_code &&
                     !this.controls.find(ctrl => ctrl.reference_code === newRefCode)
