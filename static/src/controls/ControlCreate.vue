@@ -74,12 +74,15 @@
             </span>
               <input type="text" class="form-control" v-model="reference_code_suffix" required
                      pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
-                     maxlength="255"
+                     maxlength="25"
                      title="Ce champ ne doit pas contenir de caractères spéciaux
                          ( ! , @ # $ / \ ' &quot; + etc)"
                      aria-describedby="reference-code-help"
                      aria-labelledby="reference-code-label">
             </div>
+            <span class="text-danger" v-if="reference_code_suffix.length > 24">
+              Ce champ ne peut contenir plus de 25 caractères.
+            </span>
           </div>
 
         </form>
