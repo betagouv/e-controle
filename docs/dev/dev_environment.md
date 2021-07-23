@@ -48,6 +48,12 @@ Pour changer l'image de base, il faut changer l'option `dockerfile` specifiée d
 
 ## Lancement en dev avec docker-compose
 
+Installer node et npm.
+
+Installer les dependances node : npm install
+
+Builder le front : npm bun build-all (pour developper par la suite, on pourra utiliser les commandes watch qui rebuildent au fur et à mesure des modifications. Voir package.json)
+
 Créer le fichier avec les variables d'environnement :
 
     cp .env.sample .env
