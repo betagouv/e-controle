@@ -10,7 +10,7 @@ fi
 initialize_app()
 {
     echo "############# Running Django collectstatic and migrate"""
-    pip3 install -r requirements.txt
+    pip3 install -r poetry_req.txt
     python3.6 manage.py migrate
     python3.6 manage.py collectstatic --noinput
 

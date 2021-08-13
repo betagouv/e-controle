@@ -148,8 +148,16 @@ class QuestionnaireViewSet(mixins.CreateModelMixin,
                            mixins.UpdateModelMixin,
                            viewsets.GenericViewSet):
     serializer_class = control_serializers.QuestionnaireSerializer
-    permission_classes = (
-        OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire, QuestionnaireIsDraft)
+    permission_classes_by_action = {
+        'create': (OnlyInspectorCanChange, OnlyEditorCanChangeQuestionnaire, QuestionnaireIsDraft),
+        'update': ()
+    }
+
+    def get_permissions(self):
+        try:
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError:
+            return [permission() for permission in self.permission_classes_by_action['default']]
 
     def get_queryset(self):
         queryset = Questionnaire.objects.filter(

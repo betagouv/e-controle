@@ -1,21 +1,22 @@
 version: '3'
 services:
   postgres:
-    image: postgres:11
+    image: 'postgres:11'
     environment:
-     - POSTGRES_USER=ecc
-     - POSTGRES_PASSWORD=ecc
-     - POSTGRES_DB=ecc
+      - POSTGRES_USER=ecc
+      - POSTGRES_PASSWORD=ecc
+      - POSTGRES_DB=ecc
   django:
     build:
       context: .
       dockerfile: docker/Dockerfile.python
     volumes:
-      - .:/app
+      - '.:/app'
     ports:
-      - "8080:8080"
+      - '8080:8080'
     links:
       - postgres
     environment:
       - PORT=8080
     image: ecc-django
+    command: dev

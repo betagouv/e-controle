@@ -156,6 +156,12 @@ class Questionnaire(OrderedModel, WithNumberingMixin, DocxMixin):
     is_draft = models.BooleanField(
         verbose_name="brouillon", default=False,
         help_text="Ce questionnaire est-il encore au stade de brouillon?")
+    is_replied = models.BooleanField(
+        verbose_name="répondu", default=False,
+        help_text="Ce questionnaire a-t-il obtenu toutes les réponses de l'organisme contrôlé ?")
+    is_finalized = models.BooleanField(
+        verbose_name="finalisé", default=False,
+        help_text="Ce questionnaire a-t-il été finalisé par le contrôleur ?")
     modified = models.DateTimeField('modifié', auto_now=True, null=True)
 
     class Meta:

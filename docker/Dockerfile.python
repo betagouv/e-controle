@@ -13,7 +13,7 @@ COPY . /app
 WORKDIR /app
 
 # Python and NPM Packaging
-RUN python -m pip install -r requirements.txt
+RUN python -m pip install -r poetry_req.txt
 RUN npm install
 
 # Locales

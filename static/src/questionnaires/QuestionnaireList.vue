@@ -64,6 +64,15 @@
               <div v-if="questionnaire.is_draft">
                 <div class="tag tag-azure round-tag font-italic">Brouillon</div>
               </div>
+              <div v-else-if="questionnaire_has_replies(questionnaire.id) && !questionnaire_is_replied(questionnaire.id)">
+                <div class="tag tag-yellow round-tag font-italic">En cours</div>
+              </div>
+              <div v-else-if="questionnaire_is_replied(questionnaire.id) && !questionnaire_is_finalized(questionnaire.id)">
+                <div class="tag tag-orange round-tag font-italic">Répondu</div>
+              </div>
+              <div v-else-if="questionnaire_is_finalized(questionnaire.id)">
+                <div class="tag tag-purple round-tag font-italic">Finalisé</div>
+              </div>
               <div v-else>
                 <div class="tag tag-green round-tag font-italic">Publié</div>
               </div>
@@ -102,10 +111,39 @@
             </td>
             <td class="w-1 action-column">
               <template v-if="!user.is_inspector">
-                <div class="text-right">
+                <div v-if="questionnaire_has_replies(questionnaire.id)" class="text-right">
+                   <div class="btn-group">
+                      <a class="btn btn-secondary"
+                        :href="questionnaireDetailUrl(questionnaire.id)"
+                        title="Déposer et consulter vos réponses">
+                        <i class="fe fe-eye"></i>
+                        Répondre
+                      </a>
+                       <button
+                      type="button"
+                      class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      <span class="sr-only">Menu d'actions</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                      <button
+                        class="dropdown-item text-success"
+                        type="button"
+                        @click="markQuestionnaireAsReplied(questionnaire.id)"
+                      >
+                        <i class="fe fe-check"></i>
+                        Marquer comme répondu
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="text-right">
                   <a
                     :href="questionnaireDetailUrl(questionnaire.id)"
-                    class="btn btn-primary"
+                    class="btn btn-primary ml-2"
                     title="Déposer et consulter vos réponses"
                   >
                     <i class="fe fe-eye"></i>
@@ -191,6 +229,15 @@
                       >
                         <i class="fe fe-copy"></i>
                         Dupliquer
+                      </button>
+                      <button
+                        v-if="questionnaire_is_replied(questionnaire.id)"
+                        class="dropdown-item text-success"
+                        type="button"
+                        @click="markQuestionnaireAsFinalized(questionnaire.id)"
+                      >
+                        <i class="fe fe-check"></i>
+                        Marquer comme finalisé
                       </button>
                     </div>
                   </div>
@@ -283,6 +330,44 @@ export default Vue.extend({
     showModal(qId) {
       this.questionnaireId = qId
       $(this.$refs.modal.$el).modal('show')
+    },
+    questionnaire_is_replied(qId) {
+      const q = this.control.questionnaires.find(q => q.id === qId)
+      return q.is_replied
+    },
+    questionnaire_is_finalized(qId) {
+      const q = this.control.questionnaires.find(q => q.id === qId)
+      return q.is_finalized
+    },
+    questionnaire_has_replies(qId) {
+      const q = this.control.questionnaires.find(q => q.id === qId)
+      let found_replies = false
+
+      if(q.themes) {
+        q.themes.map(theme => {
+          theme.questions.map(question => {
+            if(question.response_files.length) {
+              found_replies = true
+            }
+          })
+        })
+      }
+
+      return found_replies
+    },
+    markQuestionnaireAsReplied(qId) {
+      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+      const curQ = this.control.questionnaires.find(q => q.id === qId)
+      const newQ = { ...curQ, is_replied: true }
+
+      getUpdateMethod(qId)(newQ)
+    },
+    markQuestionnaireAsFinalized(qId) {
+      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+      const curQ = this.control.questionnaires.find(q => q.id === qId)
+      const newQ = { ...curQ, is_finalized: true }
+
+      getUpdateMethod(qId)(newQ)
     },
     cloneQuestionnaire() {
       const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())

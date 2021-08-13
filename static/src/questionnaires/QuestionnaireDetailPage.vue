@@ -18,6 +18,9 @@
                 class="tag tag-azure big-tag round-tag font-italic mr-2">
             Brouillon
           </span>
+          <span v-else-if="questionnaire_has_replies() && !questionnaire_is_replied()" class="tag tag-yellow round-tag font-italic mr-2">En cours</span>
+          <span v-else-if="questionnaire_is_replied() && !questionnaire_is_finalized()" class="tag tag-orange round-tag font-italic mr-2">Répondu</span>
+          <span v-else-if="questionnaire_is_finalized()" class="tag tag-purple round-tag font-italic mr-2">Finalisé</span>
           <span v-else class="tag tag-green big-tag round-tag font-italic mr-2">Publié</span>
         </template>
         {{ questionnaire.title_display }}
@@ -129,6 +132,28 @@ export default Vue.extend({
     },
   },
   methods: {
+    questionnaire_is_replied() {
+      return this.questionnaire.is_replied
+    },
+    questionnaire_is_finalized() {
+      return this.questionnaire.is_finalized
+    },
+    questionnaire_has_replies() {
+      const q = this.questionnaire
+      let found_replies = false
+
+      if(q.themes) {
+        q.themes.map(theme => {
+          theme.questions.map(question => {
+            if(question.response_files.length) {
+              found_replies = true
+            }
+          })
+        })
+      }
+
+      return found_replies
+    },
     showWebdavTip() {
       this.$refs.webdavTip.start()
     },
