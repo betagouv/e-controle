@@ -18,7 +18,12 @@ from sendfile import sendfile
 import json
 
 from .docx import generate_questionnaire_file
+from docx import Document
 from .export_response_files import generate_response_file_list_in_xlsx
+import openpyxl
+from pdfrw import PdfReader, PdfWriter
+from datetime import datetime
+
 from .models import Control, Questionnaire, QuestionFile, ResponseFile, Question
 from .serializers import ControlDetailUserSerializer, ControlSerializerWithoutDraft
 from .serializers import ControlSerializer, ControlDetailControlSerializer
@@ -178,7 +183,7 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
             'verb': 'uploaded invalid response-file extension',
             'target': self.object.question,
             'description': f'Detected invalid file extension: "{invalid_extension}"'
-            }
+        }
         action.send(**action_details)
 
     def add_invalid_mime_type_log(self, invalid_mime_type):
@@ -187,8 +192,14 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
             'verb': 'uploaded invalid response-file',
             'target': self.object.question,
             'description': f'Detected invalid response-file mime type: "{invalid_mime_type}"'
-            }
+        }
         action.send(**action_details)
+
+    def file_extension_is_metadata(self, extension):
+        whitelist = (".docx", ".xlsx", ".pdf")
+        if any(match.lower() == extension.lower() for match in whitelist):
+            return extension
+        return False
 
     def file_extension_is_valid(self, extension):
         blacklist = settings.UPLOAD_FILE_EXTENSION_BLACKLIST
@@ -217,8 +228,30 @@ class UploadResponseFile(LoginRequiredMixin, CreateView):
         self.object = form.save(commit=False)
         self.object.question_id = question_id
         self.object.author = self.request.user
+
         file_object = self.object.file
         file_extension = os.path.splitext(file_object.name)[1]
+
+        # Set metadata for docx, xlsx files
+        metadata_type = self.file_extension_is_metadata(file_extension)
+
+        if metadata_type == ".docx":
+            document = Document(self.object.file)
+            prop = document.core_properties
+            prop.author = self.object.author
+            prop.modified = datetime.now()
+            document.save(self.object.file)
+        elif metadata_type == ".xlsx":
+            wb = openpyxl.load_workbook(self.object.file)
+            wb.properties.creator = self.object.author
+            wb.properties.modified = datetime.now()
+            wb.save(self.object.file)
+        elif metadata_type == ".pdf":
+            pdf = PdfReader(self.object.file)
+            pdf.Info.Author = "batman"
+            pdf.Info.Author = str(self.object.author)
+            pdf.Info.ModDate = str(datetime.now())
+            PdfWriter(trailer=pdf).write(self.object.file)
         if not self.file_extension_is_valid(file_extension):
             self.add_invalid_extension_log(file_extension)
             return HttpResponseForbidden(

@@ -145,6 +145,9 @@ djangorestframework==3.11.2; python_version >= "3.5" \
 docxtpl==0.10.0 \
     --hash=sha256:45f04661b9ab1fd66b975a0a547b30c8811f457bef2f85249c2f3c5784a00052 \
     --hash=sha256:0e031ea5da63339f2bac0fd7eb7b3b137303571a9a92c950501148240ea22047
+et-xmlfile==1.1.0; python_version >= "3.6" \
+    --hash=sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada \
+    --hash=sha256:8eb9e2bc2f8c97e37a2dc85a09ecdcdec9d8a396530a6d5a33b30b9a92da0c5c
 factory-boy==2.12.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" \
     --hash=sha256:728df59b372c9588b83153facf26d3d28947fc750e8e3c95cefa9bed0e6394ee \
     --hash=sha256:faf48d608a1735f0d0a3c9cbf536d64f9132b547dae7ba452c4d99a79e84a370
@@ -282,12 +285,18 @@ markupsafe==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or 
 more-itertools==8.4.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5" \
     --hash=sha256:68c70cc7167bdf5c7c9d8f6954a7837089c6a36bf565383919bb595efb8a17e5 \
     --hash=sha256:b78134b2063dd214000685165d81c154522c3ee0a1c0d4d113c80361c234c5a2
+openpyxl==3.0.7; python_version >= "3.6" \
+    --hash=sha256:46af4eaf201a89b610fcca177eed957635f88770a5462fb6aae4a2a52b0ff516 \
+    --hash=sha256:6456a3b472e1ef0facb1129f3c6ef00713cebf62e736cd7a75bcc3247432f251
 packaging==20.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" \
     --hash=sha256:998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181 \
     --hash=sha256:4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8
 parso==0.7.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6" \
     --hash=sha256:158c140fc04112dc45bca311633ae5033c2c2a7b732fa33d0955bad8152a8dd0 \
     --hash=sha256:908e9fae2144a076d72ae4e25539143d40b8e3eafbaeae03c1bfe226f4cdf12c
+pdfrw==0.4 \
+    --hash=sha256:758289edaa3b672e9a1a67504be73c18ec668d4e5b9d5ac9cbc0dc753d8d196b \
+    --hash=sha256:0dc0494a0e6561b268542b28ede2280387c2728114f117d3bb5d8e4787b93ef4
 pexpect==4.8.0; sys_platform != "win32" and python_version >= "3.6" \
     --hash=sha256:0b48a55dcb3c05f3329815901ea4fc1537514d6ba867a152b581d69ae3710937 \
     --hash=sha256:fc65a43959d153d0114afe13997d439c22823a27cefceb5ff35c2178c6784c0c

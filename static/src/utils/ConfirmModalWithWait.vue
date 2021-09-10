@@ -3,13 +3,14 @@
     <form>
       <div class="modal-header border-bottom-0">
         <h5 class="modal-title">{{ title }}</h5>
-        <button v-if="!noClose"
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-                @click="closeModal">
-        </button>
+        <button
+          v-if="!noClose"
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          @click="closeModal"
+        ></button>
       </div>
       <div class="modal-body">
         <error-bar v-if="errorMessage">
@@ -18,15 +19,21 @@
         <slot></slot>
       </div>
       <div class="modal-footer border-top-0">
-        <button v-if="confirmButton" type="submit" class="btn btn-primary"
-                @click="confirmClicked"
-                :class="{'btn-loading': processing}"
+        <button
+          v-if="confirmButton"
+          type="submit"
+          class="btn btn-primary"
+          @click.prevent="confirmClicked"
+          :class="{ 'btn-loading': processing }"
         >
           {{ confirmButton }}
         </button>
-        <button v-if="cancelButton" type="button" class="btn btn-secondary"
-                data-dismiss="modal"
-                @click="cancelClicked"
+        <button
+          v-if="cancelButton"
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          @click="cancelClicked"
         >
           {{ cancelButton }}
         </button>
@@ -36,72 +43,70 @@
 </template>
 
 <script>
-import EmptyModal from './EmptyModal'
-import ErrorBar from './ErrorBar'
-import reportValidity from 'report-validity'
-import Vue from 'vue'
+import EmptyModal from "./EmptyModal";
+import ErrorBar from "./ErrorBar";
+import reportValidity from "report-validity";
+import Vue from "vue";
 
 export default Vue.extend({
   props: [
-    'cancel-button',
-    'confirm-button',
-    'no-close',
-    'title',
-    'submitCallback',
-    'errorCallback',
-    'successCallback',
+    "cancel-button",
+    "confirm-button",
+    "no-close",
+    "title",
+    "submitCallback",
+    "errorCallback",
+    "successCallback",
   ],
-  data: function() {
+  data: function () {
     return {
-      errorMessage: '',
+      errorMessage: "",
       processing: false,
-    }
+    };
   },
   components: {
     EmptyModal,
     ErrorBar,
   },
   methods: {
-    confirmClicked () {
-      this.errorMessage = ''
+    confirmClicked() {
+      this.errorMessage = "";
       if (!this.validateForm()) {
-        return
+        return;
       }
 
       const processingDoneCallback = (errorMessage, successMessage) => {
         if (errorMessage) {
-          console.log('error!', errorMessage)
-          this.errorMessage = errorMessage
-          this.processing = false
-          return
+          console.log("error!", errorMessage);
+          this.errorMessage = errorMessage;
+          this.processing = false;
+          return;
         }
-        console.debug('ConfirmModalWithWait : processing done', successMessage)
-      }
+        console.debug("ConfirmModalWithWait : processing done", successMessage);
+      };
 
-      this.processing = true
-      this.$emit('confirm', processingDoneCallback)
+      this.processing = true;
+      this.$emit("confirm", processingDoneCallback);
     },
-    cancelClicked () {
-      this.processing = false
-      this.errorMessage = ''
-      this.$emit('cancel')
+    cancelClicked() {
+      this.processing = false;
+      this.errorMessage = "";
+      this.$emit("cancel");
     },
-    closeModal () {
-      this.processing = false
-      this.errorMessage = ''
-      this.$emit('close')
+    closeModal() {
+      this.processing = false;
+      this.errorMessage = "";
+      this.$emit("close");
     },
-    validateForm () {
-      const forms = this.$el.getElementsByTagName('form')
+    validateForm() {
+      const forms = this.$el.getElementsByTagName("form");
       if (forms.length > 0) {
-        return reportValidity(forms[0])
+        return reportValidity(forms[0]);
       }
-      return true
+      return true;
     },
-
   },
-})
-
+});
 </script>
 
 <style></style>
