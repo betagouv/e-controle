@@ -49,6 +49,8 @@ pyasn1 = "0.4.8"
 python-magic = "0.4.18"
 xlsxwriter = "1.2.8"
 uwsgi = "^2.0.19"
+openpyxl = "^3.0.7"
+pdfrw = "^0.4"
 
 [tool.poetry.dev-dependencies]
 python-dotenv = "0.13.0"
