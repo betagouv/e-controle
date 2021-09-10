@@ -269,7 +269,7 @@ tests = ["pytest (<4.0)", "pytest-django", "pytest-flakes (==1.0.1)", "pytest-pe
 
 [[package]]
 name = "django-debug-toolbar"
-version = "1.11"
+version = "1.11.1"
 description = "A configurable set of panels that display various debug information about the current request/response."
 category = "main"
 optional = false
@@ -1156,7 +1156,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7.0"
-content-hash = "84be00cc3a857da5a2d0c136701731cddea68653baf804f3cbc145e041527c5e"
+content-hash = "89d6e8259af7a84eee363571a9f0d294628bb056650470599c37739f019d136b"
 
 [metadata.files]
 amqp = [
@@ -1273,8 +1273,8 @@ django-csp = [
     {file = "django_csp-3.6.tar.gz", hash = "sha256:0a38aa9618c675cbf5f5e517e20d5846a3e100ef7b307e32e7fb18c58aa47723"},
 ]
 django-debug-toolbar = [
-    {file = "django-debug-toolbar-1.11.tar.gz", hash = "sha256:89d75b60c65db363fb24688d977e5fbf0e73386c67acf562d278402a10fc3736"},
-    {file = "django_debug_toolbar-1.11-py2.py3-none-any.whl", hash = "sha256:c2b0134119a624f4ac9398b44f8e28a01c7686ac350a12a74793f3dd57a9eea0"},
+    {file = "django-debug-toolbar-1.11.1.tar.gz", hash = "sha256:10f5ef59c97fad34b803b02e5850b6422082e2e44544c2ec03feb4eeee0f9158"},
+    {file = "django_debug_toolbar-1.11.1-py2.py3-none-any.whl", hash = "sha256:2d240517dac3b02b7d78c9109ee88546f99171a2ec2a3efa70450771cb55735e"},
 ]
 django-email-obfuscator = [
     {file = "django-email-obfuscator-0.1.5.tar.gz", hash = "sha256:055d5251ebfb4aa3431c238927461e6b4bd501f937b5207cd175f7ea50519f32"},
