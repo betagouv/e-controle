@@ -11,8 +11,8 @@ initialize_app()
 {
     echo "############# Running Django collectstatic and migrate"""
     pip3 install -r poetry_req.txt
-    python3.6 manage.py migrate
-    python3.6 manage.py collectstatic --noinput
+    python3.9 manage.py migrate
+    python3.9 manage.py collectstatic --noinput
 
     echo "############# Building bundle"""
     npm run build-all
@@ -27,7 +27,7 @@ case "$1" in
     dev)
         initialize_app
         echo "############# Running Development Server on ${PORT}"
-        python3.6 manage.py runserver 0:${PORT}
+        python3.9 manage.py runserver 0:${PORT}
     ;;
     sh)
         initialize_app
