@@ -5,36 +5,41 @@
       Ajouter un espace de dépôt
     </button>
 
-    <confirm-modal-with-wait ref="modal"
-                             cancel-button="Annuler"
-                             confirm-button="Créer l'espace de dépôt"
-                             title="Créer un nouvel espace de dépôt"
-                             @confirm="createControl"
+    <confirm-modal-with-wait
+      ref="modal"
+      cancel-button="Annuler"
+      confirm-button="Créer l'espace de dépôt"
+      title="Créer un nouvel espace de dépôt"
+      @confirm="createControl"
     >
       <div>
         <info-bar>
-          Chaque espace de dépôt n'est visible que par les personnes que vous inviterez.
+          Chaque espace de dépôt n'est visible que par les personnes que vous
+          inviterez.
         </info-bar>
 
         <form>
           <div class="form-group mb-6">
             <label id="title-label" class="form-label">
-              Quel est le nom de la procédure pour laquelle vous ouvrez cet espace de dépôt ?
+              Quel est le nom de la procédure pour laquelle vous ouvrez cet
+              espace de dépôt ?
               <span class="form-required">*</span>
             </label>
             <div id="title-help" class="text-muted">
-              Exemple : Contrôle des comptes et de la gestion de la Fédération Française de
-              Football. 255 caractères maximum.
+              Exemple : Contrôle des comptes et de la gestion de la Fédération
+              Française de Football. 255 caractères maximum.
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-award mr-2 text-muted"></i>
-              <input type="text"
-                     class="form-control"
-                     v-model="title"
-                     maxlength="255"
-                     required
-                     aria-describedby="title-help"
-                     aria-labelledby="title-label">
+              <input
+                type="text"
+                class="form-control"
+                v-model="title"
+                maxlength="255"
+                required
+                aria-describedby="title-help"
+                aria-labelledby="title-label"
+              />
             </div>
           </div>
 
@@ -48,13 +53,15 @@
             </div>
             <div class="flex-row align-items-center">
               <i class="fa fa-building mr-2 text-muted"></i>
-              <input type="text"
-                     class="form-control"
-                     v-model="organization"
-                     maxlength="255"
-                     required
-                     aria-describedby="organization-help"
-                     aria-labelledby="organization-label">
+              <input
+                type="text"
+                class="form-control"
+                v-model="organization"
+                maxlength="255"
+                required
+                aria-describedby="organization-help"
+                aria-labelledby="organization-label"
+              />
             </div>
           </div>
 
@@ -64,27 +71,34 @@
               <span class="form-required">*</span>
             </label>
             <div id="reference-code-help" class="text-muted">
-              Ce nom sera celui du dossier contenant les pièces déposées. Il apparaîtra dans votre
-              explorateur Windows. Nous conseillons un nom court (max 25 caractères) et signifiant,
-              pour que vous retrouviez facilement le dossier. Exemple : FFF_MinSports
+              Ce nom sera celui du dossier contenant les pièces déposées. Il
+              apparaîtra dans votre explorateur Windows. Nous conseillons un nom
+              court (max 25 caractères) et signifiant, pour que vous retrouviez
+              facilement le dossier. Exemple : FFF_MinSports
             </div>
             <div class="input-group">
-            <span class="input-group-prepend" id="basic-addon3">
-              <span class="input-group-text">{{ reference_code_prefix }}</span>
-            </span>
-              <input type="text" class="form-control" v-model="reference_code_suffix" required
-                     pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
-                     maxlength="25"
-                     title="Ce champ ne doit pas contenir de caractères spéciaux
+              <span class="input-group-prepend" id="basic-addon3">
+                <span class="input-group-text">{{
+                  reference_code_prefix
+                }}</span>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                v-model="reference_code_suffix"
+                required
+                pattern="^[\.\s\wÀ-ÖØ-öø-ÿŒœ-]+$"
+                maxlength="25"
+                title="Ce champ ne doit pas contenir de caractères spéciaux
                          ( ! , @ # $ / \ ' &quot; + etc)"
-                     aria-describedby="reference-code-help"
-                     aria-labelledby="reference-code-label">
+                aria-describedby="reference-code-help"
+                aria-labelledby="reference-code-label"
+              />
             </div>
             <span class="text-danger" v-if="reference_code_suffix.length > 24">
               Ce champ ne peut contenir plus de 25 caractères.
             </span>
           </div>
-
         </form>
       </div>
     </confirm-modal-with-wait>
@@ -92,28 +106,28 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Vue from 'vue'
+import axios from "axios";
+import Vue from "vue";
 
-import backendUrls from '../utils/backend'
-import ConfirmModalWithWait from '../utils/ConfirmModalWithWait'
-import InfoBar from '../utils/InfoBar'
+import backendUrls from "../utils/backend";
+import ConfirmModalWithWait from "../utils/ConfirmModalWithWait";
+import InfoBar from "../utils/InfoBar";
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 export default Vue.extend({
-  data: function() {
+  data: function () {
     return {
-      title: '',
-      organization: '',
-      reference_code_suffix: '',
+      title: "",
+      organization: "",
+      reference_code_suffix: "",
       year: new Date().getFullYear(),
-    }
+    };
   },
   computed: {
     reference_code_prefix: function () {
-      return this.year + '_'
+      return this.year + "_";
     },
   },
   components: {
@@ -122,51 +136,67 @@ export default Vue.extend({
   },
   methods: {
     showModal() {
-      $(this.$refs.modal.$el).modal('show')
+      $(this.$refs.modal.$el).modal("show");
     },
-    createControl: function(processingDoneCallback) {
+    createControl: function (processingDoneCallback) {
       const payload = {
         title: this.title,
         depositing_organization: this.organization,
         reference_code: this.reference_code_prefix + this.reference_code_suffix,
-      }
-      axios.post(backendUrls.control(), payload)
-        .then(response => {
-          console.debug(response)
-          processingDoneCallback(null, response)
-          window.location.href = backendUrls.home()
+      };
+      axios
+        .post(backendUrls.control(), payload)
+        .then((response) => {
+          console.debug(response);
+          processingDoneCallback(null, response);
+          setTimeout(() => {
+            window.location.href = backendUrls.home();
+          }, 500);
         })
         .catch((error) => {
-          console.error('Error creating control', error)
-          const errorMessage = this.makeErrorMessage(error)
-          processingDoneCallback(errorMessage)
-        })
+          console.error("Error creating control", error);
+          const errorMessage = this.makeErrorMessage(error);
+          processingDoneCallback(errorMessage);
+        });
     },
     makeErrorMessage: function (error) {
-      if (error.response && error.response.data && error.response.data.reference_code) {
-        const requestedCode = JSON.parse(error.response.config.data).reference_code
-        if (error.response.data.reference_code[0] === 'UNIQUE') {
-          return 'Le nom abrégé "' + requestedCode +
-                '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.reference_code
+      ) {
+        const requestedCode = JSON.parse(
+          error.response.config.data
+        ).reference_code;
+        if (error.response.data.reference_code[0] === "UNIQUE") {
+          return (
+            'Le nom abrégé "' +
+            requestedCode +
+            '" existe déjà pour un autre espace. Veuillez en choisir un autre.'
+          );
         }
-        if (error.response.data.reference_code[0] === 'INVALID') {
-          return 'Le nom abrégé "' + requestedCode +
-                 '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).' +
-                 ' Veuillez en choisir un autre.'
+        if (error.response.data.reference_code[0] === "INVALID") {
+          return (
+            'Le nom abrégé "' +
+            requestedCode +
+            '" ne doit pas contenir de caractères spéciaux (! , @ # $ / \\ " \' + etc).' +
+            " Veuillez en choisir un autre."
+          );
         }
       }
 
-      if (error.message && error.message === 'Network Error') {
-        return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau"
+      if (error.message && error.message === "Network Error") {
+        return "L'espace de dépôt n'a pas pu être créé. Erreur : problème de réseau";
       }
 
       if (error.message) {
-        return "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+        return (
+          "L'espace de dépôt n'a pas pu être créé. Erreur : " + error.message
+        );
       }
 
-      return "L'espace de dépôt n'a pas pu être créé."
+      return "L'espace de dépôt n'a pas pu être créé.";
     },
   },
-})
-
+});
 </script>

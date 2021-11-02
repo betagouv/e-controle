@@ -214,9 +214,11 @@ export default Vue.extend({
       this.$refs.modalFlow.start();
     },
     goHome() {
-      this.window.location.href = backend["control-detail"](
-        this.questionnaire.control
-      );
+      setTimeout(() => {
+        this.window.location.href = backend["control-detail"](
+          this.questionnaire.control
+        );
+      }, 500);
     },
   },
   mounted() {
