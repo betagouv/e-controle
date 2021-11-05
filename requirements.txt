@@ -51,7 +51,7 @@ ipdb==0.13.2; python_version >= "2.7"
 ipython==7.28.0; python_version >= "3.7"
 itypes==1.2.0
 jedi==0.18.0; python_version >= "3.7"
-jinja2==2.11.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+jinja2==2.11.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 kombu==4.6.11; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 ldap3==2.7
 lxml==4.6.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
