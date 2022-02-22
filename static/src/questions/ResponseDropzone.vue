@@ -7,16 +7,27 @@
           Une erreur s'est produite lors de la transmision d'un fichier.
         </div>
       </error-bar>
-      <form class="dropzone"
-            :action="uploadUrl"
-            method="post"
-            enctype="multipart/form-data"
-            :id="'dropzone-area-' + questionId ">
-        <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken">
+      <form
+        class="dropzone"
+        :action="uploadUrl"
+        method="post"
+        enctype="multipart/form-data"
+        :id="'dropzone-area-' + questionId"
+      >
+        <input type="hidden" name="csrfmiddlewaretoken" :value="csrftoken" />
         <div class="dz-message" data-dz-message>
+          <div v-show="isReplied" class="alert alert-warning alert-icon">
+            <strong>Attention !</strong>
+            Vous avez déclaré avoir déjà répondu à ce questionnaire.
+          </div>
           <span>Cliquer ou glisser-déposer vos fichiers.</span>
         </div>
-        <input type="hidden" id="idQuestionId" name="question_id" :value="questionId" />
+        <input
+          type="hidden"
+          id="idQuestionId"
+          name="question_id"
+          :value="questionId"
+        />
         <div class="fallback">
           <input name="file" type="file" multiple />
         </div>
@@ -27,23 +38,22 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-import axios from 'axios'
-import backendUrls from '../utils/backend'
-import { clearCache } from '../utils/utils'
-import Dropzone from 'dropzone'
-import 'dropzone/dist/basic.css'
-import 'dropzone/dist/dropzone.css'
-import ErrorBar from '../utils/ErrorBar'
-import EventBus from '../events'
-import Vue from 'vue'
+import axios from "axios";
+import backendUrls from "../utils/backend";
+import { clearCache } from "../utils/utils";
+import Dropzone from "dropzone";
+import "dropzone/dist/basic.css";
+import "dropzone/dist/dropzone.css";
+import ErrorBar from "../utils/ErrorBar";
+import EventBus from "../events";
+import Vue from "vue";
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
-const UPLOAD_TIMEOUT_MS = 3 * 60 * 1000 // 3 min : timeout apache
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+const UPLOAD_TIMEOUT_MS = 3 * 60 * 1000; // 3 min : timeout apache
 
 export default Vue.extend({
   props: [
@@ -51,162 +61,175 @@ export default Vue.extend({
     // late.
     // This can break the rendering of the dropbox, it cannot be rendered late.
     // So we use a v-show in the template, rather than a v-if, to render early.
-    'isAudited',
-    'questionId',
+    "isAudited",
+    "isReplied",
+    "questionId",
   ],
-  data: function() {
+  data: function () {
     return {
       faqUrl: backendUrls.faq(),
       uploadUrl: backendUrls.upload(),
-      csrftoken: '',
-      errorMessage: '',
+      csrftoken: "",
+      errorMessage: "",
       hasErrors: false,
-    }
+    };
   },
   components: {
     ErrorBar,
   },
-  mounted: function() {
+  mounted: function () {
     // Weird function copied from w3schools
     function readCookie(name) {
-      var nameEQ = name + '='
-      var ca = document.cookie.split(';')
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(";");
       for (var i = 0; i < ca.length; i++) {
-        var c = ca[i]
-        while (c.charAt(0) === ' ') {
-          c = c.substring(1, c.length)
+        var c = ca[i];
+        while (c.charAt(0) === " ") {
+          c = c.substring(1, c.length);
         }
         if (c.indexOf(nameEQ) === 0) {
-          return c.substring(nameEQ.length, c.length)
+          return c.substring(nameEQ.length, c.length);
         }
       }
-      return null
+      return null;
     }
 
-    this.csrftoken = readCookie('csrftoken')
+    this.csrftoken = readCookie("csrftoken");
 
-    const errorCallback = this.dropzoneErrorCallback.bind(this)
-    const successCallback = this.dropzoneSuccessCallback.bind(this)
-    const addedFileCallback = this.clearErrors.bind(this)
-    const timeoutCallback = this.dropzoneTimeoutCallback.bind(this)
+    const errorCallback = this.dropzoneErrorCallback.bind(this);
+    const successCallback = this.dropzoneSuccessCallback.bind(this);
+    const addedFileCallback = this.clearErrors.bind(this);
+    const timeoutCallback = this.dropzoneTimeoutCallback.bind(this);
 
-    Dropzone.options['dropzoneArea' + this.questionId] = {
+    Dropzone.options["dropzoneArea" + this.questionId] = {
       addRemoveLinks: true,
       timeout: UPLOAD_TIMEOUT_MS,
-      init: function() {
-        this.on('success', successCallback)
-        this.on('error', errorCallback)
-        this.on('addedfile', addedFileCallback)
-        this.on('sending', (file, xhr, formdata) => {
-          console.debug('dropzone sending', file, xhr, formdata)
-          xhr.ontimeout = error => {
-            timeoutCallback(file, error)
-          }
-        })
+      init: function () {
+        this.on("success", successCallback);
+        this.on("error", errorCallback);
+        this.on("addedfile", addedFileCallback);
+        this.on("sending", (file, xhr, formdata) => {
+          console.debug("dropzone sending", file, xhr, formdata);
+          xhr.ontimeout = (error) => {
+            timeoutCallback(file, error);
+          };
+        });
       },
       dictCancelUpload: "Annuler l'envoi",
       dictUploadCanceled: "L'envoi a été annulé.",
-      dictCancelUploadConfirmation: "Etes-vous sûr.e de vouloir annuler l'envoi?",
-      dictRemoveFile: 'Retirer le fichier',
-      dictFileTooBig: 'La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo.',
-    }
+      dictCancelUploadConfirmation:
+        "Etes-vous sûr.e de vouloir annuler l'envoi?",
+      dictRemoveFile: "Retirer le fichier",
+      dictFileTooBig:
+        "La taille du fichier dépasse la limite authorisée de {{maxFilesize}}Mo.",
+    };
   },
   methods: {
     clearErrors() {
-      this.errors = ''
-      this.hasErrors = false
+      this.errors = "";
+      this.hasErrors = false;
     },
     styleSuccess(file) {
-      file.previewElement.getElementsByClassName('dz-success-mark')[0]
-        .getElementsByTagName('g')[0]
-        .getElementsByTagName('path')[0]
-        .setAttribute('fill', '#5EBB00') // success color in tabler
-      file.previewElement.getElementsByClassName('dz-remove')[0].remove()
+      file.previewElement
+        .getElementsByClassName("dz-success-mark")[0]
+        .getElementsByTagName("g")[0]
+        .getElementsByTagName("path")[0]
+        .setAttribute("fill", "#5EBB00"); // success color in tabler
+      file.previewElement.getElementsByClassName("dz-remove")[0].remove();
     },
     styleError(file) {
-      file.previewElement.getElementsByClassName('dz-error-mark')[0]
-        .getElementsByTagName('g')[0]
-        .getElementsByTagName('g')[0]
-        .setAttribute('fill', '#cd201f') // danger color in tabler
-      file.previewElement.getElementsByClassName('dz-remove')[0].remove()
+      file.previewElement
+        .getElementsByClassName("dz-error-mark")[0]
+        .getElementsByTagName("g")[0]
+        .getElementsByTagName("g")[0]
+        .setAttribute("fill", "#cd201f"); // danger color in tabler
+      file.previewElement.getElementsByClassName("dz-remove")[0].remove();
     },
     styleTimeout(file, errorMessage) {
       // Dropzone leaves the file in "processing" state, which looks weird. We style it to look like
       // an error state.
-      file.previewElement.classList.add('dz-error')
-      file.previewElement.classList.remove('dz-procession')
-      file.previewElement.getElementsByClassName('dz-progress')[0].remove()
+      file.previewElement.classList.add("dz-error");
+      file.previewElement.classList.remove("dz-procession");
+      file.previewElement.getElementsByClassName("dz-progress")[0].remove();
       const errorMessageEl = file.previewElement
-        .getElementsByClassName('dz-error-message')[0]
-        .getElementsByTagName('span')[0]
-      $(errorMessageEl).text(errorMessage) // Use jQuery for setting text, because it escapes HTML.
-      this.styleError(file)
+        .getElementsByClassName("dz-error-message")[0]
+        .getElementsByTagName("span")[0];
+      $(errorMessageEl).text(errorMessage); // Use jQuery for setting text, because it escapes HTML.
+      this.styleError(file);
     },
-    dropzoneTimeoutCallback: function(file, error) {
-      console.debug('dropzone timeout', file, error)
-      clearCache()
+    dropzoneTimeoutCallback: function (file, error) {
+      console.debug("dropzone timeout", file, error);
+      clearCache();
 
-      this.hasErrors = true
-      this.errorMessage = 'L\'envoi du fichier "' + file.name + '" a mis plus de ' +
-          (UPLOAD_TIMEOUT_MS / 1000) + ' secondes, et a été annulé. Essayez avec des fichiers ' +
-          'plus petits, ou un réseau internet plus rapide.'
+      this.hasErrors = true;
+      this.errorMessage =
+        "L'envoi du fichier \"" +
+        file.name +
+        '" a mis plus de ' +
+        UPLOAD_TIMEOUT_MS / 1000 +
+        " secondes, et a été annulé. Essayez avec des fichiers " +
+        "plus petits, ou un réseau internet plus rapide.";
 
-      this.styleTimeout(file, this.errorMessage)
+      this.styleTimeout(file, this.errorMessage);
     },
-    dropzoneSuccessCallback: function(file) {
-      clearCache()
-      this.styleSuccess(file)
-      this.fetchQuestionData().then(responseFiles => {
-        EventBus.$emit('response-files-updated-' + this.questionId, responseFiles)
-      })
+    dropzoneSuccessCallback: function (file) {
+      clearCache();
+      this.styleSuccess(file);
+      this.fetchQuestionData().then((responseFiles) => {
+        EventBus.$emit(
+          "response-files-updated-" + this.questionId,
+          responseFiles
+        );
+      });
     },
-    dropzoneErrorCallback: function(file, errorMessage) {
-      clearCache()
-      if (file.status !== 'canceled') {
-        this.hasErrors = true
-        this.errorMessage = errorMessage
+    dropzoneErrorCallback: function (file, errorMessage) {
+      clearCache();
+      if (file.status !== "canceled") {
+        this.hasErrors = true;
+        this.errorMessage = errorMessage;
       }
-      this.styleError(file)
-      console.debug('Error when uploading response file.', file, errorMessage)
+      this.styleError(file);
+      console.debug("Error when uploading response file.", file, errorMessage);
     },
     fetchQuestionData: function () {
-      return axios.get(backendUrls.question(this.questionId)).then(response => {
-        return response.data.response_files
-      })
+      return axios
+        .get(backendUrls.question(this.questionId))
+        .then((response) => {
+          return response.data.response_files;
+        });
     },
-
   },
-})
-
+});
 </script>
 
 <style>
-  /* Shift the error bubble down, it's overlapping the "Remove file" link. */
-  .response-dropzone .dropzone .dz-preview .dz-error-message {
-    top:150px;
-  }
+/* Shift the error bubble down, it's overlapping the "Remove file" link. */
+.response-dropzone .dropzone .dz-preview .dz-error-message {
+  top: 150px;
+}
 
-  /* The progress bar and success/error mark are on top of the filename. Move it up. */
-  .dropzone .dz-preview .dz-details {
-    padding-top: 0.7em;
-  }
-  .dropzone .dz-preview .dz-details .dz-size {
-    margin-bottom: 0.3em;
-  }
-  .dropzone .dz-preview .dz-success-mark, .dropzone .dz-preview .dz-error-mark {
-    top: 60%;
-  }
+/* The progress bar and success/error mark are on top of the filename. Move it up. */
+.dropzone .dz-preview .dz-details {
+  padding-top: 0.7em;
+}
+.dropzone .dz-preview .dz-details .dz-size {
+  margin-bottom: 0.3em;
+}
+.dropzone .dz-preview .dz-success-mark,
+.dropzone .dz-preview .dz-error-mark {
+  top: 60%;
+}
 
-  /*
+/*
     Make the checkmark for success stay visible, instead of disappearing after a while.
     We just copy the animation for the error case.
   */
-  .response-dropzone .dropzone .dz-preview.dz-success .dz-success-mark {
-    opacity: 1;
-    -webkit-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
-    -moz-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
-    -ms-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
-    -o-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
-    animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
-  }
+.response-dropzone .dropzone .dz-preview.dz-success .dz-success-mark {
+  opacity: 1;
+  -webkit-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+  -ms-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+  animation: slide-in 3s cubic-bezier(0.77, 0, 0.175, 1);
+}
 </style>

@@ -214,52 +214,50 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mapFields } from 'vuex-map-fields'
-import axios from 'axios'
-import backendUrls from '../utils/backend'
-import Vue from 'vue'
-import WebdavTip from '../controls/WebdavTip'
-import ControlDeleteFlow from './ControlDeleteFlow'
+import { mapState } from "vuex";
+import { mapFields } from "vuex-map-fields";
+import axios from "axios";
+import backendUrls from "../utils/backend";
+import Vue from "vue";
+import WebdavTip from "../controls/WebdavTip";
+import ControlDeleteFlow from "./ControlDeleteFlow";
 
-import ConfirmModal from '../utils/ConfirmModal'
-import InfoBar from '../utils/InfoBar'
-import ErrorBar from '../utils/ErrorBar'
+import ConfirmModal from "../utils/ConfirmModal";
+import InfoBar from "../utils/InfoBar";
+import ErrorBar from "../utils/ErrorBar";
 
-import JSZip from 'jszip'
-import JSZipUtils from 'jszip-utils'
-import { saveAs } from 'file-saver'
+import JSZip from "jszip";
+import JSZipUtils from "jszip-utils";
+import { saveAs } from "file-saver";
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 export default Vue.extend({
   props: {
     control: Object,
   },
-  data: function() {
+  data: function () {
     return {
       editMode: false,
-      title: '',
-      organization: '',
-      errors: '',
+      title: "",
+      organization: "",
+      errors: "",
       hasErrors: false,
       referenceError: false,
-      reference_code: '',
+      reference_code: "",
       allChecked: false,
       checkedQuestionnaires: [],
       users: [],
-    }
+    };
   },
   computed: {
     ...mapState({
-      controls: 'controls',
+      controls: "controls",
     }),
-    ...mapFields([
-      'sessionUser',
-    ]),
+    ...mapFields(["sessionUser"]),
     accessibleQuestionnaires() {
-      return this.control.questionnaires.filter(q => !q.is_draft)
+      return this.control.questionnaires.filter((q) => !q.is_draft);
     },
   },
   components: {
@@ -270,150 +268,179 @@ export default Vue.extend({
     ConfirmModal,
   },
   mounted() {
-    this.getUsers()
-    this.restoreForm()
+    this.getUsers();
+    this.restoreForm();
   },
   methods: {
     showCloneModal() {
-      $(this.$refs.modal.$el).modal('show')
+      $(this.$refs.modal.$el).modal("show");
     },
     hideCloneModal() {
-      $(this.$refs.modal.$el).modal('hide')
+      $(this.$refs.modal.$el).modal("hide");
     },
     referenceChanged() {
-      this.referenceError = false
+      this.referenceError = false;
     },
     getUsers() {
-      axios.get(backendUrls.getUsersInControl(this.control.id))
+      axios
+        .get(backendUrls.getUsersInControl(this.control.id))
         .then((response) => {
-          this.users = response.data
-        })
+          this.users = response.data;
+        });
     },
     cloneControl() {
       // reference code given by user (2021_SOMETHING)
-      const newRefCode = new Date().getFullYear() + '_' + this.reference_code
+      const newRefCode = new Date().getFullYear() + "_" + this.reference_code;
 
-      const valid = this.reference_code &&
-                    !this.controls.find(ctrl => ctrl.reference_code === newRefCode)
+      const valid =
+        this.reference_code &&
+        !this.controls.find((ctrl) => ctrl.reference_code === newRefCode);
 
       if (!valid) {
-        this.referenceError = true
-        return
+        this.referenceError = true;
+        return;
       }
 
-      const getCreateMethodCtrl = () => axios.post.bind(this, backendUrls.control())
+      const getCreateMethodCtrl = () =>
+        axios.post.bind(this, backendUrls.control());
 
       if (this.checkedQuestionnaires.length) {
-        const questionnaires = this.accessibleQuestionnaires
-          .filter(aq => this.checkedQuestionnaires.includes(aq.id))
+        const questionnaires = this.accessibleQuestionnaires.filter((aq) =>
+          this.checkedQuestionnaires.includes(aq.id)
+        );
         const ctrl = {
           title: this.control.title,
           depositing_organization: this.control.depositing_organization,
           reference_code: newRefCode,
           questionnaires: questionnaires,
-        }
+        };
 
-        getCreateMethodCtrl()(ctrl).then(response => {
+        getCreateMethodCtrl()(ctrl).then((response) => {
           // Copy users for new control
-          const controlId = response.data.id
+          const controlId = response.data.id;
 
           this.users
-            .filter(u => u.profile_type === 'inspector')
-            .map(i => {
-              const inspector = { ...i, control: controlId }
-              axios.post(backendUrls.user(), inspector)
-            })
+            .filter((u) => u.profile_type === "inspector")
+            .map((i) => {
+              const inspector = { ...i, control: controlId };
+              axios.post(backendUrls.user(), inspector);
+            });
 
           // Copy questionnaires for new control
           const promises = this.accessibleQuestionnaires
-            .filter(aq => this.checkedQuestionnaires.includes(aq.id))
-            .map(q => {
-              const themes = q.themes.map(t => {
-                const qq = t.questions.map(q => { return { description: q.description } })
-                return { title: t.title, questions: qq }
-              })
+            .filter((aq) => this.checkedQuestionnaires.includes(aq.id))
+            .map((q) => {
+              const themes = q.themes.map((t) => {
+                const qq = t.questions.map((q) => {
+                  return { description: q.description };
+                });
+                return { title: t.title, questions: qq };
+              });
 
-              const newQ = { ...q, control: controlId, is_draft: true, id: null, themes: [] }
-              return this.cloneQuestionnaire(newQ, themes, q.themes)
-            })
+              const newQ = {
+                ...q,
+                control: controlId,
+                is_draft: true,
+                id: null,
+                themes: [],
+              };
+              return this.cloneQuestionnaire(newQ, themes, q.themes);
+            });
 
-          Promise.all(promises)
-        })
+          Promise.all(promises);
+        });
 
-        this.hideCloneModal()
+        this.hideCloneModal();
       }
     },
     async cloneQuestionnaire(questionnaire, themes, oldThemes) {
-      const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
-      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+      const getCreateMethod = () =>
+        axios.post.bind(this, backendUrls.questionnaire());
+      const getUpdateMethod = (qId) =>
+        axios.put.bind(this, backendUrls.questionnaire(qId));
 
-      const promise = await getCreateMethod()(questionnaire).then(async response => {
-        const qId = response.data.id
-        const newQ = { ...questionnaire, themes: themes }
+      const promise = await getCreateMethod()(questionnaire).then(
+        async (response) => {
+          const qId = response.data.id;
+          const newQ = { ...questionnaire, themes: themes };
 
-        await getUpdateMethod(qId)(newQ).then(response => {
-          const updatedQ = response.data
+          await getUpdateMethod(qId)(newQ).then((response) => {
+            const updatedQ = response.data;
 
-          oldThemes.map(t => {
-            t.questions.map(q => {
-              const qId = updatedQ.themes.find(updatedT => updatedT.order === t.order)
-                .questions.find(updatedQ => updatedQ.order === q.order).id
+            oldThemes.map((t) => {
+              t.questions.map((q) => {
+                const qId = updatedQ.themes
+                  .find((updatedT) => updatedT.order === t.order)
+                  .questions.find((updatedQ) => updatedQ.order === q.order).id;
 
-              q.question_files.map(qf => {
-                axios.get(qf.url, { responseType: 'blob' }).then(response => {
-                  const formData = new FormData()
-                  formData.append('file', response.data, qf.basename)
-                  formData.append('question', qId)
-                  console.log('fileresponse', response.data)
-                  axios.post(backendUrls.annexe(), formData, {
-                    headers: {
-                      'Content-Type': 'multipart/form-data',
-                    },
-                  })
-                })
-              })
-            })
-          })
-        })
-      })
+                q.question_files.map((qf) => {
+                  axios
+                    .get(qf.url, { responseType: "blob" })
+                    .then((response) => {
+                      const formData = new FormData();
+                      formData.append("file", response.data, qf.basename);
+                      formData.append("question", qId);
+                      console.log("fileresponse", response.data);
+                      axios.post(backendUrls.annexe(), formData, {
+                        headers: {
+                          "Content-Type": "multipart/form-data",
+                        },
+                      });
+                    });
+                });
+              });
+            });
+          });
+        }
+      );
 
-      return promise
+      return promise;
     },
     showExportModal() {
-      $(this.$refs.modalexp.$el).modal('show')
+      $(this.$refs.modalexp.$el).modal("show");
     },
     hideExportModal() {
-      $(this.$refs.modalexp.$el).modal('hide')
+      $(this.$refs.modalexp.$el).modal("hide");
     },
     checkAllQuestionnaires() {
-      this.checkedQuestionnaires = []
-      this.allChecked = !this.allChecked
+      this.checkedQuestionnaires = [];
+      this.allChecked = !this.allChecked;
 
       if (this.allChecked) {
-        this.accessibleQuestionnaires.map(q => {
-          this.checkedQuestionnaires.push(q.id)
-        })
+        this.accessibleQuestionnaires.map((q) => {
+          this.checkedQuestionnaires.push(q.id);
+        });
       }
     },
     exportControl() {
-      if (!this.checkedQuestionnaires.length) return
+      if (!this.checkedQuestionnaires.length) return;
 
       const formatFilename = (rf) => {
-        const questionnaireNb = String(rf.questionnaireNb).padStart(2, '0')
-        const themeId = String(rf.themeId + 1).padStart(2, '0')
-        const questionId = String(rf.questionId + 1).padStart(2, '0')
-        const filename = `Q${questionnaireNb}-T${themeId}-${questionId}-${rf.basename}`
-        return { questionnaireNb, themeId, filename }
-      }
+        const questionnaireNb = String(rf.questionnaireNb).padStart(2, "0");
+        const themeId = String(rf.themeId + 1).padStart(2, "0");
+        const questionId = String(rf.questionId + 1).padStart(2, "0");
+        const filename = `Q${questionnaireNb}-T${themeId}-${questionId}-${rf.basename}`;
+        return { questionnaireNb, themeId, filename };
+      };
+
+      const questionnaireFiles = this.accessibleQuestionnaires
+        .filter((aq) => this.checkedQuestionnaires.includes(aq.id))
+        .map((fq) => {
+          return {
+            questionnaireNb: fq.numbering,
+            basename: `Questionnaire-${fq.numbering}.docx`,
+            url: `/fichier-questionnaire/${fq.id}`,
+          };
+        });
 
       const responseFiles = this.accessibleQuestionnaires
-        .filter(aq => this.checkedQuestionnaires.includes(aq.id))
-        .flatMap(fq => {
+        .filter((aq) => this.checkedQuestionnaires.includes(aq.id))
+        .flatMap((fq) => {
           if (fq.themes) {
-            return fq.themes.flatMap(t => {
+            return fq.themes.flatMap((t) => {
               if (t.questions) {
-                return t.questions.flatMap(q => {
-                  return q.response_files.flatMap(rf => {
+                return t.questions.flatMap((q) => {
+                  return q.response_files.flatMap((rf) => {
                     if (rf) {
                       return {
                         questionnaireNb: fq.numbering,
@@ -421,98 +448,109 @@ export default Vue.extend({
                         questionId: q.order,
                         basename: rf.basename,
                         url: rf.url,
-                      }
+                      };
                     }
-                  })
-                })
+                  });
+                });
               }
-            })
+            });
           }
-        })
+        });
 
-      const zipFilename = this.control.reference_code + '.zip'
-      const zip = new JSZip()
-      let cnt = 0
+      const zipFilename = this.control.reference_code + ".zip";
+      const zip = new JSZip();
 
-      responseFiles.map(rf => {
-        const url = window.location.origin + rf.url
+      responseFiles.map((rf) => {
+        const url = window.location.origin + rf.url;
 
         JSZipUtils.getBinaryContent(url, (err, data) => {
-          if (err) throw err
+          if (err) throw err;
 
-          const formatted = formatFilename(rf)
+          const formatted = formatFilename(rf);
 
-          zip.folder(`Q${formatted.questionnaireNb}`)
+          zip
+            .folder(`Q${formatted.questionnaireNb}`)
             .folder(`T${formatted.themeId}`)
-            .file(formatted.filename, data, { binary: true })
+            .file(formatted.filename, data, { binary: true });
+        });
+      });
 
-          cnt++
-          if (cnt === responseFiles.length) {
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-              saveAs(content, zipFilename)
-            })
-          }
-        })
-      })
+      questionnaireFiles.map((qf) => {
+        const url = window.location.origin + qf.url;
 
-      this.hideExportModal()
+        JSZipUtils.getBinaryContent(url, (err, data) => {
+          if (err) throw err;
+
+          const formatted = formatFilename(qf);
+
+          zip
+            .folder(`Q${formatted.questionnaireNb}`)
+            .file(qf.basename, data, { binary: true });
+
+          zip.generateAsync({ type: "blob" }).then((content) => {
+            saveAs(content, zipFilename);
+          });
+        });
+      });
+
+      this.hideExportModal();
     },
     restoreForm() {
-      this.title = this.control.title
-      this.organization = this.control.depositing_organization
+      this.title = this.control.title;
+      this.organization = this.control.depositing_organization;
     },
     clearErrors() {
-      this.errors = ''
-      this.hasErrors = false
+      this.errors = "";
+      this.hasErrors = false;
     },
     enterEditMode() {
-      this.clearErrors()
-      this.editMode = true
+      this.clearErrors();
+      this.editMode = true;
     },
     quitEditMode() {
-      this.clearErrors()
-      this.editMode = false
+      this.clearErrors();
+      this.editMode = false;
     },
     cancel() {
-      this.restoreForm()
-      this.quitEditMode()
+      this.restoreForm();
+      this.quitEditMode();
     },
-    updateControl: function() {
-      this.clearErrors()
+    updateControl: function () {
+      this.clearErrors();
       const payload = {
         title: this.title,
         depositing_organization: this.organization,
-      }
-      axios.put(backendUrls.control(this.control.id), payload)
-        .then(response => {
-          console.debug(response)
-          this.title = response.data.title
-          this.organization = response.data.depositing_organization
+      };
+      axios
+        .put(backendUrls.control(this.control.id), payload)
+        .then((response) => {
+          console.debug(response);
+          this.title = response.data.title;
+          this.organization = response.data.depositing_organization;
 
           // Display a "loading" spinner on clicked button, while the page reloads, so that they know their click
           // has been registered.
-          $('#control-title-submit-button').addClass('btn-loading')
-          window.location.reload()
+          $("#control-title-submit-button").addClass("btn-loading");
+          window.location.reload();
         })
         .catch((error) => {
-          console.error(error)
-          this.errors = error.response.data
-          this.hasErrors = true
-        })
+          console.error(error);
+          this.errors = error.response.data;
+          this.hasErrors = true;
+        });
     },
     showWebdavTip() {
-      this.$refs['webdavTip' + this.control.id].start()
+      this.$refs["webdavTip" + this.control.id].start();
     },
     startControlDeleteFlow() {
-      this.$refs.controlDeleteFlow.start()
+      this.$refs.controlDeleteFlow.start();
     },
   },
-})
-
+});
 </script>
 
 <style scoped>
-  .break-word {
-    word-break: break-all;
-  }
+.break-word {
+  word-break: break-all;
+}
 </style>

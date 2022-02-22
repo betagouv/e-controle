@@ -111,8 +111,8 @@
             </td>
             <td class="w-1 action-column">
               <template v-if="!user.is_inspector">
-                <div v-if="questionnaire_has_replies(questionnaire.id)" class="text-right">
-                   <div class="btn-group">
+                <div v-if="questionnaire_has_replies(questionnaire.id) && !questionnaire_is_replied(questionnaire.id)" class="text-right">
+                   <div class="btn-group" >
                       <a class="btn btn-secondary"
                         :href="questionnaireDetailUrl(questionnaire.id)"
                         title="Déposer et consulter vos réponses">
@@ -140,7 +140,18 @@
                     </div>
                   </div>
                 </div>
-                <div v-else class="text-right">
+                <div v-else-if="questionnaire_has_replies(questionnaire.id) && questionnaire_is_replied(questionnaire.id)" class="text-right">
+                  <div class="text-right">
+                    <a :href="questionnaireDetailUrl(questionnaire.id)"
+                      class="btn btn-primary ml-2"
+                      title="Voir le questionnaire"
+                    >
+                      <i class="fe fe-eye"></i>
+                      Consulter
+                    </a>
+                  </div>
+                </div>
+                <div v-else-if="!questionnaire_has_replies(questionnaire.id) && questionnaire_is_replied(questionnaire.id)" class="text-right">
                   <a
                     :href="questionnaireDetailUrl(questionnaire.id)"
                     class="btn btn-primary ml-2"
@@ -149,6 +160,13 @@
                     <i class="fe fe-eye"></i>
                     Répondre
                   </a>
+                </div>
+                <div v-else>
+                  <button
+                    class="btn btn-primary btn-loading"
+                  >
+                    Chargement...
+                  </button>
                 </div>
               </template>
               <template v-else>
@@ -262,19 +280,20 @@
 </template>
 
 <script>
-import axios from 'axios'
-import backendUrls from '../utils/backend'
-import DateFormat from '../utils/DateFormat.js'
-import HelpTooltip from '../utils/HelpTooltip'
-import InfoBar from '../utils/InfoBar'
-import ConfirmModal from '../utils/ConfirmModal'
-import Vue from 'vue'
-import Vuex, { mapState } from 'vuex'
+import axios from "axios";
+import backendUrls from "../utils/backend";
+import DateFormat from "../utils/DateFormat.js";
+import HelpTooltip from "../utils/HelpTooltip";
+import InfoBar from "../utils/InfoBar";
+import ConfirmModal from "../utils/ConfirmModal";
+import Vue from "vue";
+import Vuex, { mapState } from "vuex";
+import { loadStatuses } from "../store";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default Vue.extend({
-  props: ['control', 'user'],
+  props: ["control", "user"],
   filters: {
     DateFormat,
   },
@@ -283,146 +302,171 @@ export default Vue.extend({
     InfoBar,
     ConfirmModal,
   },
-  data: function() {
+  data: function () {
     return {
       questionnaireId: null,
       checkedCtrls: [],
-    }
+    };
   },
   computed: {
     ...mapState({
-      controls: 'controls',
+      controls: "controls",
     }),
     accessibleControls() {
-      return this.controls
+      return this.controls;
     },
     accessibleQuestionnaires() {
       if (this.user.is_inspector) {
-        return this.control.questionnaires
+        return this.control.questionnaires;
       }
       return this.control.questionnaires.filter(
-        (questionnaire) => !questionnaire.is_draft,
-      )
+        (questionnaire) => !questionnaire.is_draft
+      );
     },
     questionnaireCreateUrl() {
-      return backendUrls['questionnaire-create'](this.control.id)
+      return backendUrls["questionnaire-create"](this.control.id);
     },
   },
   methods: {
     questionnaireDetailUrl(questionnaireId) {
-      return backendUrls['questionnaire-detail'](questionnaireId)
+      return backendUrls["questionnaire-detail"](questionnaireId);
     },
     questionnaireEditUrl(questionnaireId) {
-      return backendUrls['questionnaire-edit'](questionnaireId)
+      return backendUrls["questionnaire-edit"](questionnaireId);
     },
     startQuestionnaireDeleteFlow(questionnaireId) {
-      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
-      const curQ = this.control.questionnaires.find(q => q.id === questionnaireId)
-      const newQ = { ...curQ, control: null }
+      const getUpdateMethod = (qId) =>
+        axios.put.bind(this, backendUrls.questionnaire(qId));
+      const curQ = this.control.questionnaires.find(
+        (q) => q.id === questionnaireId
+      );
+      const newQ = { ...curQ, control: null };
 
-      getUpdateMethod(questionnaireId)(newQ).then(response => {
-        console.log(response.data)
-      })
+      getUpdateMethod(questionnaireId)(newQ).then((response) => {
+        console.log(response.data);
+      });
     },
     exportUrl(questionnaire) {
-      return backendUrls['questionnaire-export'](questionnaire.id)
+      return backendUrls["questionnaire-export"](questionnaire.id);
     },
     showModal(qId) {
-      this.questionnaireId = qId
-      $(this.$refs.modal.$el).modal('show')
+      this.questionnaireId = qId;
+      $(this.$refs.modal.$el).modal("show");
     },
     questionnaire_is_replied(qId) {
-      const q = this.control.questionnaires.find(q => q.id === qId)
-      return q.is_replied
+      const q = this.control.questionnaires.find((q) => q.id === qId);
+      return q.is_replied;
     },
     questionnaire_is_finalized(qId) {
-      const q = this.control.questionnaires.find(q => q.id === qId)
-      return q.is_finalized
+      const q = this.control.questionnaires.find((q) => q.id === qId);
+      return q.is_finalized;
     },
     questionnaire_has_replies(qId) {
-      const q = this.control.questionnaires.find(q => q.id === qId)
-      let found_replies = false
+      const q = this.control.questionnaires.find((q) => q.id === qId);
+      let found_replies = false;
 
-      if(q.themes) {
-        q.themes.map(theme => {
-          theme.questions.map(question => {
-            if(question.response_files.length) {
-              found_replies = true
+      if (q.themes) {
+        q.themes.map((theme) => {
+          theme.questions.map((question) => {
+            if (question.response_files.length) {
+              found_replies = true;
             }
-          })
-        })
+          });
+        });
       }
-
-      return found_replies
+      return found_replies;
     },
     markQuestionnaireAsReplied(qId) {
-      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
-      const curQ = this.control.questionnaires.find(q => q.id === qId)
-      const newQ = { ...curQ, is_replied: true }
+      const getUpdateMethod = (qId) =>
+        axios.put.bind(this, backendUrls.questionnaire(qId));
+      const curQ = this.control.questionnaires.find((q) => q.id === qId);
+      const newQ = { ...curQ, is_replied: true };
 
-      getUpdateMethod(qId)(newQ)
+      getUpdateMethod(qId)(newQ);
     },
     markQuestionnaireAsFinalized(qId) {
-      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
-      const curQ = this.control.questionnaires.find(q => q.id === qId)
-      const newQ = { ...curQ, is_finalized: true }
+      const getUpdateMethod = (qId) =>
+        axios.put.bind(this, backendUrls.questionnaire(qId));
+      const curQ = this.control.questionnaires.find((q) => q.id === qId);
+      const newQ = { ...curQ, is_finalized: true };
 
-      getUpdateMethod(qId)(newQ)
+      getUpdateMethod(qId)(newQ);
     },
     cloneQuestionnaire() {
-      const getCreateMethod = () => axios.post.bind(this, backendUrls.questionnaire())
-      const getUpdateMethod = (qId) => axios.put.bind(this, backendUrls.questionnaire(qId))
+      const getCreateMethod = () =>
+        axios.post.bind(this, backendUrls.questionnaire());
+      const getUpdateMethod = (qId) =>
+        axios.put.bind(this, backendUrls.questionnaire(qId));
 
       if (this.checkedCtrls.length) {
-        const curQ = this.control.questionnaires.find(q => q.id === this.questionnaireId)
-        const destCtrls = this.controls.filter(ctrl => this.checkedCtrls.includes(ctrl.id))
+        const curQ = this.control.questionnaires.find(
+          (q) => q.id === this.questionnaireId
+        );
+        const destCtrls = this.controls.filter((ctrl) =>
+          this.checkedCtrls.includes(ctrl.id)
+        );
 
-        destCtrls.map(ctrl => {
-          const themes = curQ.themes.map(t => {
-            const qq = t.questions.map(q => {
-              return { description: q.description }
-            })
-            return { title: t.title, questions: qq }
-          })
+        destCtrls.map((ctrl) => {
+          const themes = curQ.themes.map((t) => {
+            const qq = t.questions.map((q) => {
+              return { description: q.description };
+            });
+            return { title: t.title, questions: qq };
+          });
 
-          let newQ = { ...curQ, control: ctrl.id, is_draft: true, id: null, themes: [] }
-          getCreateMethod()(newQ).then(response => {
-            const qId = response.data.id
-            newQ = { ...newQ, themes: themes }
+          let newQ = {
+            ...curQ,
+            control: ctrl.id,
+            is_draft: true,
+            id: null,
+            themes: [],
+          };
+          getCreateMethod()(newQ).then((response) => {
+            const qId = response.data.id;
+            newQ = { ...newQ, themes: themes };
 
-            getUpdateMethod(qId)(newQ).then(response => {
-              const updatedQ = response.data
+            getUpdateMethod(qId)(newQ).then((response) => {
+              const updatedQ = response.data;
 
-              curQ.themes.map(t => {
-                t.questions.map(q => {
-                  const qId = updatedQ.themes.find(updatedT => updatedT.order === t.order)
-                    .questions.find(updatedQ => updatedQ.order === q.order).id
+              curQ.themes.map((t) => {
+                t.questions.map((q) => {
+                  const qId = updatedQ.themes
+                    .find((updatedT) => updatedT.order === t.order)
+                    .questions.find(
+                      (updatedQ) => updatedQ.order === q.order
+                    ).id;
 
-                  q.question_files.map(qf => {
-                    axios.get(qf.url, { responseType: 'blob' }).then(response => {
-                      const formData = new FormData()
-                      formData.append('file', response.data, qf.basename)
-                      formData.append('question', qId)
+                  q.question_files.map((qf) => {
+                    axios
+                      .get(qf.url, { responseType: "blob" })
+                      .then((response) => {
+                        const formData = new FormData();
+                        formData.append("file", response.data, qf.basename);
+                        formData.append("question", qId);
 
-                      axios.post(backendUrls.annexe(), formData, {
-                        headers: {
-                          'Content-Type': 'multipart/form-data',
-                        },
-                      })
-                    })
-                  })
-                })
-              })
-            })
-          })
-        })
+                        axios.post(backendUrls.annexe(), formData, {
+                          headers: {
+                            "Content-Type": "multipart/form-data",
+                          },
+                        });
+                      });
+                  });
+                });
+              });
+            });
+          });
+        });
       }
     },
   },
-})
+});
 </script>
 
 <style scoped>
+[v-cloak] {
+  display: none;
+}
+
 .tag-column {
   max-width: 7em;
 }
