@@ -167,9 +167,9 @@ inflection==0.5.1; python_version >= "3.5" \
     --hash=sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417
 ipdb==0.13.2; python_version >= "2.7" \
     --hash=sha256:77fb1c2a6fccdfee0136078c9ed6fe547ab00db00bebff181f1e8c9e13418d49
-ipython==7.28.0; python_version >= "3.7" \
-    --hash=sha256:f16148f9163e1e526f1008d7c8d966d9c15600ca20d1a754287cf96d00ba6f1d \
-    --hash=sha256:2097be5c814d1b974aea57673176a924c4c8c9583890e7a5f082f547b9975b11
+ipython==7.31.1; python_version >= "3.7" \
+    --hash=sha256:55df3e0bd0f94e715abd968bedd89d4e8a7bce4bf498fb123fed4f5398fea874 \
+    --hash=sha256:b5548ec5329a4bcf054a5deed5099b0f9622eb9ea51aaa7104d215fece201d8c
 itypes==1.2.0 \
     --hash=sha256:03da6872ca89d29aef62773672b2d408f490f80db48b23079a4b194c86dd04c6 \
     --hash=sha256:af886f129dea4a2a1e3d36595a2d139589e4dd287f5cab0b40e799ee81570ff1
